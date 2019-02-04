@@ -5,7 +5,7 @@
         <title>A-Frame CodeCity</title>
         <meta name="description" content="Bubble example for A-Charts component."/>
         <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
-        <script src="./aframe-codecity.js"></script>
+        <script src="../src/city.js"></script>
         <style>
             .home{
                 color: white;
@@ -16,13 +16,13 @@
                 z-index: 9997;
             }
         </style>
-    </head>
+    <script type="text/javascript" src="aframe-codecity.js"></script></head>
     <body>
 
         <a class="home" href="../../">Home</a>
         <a-scene background="color: white">
             <a-light type="point" intensity="1" position="-2 10 10"></a-light>
-            <a-entity city="repository: https://api.github.com/repos/dlumbrer/VBoard/git/trees/integration-aframedc?recursive=1;"></a-entity>
+            <a-entity city="type: bar; dataPoints: ../data/dataPopUp.json; axis_text_color: black; show_popup_info: true"></a-entity>
 
             <a-entity position="2 10 14" rotation="-30 15 0">
                 <a-camera position="3 -1 4" rotation="0 -1 0">
