@@ -4,9 +4,9 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/city.js',
+  entry: './src/main.js',
   output: {
-    filename: 'aframe-codecity.js',
+    filename: 'aframe-components-city.js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {
@@ -57,7 +57,7 @@ module.exports = {
   },
   devtool: 'source-map',
   plugins: [new HtmlWebpackPlugin({
-    template: './src/city.html',
+    template: './src/main.html',
     inject: 'head',
     filename: 'index.html'
   })]
