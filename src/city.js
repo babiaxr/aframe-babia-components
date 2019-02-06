@@ -1,3 +1,5 @@
+import 'aframe-layout-component'
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
@@ -106,6 +108,11 @@ AFRAME.registerComponent('city', {
 
 })
 
+const DEFAULT_SURFACE_HEIGHT = 1
+const DEFAULT_SURFACE_DEPTH = 10
+const DEFAULT_SURFACE_WIDTH = 10
+
+
 function generateBuilding(point) {
   let entity = document.createElement('a-box');
   entity.setAttribute('position', { x: point['x'] + point['size'] / 2, y: point['y'] / 2, z: point['z'] }); //centering graph
@@ -118,47 +125,61 @@ function generateBuilding(point) {
   return entity;
 }
 
-function generateSurface(point, level) {
+function generateSurface(point, level, old_parent) {
   let entity = document.createElement('a-box');
-  entity.setAttribute('position', { x: 1 / level, y: 1 / level, z: 1 }); //centering graph
   entity.setAttribute('color', 'gray');
-  entity.setAttribute('height', 2*level);
+  entity.setAttribute('height', DEFAULT_SURFACE_HEIGHT * level);
   entity.setAttribute('id', point.path);
-  entity.setAttribute('depth', 10 / (level*2));
-  entity.setAttribute('width', 10 / (level*2));
+  entity.setAttribute('depth', DEFAULT_SURFACE_DEPTH / (level * level));
+  entity.setAttribute('width', DEFAULT_SURFACE_WIDTH / (level * level));
   return entity;
 }
 
 function generateCity(dir) {
-  let matrix = []
-
   let parents = dir.tree.filter(item => item.type === "tree" && !item.path.includes('/'));
   console.log(dir)
   let new_parent, old_parent
   let city = document.createElement('a-entity');
+  city.setAttribute('layout', 'type: box; columns: ' + parents.length / 2 + '; margin: 12; plane: xz');
   let level = 1
   dir.tree.forEach((item) => {
     // Check if subdir
     if (item.type === 'tree') {
-      new_parent = generateSurface(item, level)
       // Check if first level folder
       if (!item.path.includes('/')) {
+        old_parent = city
         level = 1
-        city.appendChild(new_parent)
+        new_parent = generateSurface(item, level, old_parent)
+        
+        let sons = dir.tree.filter(i => i.path.includes(item.path));
+        new_parent.setAttribute('layout', 'type: box; columns: ' + sons.length + '; margin: 3; plane: xz');
+        
+        old_parent.appendChild(new_parent)
+        level++
       } else if (!item.path.includes(old_parent.id)) {
+        level--
+        new_parent = generateSurface(item, level, old_parent)
+
+        let sons = dir.tree.filter(i => i.path.includes(item.path));
+        new_parent.setAttribute('layout', 'type: box; columns: ' + sons.length + '; margin: 3; plane: xz');
+
         old_parent = old_parent.parentElement
         old_parent.appendChild(new_parent)
-        level--
       } else {
+        new_parent = generateSurface(item, level, old_parent)
+
+        let sons = dir.tree.filter(i => i.path.includes(item.path));
+        new_parent.setAttribute('layout', 'type: box; columns: ' + sons.length + '; margin: 3; plane: xz');
+
         old_parent.appendChild(new_parent)
         level++
       }
       old_parent = new_parent
       // Check if first level file 
     } else if (!old_parent) {
-      city.appendChild(generateBuilding(item, level))
+      //city.appendChild(generateBuilding(item, level))
     } else {
-      old_parent.appendChild(generateBuilding(item, level))
+      //old_parent.appendChild(generateBuilding(item, level))
     }
   });
 
