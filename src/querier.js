@@ -6,11 +6,9 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('vismapper', {
+AFRAME.registerComponent('querier', {
     schema: {
-        width: { type: 'string' },
-        depth: { type: 'string' },
-        height: { type: 'string' }
+        gitHubApi: { type: 'string' },
     },
 
     /**
@@ -25,6 +23,10 @@ AFRAME.registerComponent('vismapper', {
         let data = this.data;
         let el = this.el;
 
+        if (data.gitHubApi) {
+            requestGitHubApi(data, el)
+        }
+
     },
 
     /**
@@ -36,17 +38,6 @@ AFRAME.registerComponent('vismapper', {
         var data = this.data;
         var el = this.el;
 
-        /**
-         * Update geometry component
-         */
-        if (data.dataToShow) {
-            if (el.components.geometry.data.primitive === "box") {
-                el.components.geometry.data.height = (data.dataToShow[data.height] / 100)
-                el.components.geometry.data.width = data.dataToShow[data.width] || 2
-                el.components.geometry.data.depth = data.dataToShow[data.depth] || 2
-            }
-            el.components.geometry.update(el.components.geometry.data)
-        }
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -72,3 +63,36 @@ AFRAME.registerComponent('vismapper', {
     play: function () { },
 
 })
+
+
+let requestGitHubApi = (data, el) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', data.gitHubApi)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            console.log("data OK in request.response", el.id)
+            // Create the event
+            var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": JSON.parse(request.response) });
+
+            // Dispatch/Trigger/Fire the event
+            document.dispatchEvent(dataEventLoaded);
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+    };
+    request.send();
+}
