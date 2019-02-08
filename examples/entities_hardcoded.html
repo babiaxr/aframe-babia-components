@@ -6,7 +6,7 @@
     <title>A-Frame CodeCity</title>
     <meta name="description" content="Bubble example for A-Charts component." />
     <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
-    <script src="../dist/aframe-components-city.js"></script>
+    <script src="./aframe-components-city.js"></script>
     <style>
         .home{
                 color: white;
@@ -24,8 +24,8 @@
     <a class="home" href="../../">Home</a>
     <a-scene background="color: #A8F3FF">
         <a-light type="point" intensity="1" position="-2 10 10"></a-light>
-        
-        <a-entity id="queriertest" querier="gitHubApi: https://api.github.com/users/dlumbrer/repos;"></a-entity>
+
+        <a-entity id="queriertest" querier_github="user: dlumbrer"></a-entity>
 
         <a-entity geometry="primitive: box; width: 5; depth: 5" material="color:navy;" position="0 0 0" visdata='from: queriertest; index: 0'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
