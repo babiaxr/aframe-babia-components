@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame CodeCity</title>
+    <meta name="description" content="Bubble example for A-Charts component." />
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="../dist/aframe-components-city.js"></script>
+    <style>
+        .home{
+                color: white;
+                font-weight: bold;
+                left: 20px;
+                top: 60px;
+                position: fixed;
+                z-index: 9997;
+            }
+        </style>
+</head>
+
+<body>
+
+    <a class="home" href="../../">Home</a>
+    <a-scene background="color: #A8F3FF">
+        <a-light type="point" intensity="1" position="-2 10 10"></a-light>
+        
+        <a-entity id="queriertest" querier="gitHubApi: https://api.github.com/users/dlumbrer/repos;"></a-entity>
+
+        <a-entity geometry="primitive: box; width: 5; depth: 5" material="color:navy;" position="0 0 0" visdata='from: queriertest; index: 0'
+            vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+        <a-entity geometry="primitive: box; width: 5; depth: 5" material="color:red;" position="-5 0 0" visdata='from: queriertest; index: 1'
+            vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+        <a-entity geometry="primitive: box; width: 5; depth: 5" material="color:green;" position="5 0 0" visdata='from: queriertest; index: 17'
+            vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+
+        <a-entity position="2 10 14">
+            <a-camera position="3 -1 4">
+            </a-camera>
+        </a-entity>
+
+    </a-scene>
+
+</body>
+</>
