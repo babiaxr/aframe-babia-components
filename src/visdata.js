@@ -32,11 +32,11 @@ AFRAME.registerComponent('visdata', {
 
 
     // Listen the event when querier ready
-    document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
+    /*document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
       data.dataRetrieved = e.detail[data.index];
       el.components.vismapper.data.dataToShow = data.dataRetrieved;
       el.components.vismapper.update(el.components.vismapper.data)
-    });
+    });*/
 
   },
 
@@ -50,9 +50,22 @@ AFRAME.registerComponent('visdata', {
     var el = this.el;
 
     // If entry it means that the data changed
-    if (data !== oldData){
-      el.components.vismapper.data.dataToShow = data.dataRetrieved;
-      el.components.vismapper.update(el.components.vismapper.data)
+    if (data !== oldData) {
+      if (data.dataRetrieved !== oldData.dataRetrieved) {
+        el.components.vismapper.data.dataToShow = data.dataRetrieved;
+        el.components.vismapper.update(el.components.vismapper.data)
+      }
+      if (data.from !== oldData.from) {
+        console.log("Change event because from has changed")
+        // Remove the event of the old querier
+        document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
+        // Listen the event when querier ready
+        document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
+          data.dataRetrieved = e.detail[data.index];
+          el.components.vismapper.data.dataToShow = data.dataRetrieved;
+          el.components.vismapper.update(el.components.vismapper.data)
+        });
+      }
     }
 
   },
