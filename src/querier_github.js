@@ -6,9 +6,10 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('querier', {
+AFRAME.registerComponent('querier_github', {
     schema: {
-        gitHubApi: { type: 'string' },
+        user: { type: 'string' },
+        token: { type: 'string' }
     },
 
     /**
@@ -23,7 +24,7 @@ AFRAME.registerComponent('querier', {
         let data = this.data;
         let el = this.el;
 
-        if (data.gitHubApi) {
+        if (data.user) {
             requestGitHubApi(data, el)
         }
 
@@ -69,17 +70,23 @@ let requestGitHubApi = (data, el) => {
     // Create a new request object
     let request = new XMLHttpRequest();
 
+    // Create url
+    let url = "https://api.github.com/users/" + data.user + "/repos"
+
     // Initialize a request
-    request.open('get', data.gitHubApi)
+    request.open('get', url)
     // Send it
     request.onload = function () {
         if (this.status >= 200 && this.status < 300) {
             console.log("data OK in request.response", el.id)
+
+            data.dataRetrieved = JSON.parse(request.response)
+
             // Create the event
-            var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": JSON.parse(request.response) });
+            var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });
 
             // Dispatch/Trigger/Fire the event
-            document.dispatchEvent(dataEventLoaded);
+            el.dispatchEvent(dataEventLoaded);
 
         } else {
             reject({

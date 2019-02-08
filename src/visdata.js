@@ -37,7 +37,7 @@ AFRAME.registerComponent('visdata', {
     var el = this.el;
 
     // Listen the event when querier ready
-    document.addEventListener('dataReady' + data.from, function (e) {
+    document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
       data.dataRetrieved = e.detail[data.index];
       el.components.vismapper.data.dataToShow = data.dataRetrieved;
       el.components.vismapper.update(el.components.vismapper.data)

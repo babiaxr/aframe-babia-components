@@ -1,3 +1,3 @@
 import './vismapper'
 import './visdata'
-import './querier'
+import './querier_github'
