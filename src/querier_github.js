@@ -80,7 +80,9 @@ let requestGitHubApi = (data, el) => {
         if (this.status >= 200 && this.status < 300) {
             console.log("data OK in request.response", el.id)
 
+            // Save data
             data.dataRetrieved = JSON.parse(request.response)
+            el.setAttribute("data_retrieved", JSON.stringify(data.dataRetrieved))
 
             // Create the event
             var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });

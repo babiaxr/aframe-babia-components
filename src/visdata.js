@@ -25,6 +25,19 @@ AFRAME.registerComponent('visdata', {
     let data = this.data;
     let el = this.el;
 
+    let querierElement = document.getElementById(data.from)
+    if (querierElement.getAttribute('data_received')) {
+      data.dataRetrieved = JSON.parse(querierElement.getAttribute('data_retrieved'))[data.index]
+    }
+
+
+    // Listen the event when querier ready
+    document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
+      data.dataRetrieved = e.detail[data.index];
+      el.components.vismapper.data.dataToShow = data.dataRetrieved;
+      el.components.vismapper.update(el.components.vismapper.data)
+    });
+
   },
 
   /**
@@ -36,12 +49,12 @@ AFRAME.registerComponent('visdata', {
     var data = this.data;
     var el = this.el;
 
-    // Listen the event when querier ready
-    document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-      data.dataRetrieved = e.detail[data.index];
+    // If entry it means that the data changed
+    if (data !== oldData){
       el.components.vismapper.data.dataToShow = data.dataRetrieved;
       el.components.vismapper.update(el.components.vismapper.data)
-    });
+    }
+
   },
   /**
   * Called when a component is removed (e.g., via removeAttribute).
