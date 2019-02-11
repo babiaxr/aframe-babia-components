@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+module.exports = [{
   entry: './src/main.js',
   output: {
     filename: 'aframe-components-city.js',
@@ -33,7 +33,7 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {name: '[name].[ext]'}
+            options: { name: '[name].[ext]' }
           }
         ]
       },
@@ -45,7 +45,7 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {name: '[name].[ext]'}
+            options: { name: '[name].[ext]' }
           }
         ]
       }
@@ -61,4 +61,12 @@ module.exports = {
     inject: 'head',
     filename: 'index.html'
   })]
-};
+},
+{
+  entry: './src/painter.js',
+  output: {
+    filename: 'painter.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+}
+];

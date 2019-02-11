@@ -26,7 +26,7 @@ AFRAME.registerComponent('visdata', {
     let el = this.el;
 
     let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('data_received')) {
+    if (querierElement.getAttribute('data_retrieved')) {
       data.dataRetrieved = JSON.parse(querierElement.getAttribute('data_retrieved'))[data.index]
     }
 

@@ -1,3 +1,8 @@
+import './querier_github'
 import './vismapper'
 import './visdata'
-import './querier_github'
+import 'aframe-layout-component'
+
+
+
+

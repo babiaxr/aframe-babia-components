@@ -71,7 +71,7 @@ let requestGitHubApi = (data, el) => {
     let request = new XMLHttpRequest();
 
     // Create url
-    let url = "https://api.github.com/users/" + data.user + "/repos"
+    let url = "https://api.github.com/users/" + data.user + "/repos?_=" + new Date().getTime();
 
     // Initialize a request
     request.open('get', url)
