@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "aframe": "^0.8.2",
-    "aframe-layout-component": "^5.3.0"
+    "aframe-layout-component": "^5.3.0",
+    "aframe-super-keyboard": "^2.0.2",
+    "aframe-text-geometry-component": "^0.5.1"
   }
 }
