@@ -45,7 +45,7 @@ window.onload = () => {
         console.log("AQUI ESTA", dataRetrieved)
         let max = Math.max.apply(Math, dataRetrieved.map(function(o) { return o.open_issues; }))
         let city = document.createElement('a-entity');
-        city.setAttribute('layout', 'type: box; columns: ' + dataRetrieved.length / 4 + '; margin: ' + (5 + max/2) + '; plane: xz');
+        city.setAttribute('layout', 'type: box; columns: ' + dataRetrieved.length / 4 + '; margin: ' + (5 + max/2) + '; plane: xz; align: center');
         for (let index = 0; index <= dataRetrieved.length; index++) {
             let box = generateBox(index);
             city.appendChild(box)
