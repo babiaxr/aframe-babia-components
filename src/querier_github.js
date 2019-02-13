@@ -9,7 +9,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('querier_github', {
     schema: {
         user: { type: 'string' },
-        token: { type: 'string' }
+        token: { type: 'string' },
+        repos: { type: 'array'}
     },
 
     /**
@@ -24,8 +25,8 @@ AFRAME.registerComponent('querier_github', {
         let data = this.data;
         let el = this.el;
 
-        if (data.user) {
-            requestGitHubApi(data, el)
+        if (data.user && (data.repos.length === 0)) {
+            requestAllReposFromUser(data, el)
         }
 
     },
@@ -66,7 +67,7 @@ AFRAME.registerComponent('querier_github', {
 })
 
 
-let requestGitHubApi = (data, el) => {
+let requestAllReposFromUser = (data, el) => {
     // Create a new request object
     let request = new XMLHttpRequest();
 
@@ -81,7 +82,7 @@ let requestGitHubApi = (data, el) => {
             console.log("data OK in request.response", el.id)
 
             // Save data
-            data.dataRetrieved = JSON.parse(request.response)
+            data.dataRetrieved = allReposParse(JSON.parse(request.response))
             el.setAttribute("data_retrieved", JSON.stringify(data.dataRetrieved))
 
             // Create the event
@@ -104,4 +105,12 @@ let requestGitHubApi = (data, el) => {
         });
     };
     request.send();
+}
+
+let allReposParse = (data) => {
+    let dataParsed = {}
+    data.forEach((e, i) => {
+        dataParsed[e.name] = e
+    });
+    return dataParsed
 }

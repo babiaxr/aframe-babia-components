@@ -27,7 +27,23 @@ AFRAME.registerComponent('visdata', {
 
     let querierElement = document.getElementById(data.from)
     if (querierElement.getAttribute('data_retrieved')) {
-      data.dataRetrieved = JSON.parse(querierElement.getAttribute('data_retrieved'))[data.index]
+      let dataFromQuerier = JSON.parse(querierElement.getAttribute('data_retrieved'));
+      // Get if key or index
+      if (!dataFromQuerier[data.index] && !isNaN(parseInt(data.index))) {
+        data.dataRetrieved = dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.index)]]
+      } else {
+        data.dataRetrieved = dataFromQuerier[data.index]
+      }
+
+    } else {
+      // Get if key or index
+      document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
+        if (!e.detail[data.index] && !isNaN(parseInt(data.index))) {
+          data.dataRetrieved = e.detail[Object.keys(e.detail)[parseInt(data.index)]]
+        } else {
+          data.dataRetrieved = e.detail[data.index]
+        }
+      })
     }
 
 

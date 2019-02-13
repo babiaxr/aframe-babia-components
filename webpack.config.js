@@ -60,6 +60,31 @@ module.exports = [{
     template: './src/main.html',
     inject: 'head',
     filename: 'index.html'
+  }),
+  new HtmlWebpackPlugin({
+    template: './src/demo/user_list.html',
+    inject: 'head',
+    filename: 'user_list.html'
+  }),
+  new HtmlWebpackPlugin({
+    template: './src/demo/user_visdata_specify_repo.html',
+    inject: 'head',
+    filename: 'user_visdata_specify_repo.html'
+  }),
+  new HtmlWebpackPlugin({
+    template: './src/demo/querier_json_url.html',
+    inject: 'head',
+    filename: 'querier_json_url.html'
+  }),
+  new HtmlWebpackPlugin({
+    template: './src/demo/querier_json_embedded.html',
+    inject: 'head',
+    filename: 'querier_json_embedded.html'
+  }),
+  new HtmlWebpackPlugin({
+    template: './src/demo/keyboard_analysis.html',
+    inject: 'head',
+    filename: 'keyboard_analysis.html'
   })]
 },
 {

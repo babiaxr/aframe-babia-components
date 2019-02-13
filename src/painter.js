@@ -65,10 +65,10 @@ window.onload = () => {
     });
 
     function generateCity(dataRetrieved) {
-        let max = Math.max.apply(Math, dataRetrieved.map(function (o) { return o.open_issues; }))
+        let max = Math.max.apply(Math, Object.keys( dataRetrieved ).map(function (o) { return dataRetrieved[o].open_issues; }))
         let city = document.createElement('a-entity');
-        city.setAttribute('layout', 'type: box; columns: ' + dataRetrieved.length / 4 + '; margin: ' + (5 + max / 2) + '; plane: xz; align: center');
-        for (let index = 0; index <= dataRetrieved.length; index++) {
+        city.setAttribute('layout', 'type: box; columns: ' + Object.keys( dataRetrieved ).length / 4 + '; margin: ' + (5 + max / 2) + '; plane: xz; align: center');
+        for (let index = 0; index <= Object.keys( dataRetrieved ).length; index++) {
             let box = generateBox(index);
             city.appendChild(box)
         };
@@ -76,12 +76,14 @@ window.onload = () => {
     }
 
     function generateBox(index) {
+        let parent = document.createElement('a-entity');
         let entity = document.createElement('a-entity');
         entity.setAttribute('geometry', 'primitive: box');
         entity.setAttribute('material', 'color: ' + colors[index]);
         entity.setAttribute('visdata', 'from: queriertest; index:' + index);
         entity.setAttribute('vismapper', "width: open_issues; depth: open_issues; height: size");
-        return entity;
+        parent.appendChild(entity)
+        return parent;
     }
 
 };
