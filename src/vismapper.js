@@ -44,6 +44,7 @@ AFRAME.registerComponent('vismapper', {
                 el.components.geometry.data.height = (data.dataToShow[data.height] / 100)
                 el.components.geometry.data.width = data.dataToShow[data.width] || 2
                 el.components.geometry.data.depth = data.dataToShow[data.depth] || 2
+                el.setAttribute("position", "0 " + data.dataToShow[data.height] / 200 + " 0")
             }
             el.components.geometry.update(el.components.geometry.data)
         }
