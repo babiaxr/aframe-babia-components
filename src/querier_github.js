@@ -10,7 +10,7 @@ AFRAME.registerComponent('querier_github', {
     schema: {
         user: { type: 'string' },
         token: { type: 'string' },
-        repos: { type: 'array'}
+        repos: { type: 'array' }
     },
 
     /**
@@ -27,6 +27,8 @@ AFRAME.registerComponent('querier_github', {
 
         if (data.user && (data.repos.length === 0)) {
             requestAllReposFromUser(data, el)
+        } else if (data.repos.length > 0) {
+            requestReposFromList(data, el)
         }
 
     },
@@ -65,6 +67,53 @@ AFRAME.registerComponent('querier_github', {
     play: function () { },
 
 })
+
+let requestReposFromList = (data, el) => {
+    let dataOfRepos = {}
+
+    data.repos.forEach((e, i) => {
+        // Create a new request object
+        let request = new XMLHttpRequest();
+
+        // Create url
+        let url = "https://api.github.com/repos/" + data.user + "/" + e + "?_=" + new Date().getTime();
+
+        // Initialize a request
+        request.open('get', url, false)
+        // Send it
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                console.log("data OK in request.response", el.id)
+
+                // Save data
+                let rawData = JSON.parse(request.response)
+                dataOfRepos[rawData.name] = rawData;
+
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        request.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        request.send();
+    })
+
+    // Save data
+    data.dataRetrieved = dataOfRepos
+    el.setAttribute("data_retrieved", JSON.stringify(data.dataRetrieved))
+    // Create the event
+    var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });
+
+    // Dispatch/Trigger/Fire the event
+    el.dispatchEvent(dataEventLoaded);
+}
 
 
 let requestAllReposFromUser = (data, el) => {

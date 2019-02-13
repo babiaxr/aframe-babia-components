@@ -10,7 +10,7 @@ AFRAME.registerComponent('visdata', {
   dependencies: ['querier', 'vismapper'],
   schema: {
     from: { type: 'string' },
-    index: { type: 'number' }
+    index: { type: 'string' }
   },
 
   /**
