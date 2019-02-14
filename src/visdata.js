@@ -40,8 +40,10 @@ AFRAME.registerComponent('visdata', {
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
         if (!e.detail[data.index] && !isNaN(parseInt(data.index))) {
           data.dataRetrieved = e.detail[Object.keys(e.detail)[parseInt(data.index)]]
+          el.setAttribute("visdata", "dataRetrieved", data.dataRetrieved)
         } else {
           data.dataRetrieved = e.detail[data.index]
+          el.setAttribute("visdata", "dataRetrieved", data.dataRetrieved)
         }
       })
     }
