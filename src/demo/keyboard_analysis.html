@@ -6,6 +6,7 @@
     <title>A-Frame CodeCity</title>
     <meta name="description" content="Bubble example for A-Charts component." />
     <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script> 
     <script src="./painter.js"></script>
     <script src="./aframe-components-city.js"></script>
 <script type="text/javascript" src="aframe-components-city.js"></script></head>
@@ -29,9 +30,10 @@
             <a-entity text-geometry="value: Enter your GitHub username" scale="0.05 0.05 0.05" position="-0.22 0.23 0"></a-entity>
         </a-entity>
 
-        <a-entity movement-controls="fly: true">
-            <a-entity camera position="-3 5 20" look-controls oculus-go-controls wasd-controls></a-entity>
-            <a-entity id="mouseCursor" cursor="rayOrigin: mouse" laser-controls="hand: right"></a-entity>
+        <a-entity movement-controls="fly: true" position="-3 5 20">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity id="mouseCursor" laser-controls="hand: right"></a-entity>
         </a-entity>
 
     </a-scene>

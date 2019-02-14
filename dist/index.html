@@ -6,7 +6,7 @@
     <title>A-Frame CodeCity</title>
     <meta name="description" content="Bubble example for A-Charts component." />
     <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
-    <script src="./painter.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
     <script src="./aframe-components-city.js"></script>
 <script type="text/javascript" src="aframe-components-city.js"></script></head>
 
@@ -15,23 +15,29 @@
     <a-scene background="color: #A8F3FF" id="AframeScene">
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <!--a-entity id="queriertest" querier_github="user: xxxx"></a-entity-->
+        <a-entity id="queriertest" querier_github="user: dlumbrer; repos: kbn_network, VBoard, kbn_searchtables"></a-entity>
 
-        <!--a-entity geometry="primitive: box; width: 5; depth: 5" material="color:navy;" position="0 0 0" visdata='from: queriertest; index: 0'
-            vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
-        <a-entity geometry="primitive: box; width: 5; depth: 5" material="color:red;" position="-5 0 0" visdata='from: queriertest; index: 1'
-            vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
-        <a-entity geometry="primitive: box; width: 5; depth: 5" material="color:green;" position="5 0 0" visdata='from: queriertest; index: 17'
-            vismapper="width: open_issues; depth: open_issues; height: size"></a-entity-->
+        <a-entity layout="type: box; columns: 3; margin: 30; align: center">
+            <a-entity>
+                <a-entity geometry="primitive: box;" material="color:navy;" visdata='from: queriertest; index: kbn_network'
+                    vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+            </a-entity>
+            <a-entity>
+                <a-entity geometry="primitive: box;" material="color:red;" visdata='from: queriertest; index: VBoard'
+                    vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+            </a-entity>
+            <a-entity>
 
-
-        <a-entity id="keyboard" super-keyboard="hand: #mouseCursor; imagePath:./img/" position="-3 5 19.5" rotation="-15 0 0">
-            <a-entity text-geometry="value: Enter your GitHub username" scale="0.05 0.05 0.05" position="-0.22 0.23 0"></a-entity>
+                <a-entity geometry="primitive: box;" material="color:green;" visdata='from: queriertest; index: kbn_searchtables'
+                    vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+            </a-entity>
         </a-entity>
 
-        <a-entity movement-controls="fly: true">
-            <a-entity camera position="-3 5 20" look-controls oculus-go-controls wasd-controls></a-entity>
-            <a-entity id="mouseCursor" cursor="rayOrigin: mouse" laser-controls="hand: right"></a-entity>
+
+        <a-entity movement-controls="fly: true" position="-3 5 20">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
         </a-entity>
 
     </a-scene>
