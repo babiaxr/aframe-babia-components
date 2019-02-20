@@ -1,4 +1,5 @@
 import './querier_github'
+import './querier_json'
 import './vismapper'
 import './visdata'
 import 'aframe-layout-component'
