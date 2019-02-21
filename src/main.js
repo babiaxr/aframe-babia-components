@@ -8,5 +8,3 @@ import 'aframe-text-geometry-component'
 
 
 
-
-
