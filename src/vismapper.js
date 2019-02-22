@@ -10,8 +10,7 @@ AFRAME.registerComponent('vismapper', {
     schema: {
         width: { type: 'string' },
         depth: { type: 'string' },
-        height: { type: 'string' },
-        debug: { type: 'boolean' }
+        height: { type: 'string' }
     },
 
     /**
@@ -26,9 +25,6 @@ AFRAME.registerComponent('vismapper', {
         let data = this.data;
         let el = this.el;
 
-        if (data.debug) {
-            showDebugPlane(data, el);
-        }
     },
 
     /**
@@ -77,40 +73,3 @@ AFRAME.registerComponent('vismapper', {
     play: function () { },
 
 })
-
-
-let showDebugPlane = (data, el) => {
-    console.log("OK, debug mode activated")
-    el.addEventListener("mouseenter", function (e) {
-        //console.log(e.target)
-        //e.target.setAttribute('scale', { x: 2, y: 2, z: 2 });
-        let debugPanel = generateDebugPanel(data, el);
-        el.appendChild(debugPanel)
-    });
-    el.addEventListener("mouseleave", function (e) {
-        //console.log(e.target)
-        //e.target.setAttribute('scale', { x: 2, y: 2, z: 2 });
-        el.removeChild(el.childNodes[0])
-    });
-}
-
-function generateDebugPanel(data, el) {
-    const HEIGHT_PLANE_DEBUG = 10
-    const WIDTH_PLANE_DEBUG = 10
-    let entity = document.createElement('a-plane');
-    entity.setAttribute('color', 'white');
-    entity.setAttribute('width', HEIGHT_PLANE_DEBUG);
-    entity.setAttribute('height', WIDTH_PLANE_DEBUG);
-    let parentPos = el.getAttribute("position")
-    entity.setAttribute('position', {x: parentPos.x + el.getAttribute("geometry").width/2 + WIDTH_PLANE_DEBUG/2, y: 0 - el.getAttribute("geometry").height/2 + HEIGHT_PLANE_DEBUG/2, z: parentPos.z});
-
-    let textEntity = document.createElement('a-text');
-    textEntity.setAttribute('value', JSON.stringify(data.dataToShow));
-    textEntity.setAttribute('width', HEIGHT_PLANE_DEBUG);
-    textEntity.setAttribute('height', WIDTH_PLANE_DEBUG);
-    textEntity.setAttribute('color', 'black');
-    textEntity.setAttribute('position', {x: 0 - entity.getAttribute('width')/2, y: 0 - el.getAttribute("height")/2, z: 0});
-
-    entity.appendChild(textEntity)
-    return entity;
-}
