@@ -30,32 +30,23 @@ AFRAME.registerComponent('visdata', {
       let dataFromQuerier = JSON.parse(querierElement.getAttribute('data_retrieved'));
       // Get if key or index
       if (!dataFromQuerier[data.index] && !isNaN(parseInt(data.index))) {
-        data.dataRetrieved = dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.index)]]
+        saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.index)]])
       } else {
-        data.dataRetrieved = dataFromQuerier[data.index]
+        saveEntityData(data, el, dataFromQuerier[data.index])
       }
 
     } else {
       // Get if key or index
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
         if (!e.detail[data.index] && !isNaN(parseInt(data.index))) {
-          data.dataRetrieved = e.detail[Object.keys(e.detail)[parseInt(data.index)]]
+          saveEntityData(data, el, e.detail[Object.keys(e.detail)[parseInt(data.index)]])
           el.setAttribute("visdata", "dataRetrieved", data.dataRetrieved)
         } else {
-          data.dataRetrieved = e.detail[data.index]
+          saveEntityData(data, el, e.detail[data.index])
           el.setAttribute("visdata", "dataRetrieved", data.dataRetrieved)
         }
       })
     }
-
-
-    // Listen the event when querier ready
-    /*document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-      data.dataRetrieved = e.detail[data.index];
-      el.components.vismapper.data.dataToShow = data.dataRetrieved;
-      el.components.vismapper.update(el.components.vismapper.data)
-    });*/
-
   },
 
   /**
@@ -79,7 +70,7 @@ AFRAME.registerComponent('visdata', {
         document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
         // Listen the event when querier ready
         document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-          data.dataRetrieved = e.detail[data.index];
+          saveEntityData(data, el, e.detail[data.index])
           el.components.vismapper.data.dataToShow = data.dataRetrieved;
           el.components.vismapper.update(el.components.vismapper.data)
         });
@@ -111,3 +102,8 @@ AFRAME.registerComponent('visdata', {
   play: function () { },
 
 })
+
+let saveEntityData = (data, el, dataToSave) => {
+  data.dataRetrieved = dataToSave
+  el.setAttribute("dataEntity", JSON.stringify(dataToSave))
+}
