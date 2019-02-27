@@ -85,6 +85,11 @@ module.exports = [{
     template: './src/demo/keyboard_analysis.html',
     inject: 'head',
     filename: 'keyboard_analysis.html'
+  }),
+  new HtmlWebpackPlugin({
+    template: './src/demo/debug-data.html',
+    inject: 'head',
+    filename: 'debug-data.html'
   })]
 },
 {

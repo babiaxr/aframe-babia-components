@@ -85,7 +85,7 @@ let requestJSONDataFromURL = (data, el) => {
             } else {
                 data.dataRetrieved = request.response
             }
-            el.setAttribute("data_retrieved", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("dataEntity", JSON.stringify(data.dataRetrieved))
 
             // Create the event
             var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });
@@ -112,7 +112,7 @@ let requestJSONDataFromURL = (data, el) => {
 let parseEmbeddedJSONData = (data, el) => {
     // Save data
     data.dataRetrieved = JSON.parse(data.embedded)
-    el.setAttribute("data_retrieved", data.embedded)
+    el.setAttribute("dataEntity", data.embedded)
 
     // Create the event
     var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });

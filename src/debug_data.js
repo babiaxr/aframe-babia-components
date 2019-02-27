@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('debug-data', {
+AFRAME.registerComponent('debug_data', {
     schema: {
         inputEvent: { type: 'string' }
     },
@@ -83,9 +83,9 @@ let listenEvent = (data, el) => {
 }
 
 let showDebugPlane = (data, el) => {
-    let debugPanel = generateDebugPanel(data, el, el.getAttribute('dataEntity'));
-    
-    if (!el.querySelector('.debug-data')) {
+    if (!el.querySelector('.debug_data')) {
+        // Get data from the attribute of the entity
+        let debugPanel = generateDebugPanel(data, el, el.getAttribute('dataEntity'));
         el.appendChild(debugPanel)
     }
 }
@@ -95,11 +95,17 @@ function generateDebugPanel(data, el, dataToShow) {
     const WIDTH_PLANE_DEBUG = 10
     let entity = document.createElement('a-plane');
     entity.setAttribute('color', 'white');
-    entity.setAttribute('class', 'debug-data');
+    entity.setAttribute('class', 'debug_data');
     entity.setAttribute('width', HEIGHT_PLANE_DEBUG);
     entity.setAttribute('height', WIDTH_PLANE_DEBUG);
     let parentPos = el.getAttribute("position")
-    entity.setAttribute('position', { x: parentPos.x + el.getAttribute("geometry").width / 2 + WIDTH_PLANE_DEBUG / 2, y: 0 - el.getAttribute("geometry").height / 2 + HEIGHT_PLANE_DEBUG / 2, z: parentPos.z });
+    let parentWidth = 0; 
+    let parentHeight = 0;
+    if (el.getAttribute("geometry")) {
+        parentWidth = el.getAttribute("geometry").width
+        parentHeight = el.getAttribute("geometry").height
+    }
+    entity.setAttribute('position', { x: parentPos.x + (parentWidth * 1 / 2) + WIDTH_PLANE_DEBUG / 2, y: 0 - ( parentHeight * 1 / 2) + HEIGHT_PLANE_DEBUG / 2, z: parentPos.z });
 
     let textEntity = document.createElement('a-text');
     textEntity.setAttribute('value', JSON.stringify(dataToShow));

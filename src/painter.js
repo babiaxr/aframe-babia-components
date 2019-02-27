@@ -51,8 +51,8 @@ window.onload = () => {
 
         //Check if data is retrieved and draw city
         let querierElement = document.getElementById('queriertest')
-        if (querierElement.getAttribute('data_retrieved')) {
-            let dataRetrieved = JSON.parse(querierElement.getAttribute('data_retrieved'))
+        if (querierElement.getAttribute('dataEntity')) {
+            let dataRetrieved = JSON.parse(querierElement.getAttribute('dataEntity'))
             generateCity(dataRetrieved)
         } else {
             document.getElementById("queriertest").addEventListener('dataReadyqueriertest', function (e) {

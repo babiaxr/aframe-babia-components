@@ -107,7 +107,7 @@ let requestReposFromList = (data, el) => {
 
     // Save data
     data.dataRetrieved = dataOfRepos
-    el.setAttribute("data_retrieved", JSON.stringify(data.dataRetrieved))
+    el.setAttribute("dataEntity", JSON.stringify(data.dataRetrieved))
     // Create the event
     var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });
 
@@ -132,7 +132,7 @@ let requestAllReposFromUser = (data, el) => {
 
             // Save data
             data.dataRetrieved = allReposParse(JSON.parse(request.response))
-            el.setAttribute("data_retrieved", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("dataEntity", JSON.stringify(data.dataRetrieved))
 
             // Create the event
             var dataEventLoaded = new CustomEvent("dataReady" + el.id, { "detail": data.dataRetrieved });

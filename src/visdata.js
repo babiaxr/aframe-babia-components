@@ -26,8 +26,8 @@ AFRAME.registerComponent('visdata', {
     let el = this.el;
 
     let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('data_retrieved')) {
-      let dataFromQuerier = JSON.parse(querierElement.getAttribute('data_retrieved'));
+    if (querierElement.getAttribute('dataEntity')) {
+      let dataFromQuerier = JSON.parse(querierElement.getAttribute('dataEntity'));
       // Get if key or index
       if (!dataFromQuerier[data.index] && !isNaN(parseInt(data.index))) {
         saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.index)]])
