@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = [{
   entry: './src/main.js',
   output: {
-    filename: 'aframe-components-city.js',
+    filename: 'aframe-visdata-components.js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {
@@ -64,32 +64,32 @@ module.exports = [{
   new HtmlWebpackPlugin({
     template: './src/demo/user_list.html',
     inject: 'head',
-    filename: 'user_list.html'
+    filename: 'demo/user_list.html'
   }),
   new HtmlWebpackPlugin({
     template: './src/demo/user_visdata_specify_repo.html',
     inject: 'head',
-    filename: 'user_visdata_specify_repo.html'
+    filename: 'demo/user_visdata_specify_repo.html'
   }),
   new HtmlWebpackPlugin({
     template: './src/demo/querier_json_url.html',
     inject: 'head',
-    filename: 'querier_json_url.html'
+    filename: 'demo/querier_json_url.html'
   }),
   new HtmlWebpackPlugin({
     template: './src/demo/querier_json_embedded.html',
     inject: 'head',
-    filename: 'querier_json_embedded.html'
+    filename: 'demo/querier_json_embedded.html'
   }),
   new HtmlWebpackPlugin({
     template: './src/demo/keyboard_analysis.html',
     inject: 'head',
-    filename: 'keyboard_analysis.html'
+    filename: 'demo/keyboard_analysis.html'
   }),
   new HtmlWebpackPlugin({
     template: './src/demo/debug-data.html',
     inject: 'head',
-    filename: 'debug-data.html'
+    filename: 'demo/debug-data.html'
   })]
 },
 {
