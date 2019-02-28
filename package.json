@@ -12,8 +12,24 @@
     "clean": "rm -r dist/*",
     "cleanbuild": "rm -r dist/* && webpack --mode production"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/barataria/aframe-visdata-components"
+  },
+  "keywords": [
+    "aframe",
+    "aframe-component",
+    "aframe-vr",
+    "vr",
+    "mozvr",
+    "webvr",
+    "visdata",
+    "city"
+  ],
+  "author": {
+    "name": "David Moreno <dmorenolumb@gmail.com>",
+    "url": "https://dlumbrer.github.io"
+  },
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.26.3",
