@@ -17,7 +17,7 @@ Install and use by directly including the [browser files](dist):
 
 <head>
     <meta charset="utf-8">
-    <title>A-Frame CodeCity</title>
+    <title>A-Frame Visdata components</title>
     <meta name="description" content="Bubble example for A-Charts component." />
     <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
     <script src="https://glcdn.githack.com/barataria/aframe-visdata-components/raw/master/dist/aframe-visdata-components.js"></script>
@@ -54,7 +54,18 @@ Install and use by directly including the [browser files](dist):
 Install via NPM:
 
 ```
-soon
+npm i aframe-visdata-components
+```
+
+Then require and use.
+```js
+require('aframe');
+require('aframe-visdata-components');
+
+# or
+
+import 'aframe'
+import 'aframe-visdata-components'
 ```
 
 ## Components
