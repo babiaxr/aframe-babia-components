@@ -129,9 +129,10 @@ This component must be in the same entity than visdata.
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| width            | Field of the data selected by visdata that will be mapped as the width of the geometry.  | string | - |
-| depth        | Field of the data selected by visdata that will be mapped as the depth of the geometry. | string   | - |
-| height        | Field of the data selected by visdata that will be mapped as the height of the geometry. | string   | - |
+| width            | Field of the data selected by visdata that will be mapped as the width of the geometry (only for box).  | string | - |
+| depth        | Field of the data selected by visdata that will be mapped as the depth of the geometry (only for box). | string   | - |
+| height        | Field of the data selected by visdata that will be mapped as the height of the geometry . | string   | - |
+| radius        | Field of the data selected by visdata that will be mapped as the radius of the geometry (only for sphere). | string   | - |
 
 
 ### debug_data component

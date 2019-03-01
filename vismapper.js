@@ -10,7 +10,8 @@ AFRAME.registerComponent('vismapper', {
     schema: {
         width: { type: 'string' },
         depth: { type: 'string' },
-        height: { type: 'string' }
+        height: { type: 'string' },
+        radius: { type: 'string' }
     },
 
     /**
@@ -45,7 +46,11 @@ AFRAME.registerComponent('vismapper', {
                 el.components.geometry.data.width = data.dataToShow[data.width] || 2
                 el.components.geometry.data.depth = data.dataToShow[data.depth] || 2
                 let oldPos = el.getAttribute("position")
-                el.setAttribute("position", {x: oldPos.x, y: data.dataToShow[data.height] / 200, z: oldPos.z})
+                el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height] / 200, z: oldPos.z })
+            } else if (el.components.geometry.data.primitive === "sphere") {
+                el.components.geometry.data.radius = (data.dataToShow[data.radius] / 10000) || 2
+                let oldPos = el.getAttribute("position")
+                el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height], z: oldPos.z })
             }
             el.components.geometry.update(el.components.geometry.data)
         }
