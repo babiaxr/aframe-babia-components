@@ -2,12 +2,14 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>A-Frame CodeCity</title>
-    <meta name="description" content="Bubble example for A-Charts component." />
-    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
-    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
-    <script src="./aframe-components-city.js"></script>
+  <meta charset="utf-8">
+  <title>A-Frame Visdata components</title>
+  <meta name="description" content="Bubble example for A-Charts component." />
+  <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+  <script src="../../dist/aframe-visdata-components.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
 </head>
 
 <body>
@@ -15,7 +17,7 @@
     <a-scene background="color: #A8F3FF" id="AframeScene">
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="queriertest" querier_json="url: ./json_data/dlumbrer_repos.json;"></a-entity>
+        <a-entity id="queriertest" querier_json="url: ./dlumbrer_repos.json;"></a-entity>
 
         <a-entity layout="type: box; columns: 3; margin: 30; align: center">
             <a-entity>
@@ -43,4 +45,3 @@
     </a-scene>
 
 </body>
-</>
