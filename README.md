@@ -1,9 +1,11 @@
 # Aframe-visdata-components
 
-Components for A-frame that allows to make visualization from different datasources.
+[![Version](http://img.shields.io/npm/v/aframe-visdata-component.svg?style=flat-square)](https://npmjs.org/package/aframe-visdata-component)
+[![License](http://img.shields.io/npm/l/aframe-visdata-component.svg?style=flat-square)](https://npmjs.org/package/aframe-visdata-component)
 
-![example](https://i.imgur.com/COMKAbj.png)
+A Data visualization components for A-Frame.
 
+For [A-Frame](https://aframe.io).
 
 ## Usage
 
@@ -20,7 +22,7 @@ Install and use by directly including the [browser files](dist):
     <title>A-Frame Visdata components</title>
     <meta name="description" content="Bubble example for A-Charts component." />
     <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
-    <script src="https://glcdn.githack.com/barataria/aframe-visdata-components/raw/master/dist/aframe-visdata-components.js"></script>
+    <script src="https://unpkg.com/aframe-visdata-component/dist/aframe-visdata-component.min.js"></script>
 </head>
 
 <body>

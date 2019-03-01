@@ -6,10 +6,11 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('interaction-mapper', {
+AFRAME.registerComponent('vismapper', {
     schema: {
-        input: { type: 'string' },
-        output: { type: 'string' }
+        width: { type: 'string' },
+        depth: { type: 'string' },
+        height: { type: 'string' }
     },
 
     /**
@@ -24,9 +25,6 @@ AFRAME.registerComponent('interaction-mapper', {
         let data = this.data;
         let el = this.el;
 
-        if (data.input && data.output) {
-            mapEvents(data, el);
-        }
     },
 
     /**
@@ -41,15 +39,15 @@ AFRAME.registerComponent('interaction-mapper', {
         /**
          * Update geometry component
          */
-        // If entry it means that the properties changed
-        if (data !== oldData) {
-            if (data.input !== oldData.input || data.output !== oldData.output) {
-                console.log("Change event because from has changed")
-                // Remove the event of the old interaction
-                el.removeEventListener(oldData.input, function (e) { })
-                // Listen and map the new event
-                mapEvents(data, el);
+        if (data.dataToShow) {
+            if (el.components.geometry.data.primitive === "box") {
+                el.components.geometry.data.height = (data.dataToShow[data.height] / 100)
+                el.components.geometry.data.width = data.dataToShow[data.width] || 2
+                el.components.geometry.data.depth = data.dataToShow[data.depth] || 2
+                let oldPos = el.getAttribute("position")
+                el.setAttribute("position", {x: oldPos.x, y: data.dataToShow[data.height] / 200, z: oldPos.z})
             }
+            el.components.geometry.update(el.components.geometry.data)
         }
     },
     /**
@@ -76,10 +74,3 @@ AFRAME.registerComponent('interaction-mapper', {
     play: function () { },
 
 })
-
-let mapEvents = (data, el) => {
-    el.addEventListener(data.input, function (e) {
-        // Dispatch/Trigger/Fire the event
-        el.emit(data.output, e, false);
-    });
-}

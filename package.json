@@ -1,50 +1,74 @@
 {
   "name": "aframe-visdata-components",
-  "version": "0.0.1",
-  "description": "*[Back to the main page](../README.md)*",
+  "version": "1.0.0",
+  "description": "A Data visualization component for A-Frame.",
   "main": "index.js",
+  "unpkg": "dist/aframe-visdata-components.min.js",
   "scripts": {
-    "dev": "webpack --mode development",
-    "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --mode development --content-base dist/",
-    "clean": "rm -r dist/*",
-    "cleanbuild": "rm -r dist/* && webpack --mode production"
+    "build": "webpack index.js dist/aframe-visdata-components.js",
+    "dev": "budo index.js:dist/aframe-visdata-components.min.js --port 7000 --live --open",
+    "dist": "npm run build && uglifyjs dist/aframe-visdata-components.js > dist/aframe-visdata-components.min.js",
+    "lint": "semistandard -v | snazzy",
+    "prepublish": "npm run dist",
+    "ghpages": "ghpages",
+    "start": "npm run dev",
+    "test": "karma start ./tests/karma.conf.js",
+    "test:firefox": "karma start ./tests/karma.conf.js --browsers Firefox",
+    "test:chrome": "karma start ./tests/karma.conf.js --browsers Chrome"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/barataria/aframe-visdata-components"
+    "url": "git+https://github.com/dlumbrer/aframe-visdata-components.git"
   },
   "keywords": [
     "aframe",
     "aframe-component",
     "aframe-vr",
     "vr",
-    "mozvr",
     "webvr",
-    "visdata",
-    "city"
+    "visdata"
   ],
-  "author": {
-    "name": "David Moreno <dmorenolumb@gmail.com>",
-    "url": "https://dlumbrer.github.io"
+  "author": "David Moreno <dmorenolumb@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dlumbrer/aframe-visdata-components/issues"
   },
-  "license": "ISC",
+  "homepage": "https://github.com/dlumbrer/aframe-visdata-components#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-preset-es2015": "^6.24.1",
-    "file-loader": "^1.1.11",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.4"
+    "aframe": "*",
+    "browserify": "^13.0.0",
+    "budo": "^8.2.2",
+    "chai": "^3.4.1",
+    "chai-shallow-deep-equal": "^1.3.0",
+    "ghpages": "^0.0.8",
+    "karma": "^0.13.15",
+    "karma-browserify": "^4.4.2",
+    "karma-chai-shallow-deep-equal": "0.0.4",
+    "karma-chrome-launcher": "2.0.0",
+    "karma-env-preprocessor": "^0.1.1",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-mocha": "^0.2.1",
+    "karma-mocha-reporter": "^1.1.3",
+    "karma-sinon-chai": "^1.1.0",
+    "mocha": "^2.3.4",
+    "randomcolor": "^0.4.4",
+    "semistandard": "^8.0.0",
+    "shelljs": "^0.7.0",
+    "sinon": "^1.17.5",
+    "sinon-chai": "^2.8.0",
+    "shx": "^0.1.1",
+    "snazzy": "^4.0.0",
+    "uglify-es": "github:mishoo/UglifyJS2#harmony",
+    "webpack": "^2.7.0"
   },
-  "dependencies": {
-    "aframe": "^0.8.2",
-    "aframe-layout-component": "^5.3.0",
-    "aframe-super-keyboard": "^2.0.2"
+  "semistandard": {
+    "globals": [
+      "AFRAME",
+      "THREE"
+    ],
+    "ignore": [
+      "examples/build.js",
+      "dist/**"
+    ]
   }
 }
