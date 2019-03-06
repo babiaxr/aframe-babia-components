@@ -99,13 +99,21 @@ function generateDebugPanel(data, el, dataToShow) {
     entity.setAttribute('width', HEIGHT_PLANE_DEBUG);
     entity.setAttribute('height', WIDTH_PLANE_DEBUG);
     let parentPos = el.getAttribute("position")
-    let parentWidth = 0; 
+    let parentWidth = 0;
     let parentHeight = 0;
     if (el.getAttribute("geometry")) {
-        parentWidth = el.getAttribute("geometry").width
-        parentHeight = el.getAttribute("geometry").height
+        if (el.components.geometry.data.primitive === "box") {
+            parentWidth = el.getAttribute("geometry").width/2
+            parentHeight = el.getAttribute("geometry").height/2
+        } else if (el.components.geometry.data.primitive === "sphere") {
+            parentWidth = el.getAttribute("geometry").radius
+        } else {
+            parentWidth = 0
+            parentHeight = 0
+        }
+        
     }
-    entity.setAttribute('position', { x: parentPos.x + (parentWidth * 1 / 2) + WIDTH_PLANE_DEBUG / 2, y: 0 - ( parentHeight * 1 / 2) + HEIGHT_PLANE_DEBUG / 2, z: parentPos.z });
+    entity.setAttribute('position', { x: parentPos.x + parentWidth + WIDTH_PLANE_DEBUG / 2, y: 0 - parentHeight + HEIGHT_PLANE_DEBUG / 2, z: parentPos.z });
 
     let textEntity = document.createElement('a-text');
     textEntity.setAttribute('value', JSON.stringify(dataToShow));
