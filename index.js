@@ -4,4 +4,5 @@ require('./vismapper')
 require('./visdata')
 require('./interaction-mapper')
 require('./debug_data')
+require('./chartdata')
 
