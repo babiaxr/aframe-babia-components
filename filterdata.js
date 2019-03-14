@@ -26,8 +26,8 @@ AFRAME.registerComponent('filterdata', {
     let el = this.el;
 
     let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('dataEntity')) {
-      let dataFromQuerier = JSON.parse(querierElement.getAttribute('dataEntity'));
+    if (querierElement.getAttribute('baratariaData')) {
+      let dataFromQuerier = JSON.parse(querierElement.getAttribute('baratariaData'));
       // Get if key or filter
       if (!dataFromQuerier[data.filter] && !isNaN(parseInt(data.filter))) {
         saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.filter)]])
@@ -105,5 +105,5 @@ AFRAME.registerComponent('filterdata', {
 
 let saveEntityData = (data, el, dataToSave) => {
   data.dataRetrieved = dataToSave
-  el.setAttribute("dataEntity", JSON.stringify(dataToSave))
+  el.setAttribute("baratariaData", JSON.stringify(dataToSave))
 }

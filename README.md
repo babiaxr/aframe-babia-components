@@ -80,7 +80,7 @@ The installation contains the following components:
 
 Component that will retrieve data from a JSON input that can be defined as an url or directly embedded.
 
-This component will put the data retrieved into the `dataEntity` attribute of the entity.
+This component will put the data retrieved into the `baratariaData` attribute of the entity.
 
 #### API
 
@@ -94,7 +94,7 @@ This component will put the data retrieved into the `dataEntity` attribute of th
 
 Component that will retrieve data related to the repositories from an user using the GitHub API. It can be defined the username in order to get info about all the repositories or also it can be defined an array of repos in order to analyse just them (instead of all).
 
-This component will put the data retrieved into the `dataEntity` attribute of the entity.
+This component will put the data retrieved into the `baratariaData` attribute of the entity.
 
 
 #### API
@@ -109,7 +109,7 @@ This component will put the data retrieved into the `dataEntity` attribute of th
 
 This component must be used with one of the `querier` components. This component will select a part of the data retrieved (by a key/index) in order to represent just that part of the data. It is neccesary to select the key of the dataset returned from the querier.
 
-This component will put the data selected into the `dataEntity` attribute of the entity.
+This component will put the data selected into the `baratariaData` attribute of the entity.
 
 #### API
 
@@ -137,7 +137,7 @@ This component must be in the same entity than visdata.
 
 ### debug_data component
 
-This component force the entity to hear an event, when this event occurs, a debug plane with the data of the `dataEntity` entity attribute will appear in the position (or close) of the entity that it belongs.
+This component force the entity to hear an event, when this event occurs, a debug plane with the data of the `baratariaData` entity attribute will appear in the position (or close) of the entity that it belongs.
 
 #### API
 
