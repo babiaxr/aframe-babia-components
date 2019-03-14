@@ -22,17 +22,17 @@
 
         <a-entity layout="type: box; columns: 3; margin: 30; align: center">
             <a-entity>
-                <a-entity geometry="primitive: sphere;" material="color:navy;" visdata='from: queriertest; index: kbn_searchtables'
+                <a-entity geometry="primitive: sphere;" material="color:navy;" filterdata='from: queriertest; filter: kbn_searchtables'
                 interaction-mapper='input: mouseenter; output: debugevent'
                 debug_data='inputEvent: debugevent' vismapper="height: open_issues; radius: size"></a-entity>
             </a-entity>
             <a-entity>
-                <a-entity geometry="primitive: sphere;" material="color:red;" visdata='from: queriertest; index: kbn_dotplot'
+                <a-entity geometry="primitive: sphere;" material="color:red;" filterdata='from: queriertest; filter: kbn_dotplot'
                     vismapper="height: open_issues; radius: size"></a-entity>
             </a-entity>
             <a-entity>
 
-                <a-entity geometry="primitive: sphere;" material="color:green;" visdata='from: queriertest; index: kbn_network'
+                <a-entity geometry="primitive: sphere;" material="color:green;" filterdata='from: queriertest; filter: kbn_network'
                     vismapper="height: open_issues; radius: size"></a-entity>
             </a-entity>
         </a-entity>

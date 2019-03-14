@@ -19,11 +19,11 @@
 
         <a-entity id="queriertest" querier_github="user: dlumbrer; repos: kbn_network, VBoard, kbn_searchtables"></a-entity>
 
-        <a-entity geometry="primitive: box;" material="color:navy;" position="0 0 0" visdata='from: queriertest; index: kbn_network'
+        <a-entity geometry="primitive: box;" material="color:navy;" position="0 0 0" filterdata='from: queriertest; filter: kbn_network'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
-        <a-entity geometry="primitive: box;" material="color:red;" position="25 0 0" visdata='from: queriertest; index: VBoard'
+        <a-entity geometry="primitive: box;" material="color:red;" position="25 0 0" filterdata='from: queriertest; filter: VBoard'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
-        <a-entity geometry="primitive: box;" material="color:green;" position="-25 0 0" visdata='from: queriertest; index: kbn_searchtables'
+        <a-entity geometry="primitive: box;" material="color:green;" position="-25 0 0" filterdata='from: queriertest; filter: kbn_searchtables'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
 
 

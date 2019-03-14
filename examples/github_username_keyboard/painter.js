@@ -80,7 +80,7 @@ window.onload = () => {
         let entity = document.createElement('a-entity');
         entity.setAttribute('geometry', 'primitive: box');
         entity.setAttribute('material', 'color: ' + colors[index]);
-        entity.setAttribute('visdata', 'from: queriertest; index:' + index);
+        entity.setAttribute('filterdata', 'from: queriertest; index:' + index);
         entity.setAttribute('vismapper', "width: open_issues; depth: open_issues; height: size");
         parent.appendChild(entity)
         return parent;

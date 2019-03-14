@@ -34,11 +34,11 @@ Install and use by directly including the [browser files](dist):
 
         <a-entity id="queriertest" querier_github="user: dlumbrer; repos: kbn_network, VBoard, kbn_searchtables"></a-entity>
 
-        <a-entity geometry="primitive: box;" material="color:navy;" position="0 0 0" visdata='from: queriertest; index: kbn_network'
+        <a-entity geometry="primitive: box;" material="color:navy;" position="0 0 0" filterdata='from: queriertest; filter: kbn_network'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
-        <a-entity geometry="primitive: box;" material="color:red;" position="50 0 0" visdata='from: queriertest; index: VBoard'
+        <a-entity geometry="primitive: box;" material="color:red;" position="50 0 0" filterdata='from: queriertest; filter: VBoard'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
-        <a-entity geometry="primitive: box;" material="color:green;" position="-50 0 0" visdata='from: queriertest; index: kbn_searchtables'
+        <a-entity geometry="primitive: box;" material="color:green;" position="-50 0 0" filterdata='from: queriertest; filter: kbn_searchtables'
             vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
 
 
@@ -288,18 +288,18 @@ The dataset returned from the parsing of the `querier` component has this model:
 
         <a-entity layout="type: box; columns: 3; margin: 30; align: center">
             <a-entity>
-                <a-entity geometry="primitive: box;" material="color:navy;" visdata='from: queriertest; index: kbn_searchtables'
+                <a-entity geometry="primitive: box;" material="color:navy;" filterdata='from: queriertest; filter: kbn_searchtables'
                     vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
                     debug_data='inputEvent: debugevent'></a-entity>
             </a-entity>
             <a-entity>
-                <a-entity geometry="primitive: box;" material="color:red;" visdata='from: queriertest; index: kbn_dotplot'
+                <a-entity geometry="primitive: box;" material="color:red;" filterdata='from: queriertest; filter: kbn_dotplot'
                     vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
                     debug_data='inputEvent: debugevent'></a-entity>
             </a-entity>
             <a-entity>
 
-                <a-entity geometry="primitive: box;" material="color:green;" visdata='from: queriertest; index: kbn_network'
+                <a-entity geometry="primitive: box;" material="color:green;" filterdata='from: queriertest; filter: kbn_network'
                     vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
                     debug_data='inputEvent: debugevent'></a-entity>
             </a-entity>

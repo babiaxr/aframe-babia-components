@@ -104,18 +104,18 @@
 
     <a-entity layout="type: box; columns: 3; margin: 30; align: center">
       <a-entity>
-        <a-entity geometry="primitive: box;" material="color:navy;" visdata='from: queriertest; index: kbn_searchtables'
+        <a-entity geometry="primitive: box;" material="color:navy;" filterdata='from: queriertest; filter: kbn_searchtables'
           vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
           debug_data='inputEvent: debugevent'></a-entity>
       </a-entity>
       <a-entity>
-        <a-entity geometry="primitive: box;" material="color:red;" visdata='from: queriertest; index: kbn_dotplot'
+        <a-entity geometry="primitive: box;" material="color:red;" filterdata='from: queriertest; filter: kbn_dotplot'
           vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
           debug_data='inputEvent: debugevent'></a-entity>
       </a-entity>
       <a-entity>
 
-        <a-entity geometry="primitive: box;" material="color:green;" visdata='from: queriertest; index: kbn_network'
+        <a-entity geometry="primitive: box;" material="color:green;" filterdata='from: queriertest; filter: kbn_network'
           vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
           debug_data='inputEvent: debugevent'></a-entity>
       </a-entity>

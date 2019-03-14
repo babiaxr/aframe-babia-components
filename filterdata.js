@@ -6,11 +6,11 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('visdata', {
+AFRAME.registerComponent('filterdata', {
   dependencies: ['querier', 'vismapper'],
   schema: {
     from: { type: 'string' },
-    index: { type: 'string' }
+    filter: { type: 'string' }
   },
 
   /**
@@ -28,22 +28,22 @@ AFRAME.registerComponent('visdata', {
     let querierElement = document.getElementById(data.from)
     if (querierElement.getAttribute('dataEntity')) {
       let dataFromQuerier = JSON.parse(querierElement.getAttribute('dataEntity'));
-      // Get if key or index
-      if (!dataFromQuerier[data.index] && !isNaN(parseInt(data.index))) {
-        saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.index)]])
+      // Get if key or filter
+      if (!dataFromQuerier[data.filter] && !isNaN(parseInt(data.filter))) {
+        saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.filter)]])
       } else {
-        saveEntityData(data, el, dataFromQuerier[data.index])
+        saveEntityData(data, el, dataFromQuerier[data.filter])
       }
 
     } else {
-      // Get if key or index
+      // Get if key or filter
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        if (!e.detail[data.index] && !isNaN(parseInt(data.index))) {
-          saveEntityData(data, el, e.detail[Object.keys(e.detail)[parseInt(data.index)]])
-          el.setAttribute("visdata", "dataRetrieved", data.dataRetrieved)
+        if (!e.detail[data.filter] && !isNaN(parseInt(data.filter))) {
+          saveEntityData(data, el, e.detail[Object.keys(e.detail)[parseInt(data.filter)]])
+          el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
         } else {
-          saveEntityData(data, el, e.detail[data.index])
-          el.setAttribute("visdata", "dataRetrieved", data.dataRetrieved)
+          saveEntityData(data, el, e.detail[data.filter])
+          el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
         }
       })
     }
@@ -70,7 +70,7 @@ AFRAME.registerComponent('visdata', {
         document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
         // Listen the event when querier ready
         document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-          saveEntityData(data, el, e.detail[data.index])
+          saveEntityData(data, el, e.detail[data.filter])
           el.components.vismapper.data.dataToShow = data.dataRetrieved;
           el.components.vismapper.update(el.components.vismapper.data)
         });
