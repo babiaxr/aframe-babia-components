@@ -34,8 +34,8 @@ AFRAME.registerComponent('debug_data', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
         /**
          * Update geometry component

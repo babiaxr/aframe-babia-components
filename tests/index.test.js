@@ -1,11 +1,11 @@
 /* global assert, setup, suite, test */
 require('aframe');
 require('../index.js');
-var entityFactory = require('./helpers').entityFactory;
+let entityFactory = require('./helpers').entityFactory;
 
 suite('visdata component', function () {
-  var component;
-  var el;
+  let component;
+  let el;
 
   setup(function (done) {
     el = entityFactory();

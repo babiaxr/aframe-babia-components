@@ -4,11 +4,11 @@
  * __init.test.js is run before every test case.
  */
 window.debug = true;
-var AScene = require('aframe').AScene
+let AScene = require('aframe').AScene
 
 navigator.getVRDisplays = function () {
-  var resolvePromise = Promise.resolve();
-  var mockVRDisplay = {
+  let resolvePromise = Promise.resolve();
+  let mockVRDisplay = {
     requestPresent: resolvePromise,
     exitPresent: resolvePromise,
     getPose: function () { return {orientation: null, position: null}; },
@@ -27,9 +27,9 @@ setup(function () {
 
 teardown(function () {
   // Clean up any attached elements.
-  var attachedEls = ['canvas', 'a-assets', 'a-scene'];
-  var els = document.querySelectorAll(attachedEls.join(','));
-  for (var i = 0; i < els.length; i++) {
+  let attachedEls = ['canvas', 'a-assets', 'a-scene'];
+  let els = document.querySelectorAll(attachedEls.join(','));
+  for (let i = 0; i < els.length; i++) {
     els[i].parentNode.removeChild(els[i]);
   }
   this.sinon.restore();

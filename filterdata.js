@@ -55,8 +55,8 @@ AFRAME.registerComponent('filterdata', {
   */
 
   update: function (oldData) {
-    var data = this.data;
-    var el = this.el;
+    let data = this.data;
+    let el = this.el;
 
     // If entry it means that the data changed
     if (data !== oldData) {

@@ -38,8 +38,8 @@ AFRAME.registerComponent('querier_json', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
     },
     /**

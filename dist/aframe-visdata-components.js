@@ -1,6 +1,6 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
-/******/ 	var installedModules = {};
+/******/ 	let installedModules = {};
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -10,7 +10,7 @@
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
+/******/ 		let module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
@@ -49,7 +49,7 @@
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
+/******/ 		let getter = module && module.__esModule ?
 /******/ 			function getDefault() { return module['default']; } :
 /******/ 			function getModuleExports() { return module; };
 /******/ 		__webpack_require__.d(getter, 'a', getter);
@@ -106,8 +106,8 @@ AFRAME.registerComponent('debug_data', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
         /**
          * Update geometry component
@@ -259,8 +259,8 @@ AFRAME.registerComponent('filterdata', {
   */
 
   update: function (oldData) {
-    var data = this.data;
-    var el = this.el;
+    let data = this.data;
+    let el = this.el;
 
     // If entry it means that the data changed
     if (data !== oldData) {
@@ -353,8 +353,8 @@ AFRAME.registerComponent('interaction-mapper', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
         /**
          * Update geometry component
@@ -439,8 +439,8 @@ AFRAME.registerComponent('piechart', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
         /**
          * Update or create chart component
@@ -641,8 +641,8 @@ AFRAME.registerComponent('querier_github', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
     },
     /**
@@ -805,8 +805,8 @@ AFRAME.registerComponent('querier_json', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
     },
     /**
@@ -919,8 +919,8 @@ AFRAME.registerComponent('simplebarchart', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
         /**
          * Update or create chart component
@@ -1115,8 +1115,8 @@ AFRAME.registerComponent('vismapper', {
     */
 
     update: function (oldData) {
-        var data = this.data;
-        var el = this.el;
+        let data = this.data;
+        let el = this.el;
 
         /**
          * Update geometry component

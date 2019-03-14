@@ -7,9 +7,9 @@
  * @returns {object} An `<a-entity>` element.
  */
 module.exports.entityFactory = function (opts) {
-  var scene = document.createElement('a-scene');
-  var assets = document.createElement('a-assets');
-  var entity = document.createElement('a-entity');
+  let scene = document.createElement('a-scene');
+  let assets = document.createElement('a-assets');
+  let entity = document.createElement('a-entity');
   scene.appendChild(assets);
   scene.appendChild(entity);
 
@@ -34,13 +34,13 @@ module.exports.entityFactory = function (opts) {
  * @returns {object} An attached `<a-mixin>` element.
  */
 module.exports.mixinFactory = function (id, obj, scene) {
-  var mixinEl = document.createElement('a-mixin');
+  let mixinEl = document.createElement('a-mixin');
   mixinEl.setAttribute('id', id);
   Object.keys(obj).forEach(function (componentName) {
     mixinEl.setAttribute(componentName, obj[componentName]);
   });
 
-  var assetsEl = scene ? scene.querySelector('a-assets') : document.querySelector('a-assets');
+  let assetsEl = scene ? scene.querySelector('a-assets') : document.querySelector('a-assets');
   assetsEl.appendChild(mixinEl);
 
   return mixinEl;
