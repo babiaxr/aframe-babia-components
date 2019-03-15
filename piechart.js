@@ -68,32 +68,34 @@ AFRAME.registerComponent('piechart', {
 })
 
 let generatePie = (data, element) => {
-    const dataToPrint = JSON.parse(data.data)
+    if (data.data) {
+        const dataToPrint = JSON.parse(data.data)
 
-    // Change size to degrees
-    let totalSize = 0
-    for (let slice of dataToPrint) {
-        totalSize += slice['size'];
-    }
-
-    let degreeStart = 0;
-    let degreeEnd = 0;
-
-    let colorid = 0
-    for (let slice of dataToPrint) {
-        //Calculate degrees
-        degreeEnd = 360 * slice['size'] / totalSize;
-        let sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid);
-        //Move degree offset
-        degreeStart += degreeEnd;
-
-        //Prepare legend
-        if (data.legend){
-            showLegend(sliceEntity, slice)
+        // Change size to degrees
+        let totalSize = 0
+        for (let slice of dataToPrint) {
+            totalSize += slice['size'];
         }
-        
-        element.appendChild(sliceEntity);
-        colorid++
+
+        let degreeStart = 0;
+        let degreeEnd = 0;
+
+        let colorid = 0
+        for (let slice of dataToPrint) {
+            //Calculate degrees
+            degreeEnd = 360 * slice['size'] / totalSize;
+            let sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid);
+            //Move degree offset
+            degreeStart += degreeEnd;
+
+            //Prepare legend
+            if (data.legend) {
+                showLegend(sliceEntity, slice)
+            }
+
+            element.appendChild(sliceEntity);
+            colorid++
+        }
     }
 }
 

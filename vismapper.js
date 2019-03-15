@@ -58,8 +58,11 @@ AFRAME.registerComponent('vismapper', {
                     el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
                 }
             } else if (el.components.simplebarchart) {
-                let list = generate2Dlist(data, dataJSON)
+                let list = generate2Dlist(data, dataJSON, "x_axis")
                 el.setAttribute("simplebarchart", "data", JSON.stringify(list))
+            }else if (el.components.piechart) {
+                let list = generate2Dlist(data, dataJSON, "slice")
+                el.setAttribute("piechart", "data", JSON.stringify(list))
             }
         }
     },
@@ -88,11 +91,11 @@ AFRAME.registerComponent('vismapper', {
 
 })
 
-let generate2Dlist = (data, dataToProcess) => {
+let generate2Dlist = (data, dataToProcess, key_type) => {
     let list = []
     Object.values(dataToProcess).forEach(value => {
         let item = {
-            "key": value[data.x_axis],
+            "key": value[data[key_type]],
             "size": value[data.height]
         }
         list.push(item)
