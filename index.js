@@ -6,4 +6,5 @@ require('./interaction-mapper')
 require('./debug_data')
 require('./piechart')
 require('./simplebarchart')
+require('./geo3dbarchart')
 
