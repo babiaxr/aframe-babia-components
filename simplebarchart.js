@@ -68,29 +68,25 @@ AFRAME.registerComponent('simplebarchart', {
 })
 
 let generateBarChart = (data, element) => {
-    const dataToPrint = JSON.parse(data.data)
+    if (data.data) {
+        const dataToPrint = JSON.parse(data.data)
 
-    // Change size to degrees
-    let totalSize = 0
-    for (let bar of dataToPrint) {
-        totalSize += bar['size'];
-    }
+        let colorid = 0
+        let stepX = 0
 
-    let colorid = 0
-    let stepX = 0
-    
-    for (let bar of dataToPrint) {
-        //Calculate degrees
-        let barEntity = generateBar(bar['size'], widthBars, colorid, stepX);
-        stepX += widthBars + widthBars/4
+        for (let bar of dataToPrint) {
+            //Calculate stepX
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX);
+            stepX += widthBars + widthBars / 4
 
-        //Prepare legend
-        if (data.legend){
-            showLegend(barEntity, bar)
+            //Prepare legend
+            if (data.legend) {
+                showLegend(barEntity, bar)
+            }
+
+            element.appendChild(barEntity);
+            colorid++
         }
-        
-        element.appendChild(barEntity);
-        colorid++
     }
 }
 
@@ -103,7 +99,7 @@ function generateBar(size, width, color, position) {
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     entity.setAttribute('height', size);
-    entity.setAttribute('position', {x: position, y: size/2, z: 0});
+    entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
     return entity;
 }
 
@@ -115,7 +111,7 @@ function generateLegend(bar) {
         width = text.length / 8;
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bar['size']/2 + 1, z: widthBars + 0.1});
+    entity.setAttribute('position', { x: 0, y: bar['size'] / 2 + 1, z: widthBars + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);

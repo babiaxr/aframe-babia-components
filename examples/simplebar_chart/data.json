@@ -1,83 +1,58 @@
 {
   "0": {
-    "id": 62662964,
-    "node_id": "MDEwOlJlcG9zaXRvcnk2MjY2Mjk2NA==",
     "name": "kbn_network",
-    "full_name": "dlumbrer/kbn_network",
-    "private": false,
-    "created_at": "2016-07-05T19:16:45Z",
-    "updated_at": "2019-02-20T14:22:24Z",
-    "pushed_at": "2019-01-06T19:35:06Z",
-    "size": 10608,
-    "stargazers_count": 232,
-    "watchers_count": 232,
-    "language": "JavaScript",
-    "has_issues": true,
-    "has_projects": true,
-    "has_downloads": true,
-    "has_wiki": true,
-    "has_pages": true,
-    "forks_count": 62,
-    "mirror_url": null,
-    "archived": false,
-    "open_issues_count": 14,
-    "forks": 62,
-    "open_issues": 14,
-    "watchers": 232
+    "size": 10
   },
   "1": {
-    "id": 100473664,
-    "node_id": "MDEwOlJlcG9zaXRvcnkxMDA0NzM2NjQ=",
-    "name": "kbn_dotplot",
-    "full_name": "dlumbrer/kbn_dotplot",
-    "private": false,
-    "created_at": "2017-08-16T09:41:01Z",
-    "updated_at": "2019-02-19T08:55:38Z",
-    "pushed_at": "2018-11-16T11:44:47Z",
-    "homepage": null,
-    "size": 28044,
-    "stargazers_count": 14,
-    "watchers_count": 14,
-    "language": "JavaScript",
-    "has_issues": true,
-    "has_projects": true,
-    "has_downloads": true,
-    "has_wiki": true,
-    "has_pages": false,
-    "forks_count": 9,
-    "mirror_url": null,
-    "archived": false,
-    "open_issues_count": 3,
-    "forks": 9,
-    "open_issues": 3,
-    "watchers": 14
+    "name": "Maria",
+    "size": 5
   },
   "2": {
-    "id": 92531387,
-    "node_id": "MDEwOlJlcG9zaXRvcnk5MjUzMTM4Nw==",
-    "name": "kbn_searchtables",
-    "full_name": "dlumbrer/kbn_searchtables",
-    "private": false,
-    "fork": false,
-    "created_at": "2017-05-26T16:59:04Z",
-    "updated_at": "2019-02-13T23:05:10Z",
-    "pushed_at": "2019-01-14T15:34:58Z",
-    "homepage": "",
-    "size": 60186,
-    "stargazers_count": 41,
-    "watchers_count": 41,
-    "language": "JavaScript",
-    "has_issues": true,
-    "has_projects": true,
-    "has_downloads": true,
-    "has_wiki": true,
-    "has_pages": false,
-    "forks_count": 13,
-    "mirror_url": null,
-    "archived": false,
-    "open_issues_count": 10,
-    "forks": 13,
-    "open_issues": 10,
-    "watchers": 41
+    "name": "Dave",
+    "size": 9
+  },
+  "3": {
+    "name": "Jhon",
+    "size": 12
+  },
+  "4": {
+    "name": "Sara",
+    "size": 16
+  },
+  "5": {
+    "name": "Lemar",
+    "size": 2
+  },
+  "6": {
+    "name": "Dawn",
+    "size": 1
+  },
+  "7": {
+    "name": "Jesus",
+    "size": 8
+  },
+  "8": {
+    "name": "Bitergia",
+    "size": 3
+  },
+  "9": {
+    "name": "URJC",
+    "size": 6
+  },
+  "10": {
+    "name": "Alice",
+    "size": 22
+  },
+  "20": {
+    "name": "Pete",
+    "size": 2
+  },
+  "40": {
+    "name": "Seth",
+    "size": 6
+  },
+  "80": {
+    "name": "Martin",
+    "size": 9
   }
 }

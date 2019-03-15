@@ -3,6 +3,8 @@ if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+let MAX_SIZE_BAR = 10
+
 /**
 * A-Charts component for A-Frame.
 */
@@ -41,20 +43,23 @@ AFRAME.registerComponent('vismapper', {
         /**
          * Update geometry component
          */
-        if (data.dataToShow) {
-            data.dataToShow = JSON.parse(data.dataToShow)
-            if (el.components.geometry.data.primitive === "box") {
-                el.setAttribute("geometry", "height", (data.dataToShow[data.height] / 100))
-                el.setAttribute("geometry", "width", data.dataToShow[data.width] || 2)
-                el.setAttribute("geometry", "depth", data.dataToShow[data.depth] || 2)
-                let oldPos = el.getAttribute("position")
-                el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height] / 200, z: oldPos.z })
-            } else if (el.components.geometry.data.primitive === "sphere") {
-                el.setAttribute("geometry", "radius", (data.dataToShow[data.radius] / 10000) || 2)
-                let oldPos = el.getAttribute("position")
-                el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height], z: oldPos.z })
+        if (data.dataToShow && data.dataToShow != oldData.dataToShow) {
+            let dataJSON = JSON.parse(data.dataToShow)
+            if (el.components.geometry) {
+                if (el.components.geometry.data.primitive === "box") {
+                    el.setAttribute("geometry", "height", (dataJSON[data.height] / 100))
+                    el.setAttribute("geometry", "width", dataJSON[data.width] || 2)
+                    el.setAttribute("geometry", "depth", dataJSON[data.depth] || 2)
+                    let oldPos = el.getAttribute("position")
+                    el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height] / 200, z: oldPos.z })
+                } else if (el.components.geometry.data.primitive === "sphere") {
+                    el.setAttribute("geometry", "radius", (dataJSON[data.radius] / 10000) || 2)
+                    let oldPos = el.getAttribute("position")
+                    el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
+                }
             } else if (el.components.simplebarchart) {
-                let list = generate2Dlist()
+                let list = generate2Dlist(data, dataJSON)
+                el.setAttribute("simplebarchart", "data", JSON.stringify(list))
             }
         }
     },
@@ -83,6 +88,16 @@ AFRAME.registerComponent('vismapper', {
 
 })
 
-let generate2Dlist = (data) => {
-    return data
+let generate2Dlist = (data, dataToProcess) => {
+    let list = []
+    Object.values(dataToProcess).forEach(value => {
+        let item = {
+            "key": value[data.x_axis],
+            "size": value[data.height]
+        }
+        list.push(item)
+    });
+    return list
 }
+
+function normalize(val, min, max) { return (val - min) / (max - min); }
