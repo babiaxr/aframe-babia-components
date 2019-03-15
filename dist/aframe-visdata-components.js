@@ -1,6 +1,6 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
-/******/ 	let installedModules = {};
+/******/ 	var installedModules = {};
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -10,7 +10,7 @@
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		let module = installedModules[moduleId] = {
+/******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
@@ -49,7 +49,7 @@
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
-/******/ 		let getter = module && module.__esModule ?
+/******/ 		var getter = module && module.__esModule ?
 /******/ 			function getDefault() { return module['default']; } :
 /******/ 			function getModuleExports() { return module; };
 /******/ 		__webpack_require__.d(getter, 'a', getter);
@@ -232,21 +232,21 @@ AFRAME.registerComponent('filterdata', {
     let querierElement = document.getElementById(data.from)
     if (querierElement.getAttribute('baratariaData')) {
       let dataFromQuerier = JSON.parse(querierElement.getAttribute('baratariaData'));
-      // Get if key or index
-      if (!dataFromQuerier[data.index] && !isNaN(parseInt(data.index))) {
-        saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.index)]])
+      // Get if key or filter
+      if (!dataFromQuerier[data.filter] && !isNaN(parseInt(data.filter))) {
+        saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.filter)]])
       } else {
-        saveEntityData(data, el, dataFromQuerier[data.index])
+        saveEntityData(data, el, dataFromQuerier[data.filter])
       }
 
     } else {
-      // Get if key or index
+      // Get if key or filter
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        if (!e.detail[data.index] && !isNaN(parseInt(data.index))) {
-          saveEntityData(data, el, e.detail[Object.keys(e.detail)[parseInt(data.index)]])
+        if (!e.detail[data.filter] && !isNaN(parseInt(data.filter))) {
+          saveEntityData(data, el, e.detail[Object.keys(e.detail)[parseInt(data.filter)]])
           el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
         } else {
-          saveEntityData(data, el, e.detail[data.index])
+          saveEntityData(data, el, e.detail[data.filter])
           el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
         }
       })
@@ -274,7 +274,7 @@ AFRAME.registerComponent('filterdata', {
         document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
         // Listen the event when querier ready
         document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-          saveEntityData(data, el, e.detail[data.index])
+          saveEntityData(data, el, e.detail[data.filter])
           el.components.vismapper.data.dataToShow = data.dataRetrieved;
           el.components.vismapper.update(el.components.vismapper.data)
         });
@@ -1092,7 +1092,9 @@ AFRAME.registerComponent('vismapper', {
         width: { type: 'string' },
         depth: { type: 'string' },
         height: { type: 'string' },
-        radius: { type: 'string' }
+        radius: { type: 'string' },
+        // For charts
+        x_axis: { type: 'string' }
     },
 
     /**
@@ -1103,11 +1105,7 @@ AFRAME.registerComponent('vismapper', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -1123,17 +1121,17 @@ AFRAME.registerComponent('vismapper', {
          */
         if (data.dataToShow) {
             if (el.components.geometry.data.primitive === "box") {
-                el.components.geometry.data.height = (data.dataToShow[data.height] / 100)
-                el.components.geometry.data.width = data.dataToShow[data.width] || 2
-                el.components.geometry.data.depth = data.dataToShow[data.depth] || 2
+                el.setAttribute("geometry", "height", (data.dataToShow[data.height] / 100))
+                el.setAttribute("geometry", "width", data.dataToShow[data.width] || 2)
+                el.setAttribute("geometry", "depth", data.dataToShow[data.depth] || 2)
                 let oldPos = el.getAttribute("position")
                 el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height] / 200, z: oldPos.z })
             } else if (el.components.geometry.data.primitive === "sphere") {
-                el.components.geometry.data.radius = (data.dataToShow[data.radius] / 10000) || 2
+                el.setAttribute("geometry", "radius", (data.dataToShow[data.radius] / 10000) || 2)
                 let oldPos = el.getAttribute("position")
                 el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height], z: oldPos.z })
-            }
-            el.components.geometry.update(el.components.geometry.data)
+            } 
+            //el.components.geometry.update(el.components.geometry.data)
         }
     },
     /**

@@ -8,10 +8,15 @@ if (typeof AFRAME === 'undefined') {
 */
 AFRAME.registerComponent('vismapper', {
     schema: {
+        // Data
+        dataToShow: { type: 'string' },
+        // Geo
         width: { type: 'string' },
         depth: { type: 'string' },
         height: { type: 'string' },
-        radius: { type: 'string' }
+        radius: { type: 'string' },
+        // For charts
+        x_axis: { type: 'string' }
     },
 
     /**
@@ -22,11 +27,7 @@ AFRAME.registerComponent('vismapper', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -41,18 +42,20 @@ AFRAME.registerComponent('vismapper', {
          * Update geometry component
          */
         if (data.dataToShow) {
+            data.dataToShow = JSON.parse(data.dataToShow)
             if (el.components.geometry.data.primitive === "box") {
-                el.components.geometry.data.height = (data.dataToShow[data.height] / 100)
-                el.components.geometry.data.width = data.dataToShow[data.width] || 2
-                el.components.geometry.data.depth = data.dataToShow[data.depth] || 2
+                el.setAttribute("geometry", "height", (data.dataToShow[data.height] / 100))
+                el.setAttribute("geometry", "width", data.dataToShow[data.width] || 2)
+                el.setAttribute("geometry", "depth", data.dataToShow[data.depth] || 2)
                 let oldPos = el.getAttribute("position")
                 el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height] / 200, z: oldPos.z })
             } else if (el.components.geometry.data.primitive === "sphere") {
-                el.components.geometry.data.radius = (data.dataToShow[data.radius] / 10000) || 2
+                el.setAttribute("geometry", "radius", (data.dataToShow[data.radius] / 10000) || 2)
                 let oldPos = el.getAttribute("position")
                 el.setAttribute("position", { x: oldPos.x, y: data.dataToShow[data.height], z: oldPos.z })
+            } else if (el.components.simplebarchart) {
+                let list = generate2Dlist()
             }
-            el.components.geometry.update(el.components.geometry.data)
         }
     },
     /**
@@ -79,3 +82,7 @@ AFRAME.registerComponent('vismapper', {
     play: function () { },
 
 })
+
+let generate2Dlist = (data) => {
+    return data
+}

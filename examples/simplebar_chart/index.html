@@ -18,16 +18,10 @@
         <a-entity environment></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
+        <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
 
 
-        <a-entity simplebarchart='data: [
-    {"key": "Pete", "size": 1},
-    {"key": "Maria", "size": 1},
-    {"key": "Dawn", "size": 2},
-    {"key": "David", "size": 1.5},
-    {"key": "Bitergia", "size": 4},
-    {"key": "Kibiter", "size": 6}
-  ]; legend: true' position="0 0 0" rotation="0 0 0"></a-entity>
+        <a-entity simplebarchart='legend: true' filterdata="from: queriertest" vismapper="x_axis: name; height: size" position="0 0 0" rotation="0 0 0"></a-entity>
 
 
         <a-entity movement-controls="fly: true" position="-3 5 20">

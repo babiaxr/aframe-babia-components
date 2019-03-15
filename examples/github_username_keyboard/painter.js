@@ -68,19 +68,20 @@ window.onload = () => {
         let max = Math.max.apply(Math, Object.keys( dataRetrieved ).map(function (o) { return dataRetrieved[o].open_issues; }))
         let city = document.createElement('a-entity');
         city.setAttribute('layout', 'type: box; columns: ' + Object.keys( dataRetrieved ).length / 4 + '; margin: ' + (5 + max / 2) + '; plane: xz; align: center');
-        for (let index = 0; index <= Object.keys( dataRetrieved ).length; index++) {
-            let box = generateBox(index);
+        let keys = Object.keys( dataRetrieved )
+        for (let index = 0; index <= keys.length; index++) {
+            let box = generateBox(keys[index], index);
             city.appendChild(box)
         };
         document.getElementById("AframeScene").appendChild(city)
     }
 
-    function generateBox(index) {
+    function generateBox(index, i) {
         let parent = document.createElement('a-entity');
         let entity = document.createElement('a-entity');
         entity.setAttribute('geometry', 'primitive: box');
-        entity.setAttribute('material', 'color: ' + colors[index]);
-        entity.setAttribute('filterdata', 'from: queriertest; index:' + index);
+        entity.setAttribute('material', 'color: ' + colors[i]);
+        entity.setAttribute('filterdata', 'from: queriertest; filter:' + index);
         entity.setAttribute('vismapper', "width: open_issues; depth: open_issues; height: size");
         parent.appendChild(entity)
         return parent;

@@ -29,22 +29,12 @@ AFRAME.registerComponent('filterdata', {
     if (querierElement.getAttribute('baratariaData')) {
       let dataFromQuerier = JSON.parse(querierElement.getAttribute('baratariaData'));
       // Get if key or filter
-      if (!dataFromQuerier[data.filter] && !isNaN(parseInt(data.filter))) {
-        saveEntityData(data, el, dataFromQuerier[Object.keys(dataFromQuerier)[parseInt(data.filter)]])
-      } else {
-        saveEntityData(data, el, dataFromQuerier[data.filter])
-      }
-
+      saveEntityData(data, el, dataFromQuerier, data.filter)
     } else {
       // Get if key or filter
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        if (!e.detail[data.filter] && !isNaN(parseInt(data.filter))) {
-          saveEntityData(data, el, e.detail[Object.keys(e.detail)[parseInt(data.filter)]])
-          el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
-        } else {
-          saveEntityData(data, el, e.detail[data.filter])
-          el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
-        }
+        saveEntityData(data, el, e.detail, data.filter)
+        el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
       })
     }
   },
@@ -59,22 +49,19 @@ AFRAME.registerComponent('filterdata', {
     let el = this.el;
 
     // If entry it means that the data changed
-    if (data !== oldData) {
-      if (data.dataRetrieved !== oldData.dataRetrieved) {
-        el.components.vismapper.data.dataToShow = data.dataRetrieved;
-        el.components.vismapper.update(el.components.vismapper.data)
-      }
-      if (data.from !== oldData.from) {
-        console.log("Change event because from has changed")
-        // Remove the event of the old querier
-        document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
-        // Listen the event when querier ready
-        document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-          saveEntityData(data, el, e.detail[data.filter])
-          el.components.vismapper.data.dataToShow = data.dataRetrieved;
-          el.components.vismapper.update(el.components.vismapper.data)
-        });
-      }
+    if (data.dataRetrieved !== oldData.dataRetrieved) {
+      el.setAttribute("vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
+    }
+
+    if (data.from !== oldData.from) {
+      console.log("Change event because from has changed")
+      // Remove the event of the old querier
+      document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
+      // Listen the event when querier ready
+      document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
+        saveEntityData(data, el, e.detail[data.filter])
+        el.setAttribute("vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
+      });
     }
 
   },
@@ -103,7 +90,12 @@ AFRAME.registerComponent('filterdata', {
 
 })
 
-let saveEntityData = (data, el, dataToSave) => {
-  data.dataRetrieved = dataToSave
-  el.setAttribute("baratariaData", JSON.stringify(dataToSave))
+let saveEntityData = (data, el, dataToSave, filter) => {
+  if (filter) {
+    data.dataRetrieved = dataToSave[filter]
+    el.setAttribute("baratariaData", JSON.stringify(dataToSave[filter]))
+  } else {
+    data.dataRetrieved = dataToSave
+    el.setAttribute("baratariaData", JSON.stringify(dataToSave))
+  }
 }
