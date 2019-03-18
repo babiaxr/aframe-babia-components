@@ -72,12 +72,44 @@ let generateBarChart = (data, element) => {
         const dataToPrint = JSON.parse(data.data)
 
         let colorid = 0
+        let maxColorId = 0
         let stepX = 0
+        let maxX = 0
+        let keys_used = {}
+        let stepZ = 0
+        let maxZ = 0
+        let z_axis = {}
 
         for (let bar of dataToPrint) {
-            //Calculate stepX
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX);
-            stepX += widthBars + widthBars / 4
+            // Check if used in order to put the bar in the parent row
+            if (keys_used[bar['key']]) {
+                stepX = keys_used[bar['key']].posX
+                colorid = keys_used[bar['key']].colorid
+            } else {
+                maxX += widthBars + widthBars / 4
+                stepX = maxX
+                maxColorId++
+                colorid = maxColorId
+                //Save in used
+                keys_used[bar['key']] = {
+                    "posX": maxX,
+                    "colorid": maxColorId
+                }
+            }
+
+            // Get Z val
+            if (z_axis[bar['key2']]) {
+                stepZ = z_axis[bar['key2']].posZ
+            } else {
+                maxZ -= widthBars + widthBars / 4
+                stepZ = maxZ
+                //Save in used
+                z_axis[bar['key2']] = {
+                    "posZ": maxZ
+                }
+            }
+
+            let barEntity = generateBar(bar['size'], widthBars, colorid, maxX, stepZ);
 
             //Prepare legend
             if (data.legend) {
@@ -85,21 +117,21 @@ let generateBarChart = (data, element) => {
             }
 
             element.appendChild(barEntity);
-            colorid++
+
         }
     }
 }
 
 let widthBars = 1
 
-function generateBar(size, width, color, position) {
+function generateBar(size, width, color, positionX, positionZ) {
     console.log("Generating bar...")
     let entity = document.createElement('a-box');
     entity.setAttribute('color', colors[color]);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     entity.setAttribute('height', size);
-    entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
+    entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
     return entity;
 }
 
