@@ -18,7 +18,8 @@ AFRAME.registerComponent('vismapper', {
         height: { type: 'string' },
         radius: { type: 'string' },
         // For charts
-        x_axis: { type: 'string' }
+        x_axis: { type: 'string' },
+        z_axis: { type: 'string' }
     },
 
     /**
@@ -63,6 +64,9 @@ AFRAME.registerComponent('vismapper', {
             }else if (el.components.piechart) {
                 let list = generate2Dlist(data, dataJSON, "slice")
                 el.setAttribute("piechart", "data", JSON.stringify(list))
+            } else if (el.components.geo3dbarchart) {
+                let list = generate3Dlist(data, dataJSON)
+                el.setAttribute("geo3dbarchart", "data", JSON.stringify(list))
             }
         }
     },
@@ -96,6 +100,19 @@ let generate2Dlist = (data, dataToProcess, key_type) => {
     Object.values(dataToProcess).forEach(value => {
         let item = {
             "key": value[data[key_type]],
+            "size": value[data.height]
+        }
+        list.push(item)
+    });
+    return list
+}
+
+let generate3Dlist = (data, dataToProcess, key_type) => {
+    let list = []
+    Object.values(dataToProcess).forEach(value => {
+        let item = {
+            "key": value[data.x_axis],
+            "key2": value[data.z_axis],
             "size": value[data.height]
         }
         list.push(item)
