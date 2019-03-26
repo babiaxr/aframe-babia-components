@@ -7,4 +7,5 @@ require('./debug_data')
 require('./piechart')
 require('./simplebarchart')
 require('./geo3dbarchart')
+require('./geobubbleschart')
 

@@ -61,12 +61,15 @@ AFRAME.registerComponent('vismapper', {
             } else if (el.components.simplebarchart) {
                 let list = generate2Dlist(data, dataJSON, "x_axis")
                 el.setAttribute("simplebarchart", "data", JSON.stringify(list))
-            }else if (el.components.piechart) {
+            } else if (el.components.piechart) {
                 let list = generate2Dlist(data, dataJSON, "slice")
                 el.setAttribute("piechart", "data", JSON.stringify(list))
             } else if (el.components.geo3dbarchart) {
-                let list = generate3Dlist(data, dataJSON)
+                let list = generate3Dlist(data, dataJSON, "3dbars")
                 el.setAttribute("geo3dbarchart", "data", JSON.stringify(list))
+            } else if (el.components.geobubbleschart) {
+                let list = generate3Dlist(data, dataJSON, "bubbles")
+                el.setAttribute("geobubbleschart", "data", JSON.stringify(list))
             }
         }
     },
@@ -107,16 +110,29 @@ let generate2Dlist = (data, dataToProcess, key_type) => {
     return list
 }
 
-let generate3Dlist = (data, dataToProcess, key_type) => {
+let generate3Dlist = (data, dataToProcess, chart_type) => {
     let list = []
-    Object.values(dataToProcess).forEach(value => {
-        let item = {
-            "key": value[data.x_axis],
-            "key2": value[data.z_axis],
-            "size": value[data.height]
-        }
-        list.push(item)
-    });
+    if (chart_type === "3dbars") {
+
+        Object.values(dataToProcess).forEach(value => {
+            let item = {
+                "key": value[data.x_axis],
+                "key2": value[data.z_axis],
+                "size": value[data.height]
+            }
+            list.push(item)
+        });
+    } else if (chart_type === "bubbles") {
+        Object.values(dataToProcess).forEach(value => {
+            let item = {
+                "key": value[data.x_axis],
+                "key2": value[data.z_axis],
+                "height": value[data.height],
+                "radius": value[data.radius]
+            }
+            list.push(item)
+        });
+    }
     return list
 }
 

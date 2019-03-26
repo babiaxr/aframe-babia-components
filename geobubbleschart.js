@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geo3dbarchart', {
+AFRAME.registerComponent('geobubbleschart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' }
@@ -38,8 +38,8 @@ AFRAME.registerComponent('geo3dbarchart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
-            console.log("Generating barchart...")
-            generateBarChart(data, el)
+            console.log("Generating bubbleschart...")
+            generateBubblesChart(data, el)
         }
     },
     /**
@@ -67,7 +67,7 @@ AFRAME.registerComponent('geo3dbarchart', {
 
 })
 
-let generateBarChart = (data, element) => {
+let generateBubblesChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
 
@@ -80,70 +80,70 @@ let generateBarChart = (data, element) => {
         let maxZ = 0
         let z_axis = {}
 
-        for (let bar of dataToPrint) {
-            // Check if used in order to put the bar in the parent row
-            if (keys_used[bar['key']]) {
-                stepX = keys_used[bar['key']].posX
-                colorid = keys_used[bar['key']].colorid
+        let widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
+
+        for (let bubble of dataToPrint) {
+            // Check if used in order to put the bubble in the parent row
+            if (keys_used[bubble['key']]) {
+                stepX = keys_used[bubble['key']].posX
+                colorid = keys_used[bubble['key']].colorid
             } else {
-                maxX += widthBars + widthBars / 4
+                maxX += widthBubbles + widthBubbles / 4
                 stepX = maxX
                 maxColorId++
                 colorid = maxColorId
                 //Save in used
-                keys_used[bar['key']] = {
+                keys_used[bubble['key']] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
             }
 
             // Get Z val
-            if (z_axis[bar['key2']]) {
-                stepZ = z_axis[bar['key2']].posZ
+            if (z_axis[bubble['key2']]) {
+                stepZ = z_axis[bubble['key2']].posZ
             } else {
-                maxZ -= widthBars + widthBars / 4
+                maxZ -= widthBubbles + widthBubbles / 4
                 stepZ = maxZ
                 //Save in used
-                z_axis[bar['key2']] = {
+                z_axis[bubble['key2']] = {
                     "posZ": maxZ
                 }
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ);
+            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, stepX, stepZ);
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar)
+                showLegend(bubbleEntity, bubble)
             }
 
-            element.appendChild(barEntity);
+            element.appendChild(bubbleEntity);
 
         }
     }
 }
 
-let widthBars = 1
+let widthBubbles = 0
 
-function generateBar(size, width, color, positionX, positionZ) {
-    console.log("Generating bar...")
-    let entity = document.createElement('a-box');
+function generateBubble(radius, height, width, color, positionX, positionZ) {
+    console.log("Generating bubble...")
+    let entity = document.createElement('a-sphere');
     entity.setAttribute('color', colors[color]);
-    entity.setAttribute('width', width);
-    entity.setAttribute('depth', width);
-    entity.setAttribute('height', size);
-    entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
+    entity.setAttribute('radius', radius);
+    entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
     return entity;
 }
 
-function generateLegend(bar) {
-    let text = bar['key'] + ': ' + bar['size'];
+function generateLegend(bubble) {
+    let text = bubble['key'] + ': \n Radius:' + bubble['radius'] + '\nHeight:' + bubble['height'];
 
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bar['size'] / 2 + 1, z: widthBars + 0.1 });
+    entity.setAttribute('position', { x: 0, y: bubble['radius'] + 1, z: bubble['radius'] + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -160,14 +160,14 @@ function generateLegend(bar) {
     return entity;
 }
 
-function showLegend(barEntity, bar) {
-    barEntity.addEventListener('mouseenter', function () {
+function showLegend(bubbleEntity, bubble) {
+    bubbleEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar);
+        legend = generateLegend(bubble);
         this.appendChild(legend);
     });
 
-    barEntity.addEventListener('mouseleave', function () {
+    bubbleEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
         this.removeChild(legend);
     });
