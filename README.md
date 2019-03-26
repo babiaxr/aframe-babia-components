@@ -77,7 +77,13 @@ import 'aframe'
 import 'aframe-visdata-components'
 ```
 
-## Components
+## How to use this components
+
+There are user guides in the [docs](https://github.com/dlumbrer/aframe-visdata-components/tree/master/docs) folder, here are the links:
+
+- [HOW_TO_CHARTS.md](./docs/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
+
+## Components API
 
 The installation contains the following components:
 
