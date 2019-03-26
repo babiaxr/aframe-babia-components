@@ -1525,12 +1525,13 @@ AFRAME.registerComponent('vismapper', {
     schema: {
         // Data
         dataToShow: { type: 'string' },
-        // Geo
+        // Geo and charts
         width: { type: 'string' },
         depth: { type: 'string' },
         height: { type: 'string' },
         radius: { type: 'string' },
-        // For charts
+        // Only for charts
+        slice: { type: 'string' },
         x_axis: { type: 'string' },
         z_axis: { type: 'string' }
     },
