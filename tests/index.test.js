@@ -3,18 +3,18 @@ require('aframe');
 require('../index.js');
 let entityFactory = require('./helpers').entityFactory;
 
-suite('visdata component', function () {
+suite('babia component', function () {
   let component;
   let el;
 
   setup(function (done) {
     el = entityFactory();
     el.addEventListener('componentinitialized', function (evt) {
-      if (evt.detail.name !== 'visdata') { return; }
-      component = el.components['visdata'];
+      if (evt.detail.name !== 'babia') { return; }
+      component = el.components['babia'];
       done();
     });
-    el.setAttribute('visdata', {});
+    el.setAttribute('babia', {});
   });
 
   suite('foo property', function () {

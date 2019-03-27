@@ -22,7 +22,7 @@ Thing you need:
 
 ![Example](https://i.imgur.com/pB327Pn.png)
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-visdata-components/examples/pie_chart/)
+[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/pie_chart/)
 
 ## Simple bar chart (2D bars chart)
 
@@ -36,7 +36,7 @@ Thing you need:
 
 
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-visdata-components/examples/simplebar_chart/)
+[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/simplebar_chart/)
 
 
 ## 3D bar chart
@@ -52,7 +52,7 @@ Thing you need:
 
 
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-visdata-components/examples/3dbars_chart/)
+[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/3dbars_chart/)
 
 
 ## Bubbles chart
@@ -69,10 +69,10 @@ Thing you need:
 
 
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-visdata-components/examples/bubbles_chart/)
+[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/bubbles_chart/)
 
 
 
 
-### [Full examples](https://dlumbrer.github.io/aframe-visdata-components)
+### [Full examples](https://dlumbrer.github.io/aframe-babia-components)
 #### More content will be added soon... 

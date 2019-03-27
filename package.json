@@ -1,13 +1,13 @@
 {
-  "name": "aframe-visdata-components",
+  "name": "aframe-babia-components",
   "version": "1.0.2",
   "description": "A Data visualization component for A-Frame.",
   "main": "index.js",
-  "unpkg": "dist/aframe-visdata-components.min.js",
+  "unpkg": "dist/aframe-babia-components.min.js",
   "scripts": {
-    "build": "webpack index.js dist/aframe-visdata-components.js",
-    "dev": "budo index.js:dist/aframe-visdata-components.min.js --port 7000 --live --open",
-    "dist": "npm run build && uglifyjs dist/aframe-visdata-components.js > dist/aframe-visdata-components.min.js",
+    "build": "webpack index.js dist/aframe-babia-components.js",
+    "dev": "budo index.js:dist/aframe-babia-components.min.js --port 7000 --live --open",
+    "dist": "npm run build && uglifyjs dist/aframe-babia-components.js > dist/aframe-babia-components.min.js",
     "lint": "semistandard -v | snazzy",
     "prepublish": "npm run dist",
     "ghpages": "ghpages",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dlumbrer/aframe-visdata-components.git"
+    "url": "git+https://github.com/dlumbrer/aframe-babia-components.git"
   },
   "keywords": [
     "aframe",
@@ -26,14 +26,14 @@
     "aframe-vr",
     "vr",
     "webvr",
-    "visdata"
+    "babia"
   ],
   "author": "David Moreno <dmorenolumb@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dlumbrer/aframe-visdata-components/issues"
+    "url": "https://github.com/dlumbrer/aframe-babia-components/issues"
   },
-  "homepage": "https://github.com/dlumbrer/aframe-visdata-components#readme",
+  "homepage": "https://github.com/dlumbrer/aframe-babia-components#readme",
   "devDependencies": {
     "aframe": "*",
     "browserify": "^13.0.0",

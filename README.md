@@ -1,7 +1,7 @@
-# Aframe-visdata-components
+# Aframe-babia-components
 
-[![Version](http://img.shields.io/npm/v/aframe-visdata-components.svg?style=flat-square)](https://npmjs.org/package/aframe-visdata-components)
-[![License](http://img.shields.io/npm/l/aframe-visdata-components.svg?style=flat-square)](https://npmjs.org/package/aframe-visdata-components)
+[![Version](http://img.shields.io/npm/v/aframe-babia-components.svg?style=flat-square)](https://npmjs.org/package/aframe-babia-components)
+[![License](http://img.shields.io/npm/l/aframe-babia-components.svg?style=flat-square)](https://npmjs.org/package/aframe-babia-components)
 
 Data visualization components for A-Frame.
 
@@ -44,9 +44,9 @@ Install and use by directly including the [browser files](dist):
 
 <head>
     <meta charset="utf-8">
-    <title>A-Frame Visdata components</title>
+    <title>A-Frame Babia components</title>
     <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-visdata-components/dist/aframe-visdata-components.min.js"></script>
+    <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
 </head>
 
 <body>
@@ -69,23 +69,23 @@ Install and use by directly including the [browser files](dist):
 Install via NPM:
 
 ```
-npm i aframe-visdata-components
+npm i aframe-babia-components
 ```
 
 Then require and use.
 ```js
 require('aframe');
-require('aframe-visdata-components');
+require('aframe-babia-components');
 
 // or
 
 import 'aframe'
-import 'aframe-visdata-components'
+import 'aframe-babia-components'
 ```
 
 ## How to use this components
 
-There are user guides in the [docs](https://github.com/dlumbrer/aframe-visdata-components/tree/master/docs) folder, here are the links:
+There are user guides in the [docs](https://github.com/dlumbrer/aframe-babia-components/tree/master/docs) folder, here are the links:
 
 - [HOW_TO_CHARTS.md](./docs/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
 
@@ -248,4 +248,4 @@ The dataset returned from the parsing of the `querier` components must has this 
 
 
 
-### Examples available at the "examples folder" and [here](https://dlumbrer.github.io/aframe-visdata-components/)
+### Examples available at the "examples folder" and [here](https://dlumbrer.github.io/aframe-babia-components/)
