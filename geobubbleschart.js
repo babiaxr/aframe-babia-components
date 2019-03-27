@@ -38,7 +38,7 @@ AFRAME.registerComponent('geobubbleschart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
-            console.log("Generating bubbleschart...")
+            console.log("Generating geobubbleschart...")
             generateBubblesChart(data, el)
         }
     },

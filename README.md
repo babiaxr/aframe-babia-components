@@ -9,6 +9,29 @@ Data visualization components for A-Frame.
 
 For [A-Frame](https://aframe.io).
 
+## Why
+
+This pack of components has the aim of visualize data in several ways. There are separated components and each one has an independent aim:
+
+- `querier_*` the aim of just query data and save it in the entity that it has
+- `filterdata` filter the data saved by one of the queriers
+- `vismapper` map the data filtered by filterdata to geometry attributes of the different charts, it "prepares" the data and save it in the entity that it has.
+- `geo*` visualize the data prepared by a vismapper in several ways (this type of components must have in the same entity than a vismapper)
+
+For instance:
+
+```html
+<a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
+<a-entity geo3dbarchart='legend: true' filterdata="from: queriertest"
+            vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
+
+```
+
+The first entity has a `querier_*` component, so this entity will retrieve the data of the url in its attribute and save it in the entity.
+
+The second entity has a `filterdata` that fetch the data saved by the `querier_json` entity from above by it's id, so the filterdata is binded to that entity. Moreover, it has a `vismapper` that is mapping fields of the data filtered by the `filterdata` component to geometry attributes of the chart component, in this case will map the field `name` to the x-axis keys of the chart, the `age` to the z-axis keys of the chart and the `size` to the height of the different items of the chart (bars, bubbles...). Finally, the `geo3dbarchart` define that the entity is going to visualize the data mapped by `vismapper` in a 3D bar chart.
+
+
 ## Usage
 
 #### Browser Installation
@@ -22,38 +45,21 @@ Install and use by directly including the [browser files](dist):
 <head>
     <meta charset="utf-8">
     <title>A-Frame Visdata components</title>
-    <meta name="description" content="Bubble example for A-Charts component." />
     <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-visdata-components/dist/aframe-visdata-components.min.js"></script>
-    <script
-        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
 </head>
 
 <body>
 
     <a-scene background="color: #A8F3FF" id="AframeScene">
-        <a-entity environment></a-entity>
-        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
-
+        
         <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
 
-        <a-entity scale="0.4 0.4 0.4" geobubbleschart='legend: true' filterdata="from: queriertest"
-            vismapper="x_axis: name; z_axis: age; height: metric2; radius: size" position="0 0 0" rotation="0 0 0">
-        </a-entity>
         <a-entity geo3dbarchart='legend: true' filterdata="from: queriertest"
             vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
-        <a-entity piechart='legend: true' filterdata="from: queriertest" vismapper="slice: name; height: size"
-            position="-8 5 10" rotation="90 15 0"></a-entity>
-        <a-entity simplebarchart='legend: true' filterdata="from: queriertest" vismapper="x_axis: name; height: size"
-            position="25 0 0" rotation="0 -15 0"></a-entity>
 
-
-        <a-entity movement-controls="fly: true" position="5 5 20">
-            <a-entity camera position="0 0 0" look-controls></a-entity>
-            <a-entity cursor="rayOrigin:mouse"></a-entity>
-            <a-entity laser-controls="hand: right"></a-entity>
-        </a-entity>
-
+        <a-entity camera position="0 0 0" look-controls></a-entity>
+        
     </a-scene>
 </body>
 ```
@@ -139,16 +145,16 @@ This component must be in the same entity than filterdata and it needs also a ch
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| height        | Field of the data selected by filterdata that will be mapped as the height of the items of the charts or a geometry. Valid for **geo3dbarchart, bubbleschart, simplebarchart and box/sphere** | string   | - |
-| radius        | Field of the data selected by filterdata that will be mapped as the radius of the items of the charts or a geometry. Valid for **bubbleschart and sphere** | string   | - |
+| height        | Field of the data selected by filterdata that will be mapped as the height of the items of the charts or a geometry. Valid for **geo3dbarchart, geobubbleschart, geosimplebarchart and box/sphere** | string   | - |
+| radius        | Field of the data selected by filterdata that will be mapped as the radius of the items of the charts or a geometry. Valid for **geobubbleschart and sphere** | string   | - |
 | slice        | Field of the data selected by filterdata that will be mapped as the slices of the items of a pie chart. Valid for **piehchart** | string   | - |
 | z-axis        | Field of the data selected by filterdata that will be mapped as the keys of the Z Axis of the chart component selected. Valid for **geo3dbarchart and bubblechart** | string   | - |
-| x-axis        | Field of the data selected by filterdata that will be mapped as the keys of the X Axis of the chart component selected. Valid for **geo3dbarchart, bubblechart and simplebarchart** | string   | - |
+| x-axis        | Field of the data selected by filterdata that will be mapped as the keys of the X Axis of the chart component selected. Valid for **geo3dbarchart, bubblechart and geosimplebarchart** | string   | - |
 | width            | Field of the data selected by filterdata that will be mapped as the width of the geometry **(only for box geometry)**.  | string | - |
 | depth        | Field of the data selected by filterdata that will be mapped as the depth of the geometry **(only for box geometry)**. | string   | - |
 
 
-### piechart component
+### geopiechart component
 
 This component must be used with one of the `vismapper` components, with the `slice` and `height` attribute defined.
 
@@ -160,12 +166,12 @@ This component shows a pie chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 
-### simplebarchart component
+### geosimplebarchart component
 
 This component must be used with one of the `vismapper` components, with the `x-axis` and `height` attribute defined.
 
 This component shows a simple 2D bar chart.
-
+geopiechart
 #### API
 
 | Property        | Description           | Type   | Default value |

@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('simplebarchart', {
+AFRAME.registerComponent('geosimplebarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' }

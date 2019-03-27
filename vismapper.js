@@ -59,12 +59,12 @@ AFRAME.registerComponent('vismapper', {
                     let oldPos = el.getAttribute("position")
                     el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
                 }
-            } else if (el.components.simplebarchart) {
+            } else if (el.components.geosimplebarchart) {
                 let list = generate2Dlist(data, dataJSON, "x_axis")
-                el.setAttribute("simplebarchart", "data", JSON.stringify(list))
-            } else if (el.components.piechart) {
+                el.setAttribute("geosimplebarchart", "data", JSON.stringify(list))
+            } else if (el.components.geopiechart) {
                 let list = generate2Dlist(data, dataJSON, "slice")
-                el.setAttribute("piechart", "data", JSON.stringify(list))
+                el.setAttribute("geopiechart", "data", JSON.stringify(list))
             } else if (el.components.geo3dbarchart) {
                 let list = generate3Dlist(data, dataJSON, "3dbars")
                 el.setAttribute("geo3dbarchart", "data", JSON.stringify(list))

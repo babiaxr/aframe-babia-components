@@ -18,7 +18,7 @@ Thing you need:
     - `slice`: the field of the data filtered by `filterdata` that will define each slice of the pie. (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the size of the slices.
 
-2. Finally, add the component `piechart` (with its optional params if you want):
+2. Finally, add the component `geopiechart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/pB327Pn.png)
 
@@ -30,7 +30,7 @@ Thing you need:
     - `x-axis`: the field of the data filtered by `filterdata` that will define the tags of the x-axis of the chart (as a keys). (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the bars.
 
-2. Finally, add the component `simplebarchart` (with its optional params if you want):
+2. Finally, add the component `geosimplebarchart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/RZBaaPg.png)
 
@@ -63,7 +63,7 @@ Thing you need:
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the bubbles.
     - `radius`: the **numeric** field of the data filtered by `filterdata` that will define the radius/size of the bubbles.
 
-2. Finally, add the component `bubbleschart` (with its optional params if you want):
+2. Finally, add the component `geobubbleschart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/5cw40tj.png)
 

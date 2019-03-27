@@ -569,7 +569,7 @@ AFRAME.registerComponent('geobubbleschart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
-            console.log("Generating bubbleschart...")
+            console.log("Generating geobubbleschart...")
             generateBubblesChart(data, el)
         }
     },
@@ -758,97 +758,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('interaction-mapper', {
-    schema: {
-        input: { type: 'string' },
-        output: { type: 'string' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.input && data.output) {
-            mapEvents(data, el);
-        }
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        /**
-         * Update geometry component
-         */
-        // If entry it means that the properties changed
-        if (data !== oldData) {
-            if (data.input !== oldData.input || data.output !== oldData.output) {
-                console.log("Change event because from has changed")
-                // Remove the event of the old interaction
-                el.removeEventListener(oldData.input, function (e) { })
-                // Listen and map the new event
-                mapEvents(data, el);
-            }
-        }
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let mapEvents = (data, el) => {
-    el.addEventListener(data.input, function (e) {
-        // Dispatch/Trigger/Fire the event
-        el.emit(data.output, e, false);
-    });
-}
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('piechart', {
+AFRAME.registerComponent('geopiechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' }
@@ -1033,7 +943,7 @@ let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", 
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -1044,293 +954,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('querier_github', {
-    schema: {
-        user: { type: 'string' },
-        token: { type: 'string' },
-        repos: { type: 'array' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.user && (data.repos.length === 0)) {
-            requestAllReposFromUser(data, el)
-        } else if (data.repos.length > 0) {
-            requestReposFromList(data, el)
-        }
-
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let requestReposFromList = (data, el) => {
-    let dataOfRepos = {}
-
-    data.repos.forEach((e, i) => {
-        // Create a new request object
-        let request = new XMLHttpRequest();
-
-        // Create url
-        let url = "https://api.github.com/repos/" + data.user + "/" + e + "?_=" + new Date().getTime();
-
-        // Initialize a request
-        request.open('get', url, false)
-        // Send it
-        request.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                console.log("data OK in request.response", el.id)
-
-                // Save data
-                let rawData = JSON.parse(request.response)
-                dataOfRepos[rawData.name] = rawData;
-
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
-                });
-            }
-        };
-        request.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        };
-        request.send();
-    })
-
-    // Save data
-    data.dataRetrieved = dataOfRepos
-    el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
-
-    // Dispatch/Trigger/Fire the event
-    el.emit("dataReady" + el.id, data.dataRetrieved)
-}
-
-
-let requestAllReposFromUser = (data, el) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Create url
-    let url = "https://api.github.com/users/" + data.user + "/repos?_=" + new Date().getTime();
-
-    // Initialize a request
-    request.open('get', url)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            console.log("data OK in request.response", el.id)
-
-            // Save data
-            data.dataRetrieved = allReposParse(JSON.parse(request.response))
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
-
-            // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-    };
-    request.send();
-}
-
-let allReposParse = (data) => {
-    let dataParsed = {}
-    data.forEach((e, i) => {
-        dataParsed[e.name] = e
-    });
-    return dataParsed
-}
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('querier_json', {
-    schema: {
-        url: { type: 'string' },
-        embedded: { type: 'string' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.url) {
-            requestJSONDataFromURL(data, el)
-        } else if (data.embedded) {
-            parseEmbeddedJSONData(data, el)
-        }
-
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-
-let requestJSONDataFromURL = (data, el) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Initialize a request
-    request.open('get', data.url)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            //console.log("data OK in request.response", request.response)
-
-            // Save data
-            if (typeof request.response === 'string' || request.response instanceof String) {
-                data.dataRetrieved = JSON.parse(request.response)
-            } else {
-                data.dataRetrieved = request.response
-            }
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
-
-            // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-    };
-    request.send();
-}
-
-let parseEmbeddedJSONData = (data, el) => {
-    // Save data
-    data.dataRetrieved = JSON.parse(data.embedded)
-    el.setAttribute("baratariaData", data.embedded)
-
-    // Dispatch/Trigger/Fire the event
-    el.emit("dataReady" + el.id, data.embedded)
-}
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('simplebarchart', {
+AFRAME.registerComponent('geosimplebarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' }
@@ -1508,6 +1132,382 @@ let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", 
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('interaction-mapper', {
+    schema: {
+        input: { type: 'string' },
+        output: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+
+        if (data.input && data.output) {
+            mapEvents(data, el);
+        }
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+
+        /**
+         * Update geometry component
+         */
+        // If entry it means that the properties changed
+        if (data !== oldData) {
+            if (data.input !== oldData.input || data.output !== oldData.output) {
+                console.log("Change event because from has changed")
+                // Remove the event of the old interaction
+                el.removeEventListener(oldData.input, function (e) { })
+                // Listen and map the new event
+                mapEvents(data, el);
+            }
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+let mapEvents = (data, el) => {
+    el.addEventListener(data.input, function (e) {
+        // Dispatch/Trigger/Fire the event
+        el.emit(data.output, e, false);
+    });
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('querier_github', {
+    schema: {
+        user: { type: 'string' },
+        token: { type: 'string' },
+        repos: { type: 'array' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+
+        if (data.user && (data.repos.length === 0)) {
+            requestAllReposFromUser(data, el)
+        } else if (data.repos.length > 0) {
+            requestReposFromList(data, el)
+        }
+
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+let requestReposFromList = (data, el) => {
+    let dataOfRepos = {}
+
+    data.repos.forEach((e, i) => {
+        // Create a new request object
+        let request = new XMLHttpRequest();
+
+        // Create url
+        let url = "https://api.github.com/repos/" + data.user + "/" + e + "?_=" + new Date().getTime();
+
+        // Initialize a request
+        request.open('get', url, false)
+        // Send it
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                console.log("data OK in request.response", el.id)
+
+                // Save data
+                let rawData = JSON.parse(request.response)
+                dataOfRepos[rawData.name] = rawData;
+
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        request.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        request.send();
+    })
+
+    // Save data
+    data.dataRetrieved = dataOfRepos
+    el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+
+    // Dispatch/Trigger/Fire the event
+    el.emit("dataReady" + el.id, data.dataRetrieved)
+}
+
+
+let requestAllReposFromUser = (data, el) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Create url
+    let url = "https://api.github.com/users/" + data.user + "/repos?_=" + new Date().getTime();
+
+    // Initialize a request
+    request.open('get', url)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            console.log("data OK in request.response", el.id)
+
+            // Save data
+            data.dataRetrieved = allReposParse(JSON.parse(request.response))
+            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+
+            // Dispatch/Trigger/Fire the event
+            el.emit("dataReady" + el.id, data.dataRetrieved)
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+    };
+    request.send();
+}
+
+let allReposParse = (data) => {
+    let dataParsed = {}
+    data.forEach((e, i) => {
+        dataParsed[e.name] = e
+    });
+    return dataParsed
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('querier_json', {
+    schema: {
+        url: { type: 'string' },
+        embedded: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+
+        if (data.url) {
+            requestJSONDataFromURL(data, el)
+        } else if (data.embedded) {
+            parseEmbeddedJSONData(data, el)
+        }
+
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+
+let requestJSONDataFromURL = (data, el) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', data.url)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            //console.log("data OK in request.response", request.response)
+
+            // Save data
+            if (typeof request.response === 'string' || request.response instanceof String) {
+                data.dataRetrieved = JSON.parse(request.response)
+            } else {
+                data.dataRetrieved = request.response
+            }
+            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+
+            // Dispatch/Trigger/Fire the event
+            el.emit("dataReady" + el.id, data.dataRetrieved)
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+    };
+    request.send();
+}
+
+let parseEmbeddedJSONData = (data, el) => {
+    // Save data
+    data.dataRetrieved = JSON.parse(data.embedded)
+    el.setAttribute("baratariaData", data.embedded)
+
+    // Dispatch/Trigger/Fire the event
+    el.emit("dataReady" + el.id, data.embedded)
+}
+
+/***/ }),
 /* 9 */
 /***/ (function(module, exports) {
 
@@ -1572,12 +1572,12 @@ AFRAME.registerComponent('vismapper', {
                     let oldPos = el.getAttribute("position")
                     el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
                 }
-            } else if (el.components.simplebarchart) {
+            } else if (el.components.geosimplebarchart) {
                 let list = generate2Dlist(data, dataJSON, "x_axis")
-                el.setAttribute("simplebarchart", "data", JSON.stringify(list))
-            } else if (el.components.piechart) {
+                el.setAttribute("geosimplebarchart", "data", JSON.stringify(list))
+            } else if (el.components.geopiechart) {
                 let list = generate2Dlist(data, dataJSON, "slice")
-                el.setAttribute("piechart", "data", JSON.stringify(list))
+                el.setAttribute("geopiechart", "data", JSON.stringify(list))
             } else if (el.components.geo3dbarchart) {
                 let list = generate3Dlist(data, dataJSON, "3dbars")
                 el.setAttribute("geo3dbarchart", "data", JSON.stringify(list))
@@ -1656,14 +1656,14 @@ function normalize(val, min, max) { return (val - min) / (max - min); }
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(6)
 __webpack_require__(7)
+__webpack_require__(8)
 __webpack_require__(9)
 __webpack_require__(1)
-__webpack_require__(4)
+__webpack_require__(6)
 __webpack_require__(0)
+__webpack_require__(4)
 __webpack_require__(5)
-__webpack_require__(8)
 __webpack_require__(2)
 __webpack_require__(3)
 
