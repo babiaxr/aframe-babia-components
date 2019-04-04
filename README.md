@@ -177,6 +177,7 @@ geopiechart
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
+| legend          | Shows chart axis  | boolean | true |
 
 ### geo3dbarchart component
 

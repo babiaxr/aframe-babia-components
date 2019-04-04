@@ -9,7 +9,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('geosimplebarchart', {
     schema: {
         data: { type: 'string' },
-        legend: { type: 'boolean' }
+        legend: { type: 'boolean', default: false },
+        axis: { type: 'boolean', default: true }
     },
 
     /**
@@ -73,19 +74,38 @@ let generateBarChart = (data, element) => {
 
         let colorid = 0
         let stepX = 0
+        let axis_dict = []
+
+        let maxY = Math.max.apply(Math, dataToPrint.map(function(o) { return o.size; }))
+
 
         for (let bar of dataToPrint) {
-            //Calculate stepX
             let barEntity = generateBar(bar['size'], widthBars, colorid, stepX);
-            stepX += widthBars + widthBars / 4
+
 
             //Prepare legend
             if (data.legend) {
                 showLegend(barEntity, bar)
             }
 
+            let bar_printed = {
+                colorid: colorid,
+                posX: stepX,
+                key: bar['key']
+            }
+            axis_dict.push(bar_printed)
+
+
             element.appendChild(barEntity);
+            //Calculate stepX
+            stepX += widthBars + widthBars / 4
+            //Increase color id
             colorid++
+        }
+
+        if (data.axis) {
+            showXAxis(element, stepX, axis_dict)
+            showYAxis(element, maxY)
         }
     }
 }
@@ -126,6 +146,64 @@ function generateLegend(bar) {
         'intensity': 0.3
     });
     return entity;
+}
+
+function showXAxis(parent, xEnd, bars_printed) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__xaxis', {
+        'start': { x: -widthBars, y: 0, z: 0 },
+        'end': { x: xEnd, y: 0, z: 0 },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: 0, y: 0, z: widthBars / 2 + widthBars / 4 });
+    axis.appendChild(axis_line)
+    
+    //Print keys
+    bars_printed.forEach(e => {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': e.key,
+            'align': 'right',
+            'width': 10,
+            'color': colors[e.colorid]
+        });
+        key.setAttribute('position', { x: e.posX, y: 0, z: 6 })
+        key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+        axis.appendChild(key)
+    });
+
+    //axis completion
+    parent.appendChild(axis)
+}
+
+function showYAxis(parent, yEnd) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__yaxis', {
+        'start': { x: -widthBars, y: 0, z: 0 },
+        'end': { x: -widthBars, y: yEnd, z: 0 },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: 0, y: 0, z: widthBars / 2 + widthBars / 4 });
+    axis.appendChild(axis_line)
+    
+    for (let i = 0; i<=yEnd; i++){
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': i,
+            'align': 'right',
+            'width': 10,
+            'color': 'white '
+        });
+        key.setAttribute('position', { x: -6.2, y: i, z: widthBars / 2 + widthBars / 4 })
+        axis.appendChild(key)
+    }
+
+    //axis completion
+    parent.appendChild(axis)
 }
 
 function showLegend(barEntity, bar) {
