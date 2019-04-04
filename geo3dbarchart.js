@@ -101,7 +101,7 @@ let generateBarChart = (data, element) => {
             if (z_axis[bar['key2']]) {
                 stepZ = z_axis[bar['key2']].posZ
             } else {
-                maxZ -= widthBars + widthBars / 4
+                maxZ += widthBars + widthBars / 4
                 stepZ = maxZ
                 //Save in used
                 z_axis[bar['key2']] = {

@@ -103,7 +103,7 @@ let generateBubblesChart = (data, element) => {
             if (z_axis[bubble['key2']]) {
                 stepZ = z_axis[bubble['key2']].posZ
             } else {
-                maxZ -= widthBubbles + widthBubbles / 4
+                maxZ += widthBubbles + widthBubbles / 4
                 stepZ = maxZ
                 //Save in used
                 z_axis[bubble['key2']] = {
