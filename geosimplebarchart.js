@@ -88,6 +88,7 @@ let generateBarChart = (data, element) => {
                 showLegend(barEntity, bar)
             }
 
+            //Axis dict
             let bar_printed = {
                 colorid: colorid,
                 posX: stepX,
@@ -103,6 +104,7 @@ let generateBarChart = (data, element) => {
             colorid++
         }
 
+        //Print axis
         if (data.axis) {
             showXAxis(element, stepX, axis_dict)
             showYAxis(element, maxY)
@@ -169,7 +171,7 @@ function showXAxis(parent, xEnd, bars_printed) {
             'width': 10,
             'color': colors[e.colorid]
         });
-        key.setAttribute('position', { x: e.posX, y: 0, z: 6 })
+        key.setAttribute('position', { x: e.posX, y: 0, z: widthBars+5.2 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
         axis.appendChild(key)
     });
@@ -198,7 +200,7 @@ function showYAxis(parent, yEnd) {
             'width': 10,
             'color': 'white '
         });
-        key.setAttribute('position', { x: -6.2, y: i, z: widthBars / 2 + widthBars / 4 })
+        key.setAttribute('position', { x: -widthBars-5.2, y: i, z: widthBars / 2 + widthBars / 4 })
         axis.appendChild(key)
     }
 

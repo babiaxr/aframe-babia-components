@@ -9,7 +9,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('geobubbleschart', {
     schema: {
         data: { type: 'string' },
-        legend: { type: 'boolean' }
+        legend: { type: 'boolean' },
+        axis: { type: 'boolean', default: true }
     },
 
     /**
@@ -79,8 +80,12 @@ let generateBubblesChart = (data, element) => {
         let stepZ = 0
         let maxZ = 0
         let z_axis = {}
+        let xaxis_dict = []
+        let zaxis_dict = []
 
-        let widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
+
+        widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
 
         for (let bubble of dataToPrint) {
             // Check if used in order to put the bubble in the parent row
@@ -88,27 +93,45 @@ let generateBubblesChart = (data, element) => {
                 stepX = keys_used[bubble['key']].posX
                 colorid = keys_used[bubble['key']].colorid
             } else {
-                maxX += widthBubbles + widthBubbles / 4
                 stepX = maxX
-                maxColorId++
                 colorid = maxColorId
                 //Save in used
                 keys_used[bubble['key']] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
+
+                //Axis dict
+                let bubble_printed = {
+                    colorid: colorid,
+                    posX: stepX,
+                    key: bubble['key']
+                }
+                xaxis_dict.push(bubble_printed)
+
+                maxX += widthBubbles + widthBubbles / 4
+                maxColorId++
             }
 
             // Get Z val
             if (z_axis[bubble['key2']]) {
                 stepZ = z_axis[bubble['key2']].posZ
             } else {
-                maxZ += widthBubbles + widthBubbles / 4
                 stepZ = maxZ
                 //Save in used
                 z_axis[bubble['key2']] = {
                     "posZ": maxZ
                 }
+
+                //Axis dict
+                let bubble_printed = {
+                    colorid: colorid,
+                    posZ: stepZ,
+                    key: bubble['key2']
+                }
+                zaxis_dict.push(bubble_printed)
+
+                maxZ += widthBubbles + widthBubbles / 4
             }
 
             let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, stepX, stepZ);
@@ -120,6 +143,13 @@ let generateBubblesChart = (data, element) => {
 
             element.appendChild(bubbleEntity);
 
+        }
+
+        // Axis
+        if (data.axis) {
+            showXAxis(element, maxX, xaxis_dict)
+            showZAxis(element, maxZ, zaxis_dict)
+            showYAxis(element, maxY)
         }
     }
 }
@@ -171,6 +201,96 @@ function showLegend(bubbleEntity, bubble) {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
         this.removeChild(legend);
     });
+}
+
+
+function showXAxis(parent, xEnd, bubbles_printed) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__xaxis', {
+        'start': { x: -widthBubbles, y: 0, z: 0 },
+        'end': { x: xEnd, y: 0, z: 0 },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBubbles / 2 + widthBubbles / 4) });
+    axis.appendChild(axis_line)
+
+    //Print keys
+    bubbles_printed.forEach(e => {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': e.key,
+            'align': 'left',
+            'width': 10,
+            'color': colors[e.colorid]
+        });
+        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBubbles-3.2 })
+        key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+        axis.appendChild(key)
+    });
+
+    //axis completion
+    parent.appendChild(axis)
+}
+
+function showZAxis(parent, zEnd, bubbles_printed) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__xaxis', {
+        'start': { x: 0, y: 0, z: -(widthBubbles / 2 + widthBubbles / 4) },
+        'end': { x: 0, y: 0, z: zEnd },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: -widthBubbles, y: 0, z: 0 });
+    axis.appendChild(axis_line)
+
+    //Print keys
+    bubbles_printed.forEach(e => {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': e.key,
+            'align': 'right',
+            'width': 10,
+            'color': colors[e.colorid]
+        });
+        key.setAttribute('position', { x: -widthBubbles-5.2, y: 0, z: e.posZ })
+        key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
+        axis.appendChild(key)
+    });
+
+    //axis completion
+    parent.appendChild(axis)
+}
+
+
+function showYAxis(parent, yEnd) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__yaxis', {
+        'start': { x: -widthBubbles, y: 0, z: 0 },
+        'end': { x: -widthBubbles, y: yEnd+1, z: 0 },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBubbles / 2 + widthBubbles / 4) });
+    axis.appendChild(axis_line)
+
+    for (let i = 0; i <= yEnd; i++) {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': i,
+            'align': 'right',
+            'width': 10,
+            'color': 'white '
+        });
+        key.setAttribute('position', { x: -widthBubbles-5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4) })
+        axis.appendChild(key)
+    }
+
+    //axis completion
+    parent.appendChild(axis)
 }
 
 let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",

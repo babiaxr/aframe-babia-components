@@ -9,7 +9,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('geo3dbarchart', {
     schema: {
         data: { type: 'string' },
-        legend: { type: 'boolean' }
+        legend: { type: 'boolean' },
+        axis: { type: 'boolean', default: true }
     },
 
     /**
@@ -79,6 +80,10 @@ let generateBarChart = (data, element) => {
         let stepZ = 0
         let maxZ = 0
         let z_axis = {}
+        let xaxis_dict = []
+        let zaxis_dict = []
+
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
 
         for (let bar of dataToPrint) {
             // Check if used in order to put the bar in the parent row
@@ -86,27 +91,45 @@ let generateBarChart = (data, element) => {
                 stepX = keys_used[bar['key']].posX
                 colorid = keys_used[bar['key']].colorid
             } else {
-                maxX += widthBars + widthBars / 4
                 stepX = maxX
-                maxColorId++
                 colorid = maxColorId
                 //Save in used
                 keys_used[bar['key']] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
+
+                //Axis dict
+                let bar_printed = {
+                    colorid: colorid,
+                    posX: stepX,
+                    key: bar['key']
+                }
+                xaxis_dict.push(bar_printed)
+
+                maxX += widthBars + widthBars / 4
+                maxColorId++
             }
 
             // Get Z val
             if (z_axis[bar['key2']]) {
                 stepZ = z_axis[bar['key2']].posZ
             } else {
-                maxZ += widthBars + widthBars / 4
                 stepZ = maxZ
                 //Save in used
                 z_axis[bar['key2']] = {
                     "posZ": maxZ
                 }
+
+                //Axis dict
+                let bar_printed = {
+                    colorid: colorid,
+                    posZ: stepZ,
+                    key: bar['key2']
+                }
+                zaxis_dict.push(bar_printed)
+
+                maxZ += widthBars + widthBars / 4
             }
 
             let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ);
@@ -118,6 +141,13 @@ let generateBarChart = (data, element) => {
 
             element.appendChild(barEntity);
 
+        }
+
+        // Axis
+        if (data.axis) {
+            showXAxis(element, maxX, xaxis_dict)
+            showZAxis(element, maxZ, zaxis_dict)
+            showYAxis(element, maxY)
         }
     }
 }
@@ -171,6 +201,96 @@ function showLegend(barEntity, bar) {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
         this.removeChild(legend);
     });
+}
+
+
+function showXAxis(parent, xEnd, bars_printed) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__xaxis', {
+        'start': { x: -widthBars, y: 0, z: 0 },
+        'end': { x: xEnd, y: 0, z: 0 },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBars / 2 + widthBars / 4) });
+    axis.appendChild(axis_line)
+
+    //Print keys
+    bars_printed.forEach(e => {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': e.key,
+            'align': 'left',
+            'width': 10,
+            'color': colors[e.colorid]
+        });
+        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBars-5 })
+        key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+        axis.appendChild(key)
+    });
+
+    //axis completion
+    parent.appendChild(axis)
+}
+
+function showZAxis(parent, zEnd, bars_printed) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__xaxis', {
+        'start': { x: 0, y: 0, z: -(widthBars / 2 + widthBars / 4) },
+        'end': { x: 0, y: 0, z: zEnd },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: -widthBars, y: 0, z: 0 });
+    axis.appendChild(axis_line)
+
+    //Print keys
+    bars_printed.forEach(e => {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': e.key,
+            'align': 'right',
+            'width': 10,
+            'color': colors[e.colorid]
+        });
+        key.setAttribute('position', { x: -widthBars-5.2, y: 0, z: e.posZ })
+        key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
+        axis.appendChild(key)
+    });
+
+    //axis completion
+    parent.appendChild(axis)
+}
+
+
+function showYAxis(parent, yEnd) {
+    let axis = document.createElement('a-entity');
+    //Print line
+    let axis_line = document.createElement('a-entity');
+    axis_line.setAttribute('line__yaxis', {
+        'start': { x: -widthBars, y: 0, z: 0 },
+        'end': { x: -widthBars, y: yEnd, z: 0 },
+        'color': '#ffffff'
+    });
+    axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBars / 2 + widthBars / 4) });
+    axis.appendChild(axis_line)
+
+    for (let i = 0; i <= yEnd; i++) {
+        let key = document.createElement('a-entity');
+        key.setAttribute('text', {
+            'value': i,
+            'align': 'right',
+            'width': 10,
+            'color': 'white '
+        });
+        key.setAttribute('position', { x: -widthBars-5.2, y: i, z: -(widthBars / 2 + widthBars / 4) })
+        axis.appendChild(key)
+    }
+
+    //axis completion
+    parent.appendChild(axis)
 }
 
 let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",

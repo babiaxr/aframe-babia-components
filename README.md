@@ -177,7 +177,7 @@ geopiechart
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
-| legend          | Shows chart axis  | boolean | true |
+| axis          | Shows chart axis  | boolean | true |
 
 ### geo3dbarchart component
 
@@ -190,6 +190,8 @@ This component shows a 3D bar chart.
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+
 
 ### bubblechart component
 
@@ -202,6 +204,8 @@ This component shows a 3D bar chart.
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bubble  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+
 
 
 ### debug_data component
