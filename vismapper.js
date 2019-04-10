@@ -71,6 +71,9 @@ AFRAME.registerComponent('vismapper', {
             } else if (el.components.geobubbleschart) {
                 let list = generate3Dlist(data, dataJSON, "bubbles")
                 el.setAttribute("geobubbleschart", "data", JSON.stringify(list))
+            } else if (el.components.geocodecitychart) {
+                let list = generateCodecityList(data, dataJSON)
+                el.setAttribute("geocodecitychart", "data", JSON.stringify(list))
             }
         }
     },
@@ -134,6 +137,21 @@ let generate3Dlist = (data, dataToProcess, chart_type) => {
             list.push(item)
         });
     }
+    return list
+}
+
+let generateCodecityList = (data, dataToProcess) => {
+    let list = []
+    Object.values(dataToProcess).forEach(value => {
+        let item = {
+            "key": value[data.key],
+            "height": value[data.height],
+            "depth": value[data.depth],
+            "width": value[data.width],
+            "position": value.position
+        }
+        list.push(item)
+    });
     return list
 }
 
