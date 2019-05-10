@@ -45,7 +45,7 @@ Install and use by directly including the [browser files](dist):
 <head>
     <meta charset="utf-8">
     <title>A-Frame Babia components</title>
-    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
 </head>
 
