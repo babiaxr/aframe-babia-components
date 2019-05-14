@@ -26,6 +26,7 @@
 import argparse
 import json
 import logging
+import math
 import os
 import ssl
 import sys
@@ -147,7 +148,8 @@ def generate_entity(item, key):
     entity = {
         'key': item[key],
         'height': 1,
-        'width': 1
+        'width': 1,
+        'depth': 1,
     }
     return entity
 
@@ -156,6 +158,8 @@ def add_layout(entities, type):
     data = {}
     if type == 'cascade':
         data = add_cascade_layout(entities)
+    if type == 'cube':
+        data = add_cube_layout(entities)
 
     return data
 
@@ -175,6 +179,33 @@ def add_cascade_layout(entities):
 
     return entities
 
+
+def add_cube_layout(entities):
+    x_pos = 0
+    z_pos = 0
+    offsetz_prev = 0
+    offsetx_prev = 0
+    side_len = math.sqrt(len(entities.items()))
+    count_items = 0
+
+    for name, entity in entities.items():
+        x_pos += offsetx_prev
+        entity['position'] = {
+            'x': x_pos,
+            'y': 0,
+            'z': z_pos
+        }
+        count_items += 1
+        if count_items > side_len:
+            count_items = 0
+            x_pos = 0
+            z_pos += offsetz_prev
+            offsetz_prev = entity['depth']
+            offsetx_prev = 0
+            continue
+        offsetx_prev = entity['width']
+
+    return entities
 
 
 def dump_codecity_data(data=None):
