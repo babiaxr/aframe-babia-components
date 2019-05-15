@@ -148,6 +148,7 @@ let generateCodecityList = (data, dataToProcess) => {
             "height": value[data.height],
             "depth": value[data.depth],
             "width": value[data.width],
+            "children": value.children,
             "position": value.position
         }
         list.push(item)

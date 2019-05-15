@@ -109,6 +109,7 @@ def generate_entities(entities, dir_data):
         if isinstance(v, dict):
             entity = {
                 'key': k,
+                'depth': 1,
                 'height': v['size'] if isinstance(v, dict) and ('type' in v and v['type'] is 'file') else 1,
                 'width': v['babia_nchilds_files'] if isinstance(v, dict) and ('type' not in v or v['type'] is not 'file') else 1,
                 'position': {
