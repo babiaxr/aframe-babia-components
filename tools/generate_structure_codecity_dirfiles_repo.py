@@ -106,20 +106,23 @@ def generate_entities(entities, dir_data):
     offsetx = 0
 
     for k, v in dir_data.items():
+        offsetx += v['babia_nchilds_files'] if isinstance(v, dict) and (
+                    'type' not in v or v['type'] is not 'file') else 1
         if isinstance(v, dict):
             entity = {
                 'key': k,
                 'depth': 1,
                 'height': v['size'] if isinstance(v, dict) and ('type' in v and v['type'] is 'file') else 1,
-                'width': v['babia_nchilds_files'] if isinstance(v, dict) and ('type' not in v or v['type'] is not 'file') else 1,
+                'width': v['babia_nchilds_files'] + 4 if isinstance(v, dict) and ('type' not in v or v['type'] is not 'file') else 1 + 4,
                 'position': {
-                    'x': offsetx,
+                    # Calculate position minus the width/2 of the parent, in order to have it centered
+                    'x': (offsetx - dir_data['babia_nchilds_files']/2) if 'babia_nchilds_files' in dir_data else offsetx,
                     'y': 0,
                     'z': 0
                 }
             }
             entities[k] = entity
-            offsetx += v['babia_nchilds_files'] if isinstance(v, dict) and ('type' not in v or v['type'] is not 'file') else 1
+
             if 'children' not in entities[k]:
                 entities[k]['children'] = {}
 

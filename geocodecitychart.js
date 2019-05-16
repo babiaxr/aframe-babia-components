@@ -102,7 +102,7 @@ function generateBuildEntity(parent, entityData, color) {
     if (entityData['children']) {
         let keys = Object.keys(entityData['children'])
         for (let child_key of keys) {
-            generateBuildEntity(entity, entityData.children[child_key], color)
+            generateBuildEntity(entity, entityData.children[child_key], color++)
         }
     }
     parent.appendChild(entity);
