@@ -35,7 +35,7 @@ from functools import reduce
 
 def main():
     ratio_x = 1
-    ratio_y = 2
+    ratio_y = 1
     value_total = 170
 
     objects = [{"id": ".", "value": 12},
@@ -53,64 +53,115 @@ def main():
     objects.sort(key=lambda x: x['value'], reverse=True)
     objects_splited = build_sublists(objects)
 
-
-    get_sizes(objects_splited, len_x, len_y)
+    get_sizes(objects_splited, len_x, len_y, 0, 0, False)
+    entities = []
+    # generate_entities(objects_splited, entities)
+    # j = get_size(objects_splited[0][0], len_x, len_y)
     print("end")
 
 
 def split_objects(objects):
     list1 = []
     list2 = []
-    for i, object in enumerate(objects):
+    for i, objeto in enumerate(objects):
         if (i % 2) == 0:
-           list1.append(object)
+            list1.append(objeto)
         else:
-           list2.append(object)
+            list2.append(objeto)
     return [list1, list2]
 
 
 def build_sublists(objects):
 
     if len(objects) <= 2:
-       return objects
+        return objects
     else:
-       [objects1, objects2] = split_objects(objects)
-       sublist1 = build_sublists(objects1)
-       sublist2 = build_sublists(objects2)
-       return [sublist1, sublist2]
+        [objects1, objects2] = split_objects(objects)
+        sublist1 = build_sublists(objects1)
+        sublist2 = build_sublists(objects2)
+        return [sublist1, sublist2]
 
-5
-def get_sizes(objects_splitted, len_x, len_y):
+
+def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, rotate):
     size = get_size(objects_splitted, len_x, len_y)
     for i, sublist in enumerate(objects_splitted):
-        get_sizes(sublist, size[i][0], size[i][1])
-    objects_splitted.append(size)
-    print("jose")
+        # If it's not a terminal
+        if isinstance(sublist, list):
+            if i == 0:
+                if not rotate:
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, rotate=not rotate)
+                    sublist.append({'x': parent_x, 'y': parent_y})
+                else:
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, rotate=not rotate)
+                    sublist.append({'x': parent_x, 'y': parent_y})
+            if i == 1:
+                if not rotate:
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, rotate=not rotate)
+                    sublist.append({'x': parent_x + size[0][0], 'y': parent_y})
+                else:
+                    get_sizes(sublist, size[i][0], size[i][1], parent_y, parent_x + size[0][0], rotate=not rotate)
+                    sublist.append({'x': parent_x, 'y': parent_y + size[0][0]})
+        else:
+            if i == 0:
+                sublist['pos'] = {'x': parent_x, 'y': parent_y}
+            if i == 1:
+                if not rotate:
+                    sublist['pos'] = {'x': parent_x + size[0][0], 'y': parent_y}
+                else:
+                    sublist['pos'] = {'x': parent_x, 'y': parent_y + size[0][0]}
 
+
+    # Check if it's a terminal and save it
+    save_terminal_size(objects_splitted, size)
+    # Save in the middle
+    # objects_splitted.append(size)
+
+
+def save_terminal_size(lista, size):
+    # Check if it is terminal
+    if isinstance(lista[0], dict):
+        lista[0]['size'] = size[0]
+    # Check if it is more than 1 terminal item
+    if len(lista) > 1 and isinstance(lista[1], dict):
+        lista[1]['size'] = size[1]
 
 
 def get_size(lista, len1, len2):
+    if len(lista) > 1:
+        lena2 = len1
+        lenb2 = len1
 
-    lena2 = len1
-    lenb2 = len1
+        valuea = add_value(lista[0], "value")
+        valueb = add_value(lista[1], "value")
 
-    valuea = add_value(lista[0], "value")
-    valueb = add_value(lista[1], "value")
+        lena1 = len2 * (valuea / (valuea + valueb))
+        lenb1 = len2 * (valueb / (valuea + valueb))
 
-    lena1 = len2 * (valuea / (valuea + valueb))
-    lenb1 = len2 * (valueb / (valuea + valueb))
-
-    return [lena1, lena2], [lenb1, lenb2]
+        return [lena1, lena2], [lenb1, lenb2]
+    else:
+        return [len1, len2], [None, None]
 
 
 def add_value(lista, field):
     count = 0
-    for i in lista:
-        if isinstance(i, list):
-            count += add_value(i, field)
-        else:
-            count += i[field]
+    if not isinstance(lista, dict):
+        for i in lista:
+            if isinstance(i, list):
+                count += add_value(i, field)
+            else:
+                count += i[field]
+    else:
+        count += lista[field]
     return count
+
+
+def generate_entities(lista, entities, izq=None):
+    print("-------------")
+    print(lista)
+    if isinstance(lista[0], list):
+        generate_entities(lista[0], entities)
+    if isinstance(lista[1], list):
+        generate_entities(lista[1], entities)
 
 
 if __name__ == '__main__':
