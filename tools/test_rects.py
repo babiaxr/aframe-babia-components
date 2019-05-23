@@ -51,9 +51,10 @@ def main():
     len_y = math.sqrt(value_total * ratio_y / ratio_x)
 
     objects.sort(key=lambda x: x['value'], reverse=True)
-    final_list = build_sublists(objects)
+    objects_splited = build_sublists(objects)
 
-    j = size(final_list, len_x, len_y)
+
+    get_sizes(objects_splited, len_x, len_y)
     print("end")
 
 
@@ -78,8 +79,17 @@ def build_sublists(objects):
        sublist2 = build_sublists(objects2)
        return [sublist1, sublist2]
 
+5
+def get_sizes(objects_splitted, len_x, len_y):
+    size = get_size(objects_splitted, len_x, len_y)
+    for i, sublist in enumerate(objects_splitted):
+        get_sizes(sublist, size[i][0], size[i][1])
+    objects_splitted.append(size)
+    print("jose")
 
-def size(lista, len1, len2):
+
+
+def get_size(lista, len1, len2):
 
     lena2 = len1
     lenb2 = len1
