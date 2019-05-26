@@ -40,6 +40,7 @@ def main():
 
     objects = [{"id": ".", "value": 12},
            {"id": "subdir1", "value": 36},
+           #{"id": "subdir7", "value": 32},
            {"id": "subdir2", "value": 46},
            {"id": "subdir3", "value": 16},
            {"id": "subdir4", "value": 40},
@@ -83,7 +84,7 @@ def build_sublists(objects):
 
 
 def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, rotate):
-    size = get_size(objects_splitted, len_x, len_y)
+    size = get_size(objects_splitted, len_x, len_y, rotate)
     for i, sublist in enumerate(objects_splitted):
         # If it's not a terminal
         if isinstance(sublist, list):
@@ -92,15 +93,17 @@ def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, rotate):
                     get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
                 else:
-                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, rotate=not rotate)
+                    # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
+                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
             if i == 1:
                 if not rotate:
                     get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, rotate=not rotate)
                     sublist.append({'x': parent_x + size[0][0], 'y': parent_y})
                 else:
-                    get_sizes(sublist, size[i][0], size[i][1], parent_y, parent_x + size[0][0], rotate=not rotate)
-                    sublist.append({'x': parent_x, 'y': parent_y + size[0][0]})
+                    # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
+                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x + size[0][0], rotate=not rotate)
+                    sublist.append({'x': parent_x, 'y': parent_y + size[0][1]})
         else:
             if i == 0:
                 sublist['pos'] = {'x': parent_x, 'y': parent_y}
@@ -108,13 +111,14 @@ def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, rotate):
                 if not rotate:
                     sublist['pos'] = {'x': parent_x + size[0][0], 'y': parent_y}
                 else:
-                    sublist['pos'] = {'x': parent_x, 'y': parent_y + size[0][0]}
+                    # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
+                    sublist['pos'] = {'x': parent_x, 'y': parent_y + size[0][1]}
 
 
     # Check if it's a terminal and save it
     save_terminal_size(objects_splitted, size)
     # Save in the middle
-    # objects_splitted.append(size)
+    objects_splitted.append(size)
 
 
 def save_terminal_size(lista, size):
@@ -126,7 +130,7 @@ def save_terminal_size(lista, size):
         lista[1]['size'] = size[1]
 
 
-def get_size(lista, len1, len2):
+def get_size(lista, len1, len2, rotate):
     if len(lista) > 1:
         lena2 = len1
         lenb2 = len1
@@ -137,7 +141,10 @@ def get_size(lista, len1, len2):
         lena1 = len2 * (valuea / (valuea + valueb))
         lenb1 = len2 * (valueb / (valuea + valueb))
 
-        return [lena1, lena2], [lenb1, lenb2]
+        if not rotate:
+            return [lena1, lena2], [lenb1, lenb2]
+        else:
+            return [lena2, lena1], [lenb2, lenb1]
     else:
         return [len1, len2], [None, None]
 
