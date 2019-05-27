@@ -32,6 +32,8 @@ import ssl
 import sys
 from functools import reduce
 
+CODECITY_OUTPUT_DATA = 'data_test_rect.json'
+
 
 def main():
     ratio_x = 1
@@ -54,10 +56,24 @@ def main():
     objects.sort(key=lambda x: x['value'], reverse=True)
     objects_splited = build_sublists(objects)
 
-    get_sizes(objects_splited, len_x, len_y, 0, 0, False)
-    entities = []
-    # generate_entities(objects_splited, entities)
+    get_sizes(objects_splited, len_x, len_y, 0, 0, len_x, len_y, False)
+    entities = {
+        'root': {
+            'key': 'root',
+            'height': 0.5,
+            'width': len_x+5,
+            'depth': len_y+5,
+            'position': {
+                'x': 0,
+                'y': 0,
+                'z': 0
+            },
+            'children': {}
+        }
+    }
+    generate_entities(objects, entities['root']['children'])
     # j = get_size(objects_splited[0][0], len_x, len_y)
+    dump_codecity_data(entities)
     print("end")
 
 
@@ -83,31 +99,31 @@ def build_sublists(objects):
         return [sublist1, sublist2]
 
 
-def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, rotate):
+def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, root_lenx, root_leny, rotate):
     size = get_size(objects_splitted, len_x, len_y, rotate)
     for i, sublist in enumerate(objects_splitted):
         # If it's not a terminal
         if isinstance(sublist, list):
             if i == 0:
                 if not rotate:
-                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, rotate=not rotate)
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, root_lenx, root_leny, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
-                    add_terminal_pos(sublist, parent_x, parent_y, rotate)
+                    add_terminal_pos(sublist, parent_x, parent_y, root_lenx, root_leny, rotate)
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x, rotate=not rotate)
+                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x, root_lenx, root_leny, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
-                    add_terminal_pos(sublist, parent_x, parent_y, rotate)
+                    add_terminal_pos(sublist, parent_x, parent_y, root_lenx, root_leny, rotate)
             if i == 1:
                 if not rotate:
-                    get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, rotate=not rotate)
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, root_lenx, root_leny, rotate=not rotate)
                     sublist.append({'x': parent_x + size[0][0], 'y': parent_y})
-                    add_terminal_pos(sublist, parent_x + size[0][0], parent_y, rotate)
+                    add_terminal_pos(sublist, parent_x + size[0][0], parent_y, root_lenx, root_leny, rotate)
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x + size[0][0], rotate=not rotate)
+                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x + size[0][0], root_lenx, root_leny, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y + size[0][1]})
-                    add_terminal_pos(sublist, parent_x, parent_y + size[0][1], rotate)
+                    add_terminal_pos(sublist, parent_x, parent_y + size[0][1], root_lenx, root_leny, rotate)
 
     # Check if it's a terminal and save it
     save_terminal_size(objects_splitted, size)
@@ -151,17 +167,17 @@ def add_value(lista, field):
     return count
 
 
-def add_terminal_pos(lista, parent_x, parent_y, rotate):
+def add_terminal_pos(lista, parent_x, parent_y, root_lenx, root_leny, rotate):
     for i, sublist in enumerate(lista):
         if isinstance(sublist, dict):
             if i == 0:
-                sublist['pos'] = {'x': parent_x, 'y': parent_y}
+                sublist['pos'] = {'x': parent_x + (lista[0]['size'][0]/2) - (root_lenx/2), 'y': parent_y + (lista[0]['size'][1]/2) - (root_leny/2)}
             elif i == 1:
                 if not rotate:
-                    sublist['pos'] = {'x': parent_x, 'y': parent_y + lista[0]['size'][1]}
+                    sublist['pos'] = {'x': parent_x + (lista[1]['size'][0]/2) - (root_lenx/2), 'y': parent_y + lista[0]['size'][1] + (lista[1]['size'][1]/2) - (root_leny/2)}
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    sublist['pos'] = {'x': parent_x + lista[0]['size'][0], 'y': parent_y}
+                    sublist['pos'] = {'x': parent_x + lista[0]['size'][0] + (lista[1]['size'][0]/2) - (root_lenx/2), 'y': parent_y + (lista[1]['size'][1]/2) - (root_leny/2)}
 
 
 def save_terminal_size(lista, size):
@@ -173,13 +189,24 @@ def save_terminal_size(lista, size):
         lista[1]['size'] = size[1]
 
 
-def generate_entities(lista, entities, izq=None):
-    print("-------------")
-    print(lista)
-    if isinstance(lista[0], list):
-        generate_entities(lista[0], entities)
-    if isinstance(lista[1], list):
-        generate_entities(lista[1], entities)
+def generate_entities(lista, entities):
+    for i, item in enumerate(lista):
+        entities[i] = {
+            'key': item['id'],
+            'height': 1,
+            'width': item['size'][0],
+            'depth': item['size'][1],
+            'position': {
+                'x': item['pos']['x'],
+                'y': 0,
+                'z': item['pos']['y']
+            }
+        }
+
+
+def dump_codecity_data(data=None):
+    with open(CODECITY_OUTPUT_DATA, 'w') as f:
+        json.dump(data, f)
 
 
 if __name__ == '__main__':
