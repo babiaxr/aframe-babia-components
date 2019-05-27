@@ -1067,15 +1067,13 @@ let generateCity = (data, element) => {
 
         for (let entity of dataToPrint) {
 
-            let buildingEntity = generateBuildEntity(entity, colorid);
+            let buildingEntity = generateBuildEntity(element, entity, colorid);
             colorid++
 
             //Prepare legend
             if (data.legend) {
                 showLegend(buildingEntity, entity)
             }
-
-            element.appendChild(buildingEntity);
 
         }
 
@@ -1084,7 +1082,7 @@ let generateCity = (data, element) => {
 
 let widthBubbles = 0
 
-function generateBuildEntity(entityData, color) {
+function generateBuildEntity(parent, entityData, color) {
     console.log("Generating building...")
     let entity = document.createElement('a-entity');
     entity.setAttribute('geometry', 'primitive: box');
@@ -1093,6 +1091,13 @@ function generateBuildEntity(entityData, color) {
     entity.setAttribute('geometry', 'depth', entityData['depth']);
     entity.setAttribute('geometry', 'height', entityData['height']);
     entity.setAttribute('position', { x: entityData.position.x, y: entityData.position.y + entityData['height'] / 2, z: entityData.position.z });
+    if (entityData['children']) {
+        let keys = Object.keys(entityData['children'])
+        for (let child_key of keys) {
+            generateBuildEntity(entity, entityData.children[child_key], color++)
+        }
+    }
+    parent.appendChild(entity);
     return entity;
 }
 
@@ -2172,6 +2177,7 @@ let generateCodecityList = (data, dataToProcess) => {
             "height": value[data.height],
             "depth": value[data.depth],
             "width": value[data.width],
+            "children": value.children,
             "position": value.position
         }
         list.push(item)
