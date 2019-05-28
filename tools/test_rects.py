@@ -70,7 +70,10 @@ def main():
                {"id": "subdir5_1", "value": 3, "children": [
                    {"id": "subdir5_1", "value": 1},
                    {"id": "subdir5_2", "value": 1},
-                   {"id": "subdir5_3", "value": 1},
+                   {"id": "subdir5_3", "value": 0.5},
+                   {"id": "subdir5_3", "value": 0.3},
+                   {"id": "subdir5_3", "value": 0.1},
+                   {"id": "subdir5_3", "value": 0.1},
                ]},
                {"id": "subdir5_2", "value": 1},
                {"id": "subdir5_3", "value": 1}
@@ -122,7 +125,7 @@ def main():
     entities = {
         'root': {
             'key': 'root',
-            'height': 0.5,
+            'height': 0.2,
             'width': len_x,
             'depth': len_y,
             'position': {
@@ -133,7 +136,7 @@ def main():
             'children': {}
         }
     }
-    generate_entities(objects, entities['root']['children'], 1)
+    generate_entities(objects, entities['root']['children'], 0.4)
     # j = get_size(objects_splited[0][0], len_x, len_y)
     dump_codecity_data(entities)
     print("end")
@@ -279,7 +282,7 @@ def generate_entities(lista, entities, height):
         }
         if 'children' in item:
             entities[i]['children'] = {}
-            generate_entities(item['children'], entities[i]['children'], height = height + 1)
+            generate_entities(item['children'], entities[i]['children'], height = height + 0.2)
 
 
 def dump_codecity_data(data=None):
