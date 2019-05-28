@@ -36,7 +36,7 @@ CODECITY_OUTPUT_DATA = '../examples/test_areas/data.json'
 
 
 def main():
-    ratio_x = 1
+    ratio_x = 3
     ratio_y = 1
     value_total = 170
 
@@ -45,19 +45,66 @@ def main():
            #{"id": "subdir7", "value": 32},
            #{"id": "subdir2", "value": 46},
            {"id": "subdir2", "value": 46, "children": [
-               {"id": "subdir2_1", "value": 26},
+               {"id": "subdir2_1", "value": 26, "children": [
+                   {"id": "subdir5_1", "value": 14},
+                   {"id": "subdir5_2", "value": 3},
+                   {"id": "subdir5_2", "value": 4},
+                   {"id": "subdir5_2", "value": 5},
+                   {"id": "subdir5_3", "value": 2},
+                   {"id": "subdir5_3", "value": 1},
+               ]},
                {"id": "subdir2_2", "value": 12},
                {"id": "subdir2_3", "value": 8}
            ]},
            {"id": "subdir3", "value": 16},
-           {"id": "subdir4", "value": 40},
+           {"id": "subdir4", "value": 40, 'children': [
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 10},
+               {"id": "subdir5", "value": 10}
+           ]},
            #{"id": "subdir5", "value": 5},
            {"id": "subdir5", "value": 5, "children": [
-               {"id": "subdir5_1", "value": 3},
+               {"id": "subdir5_1", "value": 3, "children": [
+                   {"id": "subdir5_1", "value": 1},
+                   {"id": "subdir5_2", "value": 1},
+                   {"id": "subdir5_3", "value": 1},
+               ]},
                {"id": "subdir5_2", "value": 1},
                {"id": "subdir5_3", "value": 1}
            ]},
            {"id": "subdir6", "value": 15}
+           ]
+
+    objects_test = [{"id": ".", "value": 12},
+           {"id": "subdir1", "value": 4},
+           {"id": "subdir7", "value": 32},
+           {"id": "subdir2", "value": 46},
+           {"id": "subdir3", "value": 16},
+           {"id": "subdir4", "value": 40, 'children': [
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 5},
+               {"id": "subdir5", "value": 10},
+               {"id": "subdir5", "value": 10}
+           ]},
+           {"id": "subdir5", "value": 5},
+           {"id": "subdir6", "value": 10},
+           {"id": "subdir8", "value": 5}
+           ]
+
+    objects_one_children = [{"id": ".", "value": 12},
+           {"id": "subdir1", "value": 4},
+           {"id": "subdir7", "value": 32},
+           {"id": "subdir2", "value": 46},
+           {"id": "subdir3", "value": 16},
+           {"id": "subdir4", "value": 40},
+           {"id": "subdir5", "value": 5},
+           {"id": "subdir6", "value": 10},
+           {"id": "subdir8", "value": 5}
            ]
 
     root_posx = 10
@@ -69,8 +116,8 @@ def main():
     objects.sort(key=lambda x: x['value'], reverse=True)
     objects_splited = build_sublists(objects)
 
-
-    get_sizes(objects_splited, len_x, len_y, root_posx, root_posy, len_x, len_y, root_posx, root_posy, False)
+    # TODO: los primeros len_[x] ESTÁN AL REVES, por que necesita estar invertidos para que funciione con rectangulos
+    get_sizes(objects_splited, len_y, len_x, root_posx, root_posy, len_x, len_y, root_posx, root_posy, False)
     get_child_sizes(objects)
     entities = {
         'root': {
@@ -212,7 +259,9 @@ def get_child_sizes(objects):
         if 'children' in item:
             item['children'].sort(key=lambda x: x['value'], reverse=True)
             children_splited = build_sublists(item['children'])
-            get_sizes(children_splited, item['size'][0], item['size'][1], item['pos_raw']['x'], item['pos_raw']['y'], item['size'][0], item['size'][1], item['pos_raw']['x'], item['pos_raw']['y'], True)
+            # TODO: los primeros item['size'][x] ESTÁN AL REVES, por que necesita estar invertidos para que funciione con rectangulos
+            get_sizes(children_splited, item['size'][1], item['size'][0], item['pos_raw']['x'], item['pos_raw']['y'], item['size'][0], item['size'][1], item['pos_raw']['x'], item['pos_raw']['y'], False)
+            get_child_sizes(item['children'])
 
 
 def generate_entities(lista, entities, height):
