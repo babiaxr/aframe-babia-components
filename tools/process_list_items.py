@@ -33,12 +33,12 @@ import sys
 from functools import reduce
 
 CODECITY_OUTPUT_DATA = '../examples/test_areas/data.json'
+HEIGHT_LAYERS = 0.1
+SEPARATION_LAYERS = 0.1
 
 
 def main():
-    ratio_x = 3
-    ratio_y = 1
-    value_total = 170
+
 
     objects = [{"id": ".", "value": 12},
            {"id": "subdir1", "value": 36},
@@ -50,7 +50,7 @@ def main():
                    {"id": "subdir5_2", "value": 3},
                    {"id": "subdir5_2", "value": 4},
                    {"id": "subdir5_2", "value": 5},
-                   {"id": "subdir5_3", "value": 2},
+                   {"id": "subdir5_3", "value": 2, "height": 10},
                    {"id": "subdir5_3", "value": 1},
                ]},
                {"id": "subdir2_2", "value": 12},
@@ -109,6 +109,13 @@ def main():
            {"id": "subdir6", "value": 10},
            {"id": "subdir8", "value": 5}
            ]
+    process_list(objects)
+
+
+def process_list(objects):
+    ratio_x = 2
+    ratio_y = 1
+    value_total = get_root_value(objects)
 
     root_posx = 10
     root_posy = 10
@@ -119,13 +126,13 @@ def main():
     objects.sort(key=lambda x: x['value'], reverse=True)
     objects_splited = build_sublists(objects)
 
-    # TODO: los primeros len_[x] ESTÁN AL REVES, por que necesita estar invertidos para que funciione con rectangulos
+    # TODO: los primeros len_[] ESTÁN AL REVES, por que necesita estar invertidos para que funciione con rectangulos
     get_sizes(objects_splited, len_y, len_x, root_posx, root_posy, len_x, len_y, root_posx, root_posy, False)
     get_child_sizes(objects)
     entities = {
         'root': {
             'key': 'root',
-            'height': 0.2,
+            'height': HEIGHT_LAYERS,
             'width': len_x,
             'depth': len_y,
             'position': {
@@ -136,10 +143,17 @@ def main():
             'children': {}
         }
     }
-    generate_entities(objects, entities['root']['children'], 0.4)
+    generate_entities(objects, entities['root']['children'], HEIGHT_LAYERS)
     # j = get_size(objects_splited[0][0], len_x, len_y)
     dump_codecity_data(entities)
     print("end")
+
+
+def get_root_value(list):
+    value = 0
+    for i in list:
+        value += i['value']
+    return value
 
 
 def build_sublists(objects):
@@ -271,9 +285,9 @@ def generate_entities(lista, entities, height):
     for i, item in enumerate(lista):
         entities[i] = {
             'key': item['id'],
-            'height': height,
-            'width': item['size'][0],
-            'depth': item['size'][1],
+            'height': item['height'] if 'height' in item else height,
+            'width': item['size'][0] - SEPARATION_LAYERS,
+            'depth': item['size'][1] - SEPARATION_LAYERS,
             'position': {
                 'x': item['pos']['x'],
                 'y': 0,
@@ -282,7 +296,7 @@ def generate_entities(lista, entities, height):
         }
         if 'children' in item:
             entities[i]['children'] = {}
-            generate_entities(item['children'], entities[i]['children'], height = height + 0.2)
+            generate_entities(item['children'], entities[i]['children'], height = HEIGHT_LAYERS)
 
 
 def dump_codecity_data(data=None):
