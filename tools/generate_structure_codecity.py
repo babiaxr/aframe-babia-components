@@ -30,6 +30,8 @@ import math
 import os
 import ssl
 import sys
+import pandas as pd
+import tools.process_list_items as pli
 
 from elasticsearch import Elasticsearch
 from elasticsearch.connection import create_ssl_context
@@ -37,7 +39,9 @@ from elasticsearch.connection import create_ssl_context
 
 HTTPS_CHECK_CERT = False
 INDEX_DATA_FILE = 'index_backup.json'
-CODECITY_OUTPUT_DATA = 'data.json'
+DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe.csv'
+
+CODECITY_OUTPUT_DATA = '../examples/test_codecity_git_index/data.json'
 
 
 def main():
@@ -51,20 +55,43 @@ def main():
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("requests").setLevel(logging.WARNING)
 
-    if args.elastic_url and args.index:
+    # Retrieve index and generate index backup
+    if args.elastic_url and args.index and not (args.index_file or args.dataframe):
         if os.path.exists(INDEX_DATA_FILE):
             os.remove(INDEX_DATA_FILE)
         get_index_data(args.elastic_url, args.index)
 
-    if args.data_file:
-        entities_data = proccess_data(args.data_file, args.build)
-    else:
-        entities_data = proccess_data(INDEX_DATA_FILE, args.build)
+    # Generate dataframe
+    if args.index_file:
+        df = get_dataframe(args.index_file, args.build)
+    elif not args.index_file and not args.dataframe:
+        df = get_dataframe(INDEX_DATA_FILE, args.build)
 
-    codecity_data = add_layout(entities_data, args.type)
+    # Export dataframe
+    if args.export_dataframe:
+        logging.debug("Exporting index data to csv")
+        df.to_csv(DATAFRAME_CSV_EXPORT_FILE)
 
-    dump_codecity_data(codecity_data)
+    # Load dataframe from file
+    if args.dataframe:
+        logging.debug("Loading dataframe from csv file")
+        df = pd.read_csv(args.dataframe)
 
+    # Check that at leas the dataframe is defined
+    if not args.dataframe and not args.index_file and not (args.elastic_url and args.index):
+        sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
+
+    # And go with df now
+    data = extract_data(df)
+
+    entities = pli.process_list(data)
+    dump_codecity_data(entities)
+    #df_gr = df[df['project']=="GrimoireLab"]
+
+    #codecity_data = add_layout(entities_data, args.type)
+
+    #dump_codecity_data(codecity_data)
+    print("exit")
 
 def parse_args():
     parser = argparse.ArgumentParser(usage="usage: generate_structure_codecity.py [options]",
@@ -78,8 +105,12 @@ def parse_args():
                         help='Generate a CSV file instead a JSON')
     parser.add_argument('--build', required=False,
                         help='Define the field that will be the buildings')
-    parser.add_argument('-df', '--data-file', required=False,
+    parser.add_argument('-if', '--index-file', required=False,
                         help='Instead of the elastic, load data by a file')
+    parser.add_argument('-df', '--dataframe', required=False,
+                        help='Instead of the elastic, load data by dataframe')
+    parser.add_argument('-exdf', '--export-dataframe', action='store_true',
+                        help='Export the dataframe of the index data"')
 
     return parser.parse_args()
 
@@ -125,23 +156,43 @@ def get_index_data(es_url=None, index=None):
         scroll_size = len(page['hits']['hits'])
 
 
-def proccess_data(file=None, index=None):
+def get_dataframe(file=None, index=None):
+    df = pd.DataFrame()
     key_field = "repo_name"
     data = {}
 
     file = open(file, 'r')
     rows = file.readlines()
 
-    for line in rows:
+    for i, line in enumerate(rows):
         item = json.loads(line)
+        logging.debug("Inserting item {}/{} to csv".format(i, len(rows)))
+        df = df.append(item, ignore_index=True)
 
+        '''
         if item[key_field] not in data:
             entity = generate_entity(item, key_field)
             data[item[key_field]] = entity
         else:
             data[item[key_field]]['height'] += 1
+        '''
 
-    return data
+    return df
+
+
+def extract_data(df):
+    print(df.head())
+    entities = []
+
+    for project in df['repo_name'].unique():
+        entity = {
+            "id": project,
+            "value": 10
+        }
+        entities.append(entity)
+        df_pr = df[df['project'] == project]
+
+    return entities
 
 
 def generate_entity(item, key):

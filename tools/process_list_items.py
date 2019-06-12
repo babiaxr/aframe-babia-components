@@ -78,7 +78,7 @@ def main():
                {"id": "subdir5_2", "value": 1},
                {"id": "subdir5_3", "value": 1}
            ]},
-           {"id": "subdir6", "value": 15}
+           {"id": "subdir6", "value": 15},
            ]
 
     objects_test = [{"id": ".", "value": 12},
@@ -99,26 +99,40 @@ def main():
            {"id": "subdir8", "value": 5}
            ]
 
-    objects_one_children = [{"id": ".", "value": 12},
-           {"id": "subdir1", "value": 4},
-           {"id": "subdir7", "value": 32},
-           {"id": "subdir2", "value": 46},
-           {"id": "subdir3", "value": 16},
-           {"id": "subdir4", "value": 40},
-           {"id": "subdir5", "value": 5},
-           {"id": "subdir6", "value": 10},
-           {"id": "subdir8", "value": 5}
+    objects_one_children = [{"id": ".", "value": 10},
+                            {"id": "subdir1", "value": 10},
+                            {"id": "subdir7", "value": 10},
+                            {"id": "subdir2", "value": 10},
+                            {"id": "subdir3", "value": 10},
+                            {"id": "subdir4", "value": 10},
+                            {"id": "subdir5", "value": 10},
+                            {"id": "subdir6", "value": 10},
+                            {"id": "subdir8", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir6", "value": 10},
+                            {"id": "subdir8", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir6", "value": 10},
+                            {"id": "subdir8", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir9", "value": 10},
+                            {"id": "subdir9", "value": 10},
            ]
-    process_list(objects)
+    entities = process_list(objects)
+    dump_codecity_data(entities)
 
 
 def process_list(objects):
-    ratio_x = 2
-    ratio_y = 1
+    ratio_x = 1
+    ratio_y = 2
     value_total = get_root_value(objects)
 
-    root_posx = 10
-    root_posy = 10
+    root_posx = 0
+    root_posy = 0
 
     len_x = math.sqrt(value_total * ratio_x / ratio_y)
     len_y = math.sqrt(value_total * ratio_y / ratio_x)
@@ -145,8 +159,9 @@ def process_list(objects):
     }
     generate_entities(objects, entities['root']['children'], HEIGHT_LAYERS)
     # j = get_size(objects_splited[0][0], len_x, len_y)
-    dump_codecity_data(entities)
+
     print("end")
+    return entities
 
 
 def get_root_value(list):
@@ -187,20 +202,22 @@ def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, root_lenx, roo
                 if not rotate:
                     get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
+                    # TODO Otra vez invertido en el terminal pos el parent_x e y por que antes se ha cambiado el rotate
                     add_terminal_pos(sublist, parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate)
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
+                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
                     add_terminal_pos(sublist, parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate)
             if i == 1:
                 if not rotate:
                     get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
                     sublist.append({'x': parent_x + size[0][0], 'y': parent_y})
+                    # TODO Otra vez invertido en el terminal pos el parent_x e y por que antes se ha cambiado el rotate
                     add_terminal_pos(sublist, parent_x + size[0][0], parent_y, root_lenx, root_leny, root_posx, root_posy, rotate)
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    get_sizes(sublist, size[i][1], size[i][0], parent_y, parent_x + size[0][0], root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
+                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y + size[0][1], root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y + size[0][1]})
                     add_terminal_pos(sublist, parent_x, parent_y + size[0][1], root_lenx, root_leny, root_posx, root_posy, rotate)
 
