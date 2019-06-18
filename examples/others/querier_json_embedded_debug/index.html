@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>A-Frame Babia components</title>
+  <meta name="description" content="Bubble example for A-Charts component." />
+  <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+  <script src="../../../dist/aframe-babia-components.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+</head>
+
+<body>
+
+  <a-scene background="color: #A8F3FF" id="AframeScene">
+    <a-entity environment></a-entity>
+    <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+    <a-entity id="queriertest" querier_json='embedded: { "kbn_network": {
+            "id": 62662964,
+            "node_id": "MDEwOlJlcG9zaXRvcnk2MjY2Mjk2NA==",
+            "name": "kbn_network",
+            "full_name": "dlumbrer/kbn_network",
+            "private": false,
+            "created_at": "2016-07-05T19:16:45Z",
+            "updated_at": "2019-02-20T14:22:24Z",
+            "pushed_at": "2019-01-06T19:35:06Z",
+            "size": 10608,
+            "stargazers_count": 232,
+            "watchers_count": 232,
+            "language": "JavaScript",
+            "has_issues": true,
+            "has_projects": true,
+            "has_downloads": true,
+            "has_wiki": true,
+            "has_pages": true,
+            "forks_count": 62,
+            "mirror_url": null,
+            "archived": false,
+            "open_issues_count": 14,
+            "forks": 62,
+            "open_issues": 14,
+            "watchers": 232
+          },
+          "kbn_dotplot": {
+            "id": 100473664,
+            "node_id": "MDEwOlJlcG9zaXRvcnkxMDA0NzM2NjQ=",
+            "name": "kbn_dotplot",
+            "full_name": "dlumbrer/kbn_dotplot",
+            "private": false,
+            "created_at": "2017-08-16T09:41:01Z",
+            "updated_at": "2019-02-19T08:55:38Z",
+            "pushed_at": "2018-11-16T11:44:47Z",
+            "homepage": null,
+            "size": 28044,
+            "stargazers_count": 14,
+            "watchers_count": 14,
+            "language": "JavaScript",
+            "has_issues": true,
+            "has_projects": true,
+            "has_downloads": true,
+            "has_wiki": true,
+            "has_pages": false,
+            "forks_count": 9,
+            "mirror_url": null,
+            "archived": false,
+            "open_issues_count": 3,
+            "forks": 9,
+            "open_issues": 3,
+            "watchers": 14
+          },
+          "kbn_searchtables": {
+            "id": 92531387,
+            "node_id": "MDEwOlJlcG9zaXRvcnk5MjUzMTM4Nw==",
+            "name": "kbn_searchtables",
+            "full_name": "dlumbrer/kbn_searchtables",
+            "private": false,
+            "fork": false,
+            "created_at": "2017-05-26T16:59:04Z",
+            "updated_at": "2019-02-13T23:05:10Z",
+            "pushed_at": "2019-01-14T15:34:58Z",
+            "homepage": "",
+            "size": 60186,
+            "stargazers_count": 41,
+            "watchers_count": 41,
+            "language": "JavaScript",
+            "has_issues": true,
+            "has_projects": true,
+            "has_downloads": true,
+            "has_wiki": true,
+            "has_pages": false,
+            "forks_count": 13,
+            "mirror_url": null,
+            "archived": false,
+            "open_issues_count": 10,
+            "forks": 13,
+            "open_issues": 10,
+            "watchers": 41
+          }
+        }'
+      position="-3 5 5"></a-entity>
+
+    <a-entity layout="type: box; columns: 3; margin: 30; align: center">
+      <a-entity>
+        <a-entity geometry="primitive: box;" material="color:navy;" filterdata='from: queriertest; filter: kbn_searchtables'
+          vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
+          debug_data='inputEvent: debugevent'></a-entity>
+      </a-entity>
+      <a-entity>
+        <a-entity geometry="primitive: box;" material="color:red;" filterdata='from: queriertest; filter: kbn_dotplot'
+          vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
+          debug_data='inputEvent: debugevent'></a-entity>
+      </a-entity>
+      <a-entity>
+
+        <a-entity geometry="primitive: box;" material="color:green;" filterdata='from: queriertest; filter: kbn_network'
+          vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
+          debug_data='inputEvent: debugevent'></a-entity>
+      </a-entity>
+    </a-entity>
+
+
+    <a-entity movement-controls="fly: true" position="-3 5 20">
+      <a-entity camera position="0 0 0" look-controls></a-entity>
+      <a-entity cursor="rayOrigin:mouse"></a-entity>
+      <a-entity laser-controls="hand: right"></a-entity>
+    </a-entity>
+
+  </a-scene>
+
+</body>
+</>

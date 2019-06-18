@@ -13,12 +13,21 @@ For [A-Frame](https://aframe.io).
 
 This pack of components has the aim of visualize data in several ways. There are separated components and each one has an independent aim:
 
+- `geo*` visualize the data prepared by a vismapper in several ways (this type of components must have in the same entity than a vismapper)
 - `querier_*` the aim of just query data and save it in the entity that it has
 - `filterdata` filter the data saved by one of the queriers
 - `vismapper` map the data filtered by filterdata to geometry attributes of the different charts, it "prepares" the data and save it in the entity that it has.
-- `geo*` visualize the data prepared by a vismapper in several ways (this type of components must have in the same entity than a vismapper)
 
 For instance:
+
+```html
+<a-entity geo3dbarchart='legend: true; 
+    data:"[{"key":"David","key2":"2019","size":9},{"key":"David","key2":"2018","size":8},{"key":"David","key2":"2017","size":7},{"key":"David","key2":"2016","size":6},{"key":"David","key2":"2015","size":5},{"key":"Pete","key2":"2011","size":8},{"key":"Pete","key2":"2014","size":7},{"key":"Josh","key2":"2016","size":6},{"key":"Josh","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Jesus","key2":"2011","size":8},{"key":"Jesus","key2":"2014","size":7},{"key":"Jesus","key2":"2016","size":6},{"key":"Jesus","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Steve","key2":"2016","size":9},{"key":"Steve","key2":"2017","size":8},{"key":"Steve","key2":"2014","size":7},{"key":"Steve","key2":"2013","size":6},{"key":"Moreno","key2":"2015","size":5},{"key":"Jesus","key2":"2019","size":10},{"key":"Pete","key2":"2019","size":10}]"' 
+position="-10 0 0" rotation="0 0 0"></a-entity>
+
+```
+
+or using the querier/filters/mappers components (see [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/HOW_TO_CHARTS.md))
 
 ```html
 <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
@@ -27,9 +36,7 @@ For instance:
 
 ```
 
-The first entity has a `querier_*` component, so this entity will retrieve the data of the url in its attribute and save it in the entity.
 
-The second entity has a `filterdata` that fetch the data saved by the `querier_json` entity from above by it's id, so the filterdata is binded to that entity. Moreover, it has a `vismapper` that is mapping fields of the data filtered by the `filterdata` component to geometry attributes of the chart component, in this case will map the field `name` to the x-axis keys of the chart, the `age` to the z-axis keys of the chart and the `size` to the height of the different items of the chart (bars, bubbles...). Finally, the `geo3dbarchart` define that the entity is going to visualize the data mapped by `vismapper` in a 3D bar chart.
 
 
 ## Usage
@@ -53,10 +60,9 @@ Install and use by directly including the [browser files](dist):
 
     <a-scene background="color: #A8F3FF" id="AframeScene">
         
-        <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
-
-        <a-entity geo3dbarchart='legend: true' filterdata="from: queriertest"
-            vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
+        <a-entity geo3dbarchart='legend: true; 
+            data:"[{"key":"David","key2":"2019","size":9},{"key":"David","key2":"2018","size":8},{"key":"David","key2":"2017","size":7},{"key":"David","key2":"2016","size":6},{"key":"David","key2":"2015","size":5},{"key":"Pete","key2":"2011","size":8},{"key":"Pete","key2":"2014","size":7},{"key":"Josh","key2":"2016","size":6},{"key":"Josh","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Jesus","key2":"2011","size":8},{"key":"Jesus","key2":"2014","size":7},{"key":"Jesus","key2":"2016","size":6},{"key":"Jesus","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Steve","key2":"2016","size":9},{"key":"Steve","key2":"2017","size":8},{"key":"Steve","key2":"2014","size":7},{"key":"Steve","key2":"2013","size":6},{"key":"Moreno","key2":"2015","size":5},{"key":"Jesus","key2":"2019","size":10},{"key":"Pete","key2":"2019","size":10}]"' 
+        position="-10 0 0" rotation="0 0 0"></a-entity>
 
         <a-entity camera position="0 0 0" look-controls></a-entity>
         
@@ -85,13 +91,106 @@ import 'aframe-babia-components'
 
 ## How to use this components
 
-There are user guides in the [docs](https://github.com/dlumbrer/aframe-babia-components/tree/master/docs) folder, here are the links:
+The basic Chart components are easy to use, they have few attributes but if you want to see all the components and how to use them, there are user guides in the [docs](https://github.com/dlumbrer/aframe-babia-components/tree/master/docs) folder, here are the links:
 
-- [HOW_TO_CHARTS.md](./docs/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
+- [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
 
-## Components API
+## Chart components API
 
 The installation contains the following components:
+
+### geopiechart component
+
+This component must be used with one of the `vismapper` components, with the `slice` and `height` attribute defined.
+
+This component shows a pie chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a slice  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"kbn_network","size":10},
+{"key":"Maria","size":5},
+...
+]
+```
+
+### geosimplebarchart component
+
+This component must be used with one of the `vismapper` components, with the `x-axis` and `height` attribute defined.
+
+This component shows a simple 2D bar chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a bar  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"kbn_network","size":10},
+{"key":"Maria","size":5},
+...
+]
+
+```
+
+### geo3dbarchart component
+
+This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis` and `height` attribute defined.
+
+This component shows a 3D bar chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a bar  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"David","key2":"2019","size":9},
+{"key":"David","key2":"2018","size":8},
+...
+]
+
+```
+
+### bubblechart component
+
+This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis`, `radius` and `height` attribute defined.
+
+This component shows a 3D bar chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a bubble  | boolean | false |
+| axis          | Shows chart axis  | boolean | true
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"David","key2":"2019","height":1,"radius":9},
+{"key":"David","key2":"2018","height":2,"radius":8},
+...
+]
+
+```
+
+## Querier/Filter/Mapper and other components API
 
 ### querier_json component
 
@@ -154,57 +253,7 @@ This component must be in the same entity than filterdata and it needs also a ch
 | depth        | Field of the data selected by filterdata that will be mapped as the depth of the geometry **(only for box geometry)**. | string   | - |
 
 
-### geopiechart component
-
-This component must be used with one of the `vismapper` components, with the `slice` and `height` attribute defined.
-
-This component shows a pie chart.
-
-#### API
-
-| Property        | Description           | Type   | Default value |
-| --------        | -----------           | ----   | ----- |
-| legend          | Shows a legend when hovering a slice  | boolean | false |
-
-### geosimplebarchart component
-
-This component must be used with one of the `vismapper` components, with the `x-axis` and `height` attribute defined.
-
-This component shows a simple 2D bar chart.
-geopiechart
-#### API
-
-| Property        | Description           | Type   | Default value |
-| --------        | -----------           | ----   | ----- |
-| legend          | Shows a legend when hovering a bar  | boolean | false |
-| axis          | Shows chart axis  | boolean | true |
-
-### geo3dbarchart component
-
-This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis` and `height` attribute defined.
-
-This component shows a 3D bar chart.
-
-#### API
-
-| Property        | Description           | Type   | Default value |
-| --------        | -----------           | ----   | ----- |
-| legend          | Shows a legend when hovering a bar  | boolean | false |
-| axis          | Shows chart axis  | boolean | true |
-
-
-### bubblechart component
-
-This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis`, `radius` and `height` attribute defined.
-
-This component shows a 3D bar chart.
-
-#### API
-
-| Property        | Description           | Type   | Default value |
-| --------        | -----------           | ----   | ----- |
-| legend          | Shows a legend when hovering a bubble  | boolean | false |
-| axis          | Shows chart axis  | boolean | true |
+ |
 
 
 
@@ -230,7 +279,7 @@ This component just map events of an entity to others customizables.
 | output            | Output event  | string | - |
 
 
-## Data model
+### Data model
 
 The dataset returned from the parsing of the `querier` components must has this model:
 
