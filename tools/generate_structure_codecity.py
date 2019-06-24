@@ -41,7 +41,7 @@ HTTPS_CHECK_CERT = False
 INDEX_DATA_FILE = 'index_backup.json'
 DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/test_codecity_git_index/data.json'
+CODECITY_OUTPUT_DATA = '../examples/codecity/test_codecity_git_index/data.json'
 
 
 def main():
@@ -183,14 +183,27 @@ def get_dataframe(file=None, index=None):
 def extract_data(df):
     print(df.head())
     entities = []
-
-    for project in df['repo_name'].unique():
+    val_parent = 0
+    for project in df['project'].unique():
         entity = {
             "id": project,
-            "value": 10
+            "children": []
         }
         entities.append(entity)
         df_pr = df[df['project'] == project]
+        for repo in df_pr['repo_name'].unique():
+            df_repo = df_pr[df_pr['repo_name'] == repo]
+
+            value = len(df_repo['Author_name'].unique())
+            val_parent += value
+
+            entity_repo = {
+                "id": repo,
+                "value": value
+            }
+            entity['children'].append(entity_repo)
+
+        entity['value'] = val_parent
 
     return entities
 

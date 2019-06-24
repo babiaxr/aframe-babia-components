@@ -32,7 +32,7 @@ import ssl
 import sys
 from functools import reduce
 
-CODECITY_OUTPUT_DATA = '../examples/test_areas/data.json'
+CODECITY_OUTPUT_DATA = '../examples/codecity/test_areas/data.json'
 HEIGHT_LAYERS = 0.1
 SEPARATION_LAYERS = 0.1
 
@@ -121,7 +121,13 @@ def main():
                             {"id": "subdir9", "value": 10},
                             {"id": "subdir9", "value": 10},
                             {"id": "subdir9", "value": 10},
+
+
            ]
+
+    objects_two = [#{"id": ".", "value": 10},
+                    {"id": "subdir1", "value": 20}]
+
     entities = process_list(objects)
     dump_codecity_data(entities)
 
@@ -220,6 +226,25 @@ def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, root_lenx, roo
                     get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y + size[0][1], root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y + size[0][1]})
                     add_terminal_pos(sublist, parent_x, parent_y + size[0][1], root_lenx, root_leny, root_posx, root_posy, rotate)
+        else:
+            # TODO Significa que solo tiene dos elementos hijo, por lo que el tratamiento es distinto, aun que habría que refactorizar
+            if ('pos' not in sublist) or ('pos_raw' not in sublist):
+                if i == 0:
+                    sublist['pos'] = {'x': parent_x + (size[0][0] / 2) - (root_lenx / 2) - root_posx,
+                                      'y': parent_y + (size[0][1] / 2) - (root_leny / 2) - root_posy}
+                    sublist['pos_raw'] = {'x': parent_x, 'y': parent_y}
+                elif i == 1:
+                    # TODO por que aqui es rotate y not rotate
+                    if rotate:
+                        sublist['pos'] = {'x': parent_x + (size[1][0] / 2) - (root_lenx / 2) - root_posx,
+                                          'y': parent_y + size[0][1] + (size[1][1] / 2) - (
+                                                      root_leny / 2) - root_posy}
+                        sublist['pos_raw'] = {'x': parent_x, 'y': parent_y + size[0][1]}
+                    else:
+                        sublist['pos'] = {'x': parent_x + size[0][0] + (size[1][0] / 2) - (
+                                    root_lenx / 2) - root_posx,
+                                          'y': parent_y + (size[1][1] / 2) - (root_leny / 2) - root_posy}
+                        sublist['pos_raw'] = {'x': parent_x + size[0][0], 'y': parent_y}
 
     # Check if it's a terminal and save it
     save_terminal_size(objects_splitted, size)
@@ -300,20 +325,21 @@ def get_child_sizes(objects):
 
 def generate_entities(lista, entities, height):
     for i, item in enumerate(lista):
-        entities[i] = {
-            'key': item['id'],
-            'height': item['height'] if 'height' in item else height,
-            'width': item['size'][0] - SEPARATION_LAYERS,
-            'depth': item['size'][1] - SEPARATION_LAYERS,
-            'position': {
-                'x': item['pos']['x'],
-                'y': 0,
-                'z': item['pos']['y']
+        if not isinstance(item, tuple):
+            entities[i] = {
+                'key': item['id'],
+                'height': item['height'] if 'height' in item else height,
+                'width': item['size'][0] - SEPARATION_LAYERS,
+                'depth': item['size'][1] - SEPARATION_LAYERS,
+                'position': {
+                    'x': item['pos']['x'],
+                    'y': 0,
+                    'z': item['pos']['y']
+                }
             }
-        }
-        if 'children' in item:
-            entities[i]['children'] = {}
-            generate_entities(item['children'], entities[i]['children'], height = HEIGHT_LAYERS)
+            if 'children' in item:
+                entities[i]['children'] = {}
+                generate_entities(item['children'], entities[i]['children'], height = HEIGHT_LAYERS)
 
 
 def dump_codecity_data(data=None):
