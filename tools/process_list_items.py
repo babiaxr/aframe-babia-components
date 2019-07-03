@@ -134,7 +134,7 @@ def main():
 
 def process_list(objects):
     ratio_x = 1
-    ratio_y = 2
+    ratio_y = 1
     value_total = get_root_value(objects)
 
     root_posx = 0

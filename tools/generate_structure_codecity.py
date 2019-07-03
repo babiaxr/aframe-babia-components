@@ -38,8 +38,9 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backup.json'
-DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe.csv'
+INDEX_DATA_FILE = 'index_backup_graal_cocom.json'
+DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe_graal_cocom.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'index_dataframe_graal_cocom_enriched.csv'
 
 CODECITY_OUTPUT_DATA = '../examples/codecity/test_codecity_git_index/data.json'
 
@@ -55,43 +56,56 @@ def main():
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("requests").setLevel(logging.WARNING)
 
-    # Retrieve index and generate index backup
-    if args.elastic_url and args.index and not (args.index_file or args.dataframe):
-        if os.path.exists(INDEX_DATA_FILE):
-            os.remove(INDEX_DATA_FILE)
-        get_index_data(args.elastic_url, args.index)
+    if not args.enriched_dataframe:
+        # Retrieve index and generate index backup
+        if args.elastic_url and args.index and not (args.index_file or args.dataframe):
+            if os.path.exists(INDEX_DATA_FILE):
+                os.remove(INDEX_DATA_FILE)
+            get_index_data(args.elastic_url, args.index)
 
-    # Generate dataframe
-    if args.index_file:
-        df = get_dataframe(args.index_file, args.build)
-    elif not args.index_file and not args.dataframe:
-        df = get_dataframe(INDEX_DATA_FILE, args.build)
+        # Generate dataframe
+        if args.index_file:
+            df = get_dataframe(args.index_file, args.build)
+        elif not args.index_file and not args.dataframe:
+            df = get_dataframe(INDEX_DATA_FILE, args.build)
 
-    # Export dataframe
-    if args.export_dataframe:
-        logging.debug("Exporting index data to csv")
-        df.to_csv(DATAFRAME_CSV_EXPORT_FILE)
+        # Export dataframe
+        if args.export_dataframe:
+            logging.debug("Exporting index data to csv")
+            df.to_csv(DATAFRAME_CSV_EXPORT_FILE)
 
-    # Load dataframe from file
-    if args.dataframe:
-        logging.debug("Loading dataframe from csv file")
-        df = pd.read_csv(args.dataframe)
+        # Load dataframe from file
+        if args.dataframe:
+            logging.debug("Loading dataframe from csv file")
+            df = pd.read_csv(args.dataframe)
 
-    # Check that at leas the dataframe is defined
-    if not args.dataframe and not args.index_file and not (args.elastic_url and args.index):
-        sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
+        # Check that at leas the dataframe is defined
+        if not args.dataframe and not args.index_file and not (args.elastic_url and args.index):
+            sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
 
-    # And go with df now
+        # Enrich data adding columns of each folder
+        df = enrich_data(df)
+
+        # Export enriched dataframe
+        if args.export_enriched_dataframe:
+            logging.debug("Exporting enriched index data to csv")
+            df.to_csv(DATAFRAME_CSV_ENRICHED_EXPORT_FILE)
+    else:
+        # We have the enriched dataframe, so we can go with it
+        logging.debug("Loading enriched dataframe from csv file")
+        df = pd.read_csv(args.enriched_dataframe)
+
     data = extract_data(df)
-
     entities = pli.process_list(data)
     dump_codecity_data(entities)
+
     #df_gr = df[df['project']=="GrimoireLab"]
 
     #codecity_data = add_layout(entities_data, args.type)
 
     #dump_codecity_data(codecity_data)
     print("exit")
+
 
 def parse_args():
     parser = argparse.ArgumentParser(usage="usage: generate_structure_codecity.py [options]",
@@ -109,8 +123,12 @@ def parse_args():
                         help='Instead of the elastic, load data by a file')
     parser.add_argument('-df', '--dataframe', required=False,
                         help='Instead of the elastic, load data by dataframe')
+    parser.add_argument('-edf', '--enriched-dataframe', required=False,
+                        help='Instead of the elastic, load data by dataframe')
     parser.add_argument('-exdf', '--export-dataframe', action='store_true',
                         help='Export the dataframe of the index data"')
+    parser.add_argument('-exedf', '--export-enriched-dataframe', action='store_true',
+                        help='Export the enriched dataframe of the index data"')
 
     return parser.parse_args()
 
@@ -147,6 +165,7 @@ def get_index_data(es_url=None, index=None):
 
     while scroll_size > 0:
         for item in page['hits']['hits']:
+            logging.debug("Writing to json")
             with open(INDEX_DATA_FILE, 'a') as f:
                 json.dump(item['_source'], f)
                 f.write('\n')
@@ -168,6 +187,8 @@ def get_dataframe(file=None, index=None):
         item = json.loads(line)
         logging.debug("Inserting item {}/{} to csv".format(i, len(rows)))
         df = df.append(item, ignore_index=True)
+        if i == 30000:
+            break
 
         '''
         if item[key_field] not in data:
@@ -180,9 +201,62 @@ def get_dataframe(file=None, index=None):
     return df
 
 
-def extract_data(df):
+def enrich_data(df):
     print(df.head())
+    #df = df.apply(lambda row: path_to_columns(row), axis=1)
+    for i, row in df.iterrows():
+        logging.debug(row['file_path'])
+        tree_folder = row['file_path'].split(os.sep)
+        df.set_value(i, 'file_path_list', str(tree_folder))
+        df.set_value(i, 'n_folders', len(tree_folder))
+        for n, item in enumerate(tree_folder):
+            df.set_value(i, 'folder_{}'.format(n), item)
+
+    return df
+
+
+# def path_to_columns(row):
+#     logging.debug(row['file_path'])
+#     tree_folder = row['file_path'].split(os.sep)
+#     row['file_path_list'] = tree_folder
+#     row['n_folders'] = len(tree_folder)
+#     for i, item in enumerate(tree_folder):
+#         row['folder_{}'.format(i)] = item
+
+
+def extract_data(df_raw):
+    df = df_raw[df_raw['grimoire_creation_date'].str.contains('2018')]
+
+
     entities = []
+
+    #for i in range(0, int(max_levels)):
+    val_parent = 0
+    for project in df['project'].unique():
+        df_project = df[df['project'] == project]
+        entity_project = {
+            "id": str(project),
+            "children": [],
+            "value": df_project['num_funs'].sum()
+        }
+
+        for repository in df_project['origin'].unique():
+            df_repo = df_project[df_project['origin'] == repository]
+            entity_repo = {
+                "id": str(repository),
+                #"children": [],
+                "value": df_repo['num_funs'].sum(),
+                #"height": df_repo['loc'].sum()
+            }
+            max_levels = df_repo['n_folders'].max()
+            #for i in range(0, int(max_levels)):
+
+            entity_project['children'].append(entity_repo)
+
+        entities.append(entity_project)
+
+
+    '''    
     val_parent = 0
     for project in df['project'].unique():
         entity = {
@@ -204,8 +278,43 @@ def extract_data(df):
             entity['children'].append(entity_repo)
 
         entity['value'] = val_parent
-
+    '''
     return entities
+
+
+# def path_to_columns_git_aoc(row):
+#     logging.debug(row['file_path_list'])
+#     for i, item in enumerate(row['file_path_list']):
+#         row['folder_{}'.format(i)] = item
+#     row['n_folders'] = len(row['file_path_list'])
+#
+#
+# def extract_data_old_metrics_git(df):
+#     print(df.head())
+#     entities = []
+#     val_parent = 0
+#     for project in df['project'].unique():
+#         entity = {
+#             "id": project,
+#             "children": []
+#         }
+#         entities.append(entity)
+#         df_pr = df[df['project'] == project]
+#         for repo in df_pr['repo_name'].unique():
+#             df_repo = df_pr[df_pr['repo_name'] == repo]
+#
+#             value = len(df_repo['Author_name'].unique())
+#             val_parent += value
+#
+#             entity_repo = {
+#                 "id": repo,
+#                 "value": value
+#             }
+#             entity['children'].append(entity_repo)
+#
+#         entity['value'] = val_parent
+#
+#     return entities
 
 
 def generate_entity(item, key):
