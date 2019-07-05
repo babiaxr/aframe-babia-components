@@ -32,6 +32,7 @@ import ssl
 import sys
 import pandas as pd
 import tools.process_list_items as pli
+import numpy as np
 
 from elasticsearch import Elasticsearch
 from elasticsearch.connection import create_ssl_context
@@ -177,8 +178,6 @@ def get_index_data(es_url=None, index=None):
 
 def get_dataframe(file=None, index=None):
     df = pd.DataFrame()
-    key_field = "repo_name"
-    data = {}
 
     file = open(file, 'r')
     rows = file.readlines()
@@ -227,59 +226,53 @@ def enrich_data(df):
 def extract_data(df_raw):
     df = df_raw[df_raw['grimoire_creation_date'].str.contains('2018')]
 
-
     entities = []
 
-    #for i in range(0, int(max_levels)):
-    val_parent = 0
     for project in df['project'].unique():
         df_project = df[df['project'] == project]
         entity_project = {
             "id": str(project),
             "children": [],
-            "value": df_project['num_funs'].sum()
+            "value": df_project['loc'].sum()
         }
 
         for repository in df_project['origin'].unique():
             df_repo = df_project[df_project['origin'] == repository]
             entity_repo = {
                 "id": str(repository),
-                #"children": [],
-                "value": df_repo['num_funs'].sum(),
-                #"height": df_repo['loc'].sum()
+                "children": [],
+                "value": df_repo['loc'].sum(),
             }
-            max_levels = df_repo['n_folders'].max()
-            #for i in range(0, int(max_levels)):
+            build_folders(df_repo, entity_repo['children'], 0, df['n_folders'].max())
 
             entity_project['children'].append(entity_repo)
 
         entities.append(entity_project)
 
-
-    '''    
-    val_parent = 0
-    for project in df['project'].unique():
-        entity = {
-            "id": project,
-            "children": []
-        }
-        entities.append(entity)
-        df_pr = df[df['project'] == project]
-        for repo in df_pr['repo_name'].unique():
-            df_repo = df_pr[df_pr['repo_name'] == repo]
-
-            value = len(df_repo['Author_name'].unique())
-            val_parent += value
-
-            entity_repo = {
-                "id": repo,
-                "value": value
-            }
-            entity['children'].append(entity_repo)
-
-        entity['value'] = val_parent
-    '''
     return entities
+
+
+def build_folders(df, arr, index, max_levels):
+    for folder in df['folder_{}'.format(index)].unique():
+        df_folder = df[df['folder_{}'.format(index)] == folder]
+        if str(folder) != 'nan':
+            entity_folder = {
+                "id": str(folder),
+                #"children": [],
+                "value": df_folder['loc'].sum(),
+            }
+
+            if index == 3:
+                print("pepe")
+
+            # Is leaf or not
+            if len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan':
+                entity_folder['height'] = df_folder['num_funs'].sum()
+            else:
+                entity_folder['children'] = []
+                build_folders(df_folder, entity_folder['children'], index + 1, max_levels)
+
+            arr.append(entity_folder)
 
 
 # def path_to_columns_git_aoc(row):
@@ -317,14 +310,14 @@ def extract_data(df_raw):
 #     return entities
 
 
-def generate_entity(item, key):
-    entity = {
-        'key': item[key],
-        'height': 1,
-        'width': 1,
-        'depth': 1,
-    }
-    return entity
+# def generate_entity(item, key):
+#     entity = {
+#         'key': item[key],
+#         'height': 1,
+#         'width': 1,
+#         'depth': 1,
+#     }
+#     return entity
 
 
 def add_layout(entities, type):
