@@ -31,8 +31,10 @@ import os
 import ssl
 import sys
 import pandas as pd
+import pytz
 import tools.process_list_items as pli
-import numpy as np
+from sklearn import preprocessing
+import datetime as dt
 
 from elasticsearch import Elasticsearch
 from elasticsearch.connection import create_ssl_context
@@ -45,6 +47,9 @@ DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'index_dataframe_graal_cocom_enriched.csv'
 
 CODECITY_OUTPUT_DATA = '../examples/codecity/test_codecity_git_index/data.json'
 
+HEIGHT_FIELD = 'loc'
+AREA_FIELD = 'num_funs'
+DATE_FIELD = 'grimoire_creation_date'
 
 def main():
     args = parse_args()
@@ -201,8 +206,11 @@ def get_dataframe(file=None, index=None):
 
 
 def enrich_data(df):
+    # TODO: filter by project here
+    df = df[df['origin'] == "https://github.com/chaoss/grimoirelab-perceval"]
+
     print(df.head())
-    #df = df.apply(lambda row: path_to_columns(row), axis=1)
+    # Divide path in subfolders
     for i, row in df.iterrows():
         logging.debug(row['file_path'])
         tree_folder = row['file_path'].split(os.sep)
@@ -211,21 +219,24 @@ def enrich_data(df):
         for n, item in enumerate(tree_folder):
             df.set_value(i, 'folder_{}'.format(n), item)
 
+    # Normalize height
+    df = normalize_column(df, HEIGHT_FIELD, 20)
+    df = normalize_column(df, AREA_FIELD, 1)
+
     return df
 
 
-# def path_to_columns(row):
-#     logging.debug(row['file_path'])
-#     tree_folder = row['file_path'].split(os.sep)
-#     row['file_path_list'] = tree_folder
-#     row['n_folders'] = len(tree_folder)
-#     for i, item in enumerate(tree_folder):
-#         row['folder_{}'.format(i)] = item
+def normalize_column(df, field, scalar):
+    x = df[[field]].values.astype(float)
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    df['{}_normalized'.format(field)] = pd.DataFrame(x_scaled) * scalar
+    return df
 
 
 def extract_data(df_raw):
-    df = df_raw[df_raw['grimoire_creation_date'].str.contains('2018')]
-
+    # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
+    df = filter_closest_date(df_raw, dt.datetime.now(pytz.utc))
     entities = []
 
     for project in df['project'].unique():
@@ -233,7 +244,8 @@ def extract_data(df_raw):
         entity_project = {
             "id": str(project),
             "children": [],
-            "value": df_project['loc'].sum()
+            #"value": df_project['loc'].sum()
+            "value": len(df_project.index)
         }
 
         for repository in df_project['origin'].unique():
@@ -241,7 +253,8 @@ def extract_data(df_raw):
             entity_repo = {
                 "id": str(repository),
                 "children": [],
-                "value": df_repo['loc'].sum(),
+                #"value": df_repo['loc'].sum(),
+                "value": len(df_repo.index)
             }
             build_folders(df_repo, entity_repo['children'], 0, df['n_folders'].max())
 
@@ -252,6 +265,19 @@ def extract_data(df_raw):
     return entities
 
 
+def filter_closest_date(df, date):
+    df_filtered = pd.DataFrame()
+
+    df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
+    for file in df['file_path'].unique():
+        df_file = df[df['file_path'] == file]
+        diff = (df_file[DATE_FIELD] - date)
+        indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
+        df_filtered = df_filtered.append(df_file.ix[[indexmax]])
+
+    return df_filtered
+
+
 def build_folders(df, arr, index, max_levels):
     for folder in df['folder_{}'.format(index)].unique():
         df_folder = df[df['folder_{}'.format(index)] == folder]
@@ -259,17 +285,18 @@ def build_folders(df, arr, index, max_levels):
             entity_folder = {
                 "id": str(folder),
                 #"children": [],
-                "value": df_folder['loc'].sum(),
+                #"value": df_folder['loc'].sum(),
+                #"value": len(df_folder.index)
+                #"value": len(df_folder.index)
             }
 
-            if index == 3:
-                print("pepe")
-
-            # Is leaf or not
-            if len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan':
-                entity_folder['height'] = df_folder['num_funs'].sum()
+            # Is leaf or not in order to put height
+            if (index == max_levels-1) or (len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan'):
+                entity_folder['height'] = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
+                entity_folder['value'] = 1
             else:
                 entity_folder['children'] = []
+                entity_folder['value'] = len(df_folder.index)
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels)
 
             arr.append(entity_folder)
