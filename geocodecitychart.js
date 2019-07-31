@@ -78,8 +78,6 @@ let generateCity = (data, element) => {
             let buildingEntity = generateBuildEntity(element, entity, colorid, data.legend);
             colorid++
 
-
-
         }
 
     }
@@ -98,8 +96,11 @@ function generateBuildEntity(parent, entityData, color, legend) {
     entity.setAttribute('position', { x: entityData.position.x, y: entityData.position.y + entityData['height'] / 2, z: entityData.position.z });
     if (entityData['children']) {
         let keys = Object.keys(entityData['children'])
+        if (legend) {
+            showLegendDistrict(entity, entityData)
+        }
         for (let child_key of keys) {
-            generateBuildEntity(entity, entityData.children[child_key], color++, legend)
+            generateBuildEntity(parent, entityData.children[child_key], color++, legend)
         }
     } else {
         //Prepare legend
@@ -138,7 +139,7 @@ function generateLegend(entityData) {
 
 function showLegend(buildingEntity, entity) {
     buildingEntity.addEventListener('mouseenter', function () {
-        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
+        this.setAttribute('scale', { x: 1, y: 1.2, z: 1 });
         legend = generateLegend(entity);
         this.appendChild(legend);
     });
@@ -148,6 +149,22 @@ function showLegend(buildingEntity, entity) {
         this.removeChild(legend);
     });
 }
+
+function showLegendDistrict(buildingEntity, entity) {
+    buildingEntity.addEventListener('mouseenter', function () {
+        this.setAttribute('scale', { x: 1, y: 100, z: 1 });
+        this.setAttribute('material', {opacity: 0.8});
+        legend = generateLegend(entity);
+        this.appendChild(legend);
+    });
+
+    buildingEntity.addEventListener('mouseleave', function () {
+        this.setAttribute('scale', { x: 1, y: 1, z: 1 });
+        this.setAttribute('material', {opacity: 1.0});
+        this.removeChild(legend);
+    });
+}
+
 
 
 let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
