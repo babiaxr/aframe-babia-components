@@ -99,7 +99,10 @@ def main():
            {"id": "subdir8", "value": 5}
            ]
 
-    objects_one_children = [{"id": ".", "value": 10},
+    objects_one_children = [{"id": ".", "value": 10, 'children': [
+               {"id": "subdir5", "value": 2, "height": 2},
+               {"id": "subdir5", "value": 2, "height": 3},{"id": "subdir5", "value": 2, "height": 2},{"id": "subdir5", "value": 2, "height": 2},
+               {"id": "subdir5", "value": 2, "height": 3}]},
                             {"id": "subdir1", "value": 10},
                             {"id": "subdir7", "value": 10},
                             {"id": "subdir2", "value": 10},
@@ -156,14 +159,14 @@ def process_list(objects):
             'width': len_x,
             'depth': len_y,
             'position': {
-                'x': root_posx - len_x/2,
+                'x': root_posx + len_x/2,
                 'y': 0,
-                'z': root_posy - len_y/2
+                'z': root_posy + len_y/2
             },
             'children': {}
         }
     }
-    generate_entities(objects, entities['root']['children'], HEIGHT_LAYERS)
+    generate_entities(objects, entities['root']['children'], HEIGHT_LAYERS, 1)
     # j = get_size(objects_splited[0][0], len_x, len_y)
 
     print("end")
@@ -230,21 +233,19 @@ def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, root_lenx, roo
             # TODO Significa que solo tiene dos elementos hijo, por lo que el tratamiento es distinto, aun que habría que refactorizar
             if ('pos' not in sublist) or ('pos_raw' not in sublist):
                 if i == 0:
-                    sublist['pos'] = {'x': parent_x + (size[0][0] / 2) - (root_lenx / 2) - root_posx,
-                                      'y': parent_y + (size[0][1] / 2) - (root_leny / 2) - root_posy}
+                    #sublist['pos'] = {'x': parent_x + (size[0][0] / 2) - (root_lenx / 2) - root_posx, 'y': parent_y + (size[0][1] / 2) - (root_leny / 2) - root_posy}
                     sublist['pos_raw'] = {'x': parent_x, 'y': parent_y}
+                    sublist['pos_new'] = {'x': parent_x + (size[0][0] / 2), 'y': parent_y + (size[0][1] / 2)}
                 elif i == 1:
                     # TODO por que aqui es rotate y not rotate
                     if rotate:
-                        sublist['pos'] = {'x': parent_x + (size[1][0] / 2) - (root_lenx / 2) - root_posx,
-                                          'y': parent_y + size[0][1] + (size[1][1] / 2) - (
-                                                      root_leny / 2) - root_posy}
+                        #sublist['pos'] = {'x': parent_x + (size[1][0] / 2) - (root_lenx / 2) - root_posx, 'y': parent_y + size[0][1] + (size[1][1] / 2) - (root_leny / 2) - root_posy}
                         sublist['pos_raw'] = {'x': parent_x, 'y': parent_y + size[0][1]}
+                        sublist['pos_new'] = {'x': parent_x + (size[1][0] / 2), 'y': parent_y + size[0][1] + (size[1][1] / 2)}
                     else:
-                        sublist['pos'] = {'x': parent_x + size[0][0] + (size[1][0] / 2) - (
-                                    root_lenx / 2) - root_posx,
-                                          'y': parent_y + (size[1][1] / 2) - (root_leny / 2) - root_posy}
+                        #sublist['pos'] = {'x': parent_x + size[0][0] + (size[1][0] / 2) - (root_lenx / 2) - root_posx, y': parent_y + (size[1][1] / 2) - (root_leny / 2) - root_posy}
                         sublist['pos_raw'] = {'x': parent_x + size[0][0], 'y': parent_y}
+                        sublist['pos_new'] = {'x': parent_x + size[0][0] + (size[1][0] / 2), 'y': parent_y + (size[1][1] / 2)}
 
     # Check if it's a terminal and save it
     save_terminal_size(objects_splitted, size)
@@ -292,16 +293,19 @@ def add_terminal_pos(lista, parent_x, parent_y, root_lenx, root_leny, root_posx,
     for i, sublist in enumerate(lista):
         if isinstance(sublist, dict):
             if i == 0:
-                sublist['pos'] = {'x': parent_x + (lista[0]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + (lista[0]['size'][1]/2) - (root_leny/2) - root_posy}
+                #sublist['pos'] = {'x': parent_x + (lista[0]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + (lista[0]['size'][1]/2) - (root_leny/2) - root_posy}
                 sublist['pos_raw'] = {'x': parent_x, 'y': parent_y}
+                sublist['pos_new'] = {'x': parent_x + (lista[0]['size'][0]/2), 'y': parent_y + (lista[0]['size'][1]/2)}
             elif i == 1:
                 if not rotate:
-                    sublist['pos'] = {'x': parent_x + (lista[1]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + lista[0]['size'][1] + (lista[1]['size'][1]/2) - (root_leny/2) - root_posy}
+                    #sublist['pos'] = {'x': parent_x + (lista[1]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + lista[0]['size'][1] + (lista[1]['size'][1]/2) - (root_leny/2) - root_posy}
                     sublist['pos_raw'] = {'x': parent_x, 'y': parent_y + lista[0]['size'][1]}
+                    sublist['pos_new'] = {'x': parent_x + (lista[1]['size'][0]/2), 'y': parent_y + (lista[1]['size'][1]/2) + lista[0]['size'][1]}
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    sublist['pos'] = {'x': parent_x + lista[0]['size'][0] + (lista[1]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + (lista[1]['size'][1]/2) - (root_leny/2) - root_posy}
+                    #sublist['pos'] = {'x': parent_x + lista[0]['size'][0] + (lista[1]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + (lista[1]['size'][1]/2) - (root_leny/2) - root_posy}
                     sublist['pos_raw'] = {'x': parent_x + lista[0]['size'][0], 'y': parent_y}
+                    sublist['pos_new'] = {'x': parent_x + lista[0]['size'][0] + (lista[1]['size'][0]/2), 'y': parent_y + (lista[1]['size'][1]/2)}
 
 
 def save_terminal_size(lista, size):
@@ -323,7 +327,7 @@ def get_child_sizes(objects):
             get_child_sizes(item['children'])
 
 
-def generate_entities(lista, entities, height):
+def generate_entities(lista, entities, height, index):
     for i, item in enumerate(lista):
         if not isinstance(item, tuple):
             entities[i] = {
@@ -332,14 +336,14 @@ def generate_entities(lista, entities, height):
                 'width': item['size'][0] - SEPARATION_LAYERS,
                 'depth': item['size'][1] - SEPARATION_LAYERS,
                 'position': {
-                    'x': item['pos']['x'],
-                    'y': 0,
-                    'z': item['pos']['y']
+                    'x': item['pos_new']['x'],
+                    'y': HEIGHT_LAYERS * index,
+                    'z': item['pos_new']['y']
                 }
             }
             if 'children' in item:
                 entities[i]['children'] = {}
-                generate_entities(item['children'], entities[i]['children'], height = HEIGHT_LAYERS)
+                generate_entities(item['children'], entities[i]['children'], height = HEIGHT_LAYERS, index= index+1)
 
 
 def dump_codecity_data(data=None):
