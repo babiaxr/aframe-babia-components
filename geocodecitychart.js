@@ -75,13 +75,10 @@ let generateCity = (data, element) => {
 
         for (let entity of dataToPrint) {
 
-            let buildingEntity = generateBuildEntity(element, entity, colorid);
+            let buildingEntity = generateBuildEntity(element, entity, colorid, data.legend);
             colorid++
 
-            //Prepare legend
-            if (data.legend) {
-                showLegend(buildingEntity, entity)
-            }
+
 
         }
 
@@ -90,7 +87,7 @@ let generateCity = (data, element) => {
 
 let widthBubbles = 0
 
-function generateBuildEntity(parent, entityData, color) {
+function generateBuildEntity(parent, entityData, color, legend) {
     console.log("Generating building...")
     let entity = document.createElement('a-entity');
     entity.setAttribute('geometry', 'primitive: box');
@@ -102,7 +99,12 @@ function generateBuildEntity(parent, entityData, color) {
     if (entityData['children']) {
         let keys = Object.keys(entityData['children'])
         for (let child_key of keys) {
-            generateBuildEntity(entity, entityData.children[child_key], color++)
+            generateBuildEntity(entity, entityData.children[child_key], color++, legend)
+        }
+    } else {
+        //Prepare legend
+        if (legend) {
+            showLegend(entity, entityData)
         }
     }
     parent.appendChild(entity);
