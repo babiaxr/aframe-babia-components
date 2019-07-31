@@ -128,10 +128,10 @@ def main():
 
            ]
 
-    objects_two = [#{"id": ".", "value": 10},
+    objects_two = [{"id": ".", "value": 10},
                     {"id": "subdir1", "value": 20}]
 
-    entities = process_list(objects)
+    entities = process_list(objects_one_children)
     dump_codecity_data(entities)
 
 
@@ -150,7 +150,7 @@ def process_list(objects):
     objects_splited = build_sublists(objects)
 
     # TODO: los primeros len_[] ESTÁN AL REVES, por que necesita estar invertidos para que funciione con rectangulos
-    get_sizes(objects_splited, len_y, len_x, root_posx, root_posy, len_x, len_y, root_posx, root_posy, False)
+    get_sizes(objects_splited, len_y, len_x, root_posx, root_posy, False)
     get_child_sizes(objects)
     entities = {
         'root': {
@@ -202,48 +202,45 @@ def split_objects(objects):
     return [list1, list2]
 
 
-def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate):
+def get_sizes(objects_splitted, len_x, len_y, parent_x, parent_y, rotate):
     size = get_size(objects_splitted, len_x, len_y, rotate)
     for i, sublist in enumerate(objects_splitted):
         # If it's not a terminal
         if isinstance(sublist, list):
             if i == 0:
                 if not rotate:
-                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x, parent_y, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
                     # TODO Otra vez invertido en el terminal pos el parent_x e y por que antes se ha cambiado el rotate
-                    add_terminal_pos(sublist, parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate)
+                    add_terminal_pos(sublist, parent_x, parent_y, rotate)
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
+                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y, rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y})
-                    add_terminal_pos(sublist, parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate)
+                    add_terminal_pos(sublist, parent_x, parent_y, rotate)
             if i == 1:
                 if not rotate:
-                    get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
+                    get_sizes(sublist, size[i][0], size[i][1], parent_x + size[0][0], parent_y, rotate=not rotate)
                     sublist.append({'x': parent_x + size[0][0], 'y': parent_y})
                     # TODO Otra vez invertido en el terminal pos el parent_x e y por que antes se ha cambiado el rotate
-                    add_terminal_pos(sublist, parent_x + size[0][0], parent_y, root_lenx, root_leny, root_posx, root_posy, rotate)
+                    add_terminal_pos(sublist, parent_x + size[0][0], parent_y, rotate)
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y + size[0][1], root_lenx, root_leny, root_posx, root_posy, rotate=not rotate)
+                    get_sizes(sublist, size[i][1], size[i][0], parent_x, parent_y + size[0][1], rotate=not rotate)
                     sublist.append({'x': parent_x, 'y': parent_y + size[0][1]})
-                    add_terminal_pos(sublist, parent_x, parent_y + size[0][1], root_lenx, root_leny, root_posx, root_posy, rotate)
+                    add_terminal_pos(sublist, parent_x, parent_y + size[0][1], rotate)
         else:
             # TODO Significa que solo tiene dos elementos hijo, por lo que el tratamiento es distinto, aun que habría que refactorizar
             if ('pos' not in sublist) or ('pos_raw' not in sublist):
                 if i == 0:
-                    #sublist['pos'] = {'x': parent_x + (size[0][0] / 2) - (root_lenx / 2) - root_posx, 'y': parent_y + (size[0][1] / 2) - (root_leny / 2) - root_posy}
                     sublist['pos_raw'] = {'x': parent_x, 'y': parent_y}
                     sublist['pos_new'] = {'x': parent_x + (size[0][0] / 2), 'y': parent_y + (size[0][1] / 2)}
                 elif i == 1:
                     # TODO por que aqui es rotate y not rotate
                     if rotate:
-                        #sublist['pos'] = {'x': parent_x + (size[1][0] / 2) - (root_lenx / 2) - root_posx, 'y': parent_y + size[0][1] + (size[1][1] / 2) - (root_leny / 2) - root_posy}
                         sublist['pos_raw'] = {'x': parent_x, 'y': parent_y + size[0][1]}
                         sublist['pos_new'] = {'x': parent_x + (size[1][0] / 2), 'y': parent_y + size[0][1] + (size[1][1] / 2)}
                     else:
-                        #sublist['pos'] = {'x': parent_x + size[0][0] + (size[1][0] / 2) - (root_lenx / 2) - root_posx, y': parent_y + (size[1][1] / 2) - (root_leny / 2) - root_posy}
                         sublist['pos_raw'] = {'x': parent_x + size[0][0], 'y': parent_y}
                         sublist['pos_new'] = {'x': parent_x + size[0][0] + (size[1][0] / 2), 'y': parent_y + (size[1][1] / 2)}
 
@@ -289,21 +286,18 @@ def add_value(lista, field):
     return count
 
 
-def add_terminal_pos(lista, parent_x, parent_y, root_lenx, root_leny, root_posx, root_posy, rotate):
+def add_terminal_pos(lista, parent_x, parent_y, rotate):
     for i, sublist in enumerate(lista):
         if isinstance(sublist, dict):
             if i == 0:
-                #sublist['pos'] = {'x': parent_x + (lista[0]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + (lista[0]['size'][1]/2) - (root_leny/2) - root_posy}
                 sublist['pos_raw'] = {'x': parent_x, 'y': parent_y}
                 sublist['pos_new'] = {'x': parent_x + (lista[0]['size'][0]/2), 'y': parent_y + (lista[0]['size'][1]/2)}
             elif i == 1:
                 if not rotate:
-                    #sublist['pos'] = {'x': parent_x + (lista[1]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + lista[0]['size'][1] + (lista[1]['size'][1]/2) - (root_leny/2) - root_posy}
                     sublist['pos_raw'] = {'x': parent_x, 'y': parent_y + lista[0]['size'][1]}
                     sublist['pos_new'] = {'x': parent_x + (lista[1]['size'][0]/2), 'y': parent_y + (lista[1]['size'][1]/2) + lista[0]['size'][1]}
                 else:
                     # TODO OJO ESE cambiado Es por que hay que darle la vuelta otra vez como en la funcion get_size
-                    #sublist['pos'] = {'x': parent_x + lista[0]['size'][0] + (lista[1]['size'][0]/2) - (root_lenx/2) - root_posx, 'y': parent_y + (lista[1]['size'][1]/2) - (root_leny/2) - root_posy}
                     sublist['pos_raw'] = {'x': parent_x + lista[0]['size'][0], 'y': parent_y}
                     sublist['pos_new'] = {'x': parent_x + lista[0]['size'][0] + (lista[1]['size'][0]/2), 'y': parent_y + (lista[1]['size'][1]/2)}
 
@@ -323,7 +317,7 @@ def get_child_sizes(objects):
             item['children'].sort(key=lambda x: x['value'], reverse=True)
             children_splited = build_sublists(item['children'])
             # TODO: los primeros item['size'][x] ESTÁN AL REVES, por que necesita estar invertidos para que funciione con rectangulos
-            get_sizes(children_splited, item['size'][1], item['size'][0], item['pos_raw']['x'], item['pos_raw']['y'], item['size'][0], item['size'][1], item['pos_raw']['x'], item['pos_raw']['y'], False)
+            get_sizes(children_splited, item['size'][1], item['size'][0], item['pos_raw']['x'], item['pos_raw']['y'], False)
             get_child_sizes(item['children'])
 
 
