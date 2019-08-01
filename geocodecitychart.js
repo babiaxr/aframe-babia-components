@@ -112,7 +112,7 @@ function generateBuildEntity(parent, entityData, color, legend) {
     return entity;
 }
 
-function generateLegend(entityData) {
+function generateLegend(entityData, buildingEntity) {
     let text = entityData['key']
 
     let width = 2;
@@ -120,7 +120,7 @@ function generateLegend(entityData) {
         width = text.length / 8;
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: entityData['height'] / 2 + 1, z: 0 });
+    entity.setAttribute('position', { x: 0, y: buildingEntity.getAttribute('geometry').height / 2 + 1, z: 0 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -140,7 +140,7 @@ function generateLegend(entityData) {
 function showLegend(buildingEntity, entity) {
     buildingEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1, y: 1.2, z: 1 });
-        legend = generateLegend(entity);
+        legend = generateLegend(entity, this);
         this.appendChild(legend);
     });
 
@@ -152,13 +152,14 @@ function showLegend(buildingEntity, entity) {
 
 function showLegendDistrict(buildingEntity, entity) {
     buildingEntity.addEventListener('mouseenter', function () {
-        this.setAttribute('scale', { x: 1, y: 100, z: 1 });
+        this.setAttribute('geometry', 'height', '10');
         this.setAttribute('material', {opacity: 0.8});
-        legend = generateLegend(entity);
+        legend = generateLegend(entity, this);
         this.appendChild(legend);
     });
 
     buildingEntity.addEventListener('mouseleave', function () {
+        this.setAttribute('geometry', 'height', '0.1');
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
         this.setAttribute('material', {opacity: 1.0});
         this.removeChild(legend);
