@@ -12,6 +12,7 @@
     "prepublish": "npm run dist",
     "ghpages": "ghpages",
     "start": "npm run dev",
+    "serve": "npm run dev",
     "test": "karma start ./tests/karma.conf.js",
     "test:firefox": "karma start ./tests/karma.conf.js --browsers Firefox",
     "test:chrome": "karma start ./tests/karma.conf.js --browsers Chrome"
