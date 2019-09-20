@@ -1,0 +1,587 @@
+[
+    {
+        "type": "quarter",
+        "quarter": "Quarter1",
+        "data": [
+            {
+                "block": "Block1",
+                "type": "block",
+                "data": [
+                    {
+                        "id": "1A",
+                        "area": 3,
+                        "height": 5
+                    },
+                    {
+                        "id": "1B",
+                        "area": 5,
+                        "height": 4
+                    },
+                    {
+                        "id": "1C",
+                        "area": 1,
+                        "height": 3
+                    },
+                    {
+                        "id": "1D",
+                        "area": 6,
+                        "height": 2
+                    },
+                    {
+                        "id": "1E",
+                        "area": 4,
+                        "height": 6
+                    },
+                    {
+                        "id": "1F",
+                        "area": 3,
+                        "height": 1
+                    },
+                    {
+                        "id": "1G",
+                        "area": 2,
+                        "height": 5
+                    },
+                    {
+                        "id": "1H",
+                        "area": 1,
+                        "height": 3
+                    }
+                ]
+            },
+            {
+                "block": "Block2",
+                "type": "block",
+                "data": [
+                    {
+                        "id": "2A",
+                        "area": 2,
+                        "height": 9
+                    },
+                    {
+                        "id": "2B",
+                        "area": 6,
+                        "height": 3
+                    },
+                    {
+                        "id": "2C",
+                        "area": 1,
+                        "height": 3
+                    },
+                    {
+                        "id": "2D",
+                        "area": 8,
+                        "height": 1
+                    },
+                    {
+                        "id": "2E",
+                        "area": 3,
+                        "height": 6
+                    },
+                    {
+                        "id": "2F",
+                        "area": 1,
+                        "height": 7
+                    }
+                ]
+            },
+            {
+                "block": "Block3",
+                "type": "block",
+                "data": [
+                    {
+                        "id": "3A",
+                        "area": 6,
+                        "height": 2
+                    },
+                    {
+                        "id": "3B",
+                        "area": 8,
+                        "height": 4
+                    },
+                    {
+                        "id": "3C",
+                        "area": 3,
+                        "height": 6
+                    }
+                ]
+            },
+            {
+                "block": "Block4",
+                "type": "block",
+                "data": [
+                    {
+                        "id": "4A",
+                        "area": 2,
+                        "height": 9
+                    },
+                    {
+                        "id": "4B",
+                        "area": 6,
+                        "height": 1
+                    },
+                    {
+                        "id": "4C",
+                        "area": 7,
+                        "height": 6
+                    },
+                    {
+                        "id": "4D",
+                        "area": 8,
+                        "height": 5
+                    },
+                    {
+                        "id": "4E",
+                        "area": 3,
+                        "height": 6
+                    },
+                    {
+                        "id": "4F",
+                        "area": 9,
+                        "height": 4
+                    }
+                ]
+            },
+            {
+                "block": "Block5",
+                "type": "block",
+                "data": [
+                    {
+                        "id": "5A",
+                        "area": 2,
+                        "height": 9
+                    },
+                    {
+                        "id": "5B",
+                        "area": 6,
+                        "height": 3
+                    },
+                    {
+                        "id": "5C",
+                        "area": 5,
+                        "height": 8
+                    },
+                    {
+                        "id": "5D",
+                        "area": 5,
+                        "height": 7
+                    }
+                ]
+            },
+            {
+                "block": "Block6",
+                "type": "block",
+                "data": [
+                    {
+                        "id": "6A",
+                        "area": 2,
+                        "height": 9
+                    },
+                    {
+                        "id": "6B",
+                        "area": 6,
+                        "height": 3
+                    },
+                    {
+                        "id": "6C",
+                        "area": 2,
+                        "height": 6
+                    },
+                    {
+                        "id": "6D",
+                        "area": 4,
+                        "height": 1
+                    },
+                    {
+                        "id": "6E",
+                        "area": 6,
+                        "height": 6
+                    },
+                    {
+                        "id": "6F",
+                        "area": 1,
+                        "height": 7
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "quarter",
+        "quarter": "Quarter2",
+        "data": [
+            {
+                "type": "quarter",
+                "quarter": "Quarter2-1",
+                "data": [
+                    {
+                        "block": "Block1",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "1A",
+                                "area": 3,
+                                "height": 5
+                            },
+                            {
+                                "id": "1B",
+                                "area": 5,
+                                "height": 4
+                            },
+                            {
+                                "id": "1C",
+                                "area": 1,
+                                "height": 3
+                            },
+                            {
+                                "id": "1D",
+                                "area": 6,
+                                "height": 2
+                            },
+                            {
+                                "id": "1E",
+                                "area": 4,
+                                "height": 6
+                            },
+                            {
+                                "id": "1F",
+                                "area": 3,
+                                "height": 1
+                            },
+                            {
+                                "id": "1G",
+                                "area": 2,
+                                "height": 5
+                            },
+                            {
+                                "id": "1H",
+                                "area": 1,
+                                "height": 3
+                            }
+                        ]
+                    },
+                    {
+                        "block": "Block2",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "2A",
+                                "area": 2,
+                                "height": 9
+                            },
+                            {
+                                "id": "2B",
+                                "area": 6,
+                                "height": 3
+                            },
+                            {
+                                "id": "2C",
+                                "area": 1,
+                                "height": 3
+                            },
+                            {
+                                "id": "2D",
+                                "area": 8,
+                                "height": 1
+                            },
+                            {
+                                "id": "2E",
+                                "area": 3,
+                                "height": 6
+                            },
+                            {
+                                "id": "2F",
+                                "area": 1,
+                                "height": 7
+                            }
+                        ]
+                    },
+                    {
+                        "block": "Block6",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "6A",
+                                "area": 2,
+                                "height": 9
+                            },
+                            {
+                                "id": "6B",
+                                "area": 6,
+                                "height": 3
+                            },
+                            {
+                                "id": "6C",
+                                "area": 2,
+                                "height": 6
+                            },
+                            {
+                                "id": "6D",
+                                "area": 4,
+                                "height": 1
+                            },
+                            {
+                                "id": "6E",
+                                "area": 6,
+                                "height": 6
+                            },
+                            {
+                                "id": "6F",
+                                "area": 1,
+                                "height": 7
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "quarter",
+                "quarter": "Quarter2-1",
+                "data": [
+                    {
+                        "block": "Block1",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "1A",
+                                "area": 3,
+                                "height": 5
+                            },
+                            {
+                                "id": "1B",
+                                "area": 5,
+                                "height": 4
+                            },
+                            {
+                                "id": "1C",
+                                "area": 1,
+                                "height": 3
+                            },
+                            {
+                                "id": "1D",
+                                "area": 6,
+                                "height": 2
+                            },
+                            {
+                                "id": "1E",
+                                "area": 4,
+                                "height": 6
+                            },
+                            {
+                                "id": "1F",
+                                "area": 3,
+                                "height": 1
+                            },
+                            {
+                                "id": "1G",
+                                "area": 2,
+                                "height": 5
+                            },
+                            {
+                                "id": "1H",
+                                "area": 1,
+                                "height": 3
+                            }
+                        ]
+                    },
+                    {
+                        "block": "Block2",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "2A",
+                                "area": 2,
+                                "height": 9
+                            },
+                            {
+                                "id": "2B",
+                                "area": 6,
+                                "height": 3
+                            },
+                            {
+                                "id": "2C",
+                                "area": 1,
+                                "height": 3
+                            },
+                            {
+                                "id": "2D",
+                                "area": 8,
+                                "height": 1
+                            },
+                            {
+                                "id": "2E",
+                                "area": 3,
+                                "height": 6
+                            },
+                            {
+                                "id": "2F",
+                                "area": 1,
+                                "height": 7
+                            }
+                        ]
+                    },
+                    {
+                        "block": "Block6",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "6A",
+                                "area": 2,
+                                "height": 9
+                            },
+                            {
+                                "id": "6B",
+                                "area": 6,
+                                "height": 3
+                            },
+                            {
+                                "id": "6C",
+                                "area": 2,
+                                "height": 6
+                            },
+                            {
+                                "id": "6D",
+                                "area": 4,
+                                "height": 1
+                            },
+                            {
+                                "id": "6E",
+                                "area": 6,
+                                "height": 6
+                            },
+                            {
+                                "id": "6F",
+                                "area": 1,
+                                "height": 7
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "quarter",
+                "quarter": "Quarter2-1",
+                "data": [
+                    {
+                        "block": "Block1",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "1A",
+                                "area": 3,
+                                "height": 5
+                            },
+                            {
+                                "id": "1B",
+                                "area": 5,
+                                "height": 4
+                            },
+                            {
+                                "id": "1C",
+                                "area": 1,
+                                "height": 3
+                            },
+                            {
+                                "id": "1D",
+                                "area": 6,
+                                "height": 2
+                            },
+                            {
+                                "id": "1E",
+                                "area": 4,
+                                "height": 6
+                            },
+                            {
+                                "id": "1F",
+                                "area": 3,
+                                "height": 1
+                            },
+                            {
+                                "id": "1G",
+                                "area": 2,
+                                "height": 5
+                            },
+                            {
+                                "id": "1H",
+                                "area": 1,
+                                "height": 3
+                            }
+                        ]
+                    },
+                    {
+                        "block": "Block2",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "2A",
+                                "area": 2,
+                                "height": 9
+                            },
+                            {
+                                "id": "2B",
+                                "area": 6,
+                                "height": 3
+                            },
+                            {
+                                "id": "2C",
+                                "area": 1,
+                                "height": 3
+                            },
+                            {
+                                "id": "2D",
+                                "area": 8,
+                                "height": 1
+                            },
+                            {
+                                "id": "2E",
+                                "area": 3,
+                                "height": 6
+                            },
+                            {
+                                "id": "2F",
+                                "area": 1,
+                                "height": 7
+                            }
+                        ]
+                    },
+                    {
+                        "block": "Block6",
+                        "type": "block",
+                        "data": [
+                            {
+                                "id": "6A",
+                                "area": 2,
+                                "height": 9
+                            },
+                            {
+                                "id": "6B",
+                                "area": 6,
+                                "height": 3
+                            },
+                            {
+                                "id": "6C",
+                                "area": 2,
+                                "height": 6
+                            },
+                            {
+                                "id": "6D",
+                                "area": 4,
+                                "height": 1
+                            },
+                            {
+                                "id": "6E",
+                                "area": 6,
+                                "height": 6
+                            },
+                            {
+                                "id": "6F",
+                                "area": 1,
+                                "height": 7
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
