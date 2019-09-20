@@ -1300,6 +1300,11 @@ AFRAME.registerComponent('codecity-block', {
         'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
         'olive', 'navy', 'palegreen']
     },
+    // Show legend
+    legend: {
+      type: 'boolean',
+      default: true
+    },
   },
 
   /**
@@ -1330,10 +1335,7 @@ AFRAME.registerComponent('codecity-block', {
     this.base_el = cc_block(this.el, this.items, data.width, data.depth,
       data.base_thick, data.base_color,
       data.streets, data.streets_thick, data.streets_width, data.streets_color,
-      split, data.farea, data.fheight, data.color, data.model);
-    this.base_el.addEventListener('mouseenter', function () {
-      console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-    });
+      split, data.farea, data.fheight, data.color, data.model, data.legend);
   },
 
   /**
@@ -1766,30 +1768,41 @@ AFRAME.registerComponent('autoscale', {
   }
 });
 
-function showLegend(buildingEntity, entity) {
+/**
+ * This function adds the needed events in order to activate/deactivate the legend
+ */
+function showLegend(buildingEntity, text, model, base_el) {
   let legend;
-  buildingEntity.addEventListener('click', function () {
-    console.log("qwiuyuqeuiqehiuewhibhdbwjhwefvbfhvbfhevbjh")
+  buildingEntity.addEventListener('mouseenter', function () {
     this.setAttribute('scale', { x: 1, y: 1.2, z: 1 });
-    legend = generateLegend(entity, this);
-    this.appendChild(legend);
+    legend = generateLegend(text, this, model);
+    base_el.appendChild(legend);
   });
 
   buildingEntity.addEventListener('mouseleave', function () {
     this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-    this.removeChild(legend);
+    base_el.removeChild(legend);
   });
 }
 
-function generateLegend(entityData, buildingEntity) {
-  let text = entityData
-
+/**
+ * This function generate a plane at the top of the building with the desired text
+ */
+function generateLegend(text, buildingEntity, model) {
   let width = 2;
   if (text.length > 16)
     width = text.length / 8;
 
+  let height;
+  if (model == null) {
+    height = buildingEntity.getAttribute('geometry').height
+  } else {
+    height = buildingEntity.getAttribute("autoscale").y
+  }
+
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: 0, y: buildingEntity.getAttribute('geometry').height / 2 + 1, z: 0 });
+  let parentPos = buildingEntity.getAttribute("position")
+  entity.setAttribute('position', { x: parentPos.x, y: parentPos.y + height / 2  + 1, z: parentPos.z });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '1');
   entity.setAttribute('width', width);
@@ -1800,9 +1813,9 @@ function generateLegend(entityData, buildingEntity) {
     'width': 6,
     'color': 'black'
   });
-  entity.setAttribute('light', {
+  /*entity.setAttribute('light', {
     'intensity': 0.3
-  });
+  });*/
   return entity;
 }
 
@@ -1814,7 +1827,7 @@ let cc_block = function (el, items, width, depth,
   base_thick, base_color,
   streets, streets_thick, streets_width, streets_color,
   split = naive_split, farea = 'area', fheight = 'height',
-  color = undefined, model = model) {
+  color = undefined, model = model, legend) {
   console.log("CodeCity Block: Init");
   // Build a Cartesian rectangle for the aspect ratio (width, depth),
   // which will be the base for the block, and will (later) provide
@@ -1859,12 +1872,11 @@ let cc_block = function (el, items, width, depth,
       model: model
     });
     //console.log("Building:", building);
+    if (legend) {
+      showLegend(building, rect.item.id, model, base_el)
+    }
     buildings_el.push(building);
     base_el.appendChild(building);
-    showLegend(building, rect.item.id)
-    /*building.addEventListener('click', function () {
-      console.log("qwiuyuqeuiqehiuewhibhdbwjhwefvbfhvbfhevbjh")
-    });*/
   };
   return base_el;
 };
