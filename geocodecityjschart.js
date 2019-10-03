@@ -1027,9 +1027,10 @@ let ARectangle = class {
    * @param {color} color A-Frame color for the box
    * @return {DOMElement} A-Frame entity as a DOM Element
    */
-  build_box_fixed({ height, y, color, model }) {
+  build_box_fixed({ height, y, color, model, id}) {
     // console.log("Build_box_fixed:", height, y, color);
     let box = document.createElement('a-entity');
+    box.setAttribute('id', id)
     if (model == null) {
       box.setAttribute('geometry', {
         primitive: 'box',
@@ -1062,12 +1063,13 @@ let ARectangle = class {
    * @param {color} color A-Frame color for the box
    * @return {DOMElement} A-Frame entity as a DOM Element
    */
-  build_box({ fheight, y, color, model }) {
+  build_box({ fheight, y, color, model}) {
     // console.log("Build_box:", fheight, y, color);
     return this.build_box_fixed({
       height: this.item[fheight],
       y: y, color: color,
-      model: model
+      model: model,
+      id: this.item.id
     });
   }
 
@@ -1120,7 +1122,8 @@ let ARectangle = class {
     for (const arect of arects) {
       let el = arect.insert_box_fixed({
         el: this.el, height: height,
-        y: y, color: color
+        y: y, color: color,
+        id: ""
       });
     };
   }
