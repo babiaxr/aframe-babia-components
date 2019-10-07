@@ -45,11 +45,13 @@ INDEX_DATA_FILE = 'index_backup_graal_cocom.json'
 DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe_graal_cocom.csv'
 DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'index_dataframe_graal_cocom_enriched.csv'
 
-CODECITY_OUTPUT_DATA = './'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
 DATE_FIELD = 'grimoire_creation_date'
+
+N_TIME_EVOLUTION = 5
 
 
 def main():
@@ -104,29 +106,19 @@ def main():
 
     if args.time_evolution:
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        for i in range(0, 3):
-            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*100))
-            # entities = pli.process_list(data, init_pos_x, init_pos_y) OLD ONE
-            # entities = generate_entities(data, [])
+        for i in range(0, N_TIME_EVOLUTION):
+            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*60))
             if i > 0:
                 entities = find_children(data, [])
             else:
                 entities = generate_entities(data, [])
             dump_codecity_data(entities, "data_{}.json".format(i))
-            #init_pos_x = entities['root']['position']['x']*2 + 2
-            #init_pos_y = entities['root']['position']['z']*2 + 2
     else:
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
         data = extract_data(df, dt.datetime.now(pytz.utc))
-        # entities = pli.process_list(data, 0, 0)
         entities = generate_entities(data, [])
         dump_codecity_data(entities, "data.json")
 
-    #df_gr = df[df['project']=="GrimoireLab"]
-
-    #codecity_data = add_layout(entities_data, args.type)
-
-    #dump_codecity_data(codecity_data)
     print("exit")
 
 
@@ -280,8 +272,8 @@ def enrich_data(df):
             df.set_value(i, 'folder_{}'.format(n), item)
 
     # Normalize height
-    df = normalize_column(df, HEIGHT_FIELD, 5)
-    df = normalize_column(df, AREA_FIELD, 1)
+    df = normalize_column(df, HEIGHT_FIELD, 20)
+    df = normalize_column(df, AREA_FIELD, 30)
 
     return df
 
@@ -327,8 +319,6 @@ def extract_data(df_raw, date):
 
 def filter_closest_date(df, date):
     df_filtered = pd.DataFrame()
-
-
     for file in df['file_path'].unique():
         df_file = df[df['file_path'] == file]
         diff = (df_file[DATE_FIELD] - date)
@@ -347,10 +337,8 @@ def build_folders(df, arr, index, max_levels):
         if str(folder) != 'nan':
             # Is leaf or not in order to put height
             if (index == max_levels-1) or (len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan'):
-                leaf = {"id": str(folder), 'height': max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1), 'value': 1*10}
+                leaf = {"id": str(folder), 'height': max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1), 'value': df_folder['{}_normalized'.format(AREA_FIELD)].sum()}
                 leafs_folder['children'].append(leaf)
-                #entity_folder['height'] = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
-                #entity_folder['value'] = 1 * 10
             else:
                 entity_folder = {"id": str(folder), 'children': [], 'value': len(df_folder.index) * 10}
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels)
@@ -359,51 +347,6 @@ def build_folders(df, arr, index, max_levels):
     # Adds if filled
     if len(leafs_folder['children']) > 0:
         arr.append(leafs_folder)
-
-
-# def path_to_columns_git_aoc(row):
-#     logging.debug(row['file_path_list'])
-#     for i, item in enumerate(row['file_path_list']):
-#         row['folder_{}'.format(i)] = item
-#     row['n_folders'] = len(row['file_path_list'])
-#
-#
-# def extract_data_old_metrics_git(df):
-#     print(df.head())
-#     entities = []
-#     val_parent = 0
-#     for project in df['project'].unique():
-#         entity = {
-#             "id": project,
-#             "children": []
-#         }
-#         entities.append(entity)
-#         df_pr = df[df['project'] == project]
-#         for repo in df_pr['repo_name'].unique():
-#             df_repo = df_pr[df_pr['repo_name'] == repo]
-#
-#             value = len(df_repo['Author_name'].unique())
-#             val_parent += value
-#
-#             entity_repo = {
-#                 "id": repo,
-#                 "value": value
-#             }
-#             entity['children'].append(entity_repo)
-#
-#         entity['value'] = val_parent
-#
-#     return entities
-
-
-# def generate_entity(item, key):
-#     entity = {
-#         'key': item[key],
-#         'height': 1,
-#         'width': 1,
-#         'depth': 1,
-#     }
-#     return entity
 
 
 def add_layout(entities, type):

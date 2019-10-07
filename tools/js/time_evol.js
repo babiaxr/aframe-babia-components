@@ -1,7 +1,46 @@
-const quarter_items = [{"block": "grimoire", "blocks": [{"block": "https://github.com/chaoss/grimoirelab-perceval", "blocks": [{"block": "tests", "blocks": [{"block": ".", "items": [{"id": "test_backend.py", "area": 10, "height": 1.9082952815829526}, {"id": "test_errors.py", "area": 10, "height": 0.1}, {"id": "test_bugzilla.py", "area": 10, "height": 1.4478691019786911}, {"id": "test_utils.py", "area": 10, "height": 0.3443683409436834}, {"id": "run_tests.py", "area": 10, "height": 0.1}, {"id": "__init__.py", "area": 10, "height": 0.1}, {"id": "test_cache.py", "area": 10, "height": 0.24162861491628612}, {"id": "test_git.py", "area": 10, "height": 2.328767123287671}, {"id": "test_mbox.py", "area": 10, "height": 0.7363013698630136}, {"id": "test_jenkins.py", "area": 10, "height": 0.7286910197869101}, {"id": "test_github.py", "area": 10, "height": 0.1}, {"id": "test_pipermail.py", "area": 10, "height": 0.1}, {"id": "test_stackexchange.py", "area": 10, "height": 0.6012176560121765}, {"id": "test_discourse.py", "area": 10, "height": 1.2081430745814306}, {"id": "test_bugzillarest.py", "area": 10, "height": 0.852359208523592}, {"id": "test_supybot.py", "area": 10, "height": 0.1}, {"id": "test_gmane.py", "area": 10, "height": 0.5213089802130898}, {"id": "test_confluence.py", "area": 10, "height": 0.823820395738204}, {"id": "test_jira.py", "area": 10, "height": 1.0882800608828005}, {"id": "test_mediawiki.py", "area": 10, "height": 0.1}, {"id": "test_telegram.py", "area": 10, "height": 0.45281582952815824}, {"id": "test_remo.py", "area": 10, "height": 0.3710045662100456}, {"id": "test_kitsune.py", "area": 10, "height": 0.4433028919330289}, {"id": "test_redmine.py", "area": 10, "height": 0.1}, {"id": "test_phabricator.py", "area": 10, "height": 0.1}, {"id": "test_remo2.py", "area": 10, "height": 0.471841704718417}, {"id": "test_meetup.py", "area": 10, "height": 1.933028919330289}, {"id": "test_askbot.py", "area": 10, "height": 0.8466514459665144}, {"id": "test_rss.py", "area": 10, "height": 0.31582952815829524}, {"id": "test_hyperkitty.py", "area": 10, "height": 0.3824200913242009}, {"id": "test_nntp.py", "area": 10, "height": 0.5745814307458142}, {"id": "test_slack.py", "area": 10, "height": 0.9969558599695585}, {"id": "test_dockerhub.py", "area": 10, "height": 0.23211567732115676}, {"id": "test_launchpad.py", "area": 10, "height": 1.2880517503805176}, {"id": "test_client.py", "area": 10, "height": 0.563165905631659}, {"id": "test_archive.py", "area": 10, "height": 0.6621004566210045}, {"id": "base.py", "area": 10, "height": 0.1}, {"id": "test_gitlab.py", "area": 10, "height": 2.187975646879756}, {"id": "test_gerrit.py", "area": 10, "height": 0.1}, {"id": "test_mattermost.py", "area": 10, "height": 0.6373668188736681}, {"id": "test_twitter.py", "area": 10, "height": 0.5041856925418569}, {"id": "test_groupsio.py", "area": 10, "height": 0.1}, {"id": "test_googlehits.py", "area": 10, "height": 0.3710045662100456}]}]}, {"block": "perceval", "blocks": [{"block": "backends", "blocks": [{"block": "core", "blocks": [{"block": ".", "items": [{"id": "phabricator.py", "area": 10, "height": 0.684931506849315}, {"id": "jenkins.py", "area": 10, "height": 0.2949010654490106}, {"id": "redmine.py", "area": 10, "height": 0.4433028919330289}, {"id": "kitsune.py", "area": 10, "height": 0.5079908675799086}, {"id": "remo2.py", "area": 10, "height": 0.4452054794520548}, {"id": "discourse.py", "area": 10, "height": 0.4204718417047184}, {"id": "mbox.py", "area": 10, "height": 0.46232876712328763}, {"id": "confluence.py", "area": 10, "height": 0.3843226788432268}, {"id": "stackexchange.py", "area": 10, "height": 0.3386605783866058}, {"id": "remo.py", "area": 10, "height": 0.39383561643835613}, {"id": "bugzilla.py", "area": 10, "height": 0.6164383561643836}, {"id": "meetup.py", "area": 10, "height": 0.5213089802130898}, {"id": "pipermail.py", "area": 10, "height": 0.334855403348554}, {"id": "telegram.py", "area": 10, "height": 0.31582952815829524}, {"id": "mediawiki.py", "area": 10, "height": 0.6659056316590563}, {"id": "gmane.py", "area": 10, "height": 0.410958904109589}, {"id": "bugzillarest.py", "area": 10, "height": 0.5079908675799086}, {"id": "jira.py", "area": 10, "height": 0.46232876712328763}, {"id": "gerrit.py", "area": 10, "height": 0.6373668188736681}, {"id": "github.py", "area": 10, "height": 1.1396499238964992}, {"id": "__init__.py", "area": 10, "height": 0.1}, {"id": "git.py", "area": 10, "height": 1.495433789954338}, {"id": "supybot.py", "area": 10, "height": 0.1}, {"id": "askbot.py", "area": 10, "height": 0.5593607305936072}, {"id": "rss.py", "area": 10, "height": 0.167427701674277}, {"id": "hyperkitty.py", "area": 10, "height": 0.2815829528158295}, {"id": "nntp.py", "area": 10, "height": 0.3710045662100456}, {"id": "slack.py", "area": 10, "height": 0.4356925418569254}, {"id": "dockerhub.py", "area": 10, "height": 0.19596651445966512}, {"id": "launchpad.py", "area": 10, "height": 0.5060882800608828}, {"id": "gitlab.py", "area": 10, "height": 0.806697108066971}, {"id": "mattermost.py", "area": 10, "height": 0.43188736681887363}, {"id": "twitter.py", "area": 10, "height": 0.40905631659056313}, {"id": "groupsio.py", "area": 10, "height": 0.3329528158295281}, {"id": "googlehits.py", "area": 10, "height": 0.258751902587519}]}]}, {"block": ".", "items": [{"id": "__init__.py", "area": 10, "height": 0.1}, {"id": "bugzilla.py", "area": 10, "height": 0.6982496194824961}, {"id": "git.py", "area": 10, "height": 0.9227549467275495}, {"id": "github.py", "area": 10, "height": 0.5726788432267884}, {"id": "gerrit.py", "area": 10, "height": 0.5955098934550989}, {"id": "mbox.py", "area": 10, "height": 0.502283105022831}, {"id": "stackexchange.py", "area": 10, "height": 0.42427701674277013}, {"id": "jira.py", "area": 10, "height": 0.5136986301369862}, {"id": "jenkins.py", "area": 10, "height": 0.2949010654490106}, {"id": "pipermail.py", "area": 10, "height": 0.3291476407914764}, {"id": "discourse.py", "area": 10, "height": 0.4737442922374429}, {"id": "bugzillarest.py", "area": 10, "height": 0.625951293759513}, {"id": "gmane.py", "area": 10, "height": 0.4433028919330289}, {"id": "mediawiki.py", "area": 10, "height": 0.7496194824961948}, {"id": "supybot.py", "area": 10, "height": 0.441400304414003}, {"id": "confluence.py", "area": 10, "height": 0.4356925418569254}, {"id": "telegram.py", "area": 10, "height": 0.3900304414003044}, {"id": "remo.py", "area": 10, "height": 0.39383561643835613}, {"id": "kitsune.py", "area": 10, "height": 0.5079908675799086}, {"id": "phabricator.py", "area": 10, "height": 0.7115677321156773}, {"id": "redmine.py", "area": 10, "height": 0.5955098934550989}, {"id": "remo2.py", "area": 10, "height": 0.4452054794520548}, {"id": "meetup.py", "area": 10, "height": 0.5003805175038052}, {"id": "askbot.py", "area": 10, "height": 0.5460426179604262}]}]}, {"block": ".", "items": [{"id": "backend.py", "area": 10, "height": 0.7686453576864536}, {"id": "errors.py", "area": 10, "height": 0.1}, {"id": "utils.py", "area": 10, "height": 0.2302130898021309}, {"id": "__init__.py", "area": 10, "height": 0.1}, {"id": "cache.py", "area": 10, "height": 0.121765601217656}, {"id": "_version.py", "area": 10, "height": 0.1}, {"id": "client.py", "area": 10, "height": 0.1}, {"id": "archive.py", "area": 10, "height": 0.49847792998477924}]}]}, {"block": "docs", "blocks": [{"block": ".", "items": [{"id": "conf.py", "area": 10, "height": 0.1}]}]}, {"block": ".", "items": [{"id": "setup.py", "area": 10, "height": 0.14840182648401826}]}]}]}]
-setTimeout(function () {
-    console.log("Hola holita")
-    document.getElementById("city").setAttribute("codecity-quarter", "items", JSON.stringify(quarter_items))
-    //document.getElementById("A2B").setAttribute("geometry", "height", 8)
-    //document.getElementById("A2B").setAttribute("gltf-model", "../../assets/skyscraper-2/SM_Skyscraper_02.gltf")
-}, 10000);
+const quarterItems = []
+const arrayPromises = []
+const maxFiles = 4
+
+for (let i = 1; i <= maxFiles; i++) {
+    let p1 = fetch("data_" + i + ".json").then(function (response) {
+        return response.json();
+    })
+    p2 = p1.then(function (json) {
+        // do a bunch of stuff
+        quarterItems.push(json)
+    });
+    arrayPromises.push(p2)
+}
+
+Promise.all(arrayPromises).then(values => {
+    doIt()
+});
+
+
+let doIt = () => {
+    //document.getElementById("cityevolve").setAttribute("codecity-quarter", "items", JSON.stringify(quarterItems[0]))
+    loop();
+}
+
+let i = 0
+let index = 0
+
+let loop = () => {
+    setTimeout(function () {
+        console.log("Hola holita")
+        quarterItems[index].forEach((item) => {
+            let prevPos = document.getElementById(item.id).getAttribute("position")
+            document.getElementById(item.id).setAttribute("geometry", "height", item.height)
+            document.getElementById(item.id).setAttribute("position", {x: prevPos.x, y: item.height/2, z: prevPos.z})
+        })
+        index++
+        if (index > maxFiles - 1) {
+            index = 0
+        }
+        i++;
+        if (i < 10) {
+            loop();
+        }
+    }, 3000);
+}

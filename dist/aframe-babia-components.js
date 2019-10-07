@@ -1300,8 +1300,13 @@ AFRAME.registerComponent('codecity-block', {
         'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
         'olive', 'navy', 'palegreen']
     },
-    // Show legend
-    legend: {
+    // Show legend building
+    legend_building: {
+      type: 'boolean',
+      default: true
+    },
+    // Show legend quarter
+    legend_block: {
       type: 'boolean',
       default: true
     },
@@ -1335,7 +1340,7 @@ AFRAME.registerComponent('codecity-block', {
     this.base_el = cc_block(this.el, this.items, data.width, data.depth,
       data.base_thick, data.base_color,
       data.streets, data.streets_thick, data.streets_width, data.streets_color,
-      split, data.farea, data.fheight, data.color, data.model, data.legend);
+      split, data.farea, data.fheight, data.color, data.model, data.legend_building, data.legend_block);
   },
 
   /**
@@ -1559,80 +1564,7 @@ AFRAME.registerComponent('codecity-quarter', {
    * Called once when component is attached. Generally for initial setup.
    */
   init: function () {
-    let data = this.data;
-    let el = this.el;
 
-    let split;
-    if (data.algorithm == 'naive') {
-      split = naive_split;
-    } else {
-      split = pivot_split;
-    };
-
-    console.log("CodeCity Quarter: Init");
-    if (data.items instanceof ItemsTree) {
-      this.tree = data.items;
-    } else {
-      console.log("Quarter: converting items to ItemsTree",
-        typeof data.items);
-      this.tree = new ItemsTree(data.items);
-    }
-
-    let items = this.tree.items('area', 'extra', data.border, data.extra);
-    console.log("Tree, items:", this.tree, items);
-
-    let width, depth;
-    if (data.absolute == true) {
-      width = Math.sqrt((data.width * this.tree.acc_extra) / data.depth);
-      depth = this.tree.acc_extra / width;
-    } else {
-      width = data.width;
-      depth = data.depth
-    };
-    let base_rect = new Rectangle({
-      width: width, height: depth,
-      x: 0, y: 0
-    });
-    let base_arect = base_rect.aframe(new ARectangle({}));
-    this.base_el = base_arect.insert_box_fixed({
-      el: this.el,
-      height: data.base_thick,
-      y: 0,
-      color: data.base_color
-    });
-    if (data.streets) {
-      base_arect.build_streets({
-        height: data.streets_thick,
-        width: data.streets_width,
-        y: data.base_thick / 2 - data.streets_thick / 2,
-        color: data.streets_color
-      });
-    };
-
-    let inner_rects = split({
-      rectangle: base_rect, items: items,
-      field: 'extra'
-    });
-    console.log("Quarter rects:", inner_rects);
-    let colors = new Colors();
-    let color = undefined;
-    for (const rect of inner_rects) {
-      if ('items' in rect.item) {
-        console.log("Items found:", rect.item.id, rect.item.items);
-        let proportion = rect.item.items.acc / rect.item.items.acc_extra;
-        let minor_rect = rect.proportional(proportion);
-        if (data.unicolor) {
-          color = colors.next();
-        };
-        console.log("Block color:", data.unicolor, color);
-        this.insert_block(this.base_el, base_arect, minor_rect, color);
-      } else {
-        console.log("Blocks found:", rect.item.id, rect.item.blocks);
-        let proportion = rect.item.blocks.acc / rect.item.blocks.acc_extra;
-        let minor_rect = rect.proportional(proportion);
-        this.insert_quarter(this.base_el, base_arect, minor_rect);
-      };
-    };
   },
 
   /**
@@ -1640,6 +1572,84 @@ AFRAME.registerComponent('codecity-quarter', {
    * Generally modifies the entity based on the data.
    */
   update: function (oldData) {
+    let data = this.data;
+    let el = this.el;
+
+    if (data !== oldData) {
+      let split;
+      if (data.algorithm == 'naive') {
+        split = naive_split;
+      } else {
+        split = pivot_split;
+      };
+
+      console.log("CodeCity Quarter: Init");
+      if (data.items instanceof ItemsTree) {
+        this.tree = data.items;
+      } else {
+        console.log("Quarter: converting items to ItemsTree",
+          typeof data.items);
+        this.tree = new ItemsTree(data.items);
+      }
+
+      let items = this.tree.items('area', 'extra', data.border, data.extra);
+      console.log("Tree, items:", this.tree, items);
+
+      let width, depth;
+      if (data.absolute == true) {
+        width = Math.sqrt((data.width * this.tree.acc_extra) / data.depth);
+        depth = this.tree.acc_extra / width;
+      } else {
+        width = data.width;
+        depth = data.depth
+      };
+      let base_rect = new Rectangle({
+        width: width, height: depth,
+        x: 0, y: 0
+      });
+      let base_arect = base_rect.aframe(new ARectangle({}));
+      this.base_el = base_arect.insert_box_fixed({
+        el: this.el,
+        height: data.base_thick,
+        y: 0,
+        color: data.base_color
+      });
+      if (data.streets) {
+        base_arect.build_streets({
+          height: data.streets_thick,
+          width: data.streets_width,
+          y: data.base_thick / 2 - data.streets_thick / 2,
+          color: data.streets_color
+        });
+      };
+
+      let inner_rects = split({
+        rectangle: base_rect, items: items,
+        field: 'extra'
+      });
+      console.log("Quarter rects:", inner_rects);
+      let colors = new Colors();
+      let color = undefined;
+      for (const rect of inner_rects) {
+        if ('items' in rect.item) {
+          console.log("Items found:", rect.item.id, rect.item.items);
+          let proportion = rect.item.items.acc / rect.item.items.acc_extra;
+          let minor_rect = rect.proportional(proportion);
+          if (data.unicolor) {
+            color = colors.next();
+          };
+          console.log("Block color:", data.unicolor, color);
+          this.insert_block(this.base_el, base_arect, minor_rect, color);
+        } else {
+          console.log("Blocks found:", rect.item.id, rect.item.blocks);
+          let proportion = rect.item.blocks.acc / rect.item.blocks.acc_extra;
+          let minor_rect = rect.proportional(proportion);
+          //showLegendQuarter(this.base_el, "test", null, this.data.base_thick)
+          this.insert_quarter(this.base_el, base_arect, minor_rect);
+
+        };
+      };
+    }
   },
 
   /**
@@ -1775,7 +1785,8 @@ function showLegend(buildingEntity, text, model, base_el) {
   let legend;
   buildingEntity.addEventListener('mouseenter', function () {
     this.setAttribute('scale', { x: 1, y: 1.2, z: 1 });
-    legend = generateLegend(text, this, model);
+    let parentPos = buildingEntity.getAttribute("position")
+    legend = generateLegend(text, this, parentPos, model);
     base_el.appendChild(legend);
   });
 
@@ -1786,9 +1797,32 @@ function showLegend(buildingEntity, text, model, base_el) {
 }
 
 /**
+ * This function adds the needed events in order to activate/deactivate the legend of the quarter
+ */
+function showLegendQuarter(buildingEntity, text, model = null, thick) {
+  let legend;
+  let activated = false;
+  buildingEntity.addEventListener('click', function () {
+    if (!activated) {
+      this.setAttribute('geometry', 'height', '20');
+      this.setAttribute('material', { opacity: 0.8 });
+      legend = generateLegend(text, this, { x: 0, y: 0, z: 0 }, model);
+      activated = true;
+      this.appendChild(legend);
+    } else {
+      this.setAttribute('geometry', 'height', thick);
+      this.setAttribute('scale', { x: 1, y: 1, z: 1 });
+      this.setAttribute('material', { opacity: 1.0 });
+      activated = false;
+      this.removeChild(legend);
+    }
+  });
+}
+
+/**
  * This function generate a plane at the top of the building with the desired text
  */
-function generateLegend(text, buildingEntity, model) {
+function generateLegend(text, buildingEntity, parentPos, model) {
   let width = 2;
   if (text.length > 16)
     width = text.length / 8;
@@ -1801,8 +1835,8 @@ function generateLegend(text, buildingEntity, model) {
   }
 
   let entity = document.createElement('a-plane');
-  let parentPos = buildingEntity.getAttribute("position")
-  entity.setAttribute('position', { x: parentPos.x, y: parentPos.y + height / 2  + 1, z: parentPos.z });
+
+  entity.setAttribute('position', { x: parentPos.x, y: parentPos.y + height / 2 + 1, z: parentPos.z });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '1');
   entity.setAttribute('width', width);
@@ -1827,7 +1861,7 @@ let cc_block = function (el, items, width, depth,
   base_thick, base_color,
   streets, streets_thick, streets_width, streets_color,
   split = naive_split, farea = 'area', fheight = 'height',
-  color = undefined, model = model, legend) {
+  color = undefined, model = model, legend_building, legend_block) {
   console.log("CodeCity Block: Init");
   // Build a Cartesian rectangle for the aspect ratio (width, depth),
   // which will be the base for the block, and will (later) provide
@@ -1872,12 +1906,15 @@ let cc_block = function (el, items, width, depth,
       model: model
     });
     //console.log("Building:", building);
-    if (legend) {
+    if (legend_building) {
       showLegend(building, rect.item.id, model, base_el)
     }
     buildings_el.push(building);
     base_el.appendChild(building);
   };
+  if (legend_block) {
+    showLegendQuarter(base_el, "test", null, base_thick)
+  }
   return base_el;
 };
 
@@ -2201,9 +2238,10 @@ let ARectangle = class {
    * @param {color} color A-Frame color for the box
    * @return {DOMElement} A-Frame entity as a DOM Element
    */
-  build_box_fixed({ height, y, color, model }) {
+  build_box_fixed({ height, y, color, model, id }) {
     // console.log("Build_box_fixed:", height, y, color);
     let box = document.createElement('a-entity');
+    box.setAttribute('id', id)
     if (model == null) {
       box.setAttribute('geometry', {
         primitive: 'box',
@@ -2241,7 +2279,8 @@ let ARectangle = class {
     return this.build_box_fixed({
       height: this.item[fheight],
       y: y, color: color,
-      model: model
+      model: model,
+      id: this.item.id
     });
   }
 
@@ -2294,7 +2333,8 @@ let ARectangle = class {
     for (const arect of arects) {
       let el = arect.insert_box_fixed({
         el: this.el, height: height,
-        y: y, color: color
+        y: y, color: color,
+        id: ""
       });
     };
   }
