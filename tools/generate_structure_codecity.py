@@ -45,11 +45,12 @@ INDEX_DATA_FILE = 'index_backup_graal_cocom.json'
 DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe_graal_cocom.csv'
 DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'index_dataframe_graal_cocom_enriched.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecity/test_codecity_git_index/data.json'
+CODECITY_OUTPUT_DATA = '../examples/codecity/test_timeevolution/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
 DATE_FIELD = 'grimoire_creation_date'
+
 
 def main():
     args = parse_args()
@@ -101,9 +102,21 @@ def main():
         logging.debug("Loading enriched dataframe from csv file")
         df = pd.read_csv(args.enriched_dataframe)
 
-    data = extract_data(df)
-    entities = pli.process_list(data)
-    dump_codecity_data(entities)
+    if args.time_evolution:
+        init_pos_x = 0
+        init_pos_y = 0
+        df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
+        for i in range(0, 3):
+            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*100))
+            entities = pli.process_list(data, init_pos_x, init_pos_y)
+            dump_codecity_data(entities, "data_{}.json".format(i))
+            init_pos_x = entities['root']['position']['x']*2 + 2
+            init_pos_y = entities['root']['position']['z']*2 + 2
+    else:
+        df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
+        data = extract_data(df, dt.datetime.now(pytz.utc))
+        entities = pli.process_list(data, 0, 0)
+        dump_codecity_data(entities, "data.json")
 
     #df_gr = df[df['project']=="GrimoireLab"]
 
@@ -135,6 +148,8 @@ def parse_args():
                         help='Export the dataframe of the index data"')
     parser.add_argument('-exedf', '--export-enriched-dataframe', action='store_true',
                         help='Export the enriched dataframe of the index data"')
+    parser.add_argument('-time', '--time-evolution', action='store_true',
+                        help='Time evolution analisys')
 
     return parser.parse_args()
 
@@ -220,7 +235,7 @@ def enrich_data(df):
             df.set_value(i, 'folder_{}'.format(n), item)
 
     # Normalize height
-    df = normalize_column(df, HEIGHT_FIELD, 20)
+    df = normalize_column(df, HEIGHT_FIELD, 5)
     df = normalize_column(df, AREA_FIELD, 1)
 
     return df
@@ -234,9 +249,9 @@ def normalize_column(df, field, scalar):
     return df
 
 
-def extract_data(df_raw):
+def extract_data(df_raw, date):
     # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
-    df = filter_closest_date(df_raw, dt.datetime.now(pytz.utc))
+    df = filter_closest_date(df_raw, date)
     entities = []
 
     for project in df['project'].unique():
@@ -245,7 +260,7 @@ def extract_data(df_raw):
             "id": str(project),
             "children": [],
             #"value": df_project['loc'].sum()
-            "value": len(df_project.index)
+            "value": len(df_project.index) * 10
         }
 
         for repository in df_project['origin'].unique():
@@ -254,7 +269,7 @@ def extract_data(df_raw):
                 "id": str(repository),
                 "children": [],
                 #"value": df_repo['loc'].sum(),
-                "value": len(df_repo.index)
+                "value": len(df_repo.index) * 10
             }
             build_folders(df_repo, entity_repo['children'], 0, df['n_folders'].max())
 
@@ -268,7 +283,7 @@ def extract_data(df_raw):
 def filter_closest_date(df, date):
     df_filtered = pd.DataFrame()
 
-    df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
+
     for file in df['file_path'].unique():
         df_file = df[df['file_path'] == file]
         diff = (df_file[DATE_FIELD] - date)
@@ -293,10 +308,10 @@ def build_folders(df, arr, index, max_levels):
             # Is leaf or not in order to put height
             if (index == max_levels-1) or (len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan'):
                 entity_folder['height'] = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
-                entity_folder['value'] = 1
+                entity_folder['value'] = 1 * 10
             else:
                 entity_folder['children'] = []
-                entity_folder['value'] = len(df_folder.index)
+                entity_folder['value'] = len(df_folder.index) * 10
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels)
 
             arr.append(entity_folder)
@@ -401,8 +416,8 @@ def add_cube_layout(entities):
     return entities
 
 
-def dump_codecity_data(data=None):
-    with open(CODECITY_OUTPUT_DATA, 'w') as f:
+def dump_codecity_data(data, filename):
+    with open(CODECITY_OUTPUT_DATA + filename, 'w') as f:
         json.dump(data, f)
 
 

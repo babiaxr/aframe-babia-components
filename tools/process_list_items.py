@@ -33,8 +33,8 @@ import sys
 from functools import reduce
 
 CODECITY_OUTPUT_DATA = '../examples/codecity/test_areas/data.json'
-HEIGHT_LAYERS = 0.1
-SEPARATION_LAYERS = 0.1
+HEIGHT_LAYERS = 0.1/3
+SEPARATION_LAYERS = 1
 
 
 def main():
@@ -131,17 +131,17 @@ def main():
     objects_two = [{"id": ".", "value": 10},
                     {"id": "subdir1", "value": 20}]
 
-    entities = process_list(objects_one_children)
+    entities = process_list(objects_one_children, 0, 0)
     dump_codecity_data(entities)
 
 
-def process_list(objects):
+def process_list(objects, root_posx, root_posy):
     ratio_x = 1
     ratio_y = 1
     value_total = get_root_value(objects)
 
-    root_posx = 0
-    root_posy = 0
+    root_posx = root_posx
+    root_posy = root_posy
 
     len_x = math.sqrt(value_total * ratio_x / ratio_y)
     len_y = math.sqrt(value_total * ratio_y / ratio_x)
@@ -327,8 +327,8 @@ def generate_entities(lista, entities, height, index):
             entities[i] = {
                 'key': item['id'],
                 'height': item['height'] if 'height' in item else height,
-                'width': item['size'][0] - SEPARATION_LAYERS,
-                'depth': item['size'][1] - SEPARATION_LAYERS,
+                'width': item['size'][0] - SEPARATION_LAYERS/index,
+                'depth': item['size'][1] - SEPARATION_LAYERS/index,
                 'position': {
                     'x': item['pos_new']['x'],
                     'y': HEIGHT_LAYERS * index,
