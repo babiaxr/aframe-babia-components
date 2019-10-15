@@ -28,9 +28,27 @@ let index = 0
 
 let loop = () => {
     setTimeout(function () {
-        console.log("Hola holita")
+        console.log("Hola holita", i)
         quarterItems[index].forEach((item) => {
+            // Get old data in order to do the math
             let prevPos = document.getElementById(item.id).getAttribute("position")
+            let prevWidth = document.getElementById(item.id).getAttribute("geometry").width
+            let prevDepth = document.getElementById(item.id).getAttribute("geometry").depth
+            let oldRawArea = parseFloat(document.getElementById(item.id).getAttribute("babiaxr-rawarea"))
+
+            // Calculate Aspect Ratio
+            let AR = prevWidth/prevDepth
+
+            // New area that depends on the city
+            let newAreaDep = (item.value*(prevDepth*prevWidth))/oldRawArea
+
+            // New size for the building based on the AR and the Area depend
+            let newWidth = Math.sqrt(newAreaDep*AR)
+            let newDepth = Math.sqrt(newAreaDep/AR)
+
+            // Write the new values
+            document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+            document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
             document.getElementById(item.id).setAttribute("geometry", "height", item.height)
             document.getElementById(item.id).setAttribute("position", {x: prevPos.x, y: item.height/2, z: prevPos.z})
         })

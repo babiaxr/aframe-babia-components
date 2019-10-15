@@ -2238,10 +2238,15 @@ let ARectangle = class {
    * @param {color} color A-Frame color for the box
    * @return {DOMElement} A-Frame entity as a DOM Element
    */
-  build_box_fixed({ height, y, color, model, id }) {
+  build_box_fixed({ height, y, color, model, id, rawArea }) {
     // console.log("Build_box_fixed:", height, y, color);
     let box = document.createElement('a-entity');
-    box.setAttribute('id', id)
+    if (id){
+      box.setAttribute('id', id)
+    }
+    if (rawArea){
+      box.setAttribute('babiaxr-rawarea', rawArea)
+    }
     if (model == null) {
       box.setAttribute('geometry', {
         primitive: 'box',
@@ -2280,7 +2285,8 @@ let ARectangle = class {
       height: this.item[fheight],
       y: y, color: color,
       model: model,
-      id: this.item.id
+      id: this.item.id,
+      rawArea: this.item.area
     });
   }
 
