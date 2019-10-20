@@ -105,14 +105,29 @@ def main():
         df = pd.read_csv(args.enriched_dataframe)
 
     if args.time_evolution:
+        main_json = {
+            "date_field": DATE_FIELD,
+            "sampling_days": args.time_evolution,
+            "init_data": "data_0_tree.json",
+            "time_evolution": True,
+            "data_files": []
+        }
+        
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
         for i in range(0, N_TIME_EVOLUTION):
-            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*60))
-            if i > 0:
-                entities = find_children(data, [])
-            else:
-                entities = generate_entities(data, [])
-            dump_codecity_data(entities, "data_{}.json".format(i))
+            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
+            entities_simple = find_children(data, [])
+            entities_tree = generate_entities(data, [])
+            dump_codecity_data(entities_simple, "data_{}.json".format(i))
+            dump_codecity_data(entities_tree, "data_{}_tree.json".format(i))
+
+            main_json["data_files"].append({
+                'date': dt.datetime.timestamp(dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution))),
+                'file': "data_{}.json".format(i)
+            })
+            
+        # Export the main
+        dump_codecity_data(main_json, "main_data.json")
     else:
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
         data = extract_data(df, dt.datetime.now(pytz.utc))
@@ -185,7 +200,7 @@ def parse_args():
                         help='Export the dataframe of the index data"')
     parser.add_argument('-exedf', '--export-enriched-dataframe', action='store_true',
                         help='Export the enriched dataframe of the index data"')
-    parser.add_argument('-time', '--time-evolution', action='store_true',
+    parser.add_argument('-time', '--time-evolution', required=False,
                         help='Time evolution analisys')
 
     return parser.parse_args()

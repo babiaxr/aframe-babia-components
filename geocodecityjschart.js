@@ -1727,5 +1727,8 @@ let requestJSONDataFromURL = (items) => {
   };
   request.send();
 
+  if (raw_items.time_evolution){
+    raw_items = requestJSONDataFromURL(raw_items.init_data)
+  }
   return raw_items
 }
