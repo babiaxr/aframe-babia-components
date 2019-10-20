@@ -2119,7 +2119,11 @@ let ItemsTree = class {
   constructor(items) {
     let raw_items;
     if (typeof items == 'string') {
-      raw_items = JSON.parse(items);
+      if (items.endsWith('json')){
+        raw_items = requestJSONDataFromURL(items);
+      }else{
+        raw_items = JSON.parse(items);
+      }
     } else {
       raw_items = items;
     };
@@ -2890,7 +2894,49 @@ let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
   };
 };
 
+/**
+ * Request a JSON url
+ * @param {*} data 
+ * @param {*} el 
+ */
+let requestJSONDataFromURL = (items) => {
+  let raw_items
+  // Create a new request object
+  let request = new XMLHttpRequest();
 
+  // Initialize a request
+  request.open('get', items, false)
+  // Send it
+  request.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+          //console.log("data OK in request.response", request.response)
+
+          // Save data
+          if (typeof request.response === 'string' || request.response instanceof String) {
+            raw_items = JSON.parse(request.response)
+          } else {
+            raw_items = request.response
+          }
+          
+
+      } else {
+          reject({
+              status: this.status,
+              statusText: xhr.statusText
+          });
+      }
+  };
+  
+  request.onerror = function () {
+      reject({
+          status: this.status,
+          statusText: xhr.statusText
+      });
+  };
+  request.send();
+
+  return raw_items
+}
 
 /***/ }),
 /* 6 */
