@@ -41,9 +41,9 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backup_graal_cocom.json'
-DATAFRAME_CSV_EXPORT_FILE = 'index_dataframe_graal_cocom.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'index_dataframe_graal_cocom_enriched.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_enriched.csv'
 
 CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
 
@@ -74,9 +74,9 @@ def main():
 
         # Generate dataframe
         if args.index_file:
-            df = get_dataframe(args.index_file, args.build)
+            df = get_dataframe(args.index_file)
         elif not args.index_file and not args.dataframe:
-            df = get_dataframe(INDEX_DATA_FILE, args.build)
+            df = get_dataframe(INDEX_DATA_FILE)
 
         # Export dataframe
         if args.export_dataframe:
@@ -93,7 +93,7 @@ def main():
             sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
 
         # Enrich data adding columns of each folder
-        df = enrich_data(df)
+        df = enrich_data(df, args.repo)
 
         # Export enriched dataframe
         if args.export_enriched_dataframe:
@@ -188,8 +188,8 @@ def parse_args():
     parser.add_argument('-t', '--type', required=False, help='Type of the codecity layout')
     parser.add_argument('--csvfile', required=False,
                         help='Generate a CSV file instead a JSON')
-    parser.add_argument('--build', required=False,
-                        help='Define the field that will be the buildings')
+    parser.add_argument('--repo', required=True,
+                        help='Define the repo that will be the city')
     parser.add_argument('-if', '--index-file', required=False,
                         help='Instead of the elastic, load data by a file')
     parser.add_argument('-df', '--dataframe', required=False,
@@ -248,7 +248,7 @@ def get_index_data(es_url=None, index=None):
         scroll_size = len(page['hits']['hits'])
 
 
-def get_dataframe(file=None, index=None):
+def get_dataframe(file=None):
     df = pd.DataFrame()
 
     file = open(file, 'r')
@@ -272,9 +272,9 @@ def get_dataframe(file=None, index=None):
     return df
 
 
-def enrich_data(df):
+def enrich_data(df, repo):
     # TODO: filter by project here
-    df = df[df['origin'] == "https://github.com/chaoss/grimoirelab-perceval"]
+    df = df[df['origin'] == repo]
 
     print(df.head())
     # Divide path in subfolders
