@@ -41,9 +41,9 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_enriched.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval.csv'
 
 CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
 
@@ -74,9 +74,9 @@ def main():
 
         # Generate dataframe
         if args.index_file:
-            df = get_dataframe(args.index_file)
+            df = get_dataframe(args.index_file, args.repo)
         elif not args.index_file and not args.dataframe:
-            df = get_dataframe(INDEX_DATA_FILE)
+            df = get_dataframe(INDEX_DATA_FILE, args.repo)
 
         # Export dataframe
         if args.export_dataframe:
@@ -114,8 +114,12 @@ def main():
         }
         
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        for i in range(0, N_TIME_EVOLUTION):
-            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
+        # TODO: Change
+        #for i in range(0, N_TIME_EVOLUTION):
+        not_ok = False
+        i = 0
+        while not not_ok:
+            data, not_ok = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
             entities_simple = find_children(data, [])
             entities_tree = generate_entities(data, [])
             dump_codecity_data(entities_simple, "data_{}.json".format(i))
@@ -125,12 +129,13 @@ def main():
                 'date': dt.datetime.timestamp(dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution))),
                 'file': "data_{}.json".format(i)
             })
+            i += 1
             
         # Export the main
         dump_codecity_data(main_json, "main_data.json")
     else:
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        data = extract_data(df, dt.datetime.now(pytz.utc))
+        data, not_ok = extract_data(df, dt.datetime.now(pytz.utc))
         entities = generate_entities(data, [])
         dump_codecity_data(entities, "data.json")
 
@@ -248,19 +253,22 @@ def get_index_data(es_url=None, index=None):
         scroll_size = len(page['hits']['hits'])
 
 
-def get_dataframe(file=None):
+def get_dataframe(file, repo):
     df = pd.DataFrame()
 
     file = open(file, 'r')
     rows = file.readlines()
 
-    for i, line in enumerate(rows):
+    i = 0
+    while i < len(rows):
+        line = rows[i]
         item = json.loads(line)
-        logging.debug("Inserting item {}/{} to csv".format(i, len(rows)))
-        df = df.append(item, ignore_index=True)
-        if i == 30000:
-            break
-
+        # Filter by repo
+        if repo in item['origin']:
+            logging.debug("Inserting item {}/{} to csv".format(i, len(rows)))
+            df = df.append(item, ignore_index=True)
+        
+        i = i + 1
         '''
         if item[key_field] not in data:
             entity = generate_entity(item, key_field)
@@ -287,23 +295,22 @@ def enrich_data(df, repo):
             df.set_value(i, 'folder_{}'.format(n), item)
 
     # Normalize height
-    df = normalize_column(df, HEIGHT_FIELD, 20)
-    df = normalize_column(df, AREA_FIELD, 30)
+    df = normalize_column(df, HEIGHT_FIELD, 0.1, 20)
+    df[AREA_FIELD] = df[AREA_FIELD].fillna(0.1)
+    df = normalize_column(df, AREA_FIELD, 1, 30)
 
     return df
 
 
-def normalize_column(df, field, scalar):
-    x = df[[field]].values.astype(float)
-    min_max_scaler = preprocessing.MinMaxScaler()
-    x_scaled = min_max_scaler.fit_transform(x)
-    df['{}_normalized'.format(field)] = pd.DataFrame(x_scaled) * scalar
+def normalize_column(df, field, scalar_bottom, scalar_top):
+    scaler = preprocessing.MinMaxScaler(feature_range=(scalar_bottom, scalar_top))
+    df['{}_normalized'.format(field)] = scaler.fit_transform(df[[field]])
     return df
 
 
 def extract_data(df_raw, date):
     # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
-    df = filter_closest_date(df_raw, date)
+    df, not_ok = filter_closest_date(df_raw, date)
     entities = []
 
     for project in df['project'].unique():
@@ -312,7 +319,7 @@ def extract_data(df_raw, date):
             "id": str(project),
             "children": [],
             #"value": df_project['loc'].sum()
-            "value": len(df_project.index) * 10
+            "value": len(df_project.index)
         }
 
         for repository in df_project['origin'].unique():
@@ -321,7 +328,7 @@ def extract_data(df_raw, date):
                 "id": str(repository),
                 "children": [],
                 #"value": df_repo['loc'].sum(),
-                "value": len(df_repo.index) * 10
+                "value": len(df_repo.index)
             }
             build_folders(df_repo, entity_repo['children'], 0, df['n_folders'].max())
 
@@ -329,7 +336,7 @@ def extract_data(df_raw, date):
 
         entities.append(entity_project)
 
-    return entities
+    return entities, not_ok
 
 
 def filter_closest_date(df, date):
@@ -337,10 +344,14 @@ def filter_closest_date(df, date):
     for file in df['file_path'].unique():
         df_file = df[df['file_path'] == file]
         diff = (df_file[DATE_FIELD] - date)
-        indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
-        df_filtered = df_filtered.append(df_file.ix[[indexmax]])
+        try:
+            indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
+            df_filtered = df_filtered.append(df_file.ix[[indexmax]])
+            not_ok = False
+        except ValueError:
+            not_ok = True
 
-    return df_filtered
+    return df_filtered, not_ok
 
 
 def build_folders(df, arr, index, max_levels):
@@ -352,10 +363,19 @@ def build_folders(df, arr, index, max_levels):
         if str(folder) != 'nan':
             # Is leaf or not in order to put height
             if (index == max_levels-1) or (len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan'):
-                leaf = {"id": str(folder), 'height': max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1), 'value': df_folder['{}_normalized'.format(AREA_FIELD)].sum()}
+                leaf = {
+                    "id": df_folder['file_path'].values[0],
+                    "name": str(folder),
+                    'height': max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1),
+                    'value': df_folder['{}_normalized'.format(AREA_FIELD)].sum()
+                }
                 leafs_folder['children'].append(leaf)
             else:
-                entity_folder = {"id": str(folder), 'children': [], 'value': len(df_folder.index) * 10}
+                entity_folder = {
+                    "id": str(folder),
+                    'children': [],
+                    'value': len(df_folder.index)
+                }
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels)
                 arr.append(entity_folder)
 
