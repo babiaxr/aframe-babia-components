@@ -1295,10 +1295,7 @@ AFRAME.registerComponent('codecity-block', {
     },
     colormap: {
       type: 'array',
-      default: ['blue', 'green', 'yellow', 'brown', 'orange',
-        'magenta', 'grey', 'cyan', 'azure', 'beige', 'blueviolet',
-        'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
-        'olive', 'navy', 'palegreen']
+      default: ['grey']
     },
     // Show legend building
     legend_building: {
@@ -1548,10 +1545,7 @@ AFRAME.registerComponent('codecity-quarter', {
     },
     colormap: {
       type: 'array',
-      default: ['blue', 'green', 'yellow', 'brown', 'orange',
-        'magenta', 'grey', 'cyan', 'azure', 'beige', 'blueviolet',
-        'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
-        'olive', 'navy', 'palegreen']
+      default: ['grey']
     },
   },
 
@@ -2618,7 +2612,8 @@ let Stretched = class {
 /*
  * Default palette of colors
  */
-const default_colors = ['blue', 'yellow', 'brown', 'orange',
+ const default_colors = ['#E5E1D6']
+const default_colors_2 = ['blue', 'yellow', 'brown', 'orange',
   'magenta', 'darkcyan', 'grey', 'cyan', 'darkred', 'blueviolet',
   'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
   'navy', 'palegreen'];

@@ -126,7 +126,7 @@ AFRAME.registerComponent('codecity-block', {
     if (data.items instanceof Items) {
       this.items = data.items;
     } else {
-      console.log("Block: converting items to Items", typeof data.items);
+      //console.log("Block: converting items to Items", typeof data.items);
       this.items = new Items(data.items);
     };
     this.base_el = cc_block(this.el, this.items, data.width, data.depth,
@@ -375,17 +375,16 @@ AFRAME.registerComponent('codecity-quarter', {
         split = pivot_split;
       };
 
-      console.log("CodeCity Quarter: Init");
+      //console.log("CodeCity Quarter: Init");
       if (data.items instanceof ItemsTree) {
         this.tree = data.items;
       } else {
-        console.log("Quarter: converting items to ItemsTree",
-          typeof data.items);
+        //console.log("Quarter: converting items to ItemsTree", typeof data.items);
         this.tree = new ItemsTree(data.items);
       }
 
       let items = this.tree.items('area', 'extra', data.border, data.extra);
-      console.log("Tree, items:", this.tree, items);
+      //console.log("Tree, items:", this.tree, items);
 
       let width, depth;
       if (data.absolute == true) {
@@ -419,21 +418,21 @@ AFRAME.registerComponent('codecity-quarter', {
         rectangle: base_rect, items: items,
         field: 'extra'
       });
-      console.log("Quarter rects:", inner_rects);
+      //console.log("Quarter rects:", inner_rects);
       let colors = new Colors();
       let color = undefined;
       for (const rect of inner_rects) {
         if ('items' in rect.item) {
-          console.log("Items found:", rect.item.id, rect.item.items);
+          //console.log("Items found:", rect.item.id, rect.item.items);
           let proportion = rect.item.items.acc / rect.item.items.acc_extra;
           let minor_rect = rect.proportional(proportion);
           if (data.unicolor) {
             color = colors.next();
           };
-          console.log("Block color:", data.unicolor, color);
+          //console.log("Block color:", data.unicolor, color);
           this.insert_block(this.base_el, base_arect, minor_rect, color);
         } else {
-          console.log("Blocks found:", rect.item.id, rect.item.blocks);
+          //console.log("Blocks found:", rect.item.id, rect.item.blocks);
           let proportion = rect.item.blocks.acc / rect.item.blocks.acc_extra;
           let minor_rect = rect.proportional(proportion);
           //showLegendQuarter(this.base_el, "test", null, this.data.base_thick)
@@ -473,7 +472,7 @@ AFRAME.registerComponent('codecity-quarter', {
   insert_block: function (el, base_arect, rect, color) {
     let data = this.data;
 
-    console.log("Color, model", color, data.model, this.data);
+    //console.log("Color, model", color, data.model, this.data);
     let block_el = document.createElement('a-entity');
     let arect = rect.aframe(base_arect);
     block_el.setAttribute('codecity-block', {
@@ -654,7 +653,7 @@ let cc_block = function (el, items, width, depth,
   streets, streets_thick, streets_width, streets_color,
   split = naive_split, farea = 'area', fheight = 'height',
   color = undefined, model = model, legend_building, legend_block) {
-  console.log("CodeCity Block: Init");
+  //console.log("CodeCity Block: Init");
   // Build a Cartesian rectangle for the aspect ratio (width, depth),
   // which will be the base for the block, and will (later) provide
   // A-Frame coordinates for the inner buildings.
@@ -697,7 +696,7 @@ let cc_block = function (el, items, width, depth,
       color: acolor,
       model: model
     });
-    //console.log("Building:", building);
+    ////console.log("Building:", building);
     if (legend_building) {
       showLegend(building, rect.item.id, model, base_el)
     }
@@ -919,7 +918,7 @@ let ItemsTree = class {
     } else {
       raw_items = items;
     };
-    console.log("Raw items:", raw_items);
+    //console.log("Raw items:", raw_items);
     this.tree = [];
     for (const item of raw_items) {
       if ('blocks' in item) {
@@ -979,7 +978,7 @@ let ItemsTree = class {
     this.accumulated(field, border, extra);
     let tree_items = [];
     for (const item of this.tree) {
-      console.log("Item:", item);
+      //console.log("Item:", item);
       if ('blocks' in item) {
         tree_items.push({
           id: item.block, area: item.acc,
@@ -1035,7 +1034,7 @@ let ARectangle = class {
    * @return {DOMElement} A-Frame entity as a DOM Element
    */
   build_box_fixed({ height, y, color, model, id, rawArea }) {
-    // console.log("Build_box_fixed:", height, y, color);
+    // //console.log("Build_box_fixed:", height, y, color);
     let box = document.createElement('a-entity');
     if (id){
       box.setAttribute('id', id)
@@ -1076,7 +1075,7 @@ let ARectangle = class {
    * @return {DOMElement} A-Frame entity as a DOM Element
    */
   build_box({ fheight, y, color, model }) {
-    // console.log("Build_box:", fheight, y, color);
+    // //console.log("Build_box:", fheight, y, color);
     return this.build_box_fixed({
       height: this.item[fheight],
       y: y, color: color,
@@ -1458,10 +1457,10 @@ let Colors = class {
  * @return {Rectangle[]} List of subrectangles produced by the split
  */
 let naive_split = function ({ rectangle, items, field }) {
-  console.log("Naive_split:", items.length, rectangle, items, field);
+  //console.log("Naive_split:", items.length, rectangle, items, field);
   let base_rect = new Stretched(rectangle)
   let rects = base_rect.split_proportional(items, field);
-  console.log("Naive_split (rects):", rects);
+  //console.log("Naive_split (rects):", rects);
   return rects;
 };
 
@@ -1481,11 +1480,11 @@ let naive_split = function ({ rectangle, items, field }) {
  */
 //let calls = 0;
 let pivot_split = function ({ rectangle, items, field, depth = 0 }) {
-  console.log("Pivot split: ", depth, items.length, rectangle, items, field);
+  //console.log("Pivot split: ", depth, items.length, rectangle, items, field);
   // Control to avoid excesive recursion
   //  calls ++;
   //  if (calls > 20) {
-  //    console.log("20 calls reached, finishing");
+  //    //console.log("20 calls reached, finishing");
   //    return;
   //  };
   if (items.length <= 2) {
@@ -1496,11 +1495,11 @@ let pivot_split = function ({ rectangle, items, field, depth = 0 }) {
     });
   };
   let base_rect = new Stretched(rectangle);
-  console.log("Stretched:", base_rect);
+  //console.log("Stretched:", base_rect);
   let pivot_items = items.pivot_largest(base_rect.rectangle.height, field);
   let { pivot_rect, rects } = base_rect.split_pivot(pivot_items, field);
 
-  console.log("Pivot_rect, rects:", pivot_rect, rects);
+  //console.log("Pivot_rect, rects:", pivot_rect, rects);
   let subrects = [pivot_rect];
   for (const i of [0, 1, 2]) {
     if (pivot_items.items[i].length > 0) {
@@ -1512,7 +1511,7 @@ let pivot_split = function ({ rectangle, items, field, depth = 0 }) {
       subrects = subrects.concat(split_rects);
     };
   };
-  console.log("Pivot split (rects):", depth, subrects);
+  //console.log("Pivot split (rects):", depth, subrects);
   return subrects;
 }
 
@@ -1531,22 +1530,22 @@ let items_data = [{ "id": "A", "area": 3, "height": 5 },
 { "id": "H", "area": 1, "height": 3 }]
 
 let items = new Items(items_data);
-//console.log("Items length:", items.length);
-//console.log("Sum items (area):", items.sum())
-//console.log("Sum items (height):", items.sum('height'));
+////console.log("Items length:", items.length);
+////console.log("Sum items (area):", items.sum())
+////console.log("Sum items (height):", items.sum('height'));
 //
 //let rect = new Rectangle({width: 10, height: 20, x: 3, y: 4});
-//console.log("Rectangle test:", rect);
+////console.log("Rectangle test:", rect);
 //let srect = new Stretched(rect);
-//console.log("Streched rectangle test:", srect);
+////console.log("Streched rectangle test:", srect);
 //srect = new Stretched(new Rectangle({width: 20, height: 10,
 //                                     x: 2, y: 3}));
-//console.log("Streched rectangle test 2:", srect);
+////console.log("Streched rectangle test 2:", srect);
 //let rects = naive_split({rectangle: rect, items: items});
-//console.log("Naive split test:", rect, rects);
+////console.log("Naive split test:", rect, rects);
 //rect = new Rectangle({width: 15, height: 5, x: 2, y: 5});
 //rects = naive_split({rectangle: rect, items: items, field: 'area'});
-//console.log("Naive split test 2:", rect, rects);
+////console.log("Naive split test 2:", rect, rects);
 //
 rect = new Rectangle({ width: 10, height: 2.5, x: 0, y: 0 });
 //srect = new Stretched(rect);
@@ -1555,17 +1554,17 @@ rect = new Rectangle({ width: 10, height: 2.5, x: 0, y: 0 });
 //                                        new Items(items_data.slice(4,6)),
 //                                        new Items(items_data.slice(6,8))]
 //});
-//console.log("Pivot split rects:", prects);
+////console.log("Pivot split rects:", prects);
 //
 //prects = srect.split_pivot({pivot: items_data[0],
 //                            items: [new Items(items_data.slice(1,4)),
 //                                    new Items(items_data.slice(4,7)),
 //                                    new Items(items_data.slice(7,8))]
 //});
-//console.log("Pivot split rects:", prects);
+////console.log("Pivot split rects:", prects);
 //
 //rects = pivot_split({rectangle: rect, items: items, field: 'area'});
-//console.log("Pivot split:", rect, items, rects);
+////console.log("Pivot split:", rect, items, rects);
 
 
 let items_def = [{
@@ -1649,10 +1648,10 @@ let items_def = [{
 ];
 
 //tree = new ItemsTree(items);
-//console.log(tree);
+////console.log(tree);
 //total = tree.accumulated('area');
 //items = tree.items('area', true);
-//console.log(items, tree);
+////console.log(items, tree);
 
 let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
   if (levels == 1) {
@@ -1663,7 +1662,7 @@ let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
         "height": Math.random() * height
       };
     });
-    console.log("Levels, items:", levels, items)
+    //console.log("Levels, items:", levels, items)
     return items;
   } else if (levels == 2) {
     let blocks = Array.from({ length: number }, function () {
@@ -1672,7 +1671,7 @@ let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
         "items": rnd_producer(levels - 1, number, area, height)
       };
     });
-    console.log("Levels, blocks:", levels, blocks)
+    //console.log("Levels, blocks:", levels, blocks)
     return blocks;
   } else {
     let blocks = Array.from({ length: number }, function () {
@@ -1681,15 +1680,15 @@ let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
         "blocks": rnd_producer(levels - 1, number, area, height)
       };
     });
-    console.log("Levels, blocks:", levels, blocks)
+    //console.log("Levels, blocks:", levels, blocks)
     return blocks;
   };
 };
 
 /**
  * Request a JSON url
- * @param {*} data 
- * @param {*} el 
+ * @param {*} data
+ * @param {*} el
  */
 let requestJSONDataFromURL = (items) => {
   let raw_items
@@ -1701,7 +1700,7 @@ let requestJSONDataFromURL = (items) => {
   // Send it
   request.onload = function () {
       if (this.status >= 200 && this.status < 300) {
-          //console.log("data OK in request.response", request.response)
+          ////console.log("data OK in request.response", request.response)
 
           // Save data
           if (typeof request.response === 'string' || request.response instanceof String) {

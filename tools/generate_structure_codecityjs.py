@@ -41,17 +41,15 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_bootstrap.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_bootstrap.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_bootstrap.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_bootstrap/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
 DATE_FIELD = 'grimoire_creation_date'
-
-N_TIME_EVOLUTION = 5
 
 
 def main():
@@ -118,8 +116,9 @@ def main():
         #for i in range(0, N_TIME_EVOLUTION):
         not_ok = False
         i = 0
-        while not not_ok:
-            data, not_ok = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
+        while i < int(args.samples):
+            logging.debug("{} lap of time evolution".format(i))
+            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
             entities_simple = find_children(data, [])
             entities_tree = generate_entities(data, [])
             dump_codecity_data(entities_simple, "data_{}.json".format(i))
@@ -135,7 +134,7 @@ def main():
         dump_codecity_data(main_json, "main_data.json")
     else:
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        data, not_ok = extract_data(df, dt.datetime.now(pytz.utc))
+        data = extract_data(df, dt.datetime.now(pytz.utc))
         entities = generate_entities(data, [])
         dump_codecity_data(entities, "data.json")
 
@@ -207,6 +206,8 @@ def parse_args():
                         help='Export the enriched dataframe of the index data"')
     parser.add_argument('-time', '--time-evolution', required=False,
                         help='Time evolution analisys')
+    parser.add_argument('-s', '--samples', required=False,
+                        help='Time evolution analisys')
 
     return parser.parse_args()
 
@@ -268,7 +269,7 @@ def get_dataframe(file, repo):
             logging.debug("Inserting item {}/{} to csv".format(i, len(rows)))
             df = df.append(item, ignore_index=True)
         
-        i = i + 1
+        i = i + 100
         '''
         if item[key_field] not in data:
             entity = generate_entity(item, key_field)
@@ -310,7 +311,7 @@ def normalize_column(df, field, scalar_bottom, scalar_top):
 
 def extract_data(df_raw, date):
     # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
-    df, not_ok = filter_closest_date(df_raw, date)
+    df = filter_closest_date(df_raw, date)
     entities = []
 
     for project in df['project'].unique():
@@ -336,7 +337,7 @@ def extract_data(df_raw, date):
 
         entities.append(entity_project)
 
-    return entities, not_ok
+    return entities
 
 
 def filter_closest_date(df, date):
@@ -347,11 +348,10 @@ def filter_closest_date(df, date):
         try:
             indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
             df_filtered = df_filtered.append(df_file.ix[[indexmax]])
-            not_ok = False
         except ValueError:
-            not_ok = True
+            continue
 
-    return df_filtered, not_ok
+    return df_filtered
 
 
 def build_folders(df, arr, index, max_levels):
