@@ -40,11 +40,11 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_rosnavigation.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_rosnavigation.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_rosnavigation.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_angular.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_angular.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_angular.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_rosnavigation/'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_testmigration/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
@@ -121,7 +121,7 @@ def main():
             entities_simple = find_children(data, [])
             entities_tree = generate_entities(data, [])
             dump_codecity_data(entities_simple, "data_{}.json".format(i))
-            dump_codecity_data(entities_tree, "data_{}_tree.json".format(i))
+            dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
 
             main_json["data_files"].append({
                 'date': dt.datetime.timestamp(dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution))),
@@ -153,18 +153,18 @@ def generate_entities(data, entities):
     for i, item in enumerate(data):
         if 'children' in item and 'children' in item['children'][0]:
             new_item = {
-                "block": item['id'],
-                "blocks": []
+                "id": item['id'],
+                "children": []
             }
-            generate_entities(item['children'], new_item['blocks'])
+            generate_entities(item['children'], new_item['children'])
             entities.append(new_item)
         else:
             # TODO: Bypass if
             if 'children' not in item:
                 continue
             new_item = {
-                "block": item['id'],
-                "items": []
+                "id": item['id'],
+                "children": []
             }
             for n, leaf in enumerate(item['children']):
                 # TODO: Bypass if
@@ -175,7 +175,7 @@ def generate_entities(data, entities):
                     "area": leaf['value'],
                     "height": leaf['height']
                 }
-                new_item['items'].append(new_leaf)
+                new_item['children'].append(new_leaf)
             entities.append(new_item)
 
     return entities
@@ -381,60 +381,6 @@ def build_folders(df, arr, index, max_levels):
     # Adds if filled
     if len(leafs_folder['children']) > 0:
         arr.append(leafs_folder)
-
-
-def add_layout(entities, type):
-    data = {}
-    if type == 'cascade':
-        data = add_cascade_layout(entities)
-    if type == 'cube':
-        data = add_cube_layout(entities)
-
-    return data
-
-
-def add_cascade_layout(entities):
-    x_pos = 0
-    offset_prev = 0
-
-    for name, entity in entities.items():
-        x_pos += offset_prev
-        entity['position'] = {
-            'x': x_pos,
-            'y': 0,
-            'z': 0
-        }
-        offset_prev = entity['width']
-
-    return entities
-
-
-def add_cube_layout(entities):
-    x_pos = 0
-    z_pos = 0
-    offsetz_prev = 0
-    offsetx_prev = 0
-    side_len = math.sqrt(len(entities.items()))
-    count_items = 0
-
-    for name, entity in entities.items():
-        x_pos += offsetx_prev
-        entity['position'] = {
-            'x': x_pos,
-            'y': 0,
-            'z': z_pos
-        }
-        count_items += 1
-        if count_items > side_len:
-            count_items = 0
-            x_pos = 0
-            z_pos += offsetz_prev
-            offsetz_prev = entity['depth']
-            offsetx_prev = 0
-            continue
-        offsetx_prev = entity['width']
-
-    return entities
 
 
 def dump_codecity_data(data, filename):

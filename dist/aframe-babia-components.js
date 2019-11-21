@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -988,1956 +988,936 @@ let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", 
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /* global AFRAME */
+
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('geocodecitychart', {
-    schema: {
-        data: { type: 'string' },
-        legend: { type: 'boolean' },
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        /**
-         * Update or create chart component
-         */
-        if (data.data !== oldData.data) {
-            console.log("Generating geocodecitychart...")
-            generateCity(data, el)
-        }
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let generateCity = (data, element) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
-
-        let colorid = 0
-
-        for (let entity of dataToPrint) {
-
-            let buildingEntity = generateBuildEntity(element, entity, colorid, data.legend);
-            colorid++
-
-        }
-
-    }
-}
-
-let widthBubbles = 0
-
-function generateBuildEntity(parent, entityData, color, legend) {
-    console.log("Generating building...")
-    let entity = document.createElement('a-entity');
-    entity.setAttribute('geometry', 'primitive: box');
-    entity.setAttribute('material', 'color: ' + colors[color]);
-    entity.setAttribute('geometry', 'width', entityData['width']);
-    entity.setAttribute('geometry', 'depth', entityData['depth']);
-    entity.setAttribute('geometry', 'height', entityData['height']);
-    entity.setAttribute('position', { x: entityData.position.x, y: entityData.position.y + entityData['height'] / 2, z: entityData.position.z });
-    if (entityData['children']) {
-        let keys = Object.keys(entityData['children'])
-        if (legend) {
-            showLegendDistrict(entity, entityData)
-        }
-        for (let child_key of keys) {
-            generateBuildEntity(parent, entityData.children[child_key], color++, legend)
-        }
-    } else {
-        //Prepare legend
-        if (legend) {
-            showLegend(entity, entityData)
-        }
-    }
-    parent.appendChild(entity);
-    return entity;
-}
-
-function generateLegend(entityData, buildingEntity) {
-    let text = entityData['key']
-
-    let width = 2;
-    if (text.length > 16)
-        width = text.length / 8;
-
-    let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: buildingEntity.getAttribute('geometry').height / 2 + 1, z: 0 });
-    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-    entity.setAttribute('height', '1');
-    entity.setAttribute('width', width);
-    entity.setAttribute('color', 'white');
-    entity.setAttribute('text', {
-        'value': text,
-        'align': 'center',
-        'width': 6,
-        'color': 'black'
-    });
-    entity.setAttribute('light', {
-        'intensity': 0.3
-    });
-    return entity;
-}
-
-function showLegend(buildingEntity, entity) {
-    buildingEntity.addEventListener('mouseenter', function () {
-        this.setAttribute('scale', { x: 1, y: 1.2, z: 1 });
-        legend = generateLegend(entity, this);
-        this.appendChild(legend);
-    });
-
-    buildingEntity.addEventListener('mouseleave', function () {
-        this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
-    });
-}
-
-function showLegendDistrict(buildingEntity, entity) {
-    buildingEntity.addEventListener('mouseenter', function () {
-        this.setAttribute('geometry', 'height', '10');
-        this.setAttribute('material', {opacity: 0.8});
-        legend = generateLegend(entity, this);
-        this.appendChild(legend);
-    });
-
-    buildingEntity.addEventListener('mouseleave', function () {
-        this.setAttribute('geometry', 'height', '0.1');
-        this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.setAttribute('material', {opacity: 1.0});
-        this.removeChild(legend);
-    });
-}
-
-
-
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-
-if (typeof AFRAME === 'undefined') {
-  throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
- * CodeCity block component for A-Frame.
- */
-AFRAME.registerComponent('codecity-block', {
-  schema: {
-    width: {
-      type: 'number',
-      default: 10
-    },
-    depth: {
-      type: 'number',
-      default: 10
-    },
-    // Algoritm to place buildings: naive, pivot
-    algorithm: {
-      type: 'string',
-      default: 'pivot'
-    },
-    model: {
-      type: 'string',
-      default: null
-    },
-    items: {
-      type: 'string',
-      default: JSON.stringify(
-        [{ "id": "A", "area": 3, "height": 5 },
-        { "id": "B", "area": 5, "height": 4 },
-        { "id": "C", "area": 1, "height": 3 },
-        { "id": "D", "area": 6, "height": 2 },
-        { "id": "E", "area": 4, "height": 6 },
-        { "id": "F", "area": 3, "height": 1 },
-        { "id": "G", "area": 2, "height": 5 },
-        { "id": "H", "area": 1, "height": 3 }]
-      )
-    },
-    // Field (of each item) to use as area for buildings
-    farea: {
-      type: 'string',
-      default: 'area'
-    },
-    // Field (of each item) to use as height for buildings
-    fheight: {
-      type: 'string',
-      default: 'height'
-    },
-
-    // Base: thickness
-    base_thick: {
-      type: 'number',
-      default: 1
-    },
-    // Base: color
-    base_color: {
-      type: 'color',
-      default: 'red'
-    },
-    // Base: with surrounding streets
-    streets: {
-      type: 'boolean',
-      default: true
-    },
-    // Base: street thickness
-    streets_thick: {
-      type: 'number',
-      default: .3
-    },
-    // Base: street width
-    streets_width: {
-      type: 'number',
-      default: 1
-    },
-    // Base: street color
-    streets_color: {
-      type: 'color',
-      default: 'black'
-    },
-    // Color for all buildings (if undefined, random colors)
-    color: {
-      type: 'color',
-      default: undefined
-    },
-    colormap: {
-      type: 'array',
-      default: ['grey']
-    },
-    // Show legend building
-    legend_building: {
-      type: 'boolean',
-      default: true
-    },
-    // Show legend quarter
-    legend_block: {
-      type: 'boolean',
-      default: true
-    },
-  },
-
-  /**
-   * Set if component needs multiple instancing.
-   */
-  multiple: false,
-
-  /**
-   * Called once when component is attached. Generally for initial setup.
-   */
-  init: function () {
-    let data = this.data;
-    let el = this.el;
-
-    let split;
-    if (data.algorithm == 'naive') {
-      split = naive_split;
-    } else {
-      split = pivot_split;
-    };
-
-    if (data.items instanceof Items) {
-      this.items = data.items;
-    } else {
-      console.log("Block: converting items to Items", typeof data.items);
-      this.items = new Items(data.items);
-    };
-    this.base_el = cc_block(this.el, this.items, data.width, data.depth,
-      data.base_thick, data.base_color,
-      data.streets, data.streets_thick, data.streets_width, data.streets_color,
-      split, data.farea, data.fheight, data.color, data.model, data.legend_building, data.legend_block);
-  },
-
-  /**
-   * Called when component is attached and when component data changes.
-   * Generally modifies the entity based on the data.
-   */
-  update: function (oldData) {
-  },
-
-  /**
-   * Called when a component is removed (e.g., via removeAttribute).
-   * Generally undoes all modifications to the entity.
-   */
-  remove: function () { },
-
-  /**
-   * Called on each scene tick.
-   */
-  // tick: function (t) { },
-
-  /**
-   * Called when entity pauses.
-   * Use to stop or remove any dynamic or background behavior such as events.
-   */
-  pause: function () { },
-
-  /**
-   * Called when entity resumes.
-   * Use to continue or add any dynamic or background behavior such as events.
-   */
-  play: function () { }
-});
-
-/*
- * Default items for the quarter component
- * Mainly for testing.
- */
-const quarter_items = [
-  {
-    "block": "BlockA",
-    "blocks": [{
-      "block": "BlockA1",
-      "items": [{ "id": "A1A", "area": 2, "height": 1 },
-      { "id": "A1B", "area": 5, "height": 4 },
-      { "id": "A1C", "area": 4, "height": 6 },
-      { "id": "A1D", "area": 6, "height": 2 }]
-    },
-    {
-      "block": "BlockA2",
-      "items": [{ "id": "A2A", "area": 1, "height": 3 },
-      { "id": "A2B", "area": 5, "height": 6 },
-      { "id": "A2C", "area": 8, "height": 4 }]
-    },
-    {
-      "block": "BlockA3",
-      "items": [{ "id": "A3A", "area": 4, "height": 7 },
-      { "id": "A3B", "area": 5, "height": 3 },
-      { "id": "A3C", "area": 8, "height": 1 }]
-    }
-    ]
-  },
-  {
-    "block": "BlockB",
-    "blocks": [{
-      "block": "BlockB1",
-      "items": [{ "id": "B1A", "area": 3, "height": 5 },
-      { "id": "B1B", "area": 5, "height": 4 },
-      { "id": "B1C", "area": 1, "height": 3 },
-      { "id": "B1D", "area": 6, "height": 2 },
-      { "id": "B1E", "area": 4, "height": 6 },
-      { "id": "B1F", "area": 3, "height": 1 },
-      { "id": "B1G", "area": 2, "height": 5 },
-      { "id": "B1H", "area": 1, "height": 3 }]
-    },
-    {
-      "block": "BlockB2",
-      "items": [{ "id": "B2A", "area": 2, "height": 9 },
-      { "id": "B2B", "area": 6, "height": 3 },
-      { "id": "B2C", "area": 1, "height": 3 },
-      { "id": "B2D", "area": 8, "height": 1 },
-      { "id": "B2E", "area": 3, "height": 6 },
-      { "id": "B2F", "area": 1, "height": 7 }]
-    },
-    {
-      "block": "Block3",
-      "items": [{ "id": "B3A", "area": 6, "height": 2 },
-      { "id": "B3B", "area": 8, "height": 4 },
-      { "id": "B3C", "area": 3, "height": 6 }]
-    },
-    {
-      "block": "Block4",
-      "items": [{ "id": "B4A", "area": 2, "height": 9 },
-      { "id": "B4B", "area": 6, "height": 1 },
-      { "id": "B4C", "area": 7, "height": 6 },
-      { "id": "B4D", "area": 8, "height": 5 },
-      { "id": "B4E", "area": 3, "height": 6 },
-      { "id": "B4F", "area": 9, "height": 4 }]
-    },
-    {
-      "block": "Block5",
-      "items": [{ "id": "B5A", "area": 2, "height": 9 },
-      { "id": "B5B", "area": 6, "height": 3 },
-      { "id": "B5C", "area": 5, "height": 8 },
-      { "id": "B5D", "area": 5, "height": 7 }]
-    },
-    {
-      "block": "Block6",
-      "items": [{ "id": "B6A", "area": 2, "height": 9 },
-      { "id": "B6B", "area": 6, "height": 3 },
-      { "id": "B6C", "area": 2, "height": 6 },
-      { "id": "B6D", "area": 4, "height": 1 },
-      { "id": "B6E", "area": 6, "height": 6 },
-      { "id": "B6F", "area": 1, "height": 7 }]
-    }
-    ]
   }
-];
-
-/**
- * CodeCity quarter component for A-Frame, composed of several blocks.
- */
-AFRAME.registerComponent('codecity-quarter', {
-  schema: {
-    // Absolute size (width and depth will be used for proportions)
-    absolute: {
-      type: 'boolean',
-      default: false
-    },
-    width: {
-      type: 'number',
-      default: 20
-    },
-    depth: {
-      type: 'number',
-      default: 20
-    },
-    model: {
-      type: 'string',
-      default: null
-    },
-    // Algoritm to place buildings: naive, pivot
-    algorithm: {
-      type: 'string',
-      default: 'pivot'
-    },
-    // Data to visualize
-    items: {
-      type: 'string',
-      default: JSON.stringify(quarter_items)
-    },
-    // Base: thickness
-    base_thick: {
-      type: 'number',
-      default: 1
-    },
-    // Base: color
-    base_color: {
-      type: 'color',
-      default: '#667C26'
-    },
-    // Base: color (for blocks)
-    base_block_color: {
-      type: 'color',
-      default: '#7A903A'
-    },
-    // Base: with surrounding streets
-    streets: {
-      type: 'boolean',
-      default: true
-    },
-    // Base: street thickness
-    streets_thick: {
-      type: 'number',
-      default: 0.3
-    },
-    // Base: street width
-    streets_width: {
-      type: 'number',
-      default: 1
-    },
-    // Base: street color
-    streets_color: {
-      type: 'color',
-      default: '#728C00'
-    },
-    // Size of border around buildings (streets are built on it)
-    border: {
-      type: 'number',
-      default: 1
-    },
-    // Extra factor for total area with respect to built area
-    extra: {
-      type: 'number',
-      default: 1.1
-    },
-    // Quarter: elevation for each "depth" of quarters, over the previous one
-    quarter_elevation: {
-      type: 'number',
-      default: 1
-    },
-    // Unique color for each block
-    unicolor: {
-      type: 'color',
-      default: false
-    },
-    colormap: {
-      type: 'array',
-      default: ['grey']
-    },
-  },
-
+  
   /**
-   * Set if component needs multiple instancing.
+   * CodeCity component for A-Frame.
    */
-  multiple: false,
-
-  /**
-   * Called once when component is attached. Generally for initial setup.
-   */
-  init: function () {
-
-  },
-
-  /**
-   * Called when component is attached and when component data changes.
-   * Generally modifies the entity based on the data.
-   */
-  update: function (oldData) {
-    let data = this.data;
-    let el = this.el;
-
-    if (data !== oldData) {
-      let split;
-      if (data.algorithm == 'naive') {
-        split = naive_split;
-      } else {
-        split = pivot_split;
-      };
-
-      console.log("CodeCity Quarter: Init");
-      if (data.items instanceof ItemsTree) {
-        this.tree = data.items;
-      } else {
-        console.log("Quarter: converting items to ItemsTree",
-          typeof data.items);
-        this.tree = new ItemsTree(data.items);
-      }
-
-      let items = this.tree.items('area', 'extra', data.border, data.extra);
-      console.log("Tree, items:", this.tree, items);
-
+  AFRAME.registerComponent('codecity', {
+    schema: {
+      // Absolute size (width and depth will be used for proportions)
+      absolute: {
+        type: 'boolean',
+        default: false
+      },
+      width: {
+        type: 'number',
+        default: 20
+      },
+      depth: {
+        type: 'number',
+        default: 20
+      },
+      // Algoritm to split rectangle in buildings: naive, pivot
+      split: {
+        type: 'string',
+        default: 'naive'
+      },
+      // Data to visualize
+      data: {
+        type: 'string',
+        default: JSON.stringify({id: "CodeCity", area: 1, height: 1})
+      },
+      // Field in data items to represent as area
+      farea: {
+        type: 'string',
+        default: 'area'
+      },
+      // Field in data items to represent as area
+      fheight: {
+        type: 'string',
+        default: 'height'
+      },
+      // Merged geometries in a single mesh (improves performance)
+      merged: {
+        type: 'boolean',
+        default: true
+      },
+      // Use buffered geometries (improves performance)
+      buffered: {
+        type: 'boolean',
+        default: false
+      },
+      // Base: color
+      building_color: {
+        type: 'color',
+        default: '#E6B9A1'
+      },
+      building_model: {
+        type: 'string',
+        default: null
+      },
+      // Base (build it or not)
+      base: {
+        type: 'boolean',
+        default: true
+      },
+      // Base: thickness
+      base_thick: {
+        type: 'number',
+        default: 0.2
+      },
+      // Base: color
+      base_color: {
+        type: 'color',
+        default: '#98e690'
+      },
+      // Size of border around buildings (streets are built on it)
+      border: {
+        type: 'number',
+        default: 1
+      },
+      // Extra factor for total area with respect to built area
+      extra: {
+        type: 'number',
+        default: 1.4
+      },
+      // Zone: elevation for each "depth" of quarters, over the previous one
+      zone_elevation: {
+        type: 'number',
+        default: 1
+      },
+      // Unique color for each zone
+      unicolor: {
+        type: 'color',
+        default: false
+      },
+      // Show materials as wireframe
+      wireframe: {
+        type: 'boolean',
+        default: false
+      },
+      colormap: {
+        type: 'array',
+        default: ['blue', 'green', 'yellow', 'brown', 'orange',
+                'magenta', 'grey', 'cyan', 'azure', 'beige', 'blueviolet',
+                'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
+                'olive', 'navy', 'palegreen']
+      },
+    },
+  
+    /**
+     * Set if component needs multiple instancing.
+     */
+    multiple: false,
+  
+    /**
+     * Called once when component is attached. Generally for initial setup.
+     */
+    init: function () {
+      let data = this.data;
+      let el = this.el;
+  
+      this.zone_data = JSON.parse(data.data);
+      let zone = new Zone({data: this.zone_data,
+                           extra: function(area) {return area*data.extra;},
+                           farea: data.farea, fheight: data.fheight});
+  
       let width, depth;
       if (data.absolute == true) {
-        width = Math.sqrt((data.width * this.tree.acc_extra) / data.depth);
-        depth = this.tree.acc_extra / width;
+        width = Math.sqrt(zone.areas.canvas) * data.width / data.depth;
+        depth = zone.areas.canvas / width;
       } else {
         width = data.width;
         depth = data.depth
       };
-      let base_rect = new Rectangle({
-        width: width, height: depth,
-        x: 0, y: 0
-      });
-      let base_arect = base_rect.aframe(new ARectangle({}));
-      this.base_el = base_arect.insert_box_fixed({
-        el: this.el,
-        height: data.base_thick,
-        y: 0,
-        color: data.base_color
-      });
-      if (data.streets) {
-        base_arect.build_streets({
-          height: data.streets_thick,
-          width: data.streets_width,
-          y: data.base_thick / 2 - data.streets_thick / 2,
-          color: data.streets_color
-        });
+  
+      // New levels are entities relative (children of the previous level) or not
+      let relative = true;
+      if (data.merged) {
+        relative = false;
       };
-
-      let inner_rects = split({
-        rectangle: base_rect, items: items,
-        field: 'extra'
-      });
-      console.log("Quarter rects:", inner_rects);
-      let colors = new Colors();
-      let color = undefined;
-      for (const rect of inner_rects) {
-        if ('items' in rect.item) {
-          console.log("Items found:", rect.item.id, rect.item.items);
-          let proportion = rect.item.items.acc / rect.item.items.acc_extra;
-          let minor_rect = rect.proportional(proportion);
-          if (data.unicolor) {
-            color = colors.next();
+      let canvas = new Rectangle({width: width, depth: depth, x: 0, z: 0});
+      zone.add_rects({rect: canvas, split: data.split, relative: relative});
+      let base = document.createElement('a-entity');
+      let visible = true;
+      if (data.merged) {
+        base.addEventListener('loaded', (e) => {
+          if (data.buffered) {
+            base.setAttribute('buffer-geometry-merger', {preserveOriginal: true,
+                                                         materialColors: true});
+            base.setAttribute('material', {vertexColors: 'face'});
+          } else {
+            base.setAttribute('geometry-merger', {preserveOriginal: true});
+            base.setAttribute('material', {vertexColors: 'face'});
           };
-          console.log("Block color:", data.unicolor, color);
-          this.insert_block(this.base_el, base_arect, minor_rect, color);
+        });
+        if (data.buffered) {
+          visible = true;
         } else {
-          console.log("Blocks found:", rect.item.id, rect.item.blocks);
-          let proportion = rect.item.blocks.acc / rect.item.blocks.acc_extra;
-          let minor_rect = rect.proportional(proportion);
-          //showLegendQuarter(this.base_el, "test", null, this.data.base_thick)
-          this.insert_quarter(this.base_el, base_arect, minor_rect);
-
+          visible = false;
+        };
+      };
+      el.appendChild(base);
+  
+      zone.draw_rects({
+          ground: canvas, el: base, base: data.base,
+          level: 0, elevation: 0, relative: relative,
+          base_thick: data.base_thick,
+          wireframe: data.wireframe,
+          building_color: data.building_color, base_color: data.base_color,
+          model: data.building_model, visible: visible,
+          buffered: data.buffered});
+    },
+  
+    /**
+     * Called when component is attached and when component data changes.
+     * Generally modifies the entity based on the data.
+     */
+    update: function (oldData) {
+    },
+  
+    /**
+     * Called when a component is removed (e.g., via removeAttribute).
+     * Generally undoes all modifications to the entity.
+     */
+    remove: function () { },
+  
+    /**
+     * Called on each scene tick.
+     */
+    // tick: function (t) { },
+  
+    /**
+     * Called when entity pauses.
+     * Use to stop or remove any dynamic or background behavior such as events.
+     */
+    pause: function () { },
+  
+    /**
+     * Called when entity resumes.
+     * Use to continue or add any dynamic or background behavior such as events.
+     */
+    play: function () { },
+  
+  });
+  
+  /*
+   * Autoscale a component
+   *
+   * Based on code by Don McCurdy, used to autoscale buildings
+   * https://stackoverflow.com/questions/49379435/aframe-how-to-reset-default-scale-after-loading-the-gltf-model
+   */
+  AFRAME.registerComponent('autoscale', {
+    schema: {type: 'vec3', default: {x:1, y:1, z:1}},
+    init: function () {
+      this.scale();
+      this.el.addEventListener('object3dset', () => this.scale());
+    },
+    scale: function () {
+      const el = this.el;
+      const data = this.data;
+      const span = new THREE.Vector3(data.x, data.y, data.z);
+      const mesh = el.getObject3D('mesh');
+  
+      if (!mesh) return;
+  
+      // Compute bounds.
+      const bbox = new THREE.Box3().setFromObject(mesh);
+  
+      // Normalize scale.
+      const scale = span.divide(bbox.getSize());
+      mesh.scale.set(scale.x, scale.y, scale.z);
+  
+      // Recenter.
+      const offset = bbox.getCenter().multiply(scale);
+      mesh.position.sub(offset);
+    }
+  });
+  
+  ///*
+  // * geometry-merger component
+  // * Code from https://github.com/supermedium/superframe/blob/master/components/geometry-merger/
+  // * (sligihtly modified to add property for adding colors to faces in merged mesh)
+  // */
+  //AFRAME.registerComponent('geometry-merger', {
+  //  schema: {
+  //    preserveOriginal: {default: false},
+  //    materialColors: {default: true}
+  //  },
+  //
+  //  init: function () {
+  //    var faceIndexEnd;
+  //    var faceIndexStart;
+  //    var self = this;
+  //
+  //    this.geometry = new THREE.Geometry();
+  //    this.mesh = new THREE.Mesh(this.geometry);
+  //    this.el.setObject3D('mesh', this.mesh);
+  //
+  //    this.faceIndex = {};  // Keep index of original entity UUID to new face array.
+  //    this.vertexIndex = {};  // Keep index of original entity UUID to vertex array.
+  //
+  //    this.el.object3D.traverse(function (mesh) {
+  //      if (mesh.type !== 'Mesh') { return; }
+  //      if (mesh === self.mesh) { return; }
+  //
+  //      self.faceIndex[mesh.parent.uuid] = [
+  //        self.geometry.faces.length,
+  //        self.geometry.faces.length + mesh.geometry.faces.length - 1
+  //      ];
+  //
+  //      self.vertexIndex[mesh.parent.uuid] = [
+  //        self.geometry.vertices.length,
+  //        self.geometry.vertices.length + mesh.geometry.vertices.length - 1
+  //      ];
+  //
+  //      // If material color applied to all faces, copy colors to faces
+  ////      if (self.data.materialColors && (mesh.material.vertexColors === THREE.NoColors)) {
+  ////        let color = mesh.material.color;
+  ////        for ( const face of mesh.geometry.faces) {
+  ////          face.color.set( color );
+  ////        };
+  ////      };
+  //
+  //      // Merge. Use parent's matrix due to A-Frame's <a-entity>(Group-Mesh) hierarchy.
+  //      mesh.parent.updateMatrix();
+  //      self.geometry.merge(mesh.geometry, mesh.parent.matrix);
+  //
+  //      // Remove mesh if not preserving.
+  //      if (!self.data.preserveOriginal) { mesh.parent.remove(mesh); }
+  //    });
+  //  }
+  //});
+  
+  //AFRAME.registerComponent('buffer-geometry-merger', {
+  //  schema: {
+  //    preserveOriginal: {default: false}
+  //  },
+  //
+  //  init: function () {
+  //    var geometries = [];
+  //    var self = this;
+  //
+  //    this.el.sceneEl.object3D.updateMatrixWorld()
+  //    this.el.object3D.traverse(function (mesh) {
+  //      if (mesh.type !== 'Mesh' || mesh.el === self.el) { return; }
+  //      mesh.geometry.applyMatrix(mesh.matrixWorld);
+  //      geometries.push(mesh.geometry.clone());
+  //      // Remove mesh if not preserving.
+  //      if (!self.data.preserveOriginal) { mesh.parent.remove(mesh); }
+  //    });
+  //
+  //    const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
+  //    this.mesh = new THREE.Mesh(geometry);
+  //    this.el.setObject3D('mesh', this.mesh);
+  //  }
+  //});
+  
+  /*
+   * face-colors component
+   * From https://github.com/supermedium/superframe/blob/master/components/geometry-merger/examples/basic/index.html
+   */
+  AFRAME.registerComponent('face-colors', {
+    dependencies: ['geometry'],
+    schema: {
+      color: {default: '#FFF'}
+    },
+    init: function () {
+      var geometry;
+      var i;
+      geometry = this.el.getObject3D('mesh').geometry;
+      for (i = 0; i < geometry.faces.length; i++) {
+        geometry.faces[i].color.set(this.data.color);
+      }
+      geometry.colorsNeedUpdate = true;
+    }
+  });
+  
+  /*
+   * Class for storing zone, with all its subzones and items, to show as buildings
+   */
+  let Zone = class {
+    /*
+     * Constructor, based on a tree.
+     *
+     * Each node of the tree must include 'id' and 'children',
+     * except if it is a leaf, in wihc case must include 'id'
+     * and fields for computing area and height.
+     * The tree can also come as a JSON-encoded string.
+     *
+     * @constructor
+     * @param {object} data Tree with data to store in the object
+     * @param {function} extra Function to compute extra area for canvas, based on area
+     * @param {string} farea Field to consider as area in leaf items
+     * @param {string} fheight Field to consider as height in leaf items
+     */
+    constructor({data, extra=function(area) {return area;},
+                 farea='area', fheight='height'}) {
+      this.data = data;
+      this.id = this.data.id;
+      this.extra = extra;
+      this.farea = farea;
+      this.fheight = fheight;
+      this.areas = this.areas_tree();
+      // Root element (a-entity) of the codecity for this Zone
+      this.el = null;
+      // Number of rectangles to be drawn as buildings, but still not in the scene
+      this.pending_rects = 0;
+    }
+  
+    /*
+     * Compute areas for each node of the subree at node
+     *
+     *  Annotates each node with:
+     *  .area: accumulated area of all children
+     *  .inner: area of the inner rectangle (acc. canvas of all children)
+     *  .canvas: area of the canvas for this node
+     */
+    areas_tree({data=this.data, level=0} = {}) {
+      let data_node = data;
+      let node = {data: data_node};
+      if ('children' in data_node) {
+        node.inner = 0;
+        node.area = 0;
+        node.children = [];
+        for (const data_child of data_node.children) {
+          let child = this.areas_tree({data: data_child, level: level+1});
+          node.inner += child.canvas;
+          node.area += child.area;
+          node.children.push(child);
+        };
+      } else {
+        // Leaf node
+        node.area = data_node[this.farea];
+        node.inner = node.area;
+      };
+      node.canvas = this.extra(node.inner, level);
+      return node;
+    }
+  
+    /**
+     * Add rectangles to a canvas rectangle, according to info in an areas subtree
+     *
+     * @param {Rectangle} rect Rectangle acting as canvas for the next level
+     * @param {Object} area Node of an areas tree, as it was composed by areas_tree()
+     */
+    add_rects({rect, area=this.areas, relative=true, split='naive'} = {}) {
+      // Make this the rectangle for the area, and compute its inner dimensions
+      area.rect = rect;
+      area.rect.inner(area.canvas, area.inner);
+      if ('children' in area) {
+        let child_areas = new Values(area.children.map(child => child.canvas),
+                                     area.inner);
+        let child_rect;
+        if (split === 'naive') {
+          child_rect = area.rect.split(child_areas, relative);
+          console.log("Naive split");
+        } else if (split === 'pivot') {
+          child_rect = area.rect.split_pivot(child_areas, relative);
+          console.log("Pivot split");
+        } else {
+          throw new Error("CodeCity: Unknwon split method");
+        };
+        for (const i in area.children) {
+          this.add_rects({rect: child_rect[i],
+                          area: area.children[i],
+                          relative: relative,
+                          split: split});
         };
       };
     }
-  },
-
-  /**
-   * Called when a component is removed (e.g., via removeAttribute).
-   * Generally undoes all modifications to the entity.
-   */
-  remove: function () { },
-
-  /**
-   * Called on each scene tick.
-   */
-  // tick: function (t) { },
-
-  /**
-   * Called when entity pauses.
-   * Use to stop or remove any dynamic or background behavior such as events.
-   */
-  pause: function () { },
-
-  /**
-   * Called when entity resumes.
-   * Use to continue or add any dynamic or background behavior such as events.
-   */
-  play: function () { },
-
-  /**
-   * Utility function: insert a codecity-block as a child of an element.
-   */
-  insert_block: function (el, base_arect, rect, color) {
-    let data = this.data;
-
-    console.log("Color, model", color, data.model, this.data);
-    let block_el = document.createElement('a-entity');
-    let arect = rect.aframe(base_arect);
-    block_el.setAttribute('codecity-block', {
-      items: rect.item.items,
-      farea: data.farea,
-      fheight: data.fheight,
-      algorithm: data.algorithm,
-      width: arect.width,
-      depth: arect.depth,
-      base_thick: data.base_thick,
-      base_color: data.base_block_color,
-      streets: data.streets,
-      streets_thick: data.streets_thick,
-      streets_width: data.streets_width * .6,
-      streets_color: data.streets_color,
-      color: color,
-      model: data.model
-    });
-    block_el.setAttribute('position', {
-      x: arect.x,
-      y: data.quarter_elevation,
-      z: arect.z
-    });
-    el.appendChild(block_el);
-  },
-
-  /**
-   * Utility function: insert a codecity-quarter as a child of an element.
-   */
-  insert_quarter: function (el, base_arect, rect) {
-    let data = this.data;
-
-    let quarter_el = document.createElement('a-entity');
-    let arect = rect.aframe(base_arect);
-    quarter_el.setAttribute('codecity-quarter', {
-      items: rect.item.blocks,
-      farea: data.farea,
-      fheight: data.fheight,
-      algorithm: data.algorithm,
-      width: arect.width,
-      depth: arect.depth,
-      base_thick: data.base_thick,
-      base_color: data.base_color,
-      base_block_color: data.base_block_color,
-      streets: data.streets,
-      streets_thick: data.streets_thick,
-      streets_width: data.streets_width * .6,
-      streets_color: data.streets_color,
-      border: data.border * .6,
-      extra: data.extra,
-      quarter_elevation: data.quarter_elevation,
-      unicolor: data.unicolor,
-      model: data.model
-    });
-    quarter_el.setAttribute('position', {
-      x: arect.x,
-      y: data.quarter_elevation,
-      z: arect.z
-    });
-    el.appendChild(quarter_el);
-  }
-});
-
-/*
- * Autoscale a component
- *
- * Based on code by Don McCurdy, used to autoscale buildings
- * https://stackoverflow.com/questions/49379435/aframe-how-to-reset-default-scale-after-loading-the-gltf-model
- */
-AFRAME.registerComponent('autoscale', {
-  schema: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
-  init: function () {
-    this.scale();
-    this.el.addEventListener('object3dset', () => this.scale());
-  },
-  scale: function () {
-    const el = this.el;
-    const data = this.data;
-    const span = new THREE.Vector3(data.x, data.y, data.z);
-    const mesh = el.getObject3D('mesh');
-
-    if (!mesh) return;
-
-    // Compute bounds.
-    const bbox = new THREE.Box3().setFromObject(mesh);
-
-    // Normalize scale.
-    const scale = span.divide(bbox.getSize());
-    mesh.scale.set(scale.x, scale.y, scale.z);
-
-    // Recenter.
-    const offset = bbox.getCenter().multiply(scale);
-    mesh.position.sub(offset);
-  }
-});
-
-/**
- * This function adds the needed events in order to activate/deactivate the legend
- */
-function showLegend(buildingEntity, text, model, base_el) {
-  let legend;
-  buildingEntity.addEventListener('mouseenter', function () {
-    this.setAttribute('scale', { x: 1, y: 1.2, z: 1 });
-    let parentPos = buildingEntity.getAttribute("position")
-    legend = generateLegend(text, this, parentPos, model);
-    base_el.appendChild(legend);
-  });
-
-  buildingEntity.addEventListener('mouseleave', function () {
-    this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-    base_el.removeChild(legend);
-  });
-}
-
-/**
- * This function adds the needed events in order to activate/deactivate the legend of the quarter
- */
-function showLegendQuarter(buildingEntity, text, model = null, thick) {
-  let legend;
-  let activated = false;
-  buildingEntity.addEventListener('click', function () {
-    if (!activated) {
-      this.setAttribute('geometry', 'height', '20');
-      this.setAttribute('material', { opacity: 0.8 });
-      legend = generateLegend(text, this, { x: 0, y: 0, z: 0 }, model);
-      activated = true;
-      this.appendChild(legend);
-    } else {
-      this.setAttribute('geometry', 'height', thick);
-      this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-      this.setAttribute('material', { opacity: 1.0 });
-      activated = false;
-      this.removeChild(legend);
-    }
-  });
-}
-
-/**
- * This function generate a plane at the top of the building with the desired text
- */
-function generateLegend(text, buildingEntity, parentPos, model) {
-  let width = 2;
-  if (text.length > 16)
-    width = text.length / 8;
-
-  let height;
-  if (model == null) {
-    height = buildingEntity.getAttribute('geometry').height
-  } else {
-    height = buildingEntity.getAttribute("autoscale").y
-  }
-
-  let entity = document.createElement('a-plane');
-
-  entity.setAttribute('position', { x: parentPos.x, y: parentPos.y + height / 2 + 1, z: parentPos.z });
-  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-  entity.setAttribute('height', '1');
-  entity.setAttribute('width', width);
-  entity.setAttribute('color', 'white');
-  entity.setAttribute('text', {
-    'value': text,
-    'align': 'center',
-    'width': 6,
-    'color': 'black'
-  });
-  /*entity.setAttribute('light', {
-    'intensity': 0.3
-  });*/
-  return entity;
-}
-
-
-/*
- * Build a block in a DOM element
- */
-let cc_block = function (el, items, width, depth,
-  base_thick, base_color,
-  streets, streets_thick, streets_width, streets_color,
-  split = naive_split, farea = 'area', fheight = 'height',
-  color = undefined, model = model, legend_building, legend_block) {
-  console.log("CodeCity Block: Init");
-  // Build a Cartesian rectangle for the aspect ratio (width, depth),
-  // which will be the base for the block, and will (later) provide
-  // A-Frame coordinates for the inner buildings.
-  // Build the base box from it.
-  let base_rect = new Rectangle({
-    width: width, height: depth,
-    x: 0, y: 0
-  });
-  let base_arect = base_rect.aframe(new ARectangle({}));
-  let base_el = base_arect.insert_box_fixed({
-    el: el,
-    height: base_thick,
-    y: 0,
-    color: base_color
-  });
-  if (streets) {
-    base_arect.build_streets({
-      height: streets_thick,
-      width: streets_width,
-      y: base_thick / 2 - streets_thick / 2,
-      color: streets_color
-    });
-  };
-
-  // Build inner rectangles, splitting the base according to items.
-  // Build A-Frame rectangles for all of them, and the corresponding,
-  // A-Frame boxes, inserting them in the base.
-  let inner_rects = split({
-    rectangle: base_rect, items: items,
-    field: farea
-  });
-  let buildings_el = [];
-  let colors = new Colors();
-  for (const rect of inner_rects) {
-    let arect = rect.aframe(base_arect);
-    acolor = colors.next(color);
-    let building = arect.build_box({
-      fheight: fheight,
-      y: base_thick / 2,
-      color: acolor,
-      model: model
-    });
-    //console.log("Building:", building);
-    if (legend_building) {
-      showLegend(building, rect.item.id, model, base_el)
-    }
-    buildings_el.push(building);
-    base_el.appendChild(building);
-  };
-  if (legend_block) {
-    showLegendQuarter(base_el, "test", null, base_thick)
-  }
-  return base_el;
-};
-
-
-
-/*
- * Class for storing items to show as buildings
- */
-let Items = class {
-  /*
-   * Build, based on an object with items
-   *
-   * @constructor
-   * @param {object} items Items to store in the object
-   */
-  constructor(items) {
-    if (typeof items == 'string') {
-      this.items = JSON.parse(items);
-    } else {
-      this.items = items;
-    };
-    this.length = this.items.length;
-  }
-
-  /*
-   * Sum values of field 'field' for items.
-   *
-   * @param {string} field Field to consider for computing the sum
-   * @return {number} Sum of values
-   */
-  sum(field = 'area') {
-    return this.items.reduce(function (acc, item) { return acc + item[field]; }, 0);
-  }
-
-  /*
-   * Annotate accumulated (sum) value of field 'field' for items.
-   * If the rectangle were square, the extra area for allowing for
-   * surrounding streets of width 'border' would be
-   * (SQRT(area) + 2*border)^2.
-   * Parameter 'extra' is a factor for allowing for even a larger area.
-   *
-   * @param {string} field Field to consider for computing the sum
-   * @param {number} border Width of border (street width)
-   * @param {number} extra Extra factor, for accounting for streets
-   * @return {number} Sum of values
-   */
-  accumulated(field = 'area', border, extra = 1.2) {
-    this.acc = this.sum(field);
-    this.acc_extra = Math.pow((Math.sqrt(this.acc) + 2 * border), 2) * extra;
-    return [this.acc, this.acc_extra];
-  }
-
-
-  /*
-   * Compute the largest element in an array, and its index
-   *
-   * @typedef {Object} Element Element of Items object
-   * @property {object} largest The largest item
-   * @property {number} largest_i The index of the largest item
-   *
-   * @param {string} field Field to consider for computing max
-   * @return {Element} Maximum item, and its index
-   */
-  max(field = 'area') {
-    let largest = this.items[0];
-    let largest_i = 0;
-
-    for (let i = 0; i < this.length; i++) {
-      if (largest[field] < this.items[i][field]) {
-        largest = this.items[i];
-        largest_i = i;
+  
+    /**
+     * Draw all rectangles for an area tree
+     *
+     * @param {Rectangle} ground Rectangle for the ground
+     * @param {DOMElement} el DOM element that will be parent
+     * @param {boolean} visible Draw elements with visible meshes
+     * @return {number} Number of rectangles drawn
+     */
+    draw_rects({ground, el, area=this.areas,
+                level=0, elevation=0, relative=true,
+                base_thick=.2, wireframe=false,
+                building_color="red", base_color="green", model=null,
+                visible=true, buffered=false}) {
+      if (level === 0) {
+        this.el = el;
       };
-    };
-    return { largest: largest, largest_i: largest_i };
-  }
-
-  /*
-   * Split list of items in three lists, given a pivot area
-   *
-   * @typedef {Object} PivotedList Result of spliting items list
-   * @property {Object} pivot The pivot item
-   * @property {Items[]} items1 Three arrays of items, produced by the pivot algo
-   *
-   * The algorithm produces:
-   * - pivot is the item with the largest (area) value
-   * - items is the list of three Items objects
-   *     . items[0] is items before pivot
-   *     . items[1] is the next items after pivot, so that
-   *       pivot is close to square
-   *       (width of rectangle for items[1] is the same as of pivot)
-   *     . items[2] is the other items to the right of pivot
-   *
-   * @param {number} height Height of enclosing stretched rectangle
-   * @param {string} field Field to consider for spliting
-   * @return {PivotedList} Pivot and lists produced by the algorithm
-   */
-  pivot_largest(height, field) {
-    let a1_len, a2_len, a3_len;
-    let items = this.items;
-    let { largest, largest_i } = this.max(field);
-
-    let pivot_i = largest_i;
-    a1_len = pivot_i;
-
-    if (this.length == pivot_i + 1) {
-      // No items to the right of pivot. a2, a3 empty
-      return {
-        pivot: items[pivot_i],
-        items: [new Items(items.slice(0, a1_len)),
-        new Items([]),
-        new Items([])]
-      };
-    };
-
-    if (this.length == pivot_i + 2) {
-      // Only one item to the right of pivot. It is a2. a3 is empty.
-      return {
-        pivot: items[pivot_i],
-        items: [new Items(items.slice(0, a1_len)),
-        new Items(items.slice(pivot_i + 1, pivot_i + 2)),
-        new Items([])]
-      };
-    };
-
-    // More than one item to the right of pivot.
-    // Compute a2 so that pivot can be as square as possible
-    let pivot_area = items[pivot_i][field];
-    let a2_width_ideal = Math.sqrt(pivot_area);
-    let a2_area_ideal = a2_width_ideal * height - pivot_area;
-
-    let a2_area = 0;
-    let i = pivot_i + 1;
-    while (a2_area < a2_area_ideal && i < this.length) {
-      var a2_area_last = a2_area;
-      a2_area += this.items[i][field];
-      i++;
-    };
-    // There are two candidates to be the area closest to the ideal area:
-    // the last area computed (long), and the one that was conputed before it (short),
-    // providing the last computed is not the next to the pivot (in that case,
-    // the last computed is the next to the pivot, and therefore it needs to be the
-    // first in a3.
-    if (Math.abs(a2_area - a2_area_ideal) < Math.abs(a2_area_last - a2_area_ideal)) {
-      var a3_first = i;
-    } else if (i - 1 > pivot_i) {
-      var a3_first = i - 1;
-    } else {
-      var a3_first = i;
-    };
-
-    a2_len = a3_first - pivot_i - 1;
-    a3_len = this.length - a3_first
-
-    return {
-      pivot: items[pivot_i],
-      items: [new Items(items.slice(0, a1_len)),
-      new Items(items.slice(pivot_i + 1,
-        pivot_i + 1 + a2_len)),
-      new Items(items.slice(pivot_i + 1 + a2_len,
-        pivot_i + 1 + a2_len + a3_len))]
-    };
-  }
-
-  /*
-   * Compute fraction with respect to a total.
-   *
-   * Produces the fraction of total that corresponds to
-   * the sum of items, using field.
-   *
-   * @param {number} total Total for computing the fraction
-   * @param {string} field Field to consider
-   * @return {number} Fraction
-   */
-  fraction(total, field) {
-    let area = this.sum(field);
-    return area / total;
-  }
-};
-
-/*
- * Class for storing items tree to show as quarters / buildings
- */
-
-let ItemsTree = class {
-  /*
-   * Build, based on an object with items, items of items, etc.
-   *
-   * The data used to instantiate the class (items) is structured
-   * as an array of objects. Each of these objects has always
-   * a property 'block', which is an id for the block, and
-   * one of two other properties:
-   * 'blocks' (which will be an array of other blocks, with the
-   * same structure), or 'items', which will be
-   * an array of objects with the same structure,
-   * or an array of final data.
-   * Final data should have at least 'id', and two fields to
-   * act as area and height.
-   *
-   * @constructor
-   * @param {object} items Items to store in the object
-   */
-  constructor(items) {
-    let raw_items;
-    if (typeof items == 'string') {
-      if (items.endsWith('json')){
-        raw_items = requestJSONDataFromURL(items);
-      }else{
-        raw_items = JSON.parse(items);
-      }
-    } else {
-      raw_items = items;
-    };
-    console.log("Raw items:", raw_items);
-    this.tree = [];
-    for (const item of raw_items) {
-      if ('blocks' in item) {
-        this.tree.push({
-          block: item.block,
-          blocks: new ItemsTree(item.blocks)
-        });
+      let pending_rects = this.pending_rects;
+      if ('children' in area) {
+        // Create base for this area, and go recursively to the next level
+        let base = area.rect.box({elevation: elevation,
+                                  height: base_thick,
+                                  color: base_color, inner: false,
+                                  wireframe: wireframe, visible: visible,
+                                  buffered: buffered});
+        el.appendChild(base);
+        let root_el = base;
+        if (!relative) { root_el = el };
+        for (const child of area.children) {
+          let next_elevation = base_thick/2;
+          if (!relative) { next_elevation = elevation+base_thick };
+          this.draw_rects({ground: area.rect, el: root_el, area: child,
+                           level: level+1, elevation: next_elevation,
+                           relative: relative,
+                           building_color: building_color, base_color: base_color,
+                           model: model,
+                           base_thick: base_thick, wireframe: wireframe,
+                           visible: visible, buffered: buffered});
+        };
       } else {
-        this.tree.push({
-          block: item.block,
-          items: new Items(item.items)
-        });
+        // Leaf node, create the building
+        let height = area.data[this.fheight];
+        let box = area.rect.box({height: area.data[this.fheight],
+                                 elevation: elevation,
+                                 wireframe: wireframe,
+                                 color: building_color,
+                                 model: model,
+                                 visible: visible,
+                                 buffered: buffered});
+        el.appendChild(box);
       };
     };
-    this.length = this.tree.length;
-  }
-
-  /*
-   * Annotate trees with accumulated value of field 'field' for items.
-   *
-   * @param {string} field Field to consider for computing the sum
-   * @param {number} border Width of border (street width)
-   * @param {number} extra Extra factor, for accounting for streets
-   * @return {number} Sum of values
-   */
-  accumulated(field = 'area', border, extra = 1.2) {
-    this.acc = 0;
-    this.acc_extra = 0;
-    for (const item of this.tree) {
-      let acc, acc_extra;
-      if ('blocks' in item) {
-        [item.acc, item.acc_extra] = item.blocks.accumulated(field, border * .6, extra);
-        //        item.acc_extra = Math.pow((Math.sqrt(item.acc_extra) + 2*border), 2) * extra;
-      } else {
-        [item.acc, item.acc_extra] = item.items.accumulated(field, border * .6, extra);
-      };
-      this.acc += item.acc;
-      this.acc_extra += item.acc_extra;
-    };
-    return [this.acc, this.acc_extra];
-  }
-
-  /*
-   * Produce an Items object from the top level of a treee.
-   *
-   * Annotate the tree with accumulated data for field,
-   * and produce an Items object with the top level data.
-   * Each item is a dictionary {block, area}, with area being
-   * the accumulated value for the subtree, if the level corresponds
-   * to blocks, or regular (leaf) items, if not.
-   *
-   * @param {string} field Field to consider for computing the sum
-   * @param {number} extra Extra factor, for accounting for streets
-   * @return {Items} Items object.
-   */
-  items(field = 'area', afield = 'extra', border = 0, extra = 1.2) {
-    this.accumulated(field, border, extra);
-    let tree_items = [];
-    for (const item of this.tree) {
-      console.log("Item:", item);
-      if ('blocks' in item) {
-        tree_items.push({
-          id: item.block, area: item.acc,
-          extra: item.acc_extra, blocks: item.blocks
-        });
-      } else {
-        tree_items.push({
-          id: item.block, area: item.acc,
-          extra: item.acc_extra, items: item.items
-        });
-      };
-    };
-    return new Items(tree_items);
-  }
-};
-
-/*
- * Class for representing A-Frame rectangles
- *
- * An A-Frame rectangle is a rectangle that can be used as a base
- * for a box entity. It lives in the XZ plane,
- * with sides parallel to the A-Frame coordinates axis.
- * Length of sides are width (assummed to be parallel to X axis),
- * and depth (assumed to be parallel to Z axis).
- * Position coordinates are (x,z), representing the position
- * of the center of the rectangle (as is usual in A-Frame).
- */
-let ARectangle = class {
-  /*
-   * Build a rectangle, given its parameters
-   *
-   * @constructor
-   * @param {number} width Width (side parallel to X axis)
-   * @param {number} depth Depth (side parallel to Z axis)
-   * @param {number} x X coordinate
-   * @param {number} y Z coordinate
-   * @param {object} item Item with data corresponding to this rectangle
-   */
-  constructor({ width, depth, x = 0, z = 0, item }) {
-    this.width = width;
-    this.depth = depth;
-    this.x = x;
-    this.z = z;
-    this.item = item;
-  }
-
-  /*
-   * Build A-Frame box with this rectangle as base, fixed height
-   *
-   * @param {number} height Height of the box
-   * @param {number} y Y coordinate of the box
-   * @param {color} color A-Frame color for the box
-   * @return {DOMElement} A-Frame entity as a DOM Element
-   */
-  build_box_fixed({ height, y, color, model, id, rawArea }) {
-    // console.log("Build_box_fixed:", height, y, color);
-    let box = document.createElement('a-entity');
-    if (id){
-      box.setAttribute('id', id)
-    }
-    if (rawArea){
-      box.setAttribute('babiaxr-rawarea', rawArea)
-    }
-    if (model == null) {
-      box.setAttribute('geometry', {
-        primitive: 'box',
-        depth: this.depth,
-        width: this.width,
-        height: height
-      });
-      box.setAttribute('material', { 'color': color });
-    } else {
-      box.setAttribute('gltf-model', model);
-      box.setAttribute('autoscale', {
-        x: this.width,
-        y: height,
-        z: this.depth
-      });
-    };
-    box.setAttribute('position', {
-      x: this.x,
-      y: y + height / 2,
-      z: this.z
-    });
-    return box;
-  }
-
-  /*
-   * Build A-Frame box with this rectangle as base, height from item
-   *
-   * @param {string} fheight Field (of item) with height of the box
-   * @param {number} y Y coordinate of the box
-   * @param {color} color A-Frame color for the box
-   * @return {DOMElement} A-Frame entity as a DOM Element
-   */
-  build_box({ fheight, y, color, model }) {
-    // console.log("Build_box:", fheight, y, color);
-    return this.build_box_fixed({
-      height: this.item[fheight],
-      y: y, color: color,
-      model: model,
-      id: this.item.id,
-      rawArea: this.item.area
-    });
-  }
-
-  /*
-   * Insert A-Frame box with this rectangle as base, fixed height
-   *
-   * @param {DOMElement} el Insert the box in this element
-   * @param {number} height Height of the box
-   * @param {number} y Y coordinate of the box
-   * @param {color} color A-Frame color for the box
-   * @return {DOMElement} A-Frame entity as a DOM Element
-   */
-  insert_box_fixed({ el, height, y, color }) {
-    this.el = this.build_box_fixed({ height: height, y: y, color: color })
-    el.appendChild(this.el);
-    return this.el;
-  }
-
-  /*
-   * Build streets around the box
-   *
-   * @param {number} height Height of the box (ignore fheight)
-   * @param {number} y Y coordinate of the box
-   * @param {color} color A-Frame color for the box
-   * @return {DOMElement} A-Frame entity as a DOM Element
-   */
-  build_streets({ height, width, y, color }) {
-    let arects = [
-      new ARectangle({
-        width: this.width + width * 2, depth: width,
-        x: 0,
-        z: - this.depth / 2 - width / 2
-      }),
-      new ARectangle({
-        width: this.width + width * 2, depth: width,
-        x: 0,
-        z: this.depth / 2 + width / 2
-      }),
-      new ARectangle({
-        width: width, depth: this.depth + width * 2,
-        x: - this.width / 2 - width / 2,
-        z: 0
-      }),
-      new ARectangle({
-        width: width, depth: - this.depth - width * 2,
-        x: this.width / 2 + width / 2,
-        z: 0
-      })
-    ];
-    for (const arect of arects) {
-      let el = arect.insert_box_fixed({
-        el: this.el, height: height,
-        y: y, color: color,
-        id: ""
-      });
-    };
-  }
-};
-
-/*
- * Class for representing (cartesian) rectangles
- *
- * A cartesian rectangle is a rectangle, living in a 2D world,
- * with sides parallel to the coordinates axis.
- * Length of sides are width (assummed to be parallel to X axis),
- * and height (assumed to be parallel to Y axis).
- * Position coordinates are (x,y), representing the position
- * of the bottom left corner of the rectangle.
- */
-let Rectangle = class {
-  /*
-   * Build a rectangle, given its parameters
-   *
-   * @constructor
-   * @param {number} width Width (side parallel to X axis)
-   * @param {number} height Height (side parallel to Y axis)
-   * @param {number} x X coordinate
-   * @param {number} y Y coordinate
-   * @param {object} item Item with data corresponding to this rectangle
-   */
-  constructor({ width, height, x = 0, y = 0, item }) {
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y;
-    this.item = item;
-  }
-
-  /*
-   * Revolve a rectangle
-   *
-   * Produce a new rectangle, with exchanged width and height, and x and y
-   *
-   * @return {Rectangle} Revolved rectangle
-   */
-  revolve() {
-    let rectangle = new Rectangle({
-      width: this.height, height: this.width,
-      x: this.y, y: this.x, item: this.item
-    });
-    return rectangle;
-  }
-
-  /*
-   * Is width the longest side?
-   *
-   * @return {boolean} True if width is the longest side.
-   */
-  longest_width() {
-    let longest = Math.max(this.width, this.height);
-    return (longest == this.width);
-  }
-
-  /*
-   * Produce a proportional rectangle
-   *
-   * A proportional rectangle is one inscribed in this one, with the same
-   * center, and sides proportional.
-   *
-   * @param {number} proportion
-   */
-  proportional(proportion) {
-    return new Rectangle({
-      width: this.width * proportion,
-      height: this.height * proportion,
-      x: this.x + this.width * (1 - proportion) / 2,
-      y: this.y + this.height * (1 - proportion) / 2,
-      item: this.item
-    });
-  }
-
-  /*
-   * Build A-Frame rectangle for a Cartesian rectangle
-   *
-   * The parent is a A-Frame rectangle in which we can 'insert' our
-   * rectangle, with coordinates relative to it.
-   *
-   * Cartesian coordinates consider x,y in the bottom left corner of the
-   * rectangle, while A-Frame coordinates consider x,z in the center of it.
-   * So, we need to map Cartesian 0,0 to the center of the parent,
-   * and Cartesian x,y to the center of the rectangle, relative to that center
-   * of the parent, as x,z.
-   *
-   * @param {ARectangle} parent Parent A-Frame rectangle
-   * @return {ARectangle} A-Frame rectangle corresponding to this Cartesian rectangle
-   */
-  aframe(parent) {
-    let pwidth = parent.width;
-    let x, z;
-    if (pwidth) {
-      x = this.x + this.width / 2 - pwidth / 2;
-    } else {
-      x = this.x;
-    };
-    let pdepth = parent.depth;
-    if (pdepth) {
-      z = -1 * (this.y + this.height / 2 - pdepth / 2);
-    } else {
-      z = -this.y;
-    };
-    return new ARectangle({ width: this.width, depth: this.height, x: x, z: z, item: this.item });
-  }
-};
-
-/*
- * Class for representing (stretched, cartesian) rectangles
- *
- * This is a Rectangle object in which width is always the longest
- * dimension (except for squares, obviously).
- * I will include a propriety to know whether the original
- * Rectangle used to build it had to be rotated or not
- */
-let Stretched = class {
-  /*
-   * Builds a stretched rectangle, given a Rectangle
-   *
-   * @constructor
-   * @param {Rectangle} rectangle Rectangle from which it is built
-   */
-  constructor(rectangle) {
-    if (rectangle.longest_width()) {
-      this.revolved = false;
-      this.rectangle = Object.assign(new Rectangle({}), rectangle);
-    } else {
-      this.revolved = true;
-      this.rectangle = rectangle.revolve();
-    };
-  }
-
-  /*
-   * Split the streched rectangle proportionally to items
-   * The property named by the 'field' argument will be used
-   * as the value for the proportion.
-   *
-   * @param {Items} items Items to use for the splitting
-   * @param {string} field Field of each item to use for proportion
-   * @return {Rectangle[]} Rectangles produced by the split
-   */
-  split_proportional(items, field = 'area') {
-    // ratio to convert a size in a split (part of total)
-    let ratio = this.rectangle.width / items.sum(field);
-    // value of fields scaled to fit total, plus original complete item
-    let splits = items.items.map(function (item) {
-      return { width: ratio * item[field], item: item };
-    });
-    // x for rectangles start with x for the base rectangle
-    let current_x = this.rectangle.x;
-    let rects = [];
-    // Let's now compute the proportional rectangles,
-    // by building one after the other, following the width side
-    for (const split of splits) {
-      let x = current_x;
-      current_x += split.width;
-      let rect = new Rectangle({
-        width: split.width,
-        height: this.rectangle.height,
-        x: x, y: this.rectangle.y,
-        item: split.item
-      });
-      // If the base rectangle was revolved, re-revolve rectangles
-      if (this.revolved) {
-        rects.push(rect.revolve());
-      } else {
-        rects.push(rect);
-      };
-    };
-    return rects;
-  }
-
-  /*
-   * Split the streched rectangle according to the list of pivot items
-   *
-   * @typedef {Object} PivotedList Result of spliting items list
-   * @property {Object} pivot The pivot item
-   * @property {Items[]} items1 Three arrays of items, produced by the pivot algo
-   *
-   * See Items.pivot_largest for details
-   *
-   * @typedef {Object} PivotedRects Result of spliting rectangle
-   * @property {Rectangle} pivot_rect The pivot rectangle
-   * @property {Rectangle[]} rects Array of Rectangle 1, 2 and 3
-   *
-   * The property named by the 'field' argument will be used
-   * as the value for the proportion.
-   *
-   * @param {PivotedList} pivot_items Items to use for the splitting
-   * @param {string} field Field of each item to use for proportion
-   * @return {PivotedRects} Rectangles produced by the split
-   */
-  split_pivot(pivot_items, field = 'area') {
-    let { pivot, items } = pivot_items;
-
-    let rect1, pivot_rect, rect2, rect3;
-    let rect1_width, rect2_width, rect3_width;
-
-    let base_area = pivot[field] + items[0].sum(field) + items[1].sum(field)
-      + items[2].sum(field);
-    let base_rect = this.rectangle;
-
-    // Compute rect1
-    if (items[0].length > 0) {
-      rect1_width = items[0].fraction(base_area, field) * base_rect.width;
-      rect1 = new Rectangle({
-        width: rect1_width,
-        height: base_rect.height,
-        x: base_rect.x, y: base_rect.y
-      });
-      if (this.revolved) {
-        rect1 = rect1.revolve();
-      };
-    } else {
-      rect1 = null;
-      rect1_width = 0;
-    };
-
-    // Compute rect2 and pivot_rect
-    let items2pivot = new Items([pivot, ...items[1].items]);
-    rect2_width = items2pivot.fraction(base_area, field) * base_rect.width;
-    let pivot_height = base_rect.height * pivot[field] / items2pivot.sum(field);
-    let rect2_height = base_rect.height - pivot_height;
-    pivot_rect = new Rectangle({
-      width: rect2_width,
-      height: pivot_height,
-      x: base_rect.x + rect1_width,
-      y: base_rect.y + rect2_height,
-      item: pivot
-    });
-    if (this.revolved) {
-      pivot_rect = pivot_rect.revolve();
-    };
-
-    if (items[1].length > 0) {
-      rect2 = new Rectangle({
-        width: rect2_width, height: rect2_height,
-        x: base_rect.x + rect1_width,
-        y: base_rect.y
-      });
-      if (this.revolved) {
-        rect2 = rect2.revolve();
-      };
-    } else {
-      rect2 = null;
-    };
-
-    // Compute rect3
-    if (items[2].length > 0) {
-      rect3_width = items[2].fraction(base_area, field) * base_rect.width;
-      rect3 = new Rectangle({
-        width: rect3_width, height: base_rect.height,
-        x: base_rect.x + rect1_width + rect2_width,
-        y: base_rect.y
-      });
-      if (this.revolved) {
-        rect3 = rect3.revolve();
-      };
-    } else {
-      rect3 = null;
-    }
-
-    return { pivot_rect: pivot_rect, rects: [rect1, rect2, rect3] };
-  }
-
-};
-
-/*
- * Default palette of colors
- */
- const default_colors = ['#E5E1D6']
-const default_colors_2 = ['blue', 'yellow', 'brown', 'orange',
-  'magenta', 'darkcyan', 'grey', 'cyan', 'darkred', 'blueviolet',
-  'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
-  'navy', 'palegreen'];
-/*
- * Class for dealing with colors
- */
-let Colors = class {
-  /*
-   * Builds palette of colors, given a list of colors
-   *
-   * @constructor
-   * @param {color[]} colors Colors to build the palette
-   */
-  constructor(colors = default_colors) {
-    this.colors = colors;
-    this.current = -1;
-  };
-
-  /*
-   * Give me the next color
-   */
-  next(color) {
-    if (typeof color !== 'undefined') {
-      return color;
-    } else {
-      this.current = (this.current + 1) % this.colors.length;
-      return this.colors[this.current];
-    };
-  };
-};
-
-/*
- * Naive algorithm for splitting a rectangle, given a list of items
- *
- * This just splits the rectangle in adjacent rectangles,
- * proportional to the areas of the items in the list.
- * It is assumed that the longest side of the
- * rectangle will be the basis for the proportional split.
- * Ths list of items will include a field 'area', that will
- * be the value used for the proportional splitting.
- *
- * @param {Rectangle} rectangle Rectangle to split
- * @param {Items} items Items to use for subrectangles
- * @param {string} field Field of each item to consider for splitting
- * @return {Rectangle[]} List of subrectangles produced by the split
- */
-let naive_split = function ({ rectangle, items, field }) {
-  console.log("Naive_split:", items.length, rectangle, items, field);
-  let base_rect = new Stretched(rectangle)
-  let rects = base_rect.split_proportional(items, field);
-  console.log("Naive_split (rects):", rects);
-  return rects;
-};
-
-
-
-/*
- * Pivot algorigthm for splitting a rectangle, given a list of items
- * http://cvs.cs.umd.edu/~ben/papers/Shneiderman2001Ordered.pdf
- *
- * Works recursively, by spliting the rectangle in a pivot item,
- * and three lists of items.
- *
- * @param {Rectangle} rectangle Rectangle to split
- * @param {Items} items Items to use for subrectangles
- * @param {string} field Field of each item to consider for splitting
- * @return {Rectangle[]} List of subrectangles produced by the split
- */
-//let calls = 0;
-let pivot_split = function ({ rectangle, items, field, depth = 0 }) {
-  console.log("Pivot split: ", depth, items.length, rectangle, items, field);
-  // Control to avoid excesive recursion
-  //  calls ++;
-  //  if (calls > 20) {
-  //    console.log("20 calls reached, finishing");
-  //    return;
-  //  };
-  if (items.length <= 2) {
-    // Only one or two items, we cannot apply pivot, apply naive
-    return naive_split({
-      rectangle: rectangle, items: items,
-      field: field
-    });
-  };
-  let base_rect = new Stretched(rectangle);
-  console.log("Stretched:", base_rect);
-  let pivot_items = items.pivot_largest(base_rect.rectangle.height, field);
-  let { pivot_rect, rects } = base_rect.split_pivot(pivot_items, field);
-
-  console.log("Pivot_rect, rects:", pivot_rect, rects);
-  let subrects = [pivot_rect];
-  for (const i of [0, 1, 2]) {
-    if (pivot_items.items[i].length > 0) {
-      let split_rects = pivot_split({
-        rectangle: rects[i],
-        items: pivot_items.items[i],
-        field: field, depth: depth + 1
-      });
-      subrects = subrects.concat(split_rects);
-    };
-  };
-  console.log("Pivot split (rects):", depth, subrects);
-  return subrects;
-}
-
-
-/*
- * Below this line, some testing code that should be moved to a proper test suite.
- */
-
-let items_data = [{ "id": "A", "area": 3, "height": 5 },
-{ "id": "B", "area": 5, "height": 4 },
-{ "id": "C", "area": 1, "height": 3 },
-{ "id": "D", "area": 6, "height": 2 },
-{ "id": "E", "area": 4, "height": 6 },
-{ "id": "F", "area": 3, "height": 1 },
-{ "id": "G", "area": 2, "height": 5 },
-{ "id": "H", "area": 1, "height": 3 }]
-
-let items = new Items(items_data);
-//console.log("Items length:", items.length);
-//console.log("Sum items (area):", items.sum())
-//console.log("Sum items (height):", items.sum('height'));
-//
-//let rect = new Rectangle({width: 10, height: 20, x: 3, y: 4});
-//console.log("Rectangle test:", rect);
-//let srect = new Stretched(rect);
-//console.log("Streched rectangle test:", srect);
-//srect = new Stretched(new Rectangle({width: 20, height: 10,
-//                                     x: 2, y: 3}));
-//console.log("Streched rectangle test 2:", srect);
-//let rects = naive_split({rectangle: rect, items: items});
-//console.log("Naive split test:", rect, rects);
-//rect = new Rectangle({width: 15, height: 5, x: 2, y: 5});
-//rects = naive_split({rectangle: rect, items: items, field: 'area'});
-//console.log("Naive split test 2:", rect, rects);
-//
-rect = new Rectangle({ width: 10, height: 2.5, x: 0, y: 0 });
-//srect = new Stretched(rect);
-//let prects = srect.split_pivot({pivot: items_data[3],
-//                                items: [new Items(items_data.slice(0,3)),
-//                                        new Items(items_data.slice(4,6)),
-//                                        new Items(items_data.slice(6,8))]
-//});
-//console.log("Pivot split rects:", prects);
-//
-//prects = srect.split_pivot({pivot: items_data[0],
-//                            items: [new Items(items_data.slice(1,4)),
-//                                    new Items(items_data.slice(4,7)),
-//                                    new Items(items_data.slice(7,8))]
-//});
-//console.log("Pivot split rects:", prects);
-//
-//rects = pivot_split({rectangle: rect, items: items, field: 'area'});
-//console.log("Pivot split:", rect, items, rects);
-
-
-let items_def = [{
-  "block": "BlockA",
-  "blocks": [{
-    "block": "BlockA1",
-    "items": [{ "id": "A1A", "area": 2, "height": 1 },
-    { "id": "A1B", "area": 5, "height": 4 },
-    { "id": "A1C", "area": 4, "height": 6 },
-    { "id": "A1D", "area": 6, "height": 2 }]
-  },
-  {
-    "block": "BlockA2",
-    "items": [{ "id": "A2A", "area": 1, "height": 3 },
-    { "id": "A2B", "area": 5, "height": 6 },
-    { "id": "A2C", "area": 8, "height": 4 }]
-  },
-  {
-    "block": "BlockA3",
-    "items": [{ "id": "A3A", "area": 4, "height": 7 },
-    { "id": "A3B", "area": 5, "height": 3 },
-    { "id": "A3C", "area": 8, "height": 1 }]
-  }
-  ]
-},
-{
-  "block": "BlockB",
-  "blocks": [{
-    "block": "BlockB1",
-    "items": [{ "id": "B1A", "area": 3, "height": 5 },
-    { "id": "B1B", "area": 5, "height": 4 },
-    { "id": "B1C", "area": 1, "height": 3 },
-    { "id": "B1D", "area": 6, "height": 2 },
-    { "id": "B1E", "area": 4, "height": 6 },
-    { "id": "B1F", "area": 3, "height": 1 },
-    { "id": "B1G", "area": 2, "height": 5 },
-    { "id": "B1H", "area": 1, "height": 3 }]
-  },
-  {
-    "block": "BlockB2",
-    "items": [{ "id": "B2A", "area": 2, "height": 9 },
-    { "id": "B2B", "area": 6, "height": 3 },
-    { "id": "B2C", "area": 1, "height": 3 },
-    { "id": "B2D", "area": 8, "height": 1 },
-    { "id": "B2E", "area": 3, "height": 6 },
-    { "id": "B2F", "area": 1, "height": 7 }]
-  },
-  {
-    "block": "Block3",
-    "items": [{ "id": "B3A", "area": 6, "height": 2 },
-    { "id": "B3B", "area": 8, "height": 4 },
-    { "id": "B3C", "area": 3, "height": 6 }]
-  },
-  {
-    "block": "Block4",
-    "items": [{ "id": "B4A", "area": 2, "height": 9 },
-    { "id": "B4B", "area": 6, "height": 1 },
-    { "id": "B4C", "area": 7, "height": 6 },
-    { "id": "B4D", "area": 8, "height": 5 },
-    { "id": "B4E", "area": 3, "height": 6 },
-    { "id": "B4F", "area": 9, "height": 4 }]
-  },
-  {
-    "block": "Block5",
-    "items": [{ "id": "B5A", "area": 2, "height": 9 },
-    { "id": "B5B", "area": 6, "height": 3 },
-    { "id": "B5C", "area": 5, "height": 8 },
-    { "id": "B5D", "area": 5, "height": 7 }]
-  },
-  {
-    "block": "Block6",
-    "items": [{ "id": "B6A", "area": 2, "height": 9 },
-    { "id": "B6B", "area": 6, "height": 3 },
-    { "id": "B6C", "area": 2, "height": 6 },
-    { "id": "B6D", "area": 4, "height": 1 },
-    { "id": "B6E", "area": 6, "height": 6 },
-    { "id": "B6F", "area": 1, "height": 7 }]
-  }
-  ]
-}
-];
-
-//tree = new ItemsTree(items);
-//console.log(tree);
-//total = tree.accumulated('area');
-//items = tree.items('area', true);
-//console.log(items, tree);
-
-let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
-  if (levels == 1) {
-    let items = Array.from({ length: number }, function () {
-      return {
-        "id": "BlockA",
-        "area": Math.random() * area,
-        "height": Math.random() * height
-      };
-    });
-    console.log("Levels, items:", levels, items)
-    return items;
-  } else if (levels == 2) {
-    let blocks = Array.from({ length: number }, function () {
-      return {
-        "block": "BlockA",
-        "items": rnd_producer(levels - 1, number, area, height)
-      };
-    });
-    console.log("Levels, blocks:", levels, blocks)
-    return blocks;
-  } else {
-    let blocks = Array.from({ length: number }, function () {
-      return {
-        "block": "BlockA",
-        "blocks": rnd_producer(levels - 1, number, area, height)
-      };
-    });
-    console.log("Levels, blocks:", levels, blocks)
-    return blocks;
-  };
-};
-
-/**
- * Request a JSON url
- * @param {*} data 
- * @param {*} el 
- */
-let requestJSONDataFromURL = (items) => {
-  let raw_items
-  // Create a new request object
-  let request = new XMLHttpRequest();
-
-  // Initialize a request
-  request.open('get', items, false)
-  // Send it
-  request.onload = function () {
-      if (this.status >= 200 && this.status < 300) {
-          //console.log("data OK in request.response", request.response)
-
-          // Save data
-          if (typeof request.response === 'string' || request.response instanceof String) {
-            raw_items = JSON.parse(request.response)
-          } else {
-            raw_items = request.response
-          }
-          
-
-      } else {
-          reject({
-              status: this.status,
-              statusText: xhr.statusText
-          });
-      }
   };
   
-  request.onerror = function () {
-      reject({
-          status: this.status,
-          statusText: xhr.statusText
-      });
+  
+  /**
+   * Class for lists (arrays) of values
+   */
+  let Values = class {
+    /*
+     * @param {Array} values Array with values (Number)
+     */
+    constructor(values, total) {
+      this.items = values;
+      if (typeof(total) !== 'undefined') {
+        this.total = total;
+      } else {
+        this.total = values.reduce((acc, a) => acc+a, 0);
+      };
+    }
+  
+    imax () {
+      let largest = this.items[0];
+      let largest_i = 0;
+  
+      for (let i = 0; i < this.items.length; i++) {
+        if (largest < this.items[i] ) {
+            largest = this.items[i];
+            largest_i = i;
+        };
+      };
+      return largest_i;
+    }
+  
+    static range(start, length) {
+      var indexes = [];
+      for (let i = start; i < start+length; i++) {
+        indexes.push(i);
+      };
+      return indexes;
+    }
+  
+    /*
+     * Return the scaled area, for a rectangle area, of item i
+     *
+     * @param {Number} area Total area of the rectangle
+     * @param {Integer} item Item number (starting in 0)
+     */
+    scaled_area(area, item) {
+      return this.items[item] * area / this.total;
+    }
+  
+    /*
+     * Produce a Values object for items in positions
+     *
+     * @param {array} positions Positions of items to produce the new Values object
+     */
+    values_i(positions) {
+      let values = [];
+      for (const position of positions) {
+        values.push(this.items[position])
+      };
+      return new Values(values);
+    }
+  
+    /**
+     * Produce pivot and three regions
+     *
+     * The array of values will be split in an element (pivot) and
+     * three arrays (a1, a2, a3). The function will return the
+     * index in the array of values for each of its items in the
+     * pivot and the three regions.
+     * This function assumes there are at least three items in the object.
+     * It also assumes that the rectangle is laying.
+     *
+     * @return {Object} Pivot and regions, as properties of the object
+     */
+    pivot_regions(width, depth) {
+      if (this.items.length < 3) {
+        throw new Error("CodeCity - Values.pivot_regions: less than three items");
+      };
+      if (width < depth) {
+        throw new Error("Codecity - Values.pivot_regions: rectangle should be laying");
+      };
+      let a1_len, a2_len, a3_len;
+      let pivot_i = this.imax();
+      if (this.items.lenght == pivot_i + 1) {
+        // No items to the right of pivot. a2, a3 empty
+        return {pivot: pivot_i,
+                a1: Values.range(0, pivot_i),
+                a2: [], a3: []};
+      };
+  
+      if (this.items.length == pivot_i + 2) {
+        // Only one item to the right of pivot. It is a2. a3 is empty.
+        return {pivot: pivot_i,
+                a1: Values.range(0, pivot_i),
+                a2: [pivot_i + 1], a3: []};
+      };
+  
+      // More than one item to the right of pivot.
+      // Compute a2 so that pivot can be as square as possible
+      let area = width * depth;
+      let pivot_area = this.scaled_area(area, pivot_i);
+      let a2_width_ideal = Math.sqrt(pivot_area);
+      let a2_area_ideal = a2_width_ideal * depth - pivot_area;
+  
+      let a2_area = 0;
+      let a2_area_last = a2_area;
+      let i = pivot_i + 1;
+      while (a2_area < a2_area_ideal && i < this.items.length ) {
+        a2_area_last = a2_area;
+        a2_area += this.scaled_area(area, i);
+        i ++;
+      };
+      // There are two candidates to be the area closest to the ideal area:
+      // the last area computed (long), and the one that was conputed before it (short),
+      // provided the last computed one is not the next to the pivot (in that case,
+      // the last computed is the next to the pivot, and therefore it needs to be the
+      // first in a3.
+      let a3_first = i;
+      if ((i - 1 > pivot_i) &&
+          (Math.abs(a2_area - a2_area_ideal) > Math.abs(a2_area_last - a2_area_ideal))) {
+        a3_first = i-1;
+      };
+  
+      a2_len = a3_first - pivot_i - 1;
+      a3_len = this.items.length - a3_first;
+      return {pivot: pivot_i,
+              a1: Values.range(0, pivot_i),
+              a2: Values.range(pivot_i + 1, a2_len),
+              a3: Values.range(pivot_i + 1 + a2_len, a3_len)};
+    }
+  
+    /*
+     * Compute the width for a region, for a rectangle of given width
+     * (region is a rectangles with rectangle depth as depth)
+     *
+     * @param {array} values Position of values belonging to region
+     * @param {number} width Width of rectangle
+     */
+    pivot_region_width(values, width) {
+      let region_total = 0;
+      for (const i of values) {
+        region_total += this.items[i]
+      };
+      return (region_total / this.total ) * width;
+    }
+  
   };
-  request.send();
-
-  if (raw_items.time_evolution){
-    raw_items = requestJSONDataFromURL(raw_items.init_data)
-  }
-  return raw_items
-}
+  
+  /*
+   * Rectangles, using AFrame coordinates
+   */
+  let Rectangle = class {
+    /*
+     * Build a rectangle, given its parameters
+     *
+     * @constructor
+     * @param {number} width Width (side parallel to X axis)
+     * @param {number} depth Depth (side parallel to Z axis)
+     * @param {number} x X coordinate
+     * @param {number} z Z coordinate
+     * @param {boolean} revolved Was the rectangle revolved?
+     */
+    constructor({width, depth, x = 0, z = 0}) {
+      this.width = width;
+      this.depth = depth;
+      this.x = x;
+      this.z = z;
+    }
+  
+    /*
+     * Is the rectangle laying, inner dimensions?
+     * (is width the longest side?)
+     *
+     * @return {boolean} True if width is the longest side.
+     */
+    is_ilaying () {
+      let longest = Math.max(this.width, this.depth);
+      return (longest == this.width);
+    }
+  
+    /*
+     * Add the inner area rectangle, assuming this is the canvas
+     * Note: canvas and area are not the real area of canvas and
+     * area, but the numbers used to compute the proportion
+     * If there si no acanvas, it is assumed that inner is equal to canvas
+     *
+     * @param {number} canvas Value for area of canvas
+     * @param {number} area Value for area of inner
+     */
+    inner(acanvas, ainner) {
+      if (acanvas < ainner) {
+        throw "Rectangle.inner: Area for inner rectangle larger than my area"
+      };
+      if (typeof acanvas !== 'undefined') {
+        let ratio = Math.sqrt(ainner/acanvas);
+        this.iwidth = ratio * this.width;
+        this.idepth = ratio * this.depth;
+      } else {
+        this.iwidth = this.width;
+        this.idepth = this.depth;
+      };
+    }
+  
+    /*
+     * Reflect (change horizontal for vertical dimensions)
+     * Only for width, depth, x, y
+     */
+    reflect() {
+      [this.width, this.depth] = [this.depth, this.width];
+      [this.x, this.z] = [this.z, this.x];
+    }
+  
+    /*
+     * Return inner dimensions (plus position) as if rectangle was laying.
+     *
+     * Check if rectangle is laying. If it is not, return dimensions as if
+     * reflected (but not reflect it). Last element in the resturned array
+     * is a boolean indicating if values were reflected or not.
+     *
+     * @return {Array} Inner values: [iwidth, idepth, x, y, reflected]
+     */
+    idims_as_laying() {
+      if (this.is_ilaying()) {
+        return [this.iwidth, this.idepth, this.x, this.z, false];
+      } else {
+        return [this.idepth, this.iwidth, this.z, this.x, true];
+      };
+    }
+  
+    /*
+     * Split according to data in values (array)
+     *
+     * Split is of the inner rectangle.
+     * If relative is true, the coordinates of the resulting rectangle
+     * consider the center of the canvas rectangle as 0,0.
+     * If relative is false, the coordinates of the resulting rectangle
+     * consider the center of the canvas as x,z (coordinates of the
+     * rectangle to split.
+     *
+     * @param {Values} values Values to be used to split the rectangle
+     * @param {boolean} relative Result is in relative (center in 0,0) or not
+     */
+    split(values, relative=true) {
+      // Always split on width, as if the rectangle was laying.
+      // Use local variables to point to the rigth real dimensions
+      let [width, depth, x, z, reflected] = this.idims_as_laying();
+      // Ratio to convert a size in a split (part of total)
+      let ratio = width / values.total;
+      let current_x = -width/2;
+      let current_z = 0;
+      if (! relative) {
+        current_x += x;
+        current_z = z;
+      };
+      let rects = [];
+      // Value of fields scaled to fit total canvas
+      for (const value of values.items) {
+        let sub_width = value * ratio;
+        let rect = new Rectangle({width: sub_width, depth: depth,
+                              x: current_x + sub_width/2, z: current_z});
+        if (reflected) {
+          // Dimensions were reflected, reflect back
+          rect.reflect();
+        };
+        rects.push(rect);
+        current_x += sub_width;
+      };
+      return rects;
+    }
+  
+    /*
+     * Split according to data in values (array), with the pivot algorithm
+     *
+     * Split is of the inner rectangle
+     */
+    split_pivot(values, relative=true) {
+      // Always split on width, as if the rectangle was laying.
+      // Use local variables to point to the rgith real dimensions
+      if (values.items.length <= 2) {
+        // Only one or two values, we cannot apply pivot, apply naive
+        return this.split(values, relative);
+      };
+      let [width, depth, x, z, reflected] = this.idims_as_laying();
+      if (relative) {
+        x = 0;
+        z = 0;
+      };
+      let {pivot, a1, a2, a3} = values.pivot_regions(width, depth);
+      // Dimensions for areas (a1, a2, a3)
+      let width_a1 = values.pivot_region_width(a1, width);
+      let width_a2 = values.pivot_region_width(a2.concat(pivot), width);
+      let width_a3 = values.pivot_region_width(a3, width);
+      let x_a1 = x - width/2 + width_a1/2;
+      let x_a2 = x - width/2 + width_a1 + width_a2/2;
+      let x_a3 = x - width/2 + width_a1 + width_a2 + width_a3/2;
+  
+      let rects = [];
+      // Pivot rectangle
+      let depth_pivot = values.scaled_area(width*depth, pivot) / width_a2;
+      rects[pivot] = new Rectangle({width: width_a2, depth: depth_pivot,
+                                    x: x_a2,
+                                    z: z + depth/2 - depth_pivot/2});
+      // Dimensions for each area (and corresponding rectangle)
+      let dim_areas = [
+        [a1, width_a1, depth, x_a1, z],
+        [a2, width_a2, depth - depth_pivot, x_a2, z - depth_pivot/2 ],
+        [a3, width_a3, depth, x_a3, z]];
+      for (const [values_i, width_i, depth_i, x_i, z_i] of dim_areas) {
+        if (values_i.length > 0) {
+          let subrect = new Rectangle({width: width_i, depth: depth_i,
+                                       x: x_i, z: z_i});
+          subrect.inner();
+          // Ensure we add rectangles in the right places
+          let subvalues = values.values_i(values_i);
+          // Further splits should always be absolute, wrt my coordinates
+          let rects_i = subrect.split_pivot(subvalues, false);
+          let counter = 0;
+          for (const i of values_i) {
+            rects[i] = rects_i[counter];
+            counter ++;
+          };
+        };
+      };
+      if (reflected) {
+        // Dimensions were reflected, reflect back
+        for (const rect of rects) {
+          rect.reflect();
+        }
+      };
+      return rects;
+    }
+  
+    /*
+     * Produce a A-Frame building for the rectangle
+     *
+     * The building is positioned right above the y=0 level.
+     * If a model is specified, the corresponding glTF model will be used,
+     * scaled to the "box" that would be used. If not, a box will be used.
+     *
+     * @param {Number} height Height of the box
+     * @param {Color} color Color of the box
+     * @param {string} model Link to the glTF model
+     */
+    box({height, elevation=0, color='red', model=null, inner=true,
+         wireframe=false, visible=true, buffered=false}) {
+      let depth, width;
+      if (inner) {
+        [depth, width] = [this.idepth, this.iwidth];
+      } else {
+        [depth, width] = [this.depth, this.width];
+      };
+      let box = document.createElement('a-entity');
+      if (model == null) {
+        box.setAttribute('geometry', {
+          buffer: buffered,
+          primitive: 'box',
+          skipCache: true,
+          depth: depth,
+          width: width,
+          height: height
+        });
+      } else {
+        box.setAttribute('gltf-model', model);
+        box.setAttribute('autoscale', {
+          x: width,
+          y: height,
+          z: depth
+        });
+      };
+  
+      box.setAttribute('position', {x: this.x,
+                                    y: elevation+height/2,
+                                    z: this.z});
+      box.setAttribute('material', {'wireframe': wireframe,
+                                    'vertexColors': 'face',
+                                    'visible': visible});
+      box.setAttribute('face-colors', {'color': color});
+      return box;
+    }
+  
+  };
+  
+  /*
+   * Default palette of colors
+   */
+  const default_colors = ['blue', 'yellow', 'brown', 'orange',
+                'magenta', 'darkcyan', 'grey', 'cyan', 'darkred', 'blueviolet',
+                'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
+                'navy', 'palegreen'];
+  /*
+   * Class for dealing with colors
+   */
+  let Colors = class {
+    /*
+     * Builds palette of colors, given a list of colors
+     *
+     * @constructor
+     * @param {color[]} colors Colors to build the palette
+     */
+    constructor(colors=default_colors) {
+      this.colors = colors;
+      this.current = -1;
+    };
+  
+    /*
+     * Give me the next color
+     */
+    next(color) {
+      if (typeof color !== 'undefined') {
+        return color;
+      } else {
+        this.current = (this.current + 1) % this.colors.length;
+        return this.colors[this.current];
+      };
+    };
+  };
+  
+  
+  /*
+   * Auxiliary function: produce a random data tree for codecity
+   */
+  let rnd_producer = function (levels=2, number=3, area=20, height=30) {
+    if (levels == 1) {
+        return {
+          "id": "A",
+          "area": Math.random() * area,
+          "height": Math.random() * height
+        };
+    } else if (levels > 1) {
+      let children = Array.from({length: number}, function () {
+        return rnd_producer(levels-1, number, area, height);
+      });
+      return {id: "BlockAA", children: children};
+    };
+  };
+  
+  if (true) {
+    module.exports = {Values, Rectangle, Zone};
+  };
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3133,7 +2113,7 @@ let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", 
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3402,7 +2382,7 @@ let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", 
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3492,7 +2472,7 @@ let mapEvents = (data, el) => {
 }
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3657,7 +2637,7 @@ let allReposParse = (data) => {
 }
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3778,7 +2758,7 @@ let parseEmbeddedJSONData = (data, el) => {
 }
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3942,21 +2922,20 @@ let generateCodecityList = (data, dataToProcess) => {
 function normalize(val, min, max) { return (val - min) / (max - min); }
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(8)
 __webpack_require__(9)
 __webpack_require__(10)
-__webpack_require__(11)
 __webpack_require__(1)
-__webpack_require__(8)
-__webpack_require__(0)
-__webpack_require__(6)
 __webpack_require__(7)
+__webpack_require__(0)
+__webpack_require__(5)
+__webpack_require__(6)
 __webpack_require__(2)
 __webpack_require__(3)
 __webpack_require__(4)
-__webpack_require__(5)
 
 
 

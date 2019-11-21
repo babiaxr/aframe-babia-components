@@ -1,0 +1,1 @@
+{"date_field": "grimoire_creation_date", "sampling_days": "800", "init_data": "data_0_tree.json", "time_evolution": true, "data_files": [{"date": 1574334291.458826, "file": "data_0.json"}, {"date": 1505214327.539153, "file": "data_1.json"}, {"date": 1436094338.818414, "file": "data_2.json"}]}
