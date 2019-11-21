@@ -123,7 +123,17 @@ AFRAME.registerComponent('codecity', {
         let data = this.data;
         let el = this.el;
 
-        this.zone_data = JSON.parse(data.data);
+        if (typeof data.data == 'string') {
+            if (data.data.endsWith('json')) {
+                raw_items = requestJSONDataFromURL(data.data);
+            } else {
+                raw_items = JSON.parse(data.data);
+            }
+        } else {
+            raw_items = data.data;
+        };
+
+        this.zone_data = raw_items;
         let zone = new Zone({
             data: this.zone_data,
             extra: function (area) { return area * data.extra; },
@@ -953,3 +963,49 @@ let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
 if (typeof module !== 'undefined') {
     module.exports = { Values, Rectangle, Zone };
 };
+
+
+/**
+ * Request a JSON url
+ */
+let requestJSONDataFromURL = (items) => {
+    let raw_items
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', items, false)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            ////console.log("data OK in request.response", request.response)
+
+            // Save data
+            if (typeof request.response === 'string' || request.response instanceof String) {
+                raw_items = JSON.parse(request.response)
+            } else {
+                raw_items = request.response
+            }
+
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        }
+    };
+
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+    };
+    request.send();
+
+    if (raw_items.time_evolution) {
+        raw_items = requestJSONDataFromURL(raw_items.init_data)
+    }
+    return raw_items
+}

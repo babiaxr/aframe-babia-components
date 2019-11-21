@@ -1687,8 +1687,6 @@ let rnd_producer = function (levels = 2, number = 3, area = 20, height = 30) {
 
 /**
  * Request a JSON url
- * @param {*} data
- * @param {*} el
  */
 let requestJSONDataFromURL = (items) => {
   let raw_items
