@@ -474,7 +474,8 @@ let Zone = class {
                 height: base_thick,
                 color: base_color, inner: false,
                 wireframe: wireframe, visible: visible,
-                buffered: buffered
+                buffered: buffered,
+                id: area.data['id']
             });
             el.appendChild(base);
             let root_el = base;
@@ -502,7 +503,8 @@ let Zone = class {
                 color: building_color,
                 model: model,
                 visible: visible,
-                buffered: buffered
+                buffered: buffered,
+                id: area.data['id']
             });
             el.appendChild(box);
         };
@@ -864,7 +866,7 @@ let Rectangle = class {
      * @param {string} model Link to the glTF model
      */
     box({ height, elevation = 0, color = 'red', model = null, inner = true,
-        wireframe = false, visible = true, buffered = false }) {
+        wireframe = false, visible = true, buffered = false, id = "" }) {
         let depth, width;
         if (inner) {
             [depth, width] = [this.idepth, this.iwidth];
@@ -901,6 +903,7 @@ let Rectangle = class {
             'visible': visible
         });
         box.setAttribute('face-colors', { 'color': color });
+        box.setAttribute('id', id);
         return box;
     }
 
