@@ -28,15 +28,16 @@
     ' position="-0 0 -3"></a-entity-->
 
     <a-entity position="0 0 -3" codecity='width: 20; depth: 20; streets: true; color: green;
-              extra: 1.5; base_thick: 0.3; split: pivot;
+              extra: 1.5; base_thick: 0.3; split: pivot; titles: true;
               data: main_data.json'>
     </a-entity>
 
     <!--      <a-entity movement-controls="fly: true" position="50 20 -4" rotation="-90 0 0"> -->
     <a-entity movement-controls="fly: true" position="0 0 4">
       <!--      <a-entity movement-controls="fly: true" position="0 15 -7" rotation="-90 0 0"> -->
-      <a-entity camera position="0 1.6 0" look-controls wasd-controls></a-entity>
-      <a-entity oculus-go-controls x-button-listener></a-entity>
+      <a-entity camera position="0 1.6 0" look-controls></a-entity>
+      <a-entity laser-controls="hand: right" cursor="rayOrigin:mouse" raycaster="objects: .mouseentertitles"></a-entity>
+      <a-entity ></a-entity>
     </a-entity>
 
   </a-scene>

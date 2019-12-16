@@ -47,6 +47,11 @@ AFRAME.registerComponent('codecity', {
             type: 'boolean',
             default: true
         },
+        // Titles on top of the buildings when hovering
+        titles: {
+            type: 'boolean',
+            default: true
+        },
         // Use buffered geometries (improves performance)
         buffered: {
             type: 'boolean',
@@ -157,6 +162,7 @@ AFRAME.registerComponent('codecity', {
         let canvas = new Rectangle({ width: width, depth: depth, x: 0, z: 0 });
         zone.add_rects({ rect: canvas, split: data.split, relative: relative });
         let base = document.createElement('a-entity');
+        this.base = base;
         let visible = true;
         if (data.merged) {
             base.addEventListener('loaded', (e) => {
@@ -177,7 +183,7 @@ AFRAME.registerComponent('codecity', {
                 visible = false;
             };
         };
-        el.appendChild(base);
+
 
         zone.draw_rects({
             ground: canvas, el: base, base: data.base,
@@ -186,8 +192,9 @@ AFRAME.registerComponent('codecity', {
             wireframe: data.wireframe,
             building_color: data.building_color, base_color: data.base_color,
             model: data.building_model, visible: visible,
-            buffered: data.buffered
+            buffered: data.buffered, titles: data.titles
         });
+        el.appendChild(base);
     },
 
     /**
@@ -212,13 +219,13 @@ AFRAME.registerComponent('codecity', {
      * Called when entity pauses.
      * Use to stop or remove any dynamic or background behavior such as events.
      */
-    pause: function () { },
+    // pause: function () { },
 
     /**
      * Called when entity resumes.
      * Use to continue or add any dynamic or background behavior such as events.
      */
-    play: function () { },
+    play: function () { }
 
 });
 
@@ -432,10 +439,10 @@ let Zone = class {
             let child_rect;
             if (split === 'naive') {
                 child_rect = area.rect.split(child_areas, relative);
-                console.log("Naive split");
+                // console.log("Naive split");
             } else if (split === 'pivot') {
                 child_rect = area.rect.split_pivot(child_areas, relative);
-                console.log("Pivot split");
+                // console.log("Pivot split");
             } else {
                 throw new Error("CodeCity: Unknwon split method");
             };
@@ -462,7 +469,7 @@ let Zone = class {
         level = 0, elevation = 0, relative = true,
         base_thick = .2, wireframe = false,
         building_color = "red", base_color = "green", model = null,
-        visible = true, buffered = false }) {
+        visible = true, buffered = false, titles = true }) {
         if (level === 0) {
             this.el = el;
         };
@@ -490,7 +497,7 @@ let Zone = class {
                     building_color: building_color, base_color: base_color,
                     model: model,
                     base_thick: base_thick, wireframe: wireframe,
-                    visible: visible, buffered: buffered
+                    visible: visible, buffered: buffered, titles: titles
                 });
             };
         } else {
@@ -506,7 +513,39 @@ let Zone = class {
                 buffered: buffered,
                 id: area.data['id']
             });
+            box.setAttribute('class', 'mouseentertitles');
             el.appendChild(box);
+
+            // Titles
+            if (titles) {
+                let legend;
+                box.addEventListener('mouseenter', function () {
+                    let oldGeometry = box.getAttribute('geometry')
+                    this.setAttribute('geometry', {
+                        height: oldGeometry.height + 0.1,
+                        depth: oldGeometry.depth + 0.1,
+                        width: oldGeometry.width + 0.1
+                    });
+                    this.setAttribute('material', {
+                        'visible': true
+                    });
+                    legend = generateLegend(this.getAttribute("id"), this, null);
+                    this.appendChild(legend)
+                })
+
+                box.addEventListener('mouseleave', function () {
+                    let oldGeometry = this.getAttribute('geometry')
+                    this.setAttribute('geometry', {
+                        height: oldGeometry.height - 0.1,
+                        depth: oldGeometry.depth - 0.1,
+                        width: oldGeometry.width - 0.1
+                    });
+                    this.setAttribute('material', {
+                        'visible': false
+                    });
+                    this.removeChild(legend)
+                })
+            }
         };
     };
 };
@@ -903,7 +942,19 @@ let Rectangle = class {
             'visible': visible
         });
         box.setAttribute('face-colors', { 'color': color });
+        box.addEventListener('loaded', (e) => {
+            // console.log("Box loaded:", e);
+        });
+        box.addEventListener('object3dset', (e) => {
+            // console.log("Box object3dset:", e);
+        });
+        box.addEventListener('model-loaded', (e) => {
+            // console.log("Box model-loaded:", e);
+        });
         box.setAttribute('id', id);
+
+
+
         return box;
     }
 
@@ -981,7 +1032,7 @@ let requestJSONDataFromURL = (items) => {
     // Send it
     request.onload = function () {
         if (this.status >= 200 && this.status < 300) {
-            ////console.log("data OK in request.response", request.response)
+            ////// console.log("data OK in request.response", request.response)
 
             // Save data
             if (typeof request.response === 'string' || request.response instanceof String) {
@@ -1011,4 +1062,39 @@ let requestJSONDataFromURL = (items) => {
         raw_items = requestJSONDataFromURL(raw_items.init_data)
     }
     return raw_items
+}
+
+/**
+ * This function generate a plane at the top of the building with the desired text
+ */
+let generateLegend = (text, buildingEntity, model) => {
+    let width = 2;
+    if (text.length > 16)
+        width = text.length / 8;
+
+    let height;
+    if (model == null) {
+        height = buildingEntity.getAttribute('geometry').height
+    } else {
+        height = buildingEntity.getAttribute("autoscale").y
+    }
+
+    let entity = document.createElement('a-plane');
+
+    entity.setAttribute('position', { x: 0, y: height / 2 + 1, z: 0 });
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
+    entity.setAttribute('height', '1');
+    entity.setAttribute('width', width);
+    entity.setAttribute('color', 'white');
+    entity.setAttribute('material', {'side': 'double'});
+    entity.setAttribute('text', {
+        'value': text,
+        'align': 'center',
+        'width': 6,
+        'color': 'black',
+    });
+    /*entity.setAttribute('light', {
+      'intensity': 0.3
+    });*/
+    return entity;
 }
