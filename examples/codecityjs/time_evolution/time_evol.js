@@ -1,7 +1,7 @@
 const quarterItems = []
 let initItems = undefined
 const arrayPromises = []
-const maxFiles = 3
+const maxFiles = 2
 
 let init1 = fetch("data_0.json").then(function (response) {
     return response.json();
