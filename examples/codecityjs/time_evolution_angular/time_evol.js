@@ -95,8 +95,13 @@ let loop = () => {
             index = 0
         }
         i++;
+        console.log("Changing city")
+        document.getElementById('codecity').children[0].removeAttribute('geometry-merger')
+        document.getElementById('codecity').children[0].removeAttribute('material')
+        document.getElementById('codecity').children[0].setAttribute('geometry-merger', { preserveOriginal: true })
+        document.getElementById('codecity').children[0].setAttribute('material', { vertexColors: 'face' });
         if (i < maxFiles) {
             loop();
         }
-    }, 3000);
+    }, 8000);
 }
