@@ -1,91 +1,162 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>A-Frame CodeCity Component - Basic</title>
-    <meta name="description" content="Basic example for CodeCity component."></meta>
-    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
-    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
-    <script src="../../../dist/aframe-babia-components.min.js"></script>
-  </head>
-  <body>
 
-    <a-scene>
+<head>
+  <meta charset="utf-8">
+  <title>A-Frame CodeCity Component - Basic</title>
+  <meta name="description" content="Basic example for CodeCity component.">
+  </meta>
+  <script src="https://aframe.io/releases/1.0.1/aframe.min.js"></script>
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v6.0.0/dist/aframe-extras.min.js"></script>
+  <!--    <script src="../../dist/aframe-codecity-component.min.js"></script> -->
+  <script src="../../../dist/aframe-babia-components.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+</head>
 
-      <a-entity codecity-block='width: 7; depth: 7; streets: true; color: green'
-                position="-18 -3 -7"></a-entity>
+<body>
 
-      <a-entity codecity-block='width: 8; depth: 5; algorithm: naive;
-        items: [{"id": "A", "area": 3, "height": 1},
-                {"id": "B", "area": 5, "height": 2},
-                {"id": "C", "area": 1, "height": 2},
-                {"id": "D", "area": 6, "height": 5},
-                {"id": "E", "area": 4, "height": 6},
-                {"id": "F", "area": 3, "height": 9},
-                {"id": "G", "area": 2, "height": 6},
-                {"id": "H", "area": 1, "height": 12},
-                {"id": "I", "area": 4, "height": 1},
-                {"id": "J", "area": 3, "height": 4},
-                {"id": "K", "area": 1, "height": 5},
-                {"id": "L", "area": 7, "height": 4}]'
-                position="-6 -3 -7"></a-entity>
+  <a-scene id="scene">
 
-      <a-entity codecity-block='width: 10; depth: 2.5;
-                 [{"id": "A", "area": 3, "height": 5},
-                  {"id": "B", "area": 5, "height": 4},
-                  {"id": "C", "area": 1, "height": 3},
-                  {"id": "D", "area": 6, "height": 2},
-                  {"id": "E", "area": 4, "height": 6},
-                  {"id": "F", "area": 3, "height": 1},
-                  {"id": "G", "area": 2, "height": 5},
-                  {"id": "H", "area": 1, "height": 3}]'
-                position="6 -3 -7"></a-entity>
+    <a-entity environment="playArea: 2"></a-entity>
 
-      <a-entity codecity-block='width: 8; depth: 5; streets: false'
-                position="18 -3 -7"></a-entity>
+    <!--a-entity id="cityevolve" codecity='width: 60; depth: 50; algorithm: pivot;
+    extra: 1.05; streets: true;
+    base_thick: .1; streets_thick: .1;
+    streets_width: 1; border: 1;
+    absolute: true; quarter_elevation: .1;
+    ' position="-0 0 -3"></a-entity-->
 
-      <a-entity codecity-block='width: 5; depth: 8; streets: true'
-                position="30 -3 -7"></a-entity>
+    <a-entity position="0 0 -3"
+                codecity='width: 20; depth: 20; streets: true; color: green;
+                          extra: 1.5; base_thick: 0.3; split: naive;
+                          data:
+         {"id": "Root",
+         "children":
+          [{"id": "BlockA",
+            "children": [{"id": "BlockA0",
+                      "children": [{"id": "A0A", "area": 2, "height": 1}]},
+                     {"id": "BlockA1",
+                      "children": [{"id": "A1A", "area": 2, "height": 1},
+                                  {"id": "A1B", "area": 5, "height": 4},
+                                  {"id": "A1C", "area": 4, "height": 6},
+                                  {"id": "A1D", "area": 6, "height": 2}]},
+                     {"id": "BlockA2",
+                      "children": [{"id": "A2A", "area": 1, "height": 3},
+                                  {"id": "A2B", "area": 5, "height": 6},
+                                  {"id": "A2C", "area": 8, "height": 4}]},
+                     {"id": "BlockA3",
+                      "children": [{"id": "A3A", "area": 4, "height": 7},
+                                  {"id": "A3B", "area": 5, "height": 3},
+                                  {"id": "A3C", "area": 8, "height": 1}]}
+                    ]},
+           {"id": "BlockB",
+            "children": [{"id": "BlockB1",
+                      "children": [{"id": "B1A", "area": 3, "height": 5},
+                                  {"id": "B1B", "area": 5, "height": 4},
+                                  {"id": "B1C", "area": 1, "height": 3},
+                                  {"id": "B1D", "area": 6, "height": 2},
+                                  {"id": "B1E", "area": 4, "height": 6},
+                                  {"id": "B1F", "area": 3, "height": 1},
+                                  {"id": "B1G", "area": 2, "height": 5},
+                                  {"id": "B1H", "area": 1, "height": 3}]},
+                     {"id": "BlockB2",
+                      "children": [{"id": "B2A", "area": 2, "height": 9},
+                                  {"id": "B2B", "area": 6, "height": 3},
+                                  {"id": "B2C", "area": 1, "height": 3},
+                                  {"id": "B2D", "area": 8, "height": 1},
+                                  {"id": "B2E", "area": 3, "height": 6},
+                                  {"id": "B2F", "area": 1, "height": 7}]},
+                     {"id": "Block3",
+                      "children": [{"id": "B3A", "area": 6, "height": 2},
+                                  {"id": "B3B", "area": 8, "height": 4},
+                                  {"id": "B3C", "area": 3, "height": 6}]},
+                     {"id": "Block4",
+                      "children": [{"id": "B4A", "area": 2, "height": 9},
+                                  {"id": "B4B", "area": 6, "height": 1},
+                                  {"id": "B4C", "area": 7, "height": 6},
+                                  {"id": "B4D", "area": 8, "height": 5},
+                                  {"id": "B4E", "area": 3, "height": 6},
+                                  {"id": "B4F", "area": 9, "height": 4}]},
+                     {"id": "Block5",
+                      "children": [{"id": "B5A", "area": 2, "height": 9},
+                                  {"id": "B5B", "area": 6, "height": 3},
+                                  {"id": "B5C", "area": 5, "height": 8},
+                                  {"id": "B5D", "area": 5, "height": 7}]},
+                     {"id": "Block6",
+                      "children": [{"id": "B6A", "area": 2, "height": 9},
+                                  {"id": "B6B", "area": 6, "height": 3},
+                                  {"id": "B6C", "area": 2, "height": 6},
+                                  {"id": "B6D", "area": 4, "height": 1},
+                                  {"id": "B6E", "area": 6, "height": 6},
+                                  {"id": "B6F", "area": 1, "height": 7},
+                                  {"id": "B6G", "area": 4, "height": 3},
+                                  {"id": "B6H", "area": 2, "height": 5},
+                                  {"id": "B6I", "area": 7, "height": 1},
+                                  {"id": "B6J", "area": 3, "height": 2},
+                                  {"id": "B6K", "area": 1, "height": 3}]}
+                    ]}
+          ]
+        }'></a-entity>
 
-<!--      <a-entity movement-controls="fly: true" position="0 15 -4" rotation="-90 0 0"> -->
-      <a-entity movement-controls="fly: true" position="0 0 4">
-        <a-entity camera position="0 1.6 0" look-controls wasd-controls></a-entity>
-        <a-entity oculus-go-controls x-button-listener></a-entity>
-        <a-entity cursor="rayOrigin:mouse"></a-entity>
-        <a-entity laser-controls="hand: right"></a-entity>
-      </a-entity>
-    </a-scene>
 
+    <!--      <a-entity movement-controls="fly: true" position="50 20 -4" rotation="-90 0 0"> -->
+    <a-entity movement-controls="fly: true" position="0 0 4">
+      <!--      <a-entity movement-controls="fly: true" position="0 15 -7" rotation="-90 0 0"> -->
+      <a-entity camera position="0 1.6 0" look-controls></a-entity>
+      <a-entity laser-controls="hand: right" cursor="rayOrigin:mouse" raycaster="objects: .mouseentertitles"></a-entity>
+      <a-entity ></a-entity>
+    </a-entity>
 
+  </a-scene>
 
-    <!-- GitLab Corner. -->
-    <style>
-      .gitlab-corner-wrapper{overflow:hidden;width:100px;height:100px;position:absolute;top:0;right:0}
-      .gitlab-corner{position:absolute;top:-16px;right:-50px;transform:rotate(45deg);background:#548;border:44px solid #548;border-bottom:none;border-top:#548 solid 16px}
-      .gitlab-corner svg{width:60px;height:60px;margin-bottom:-4px}
-      .cls-1{fill:#fc6d26}
-      .cls-2{fill:#e24329}
-      .cls-3{fill:#fca326}
-      .gitlab-corner:hover
-      .cls-1{animation:cycle .6s}
-      .gitlab-corner:hover
-      .cls-2{animation:cycleMid .6s}
-      .gitlab-corner:hover
-      .cls-3{animation:cycleEnd .6s}
-      @keyframes cycle{100%,15%,60%{fill:#fc6d26}30%,75%{fill:#e24329}45%,90%{fill:#fca326}}
-      @keyframes cycleMid{100%,15%,60%{fill:#e24329}30%,75%{fill:#fca326}45%,90%{fill:#fc6d26}}
-      @keyframes cycleEnd{100%,15%,60%{fill:#fca326}30%,75%{fill:#fc6d26}45%,90%{fill:#e24329}}
-      @media (max-width:500px){
-        .gitlab-corner:hover
-        .cls-1,.gitlab-corner:hover
-        .cls-2,.gitlab-corner:hover
-        .cls-3{animation:none}.gitlab-corner
-        .cls-1{animation:cycle .6s}.gitlab-corner
-        .cls-2{animation:cycleMid .6s}.gitlab-corner
-        .cls-3{animation:cycleEnd .6s}}
-    </style>
-    <div class="gitlab-corner-wrapper"><a href="https://gitlab.com/jgbarah/aframe-codecity" class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559"><g id="g44"><path id="path46" class="cls-1" d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39"/></g><g id="g48"><path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z"/></g><g id="g56"><path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z"/></g><g id="g64"><path id="path66" class="cls-3" d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z"/></g><g id="g72"><path id="path74" class="cls-2" d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z"/></g><g id="g76"><path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z"/></g><g id="g80"><path id="path82" class="cls-3" d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z"/></g><g id="g84"><path id="path86" class="cls-2" d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z"/></g></svg></a></div>
-    <!-- End GitLab Corner. -->
+  <!-- GitHub Corner. -->
+  <a href="https://github.com/babiaxr/aframe-babia-components" class="github-corner">
+    <svg width="80" height="80" viewBox="0 0 250 250"
+      style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;">
+      <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+      <path
+        d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+        fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+      <path
+        d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+        fill="currentColor" class="octo-body"></path>
+    </svg>
+  </a>
+  <style>
+    .github-corner:hover .octo-arm {
+      animation: octocat-wave 560ms ease-in-out
+    }
 
-  </body>
+    @keyframes octocat-wave {
+
+      0%,
+      100% {
+        transform: rotate(0)
+      }
+
+      20%,
+      60% {
+        transform: rotate(-25deg)
+      }
+
+      40%,
+      80% {
+        transform: rotate(10deg)
+      }
+    }
+
+    @media (max-width:500px) {
+      .github-corner:hover .octo-arm {
+        animation: none
+      }
+
+      .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+      }
+    }
+  </style>
+  <!-- End GitHub Corner. -->
+</body>
+
 </html>
