@@ -155,8 +155,9 @@ AFRAME.registerComponent('codecity', {
         };
 
         // New levels are entities relative (children of the previous level) or not
+        let merged = data.merged;
         let relative = true;
-        if (data.merged) {
+        if (merged) {
             relative = false;
         };
         let canvas = new Rectangle({ width: width, depth: depth, x: 0, z: 0 });
@@ -164,27 +165,29 @@ AFRAME.registerComponent('codecity', {
         let base = document.createElement('a-entity');
         this.base = base;
         let visible = true;
-        if (data.merged) {
+        if (merged) {
             base.addEventListener('loaded', (e) => {
-                if (data.buffered) {
-                    base.setAttribute('buffer-geometry-merger', {
-                        preserveOriginal: true,
-                        materialColors: true
-                    });
-                    base.setAttribute('material', { vertexColors: 'face' });
+                if (data.building_model) {
+                    console.log("In loaded, model:", base);
+                    base.setAttribute('gltf-buffer-geometry-merger', { preserveOriginal: true });
+                } else if (data.buffered) {
+                    console.log("In loaded, buffered:", base);
+                    base.setAttribute('material', { vertexColors: 'vertex' });
+                    base.setAttribute('buffer-geometry-merger2', { preserveOriginal: true });
                 } else {
+                    console.log("In loaded, unbuffered:", base);
                     base.setAttribute('geometry-merger', { preserveOriginal: true });
                     base.setAttribute('material', { vertexColors: 'face' });
                 };
             });
             if (data.buffered) {
-                visible = true;
+                visible = false;
             } else {
                 visible = false;
             };
         };
 
-
+        console.log("Init (relative, buffered, merged):", relative, data.buffered, merged);
         zone.draw_rects({
             ground: canvas, el: base, base: data.base,
             level: 0, elevation: 0, relative: relative,
@@ -262,77 +265,97 @@ AFRAME.registerComponent('autoscale', {
     }
 });
 
-///*
-// * geometry-merger component
-// * Code from https://github.com/supermedium/superframe/blob/master/components/geometry-merger/
-// * (sligihtly modified to add property for adding colors to faces in merged mesh)
-// */
-//AFRAME.registerComponent('geometry-merger', {
-//  schema: {
-//    preserveOriginal: {default: false},
-//    materialColors: {default: true}
-//  },
-//
-//  init: function () {
-//    var faceIndexEnd;
-//    var faceIndexStart;
-//    var self = this;
-//
-//    this.geometry = new THREE.Geometry();
-//    this.mesh = new THREE.Mesh(this.geometry);
-//    this.el.setObject3D('mesh', this.mesh);
-//
-//    this.faceIndex = {};  // Keep index of original entity UUID to new face array.
-//    this.vertexIndex = {};  // Keep index of original entity UUID to vertex array.
-//
-//    this.el.object3D.traverse(function (mesh) {
-//      if (mesh.type !== 'Mesh') { return; }
-//      if (mesh === self.mesh) { return; }
-//
-//      self.faceIndex[mesh.parent.uuid] = [
-//        self.geometry.faces.length,
-//        self.geometry.faces.length + mesh.geometry.faces.length - 1
-//      ];
-//
-//      self.vertexIndex[mesh.parent.uuid] = [
-//        self.geometry.vertices.length,
-//        self.geometry.vertices.length + mesh.geometry.vertices.length - 1
-//      ];
-//
-//      // If material color applied to all faces, copy colors to faces
-////      if (self.data.materialColors && (mesh.material.vertexColors === THREE.NoColors)) {
-////        let color = mesh.material.color;
-////        for ( const face of mesh.geometry.faces) {
-////          face.color.set( color );
-////        };
-////      };
-//
-//      // Merge. Use parent's matrix due to A-Frame's <a-entity>(Group-Mesh) hierarchy.
-//      mesh.parent.updateMatrix();
-//      self.geometry.merge(mesh.geometry, mesh.parent.matrix);
-//
-//      // Remove mesh if not preserving.
-//      if (!self.data.preserveOriginal) { mesh.parent.remove(mesh); }
-//    });
-//  }
-//});
+AFRAME.registerComponent('gltf-buffer-geometry-merger', {
+    schema: {
+        preserveOriginal: { default: false }
+    },
 
-//AFRAME.registerComponent('buffer-geometry-merger', {
+    init: function () {
+        let self = this;
+        let models = 0;
+        this.el.object3D.traverse(function (mesh) {
+            if (mesh.type == 'Group') {
+                for (component in mesh.el.components) {
+                    if (component == 'gltf-model') {
+                        models++;
+                    };
+                };
+            };
+        });
+
+        this.el.addEventListener('model-loaded', function (e) {
+            models--;
+            if (models <= 0) {
+                self.el.setAttribute('buffer-geometry-merger2',
+                    { preserveOriginal: self.data.preserveOriginal });
+            };
+        });
+    }
+});
+
+/*
+ * Merge buffered geometries in elements in the subtree
+ *
+ * Based on buffer-geometry-merger
+ * https://www.npmjs.com/package/aframe-geometry-merger-component
+ */
+
+AFRAME.registerComponent('buffer-geometry-merger2', {
+    schema: {
+        preserveOriginal: { default: false }
+    },
+
+    init: function () {
+        var geometries = [];
+        var material = null;
+        let self = this;
+        console.log("Init");
+
+        self.el.object3D.updateMatrixWorld();
+        self.el.object3D.traverse(function (mesh) {
+            if (mesh.type !== 'Mesh' || mesh.el === self.el) { return; };
+            let geometry = mesh.geometry.clone();
+            if (material == null) {
+                material = mesh.material.clone();
+            };
+            let currentMesh = mesh;
+            while (currentMesh !== self.el.object3D) {
+                geometry.applyMatrix(currentMesh.parent.matrix);
+                currentMesh = currentMesh.parent;
+            }
+            geometries.push(geometry);
+            // Remove mesh if not preserving.
+            if (!self.data.preserveOriginal) { mesh.parent.remove(mesh); }
+        });
+
+        const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
+        self.mesh = new THREE.Mesh(geometry, material);
+        self.el.setObject3D('mesh', self.mesh);
+    },
+
+
+});
+
+//AFRAME.registerComponent('buffer-geometry-merger2', {
 //  schema: {
 //    preserveOriginal: {default: false}
 //  },
 //
 //  init: function () {
 //    var geometries = [];
-//    var self = this;
+//    let self = this;
 //
-//    this.el.sceneEl.object3D.updateMatrixWorld()
+//    this.el.object3D.updateMatrixWorld();
 //    this.el.object3D.traverse(function (mesh) {
 //      if (mesh.type !== 'Mesh' || mesh.el === self.el) { return; }
-//      mesh.geometry.applyMatrix(mesh.matrixWorld);
-//      geometries.push(mesh.geometry.clone());
-//      // Remove mesh if not preserving.
-//      if (!self.data.preserveOriginal) { mesh.parent.remove(mesh); }
+//      let geometry = mesh.geometry.clone();
+//      let currentMesh = mesh;
+//      while (currentMesh !== self.el.object3D) {
+//        geometry.applyMatrix(currentMesh.parent.matrix);
+//        currentMesh = currentMesh.parent;
+//      }
+//      geometries.push(geometry);
+//      mesh.parent.remove(mesh);
 //    });
 //
 //    const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
@@ -341,8 +364,11 @@ AFRAME.registerComponent('autoscale', {
 //  }
 //});
 
+
+
+
 /*
- * face-colors component
+ * face-colors component    
  * From https://github.com/supermedium/superframe/blob/master/components/geometry-merger/examples/basic/index.html
  */
 AFRAME.registerComponent('face-colors', {
@@ -360,6 +386,69 @@ AFRAME.registerComponent('face-colors', {
         geometry.colorsNeedUpdate = true;
     }
 });
+
+/*
+ * vertex-colors-buffer component
+ * Copied from https://github.com/supermedium/superframe/blob/master/components/geometry-merger/examples/buffer/vertex-colors-buffer.js
+ */
+var colorHelper = new THREE.Color();
+
+AFRAME.registerComponent('vertex-colors-buffer', {
+    schema: {
+        baseColor: { type: 'color' },
+        itemSize: { default: 3 }
+    },
+
+    update: function (oldData) {
+        var colors;
+        var data = this.data;
+        var i;
+        var el = this.el;
+        var geometry;
+        var mesh;
+        var self = this;
+
+        mesh = this.el.getObject3D('mesh');
+
+        if (!mesh || !mesh.geometry) {
+            el.addEventListener('object3dset', function reUpdate(evt) {
+                if (evt.detail.type !== 'mesh') { return; }
+                el.removeEventListener('object3dset', reUpdate);
+                self.update(oldData);
+            });
+            return;
+        }
+
+        geometry = mesh.geometry;
+
+        // Empty geometry.
+        if (!geometry.attributes.position) {
+            console.warn('Geometry has no vertices', el);
+            return;
+        }
+
+        if (!geometry.attributes.color) {
+            geometry.addAttribute('color',
+                new THREE.BufferAttribute(
+                    new Float32Array(geometry.attributes.position.array.length), 3
+                )
+            );
+        }
+
+        colors = geometry.attributes.color.array;
+
+        // TODO: For some reason, incrementing loop by 3 doesn't work. Need to do by 4 for glTF.
+        colorHelper.set(data.baseColor);
+        for (i = 0; i < colors.length; i += data.itemSize) {
+            colors[i] = colorHelper.r;
+            colors[i + 1] = colorHelper.g;
+            colors[i + 2] = colorHelper.b;
+        }
+
+        geometry.attributes.color.needsUpdate = true;
+    }
+});
+
 
 /*
  * Class for storing zone, with all its subzones and items, to show as buildings
@@ -936,21 +1025,19 @@ let Rectangle = class {
             y: elevation + height / 2,
             z: this.z
         });
-        box.setAttribute('material', {
-            'wireframe': wireframe,
-            'vertexColors': 'face',
-            'visible': visible
-        });
-        box.setAttribute('face-colors', { 'color': color });
-        box.addEventListener('loaded', (e) => {
-            // console.log("Box loaded:", e);
-        });
-        box.addEventListener('object3dset', (e) => {
-            // console.log("Box object3dset:", e);
-        });
-        box.addEventListener('model-loaded', (e) => {
-            // console.log("Box model-loaded:", e);
-        });
+        if (model == null) {
+            if (buffered) {
+                box.setAttribute('vertex-colors-buffer', { 'baseColor': color });
+                box.setAttribute('material', { 'visible': visible });
+            } else {
+                box.setAttribute('material', {
+                    'wireframe': wireframe,
+                    'vertexColors': 'face',
+                    'visible': visible
+                });
+                box.setAttribute('face-colors', { 'color': color });
+            };
+        };
         box.setAttribute('id', id);
 
 
@@ -1086,7 +1173,7 @@ let generateLegend = (text, buildingEntity, model) => {
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
-    entity.setAttribute('material', {'side': 'double'});
+    entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
         'value': text,
         'align': 'center',
