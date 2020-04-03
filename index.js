@@ -9,4 +9,6 @@ require('./geosimplebarchart')
 require('./geo3dbarchart')
 require('./geobubbleschart')
 require('./geocodecityjschart')
+require('./geocylinderchart')
+require('./geo3dcylinderchart')
 
