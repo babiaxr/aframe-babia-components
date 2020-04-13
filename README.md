@@ -198,6 +198,74 @@ This component shows a 3D bar chart.
 
 ```
 
+### geocylinderchart component
+
+This component must be used with one of the `vismapper` components, with the `x-axis`, `height` and `radius` attribute defined.
+
+This component shows a cylinder chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a cylinder  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"David","height":9,"radius":1},
+{"key":"David","height":8,"radius":3},
+...
+]
+
+```
+
+### geo3dcylinderchart component
+
+This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis`, `height` and `radius` attribute defined.
+
+This component shows a 3D cylinder chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a cylinder  | boolean | false |
+| axis          | Shows chart axis  | boolean | true
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"David","key2":"2019","height":1,"radius":9},
+{"key":"David","key2":"2018","height":2,"radius":8},
+...
+]
+
+```
+
+### geodougnutchart component
+
+This component must be used with one of the `vismapper` components, with the `slice` and `size` attribute defined.
+
+This component shows a doughnut chart.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| legend          | Shows a legend when hovering a slice  | boolean | false |
+| axis          | Shows chart axis  | boolean | true |
+| data          | Data to show with the chart  | JSON (list of objects) | - |
+
+#### Data format
+```json
+[{"key":"kbn_network","size":10},
+{"key":"Maria","size":5},
+...
+]
+```
+
 ## Querier/Filter/Mapper and other components API
 
 ### querier_json component
