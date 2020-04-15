@@ -95,6 +95,14 @@ The basic Chart components are easy to use, they have few attributes but if you 
 
 - [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
 
+
+## Building and Running BabiaXR, and/or Contributing Code
+
+You might want to build BabiaXR locally to contribute some code, test out the latest features, or try out an open PR:
+
+- [CONTRIBUTING.md](./docs/CONTRIBUTING.md) will help you get BabiaXR up and running.
+
+
 ## Chart components API
 
 The installation contains the following components:
