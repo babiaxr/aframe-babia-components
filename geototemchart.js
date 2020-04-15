@@ -182,9 +182,6 @@ function generateTotemTitle(element, x, y, rotation_y, width, title){
         'width': '10',
         'color': 'white'
     })
-    entity.setAttribute('light', {
-        'intensity': '0.3'
-    })  
     element.appendChild(entity) 
 }
 
@@ -206,9 +203,6 @@ function generateTotem(element, x, y, rotation, width, list, list_used){
             'value': item,
             'align': 'center',
             'width': '10',
-        })
-        entity.setAttribute('light', {
-            'intensity': '0.3'
         })
         // Item Seleted
         if (item == list_used){
