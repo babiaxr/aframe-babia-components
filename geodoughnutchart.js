@@ -38,6 +38,9 @@ AFRAME.registerComponent('geodoughnutchart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
+            //remove previous chart
+            while (this.el.firstChild)
+                this.el.firstChild.remove();
             console.log("Generating pie...")
             generateDoughnut(data, el)
         }

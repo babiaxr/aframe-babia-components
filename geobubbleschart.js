@@ -39,6 +39,9 @@ AFRAME.registerComponent('geobubbleschart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
+            //remove previous chart
+            while (this.el.firstChild)
+                this.el.firstChild.remove();
             console.log("Generating geobubbleschart...")
             generateBubblesChart(data, el)
         }
