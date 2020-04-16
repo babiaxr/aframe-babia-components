@@ -8,6 +8,7 @@ if (typeof AFRAME === 'undefined') {
 */
 AFRAME.registerComponent('geototemchart', {
     schema: {
+        charts_id: { type: 'string'},
         data_list: { type: 'string' },
         chart: {type: 'string', default: 'geopiechart' },
         data: {type: 'string'},
@@ -38,6 +39,12 @@ AFRAME.registerComponent('geototemchart', {
          * Update or create chart component
          */
         if (data !== oldData)  {
+
+            charts_id = JSON.parse(data.charts_id)
+            console.log(charts_id)
+
+
+            //Remove previous chart
             while (this.el.firstChild)
                 this.el.firstChild.remove();
             console.log("Generating totemchart...")
@@ -72,6 +79,7 @@ AFRAME.registerComponent('geototemchart', {
 
 let data_used
 let data_files = []
+let charts_id
 
 let generateTotemChart = (data, element, chart) => {
     if (data.data_list) {
@@ -81,16 +89,9 @@ let generateTotemChart = (data, element, chart) => {
             loadFiles(dataToPrint_list, firstData)
         }
         if (data_files) {
-            // Totem Charts
-            const chart_list = ['geopiechart', 'geosimplebarchart', 'geodoughnutchart']
-            generateTotemVis(element, chart_list, chart)
             
             // Totem Data
             generateTotemData(element, dataToPrint_list, data_used)
-
-            // generate chart
-            let text = getEntity().getAttribute('geototemchart').data
-            createChart(element, chart, text)
         }
     }   
 }
@@ -109,6 +110,7 @@ function loadFiles(list, callback) {
         loader.load(file,
             // onLoad callback
             function ( data ) {
+                console.log(data)
                 data_files.push({
                     file : data,
                     path : file
@@ -129,49 +131,34 @@ function loadFiles(list, callback) {
     
 }
 
-function generateTotemVis(element, list, vis_used) {
-    console.log('Generating Charts Totem...')
-    let position_y = 6
-    let position_x = -2
-    let rotation_y = 20
-
-    // Generate Title
-    generateTotemTitle(element, position_x, position_y, rotation_y, 5, 'Select Chart')
-    position_y -= 1
-
-    // Generate List of Charts
-    generateTotem(element, position_x, position_y, rotation_y, 5, list, vis_used)
-
-    return vis_used;
-}
-
 function generateTotemData(element, list, data_used){
     console.log('Generating Datas Totem...')
-    let position_y = 5
+    let position_y = 7.5
     // Change List's height 
     if (list.length % 2 == 1){
         let increment = Math.trunc(list.length / 2)
         position_y += increment
     }
 
-    let position_x = 16
-    let rotation_y = -20
+    let position_x = -3
+    let position_z = 6
+    let rotation_y = 0
 
     //Get Width
     let width = getWidthTotem(list)
 
     // Generate Title
-    generateTotemTitle(element, position_x, position_y, rotation_y, width, 'Select Data')
+    generateTotemTitle(element, position_x, position_y, position_z, rotation_y, width, 'Select Data')
     position_y -= 1
 
     // Generate List of Charts
-    generateTotem(element, position_x, position_y, rotation_y, width, list, data_used)
+    generateTotem(element, position_x, position_y, position_z, rotation_y, width, list, data_used)
 }
 
-function generateTotemTitle(element, x, y, rotation_y, width, title){
+function generateTotemTitle(element, x, y, z, rotation_y, width, title){
     
     let entity = document.createElement('a-plane')
-    entity.setAttribute('position', {x: x, y: y, z: 10})
+    entity.setAttribute('position', {x: x, y: y, z: z})
     entity.setAttribute('rotation', {x: 0, y: rotation_y, z:0})
     entity.setAttribute('height', 1)
     entity.setAttribute('width', width)
@@ -185,7 +172,7 @@ function generateTotemTitle(element, x, y, rotation_y, width, title){
     element.appendChild(entity) 
 }
 
-function generateTotem(element, x, y, rotation, width, list, list_used){
+function generateTotem(element, x, y, z, rotation, width, list, list_used){
     // Generate List of Items
     for(let item of list) {
         // For data
@@ -195,7 +182,7 @@ function generateTotem(element, x, y, rotation, width, list, list_used){
 
         let entity = document.createElement('a-plane')
         entity.setAttribute('id', item)
-        entity.setAttribute('position', {x: x, y: y, z: 10})
+        entity.setAttribute('position', {x: x, y: y, z: z})
         entity.setAttribute('rotation', {x: 0, y: rotation, z:0})
         entity.setAttribute('height', 1)
         entity.setAttribute('width', width)
@@ -225,7 +212,8 @@ function generateTotem(element, x, y, rotation, width, list, list_used){
                 if (i.path){
                     if (list_used == i.data){
                         data_used = i.data
-                        updateEntity(i.path, 'data')
+                        console.log(i.path)
+                        updateEntity(i.path)
                     }
                 } else {
                     updateEntity(item, 'chart')
@@ -249,22 +237,25 @@ function getWidthTotem(list){
     return width;
 }
 
-function updateEntity(data, attribute) {
+function updateEntity(data){
     let entity = getEntity()
-    if( entity.getAttribute('geototemchart') ){
-        console.log(data_files)
-        if (attribute === 'chart'){
-            entity.setAttribute('geototemchart', { 'chart' : data })
-        } else if (attribute === 'data') {
-            for (let file in data_files){
-                if (data_files[file].path == data){
-                    console.log('Vamos a añadir: ' + data.toString())
-                    entity.setAttribute('geototemchart', { 'data' : data_files[file].file })
-                }
+    for (let obj in charts_id){
+        let id = charts_id[obj].id
+        let type = charts_id[obj].type
+        let new_data
+        console.log(id.toString() + ": " + type)
+        for (let file in data_files){
+            if (data_files[file].path == data){
+                console.log('Vamos a añadir: ' + data.toString())
+                new_data = data_files[file].file
+                console.log(new_data)
+                entity.setAttribute('geototemchart', { 'data' : data_files[file].file })
             }
-            console.log(entity.getAttribute('geototemchart'))
-        }        
-    }
+        }
+        //entity.setAttribute('geototemchart', { 'data' : data})
+        document.getElementById(id).setAttribute(type, "data" , new_data)
+    }    
+    
 }
 
 function getEntity(){
@@ -276,19 +267,3 @@ function getEntity(){
     }
 }
 
-let createChart = (element, chart, text) => {
-    console.log('Generating Chart.....')
-    let entity = document.createElement('a-entity')
-    entity.setAttribute(chart, {
-        'legend' : 'true',
-        'data' : text
-    })
-    if ((chart == 'geopiechart') || (chart == 'geodoughnutchart')){
-        entity.setAttribute('position', {x: 7, y: 5, z: 15})
-        entity.setAttribute('rotation', {x: 90, y: 0, z: 0})      
-    } else if (chart == 'geosimplebarchart'){
-        entity.setAttribute('position', {x: 0, y: 0, z: 0})
-        entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
-    }
-    element.appendChild(entity)
-}
