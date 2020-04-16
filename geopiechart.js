@@ -38,6 +38,8 @@ AFRAME.registerComponent('geopiechart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
+            while (this.el.firstChild)
+                this.el.firstChild.remove();
             console.log("Generating pie...")
             generatePie(data, el)
         }
