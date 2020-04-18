@@ -9,6 +9,11 @@ Data visualization components for A-Frame.
 
 For [A-Frame](https://aframe.io).
 
+**Important**: The repository is hosted on [GitLab](https://gitlab.com/babiaxr/aframe-babia-components), if you are on GitHub, note that this is a mirror from the GitLab repository, if you want to open an [**issue**](https://gitlab.com/babiaxr/aframe-babia-components/-/issues), [**PR/MR**](https://gitlab.com/babiaxr/aframe-babia-components/-/merge_requests) or [**contribute**](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/CONTRIBUTING.md) to the project, please visit:
+- Repository: https://gitlab.com/babiaxr/aframe-babia-components
+- Components webpage: https://babiaxr.gitlab.io/aframe-babia-components/
+- BabiaXR webpage: https://babiaxr.gitlab.io
+
 ## Why
 
 This pack of components has the aim of visualize data in several ways. There are separated components and each one has an independent aim:
@@ -378,4 +383,4 @@ The dataset returned from the parsing of the `querier` components must has this 
 
 
 
-### Examples available at the "examples folder" and [here](https://dlumbrer.github.io/aframe-babia-components/)
+### Examples available at the "examples folder" and [here](https://babiaxr.gitlab.io/aframe-babia-components/)
