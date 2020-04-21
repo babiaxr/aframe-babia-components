@@ -198,6 +198,11 @@ AFRAME.registerComponent('codecity', {
             buffered: data.buffered, titles: data.titles
         });
         el.appendChild(base);
+
+        // Time Evolution starts
+        if (time_evolution) {
+           time_evol()
+        }
     },
 
     /**
@@ -1120,15 +1125,14 @@ let requestJSONDataFromURL = (items) => {
     request.onload = function () {
         if (this.status >= 200 && this.status < 300) {
             ////// console.log("data OK in request.response", request.response)
-
             // Save data
             if (typeof request.response === 'string' || request.response instanceof String) {
                 raw_items = JSON.parse(request.response)
+                // Save date and files
+                date_files = dateBar(raw_items)
             } else {
                 raw_items = request.response
             }
-
-
         } else {
             reject({
                 status: this.status,
@@ -1146,9 +1150,64 @@ let requestJSONDataFromURL = (items) => {
     request.send();
 
     if (raw_items.time_evolution) {
+        time_evolution = true
         raw_items = requestJSONDataFromURL(raw_items.init_data)
     }
     return raw_items
+}
+
+let time_evolution = false
+let dates = []
+
+/**
+ *  This function generate a plane with date of files
+ */
+function dateBar(data) {
+    if (data.data_files){
+        let date_files = data.data_files
+
+        // get entity codecity
+        let component  
+        if(document.getElementById('scene')){
+            component = document.getElementById('scene')
+        } else {
+            component = document.getElementsByTagName('a-scene')
+            // Others
+            let entities = document.getElementsByTagName('a-entity')
+            /*for (let i in entities)
+            {
+                if (entities[i].attributes && entities[i].attributes['geocodecity']){
+                    component = entities[i]
+                }
+            }*/
+        }
+
+        let entity = document.createElement('a-plane')
+        entity.setAttribute('id', 'date')
+        entity.setAttribute('position', {x: -13, y: 10, z: -3})
+        entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+        entity.setAttribute('color', "white")
+        entity.setAttribute('height', 0.5)
+        entity.setAttribute('width', 2)
+        entity.setAttribute('scale', {x: 3, y:3, z: 1 })
+
+        let text = new Date(date_files[0].date * 1000).toLocaleDateString()
+        entity.setAttribute('text', {
+            'value': text,
+            'align': 'center',
+            'width': 6,
+            'color': 'black'
+        })
+        // Create point
+        for (let data in date_files){
+            let date = new Date(date_files[data].date * 1000)
+            dates.push(date.toLocaleDateString())
+        }
+
+        component.appendChild(entity)
+        return date_files
+    }
+    
 }
 
 /**
@@ -1184,4 +1243,120 @@ let generateLegend = (text, buildingEntity, model) => {
       'intensity': 0.3
     });*/
     return entity;
+}
+
+function time_evol(){
+    const quarterItems = []
+    let initItems = undefined
+    const arrayPromises = []
+    const maxFiles = dates.length
+
+    let init1 = fetch("data_0.json").then(function (response) {
+        return response.json();
+    })
+    init2 = init1.then(function (json) {
+        // do a bunch of stuff
+        initItems = json
+    });
+    arrayPromises.push(init2)
+
+    for (let i = 1; i < maxFiles; i++) {
+        let p1 = fetch("data_" + i + ".json").then(function (response) {
+            return response.json();
+        })
+        p2 = p1.then(function (json) {
+            // do a bunch of stuff
+            quarterItems.push(json)
+        });
+        arrayPromises.push(p2)
+    }
+
+    Promise.all(arrayPromises).then(values => {
+        doIt()
+    });
+
+
+    let doIt = () => {
+        //document.getElementById("cityevolve").setAttribute("codecity-quarter", "items", JSON.stringify(quarterItems[0]))
+        loop();
+    }
+
+    let i = 0
+    let index = 0
+
+    let loop = () => {
+        setTimeout(function () {
+            console.log("Loop number", i)
+
+            // Change Date
+            let text = dates[i+1]
+            document.getElementById('date').setAttribute('text', 'value', text)
+
+            let changedItems = []
+            quarterItems[index].forEach((item) => {
+                if (document.getElementById(item.id) != undefined && item.value != 0.0) {
+                    
+                    // Add to changed items
+                    changedItems.push(item.id)
+
+                    // Get old data in order to do the math
+                    let prevPos = document.getElementById(item.id).getAttribute("position")
+                    let prevWidth = document.getElementById(item.id).getAttribute("geometry").width
+                    let prevDepth = document.getElementById(item.id).getAttribute("geometry").depth
+                    let oldRawArea = parseFloat(document.getElementById(item.id).getAttribute("babiaxr-rawarea"))
+
+                    // Calculate Aspect Ratio
+                    let reverseWidthDepth = false
+                    let AR = prevWidth / prevDepth
+                    if (AR < 1) {
+                        reverseWidthDepth = true
+                        AR = prevDepth / prevWidth
+                    }
+
+                    // New area that depends on the city
+                    let newAreaDep = (item.value * (prevDepth * prevWidth)) / oldRawArea
+
+                    // New size for the building based on the AR and the Area depend
+                    let newWidth = Math.sqrt(newAreaDep * AR)
+                    let newDepth = Math.sqrt(newAreaDep / AR)
+                    if (reverseWidthDepth) {
+                        newDepth = Math.sqrt(newAreaDep * AR)
+                        newWidth = Math.sqrt(newAreaDep / AR)
+                    }
+
+
+                    // Write the new values
+                    document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.value)
+                    document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+                    document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+                    document.getElementById(item.id).setAttribute("geometry", "height", item.height)
+                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: item.height / 2, z: prevPos.z })
+                }
+            })
+
+            // Put height 0 those that not exists
+            initItems.forEach((item) => {
+                if (!changedItems.includes(item.id)){
+                    let prevPos = document.getElementById(item.id).getAttribute("position")
+                    document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
+                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: 0, z: prevPos.z })
+                }
+            })
+
+            index++
+            if (index > maxFiles - 1) {
+                index = 0
+            }
+            i++;
+            console.log("Changing city")
+            document.getElementById('codecity').children[0].removeAttribute('geometry-merger')
+            document.getElementById('codecity').children[0].removeAttribute('material')
+            document.getElementById('codecity').children[0].setAttribute('geometry-merger', { preserveOriginal: true })
+            document.getElementById('codecity').children[0].setAttribute('material', { vertexColors: 'face' });
+            
+            if (i < maxFiles - 1) {
+                loop();
+            }
+        }, 8000);
+    }
 }
