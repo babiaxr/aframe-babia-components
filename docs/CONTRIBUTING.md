@@ -27,13 +27,19 @@ BabiaXR is an open-source project hosted on [GitLab](https://gitlab.com/babiaxr)
 
 The core developers organize the development using springs of two weeks of duration, each spring is defined as a Milestone of GitLab. In each milestone, some tasks will have done, and the organization of the tasks is the following:
 
-- Topics/Subjects of the tasks are defined as tags in GitLab.
-- Epics are big and complex tasks that have smaller and defined subtasks as children, each epic has a topic assigned. Once all the tasks of an epic are resolved, the epic will be resolved as well.
+- Topics/Subjects of the tasks are defined as issues in GitLab with the `Theme` tag.
+- Epics are big and complex tasks that have smaller and defined subtasks as children, each epic has a topic assigned. Once all the tasks of an epic are resolved, the epic will be resolved as well. Are defined as issues in GitLab with the `Epic` tag.
 - The common tasks are issues on GitLab and these issues depend on an epic or are a bug/feature.
+
+#### Srpings/Milestones
+
+| Name        | Start date           | End Date   | Information | Board |
+| --------        | -----------           | ----   | ----- | ------ |
+| Akira         | 2020-04-22   |   2020-05-06  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/2) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Akira) |
 
 ### Pending tasks
 
-We follow a Kanban, hosted as a board on GitLab, in the "To Do" list there are the tasks that are prepared to do. In order to see the tasks related to the current spring/milestone, please filter by the kanban/tasks list:
+We follow a Kanban for each, hosted as a board on GitLab, in the "To Do" list there are the tasks that are prepared to do. In order to see the tasks related to the current spring/milestone, please filter by milestonse the kanban/tasks list:
 
 - Kanban: https://gitlab.com/groups/babiaxr/-/boards
 - Tasks list: https://gitlab.com/groups/babiaxr/-/issues
