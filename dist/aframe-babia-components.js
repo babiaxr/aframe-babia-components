@@ -3684,10 +3684,6 @@ AFRAME.registerComponent('geototemchart', {
     schema: {
         charts_id: { type: 'string'},
         data_list: { type: 'string' },
-        chart: {type: 'string', default: 'geopiechart' },
-        data: {type: 'string'},
-        legend: { type: 'boolean' },
-        axis: { type: 'boolean', default: true }
     },
 
     /**
