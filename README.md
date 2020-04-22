@@ -336,11 +336,11 @@ This component must be in the same entity than filterdata and it needs also a ch
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| height        | Field of the data selected by filterdata that will be mapped as the height of the items of the charts or a geometry. Valid for **geo3dbarchart, geobubbleschart, geosimplebarchart and box/sphere** | string   | - |
-| radius        | Field of the data selected by filterdata that will be mapped as the radius of the items of the charts or a geometry. Valid for **geobubbleschart and sphere** | string   | - |
-| slice        | Field of the data selected by filterdata that will be mapped as the slices of the items of a pie chart. Valid for **piehchart** | string   | - |
-| z-axis        | Field of the data selected by filterdata that will be mapped as the keys of the Z Axis of the chart component selected. Valid for **geo3dbarchart and bubblechart** | string   | - |
-| x-axis        | Field of the data selected by filterdata that will be mapped as the keys of the X Axis of the chart component selected. Valid for **geo3dbarchart, bubblechart and geosimplebarchart** | string   | - |
+| height        | Field of the data selected by filterdata that will be mapped as the height of the items of the charts or a geometry. Valid for **geo3dbarchart, **geocylinderchart**, **geo3dcylinderchart**, **geobubbleschart, geosimplebarchart and box/sphere** | string   | - |
+| radius        | Field of the data selected by filterdata that will be mapped as the radius of the items of the charts or a geometry. Valid for **geocylinderchart**, **geo3dcylinderchart**, **geobubbleschart and sphere** | string   | - |
+| slice        | Field of the data selected by filterdata that will be mapped as the slices of the items of a pie chart. Valid for **piechart** and **geodoughnutchart** | string   | - |
+| z-axis        | Field of the data selected by filterdata that will be mapped as the keys of the Z Axis of the chart component selected. Valid for **geo3dbarchart, geobubblechart and geo3dcylinderchart** | string   | - |
+| x-axis        | Field of the data selected by filterdata that will be mapped as the keys of the X Axis of the chart component selected. Valid for **geo3dbarchart, geo3dcylinderchart, geoubblechart and geosimplebarchart** | string   | - |
 | width            | Field of the data selected by filterdata that will be mapped as the width of the geometry **(only for box geometry)**.  | string | - |
 | depth        | Field of the data selected by filterdata that will be mapped as the depth of the geometry **(only for box geometry)**. | string   | - |
 

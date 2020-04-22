@@ -4376,15 +4376,24 @@ AFRAME.registerComponent('vismapper', {
             } else if (el.components.geosimplebarchart) {
                 let list = generate2Dlist(data, dataJSON, "x_axis")
                 el.setAttribute("geosimplebarchart", "data", JSON.stringify(list))
+            } else if (el.components.geocylinderchart) {
+                let list = generate2Dlist(data, dataJSON, "x_axis", "cylinder")
+                el.setAttribute("geocylinderchart", "data", JSON.stringify(list))
             } else if (el.components.geopiechart) {
                 let list = generate2Dlist(data, dataJSON, "slice")
                 el.setAttribute("geopiechart", "data", JSON.stringify(list))
+            } else if (el.components.geodoughnutchart) {
+                let list = generate2Dlist(data, dataJSON, "slice")
+                el.setAttribute("geodoughnutchart", "data", JSON.stringify(list))
             } else if (el.components.geo3dbarchart) {
                 let list = generate3Dlist(data, dataJSON, "3dbars")
                 el.setAttribute("geo3dbarchart", "data", JSON.stringify(list))
             } else if (el.components.geobubbleschart) {
                 let list = generate3Dlist(data, dataJSON, "bubbles")
                 el.setAttribute("geobubbleschart", "data", JSON.stringify(list))
+            } else if (el.components.geo3dcylinderchart) {
+                let list = generate3Dlist(data, dataJSON, "3dcylinder")
+                el.setAttribute("geo3dcylinderchart", "data", JSON.stringify(list))
             } else if (el.components.geocodecitychart) {
                 let list = generateCodecityList(data, dataJSON)
                 el.setAttribute("geocodecitychart", "data", JSON.stringify(list))
@@ -4416,40 +4425,59 @@ AFRAME.registerComponent('vismapper', {
 
 })
 
-let generate2Dlist = (data, dataToProcess, key_type) => {
+let generate2Dlist = (data, dataToProcess, key_type, chart_type) => {
     let list = []
-    Object.values(dataToProcess).forEach(value => {
-        let item = {
-            "key": value[data[key_type]],
-            "size": value[data.height]
+    if (Array.isArray(dataToProcess)) {
+        list = dataToProcess
+    } else {
+        if (chart_type === "cylinder") {
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data[key_type]],
+                    "height": value[data.height],
+                    "radius": value[data.radius]
+                }
+                list.push(item)
+            });
+        } else {
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data[key_type]],
+                    "size": value[data.height]
+                }
+                list.push(item)
+            });
         }
-        list.push(item)
-    });
+    }
     return list
 }
 
 let generate3Dlist = (data, dataToProcess, chart_type) => {
     let list = []
-    if (chart_type === "3dbars") {
+    if (Array.isArray(dataToProcess)) {
+        list = dataToProcess
+    } else {
+        if (chart_type === "3dbars") {
 
-        Object.values(dataToProcess).forEach(value => {
-            let item = {
-                "key": value[data.x_axis],
-                "key2": value[data.z_axis],
-                "size": value[data.height]
-            }
-            list.push(item)
-        });
-    } else if (chart_type === "bubbles") {
-        Object.values(dataToProcess).forEach(value => {
-            let item = {
-                "key": value[data.x_axis],
-                "key2": value[data.z_axis],
-                "height": value[data.height],
-                "radius": value[data.radius]
-            }
-            list.push(item)
-        });
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data.x_axis],
+                    "key2": value[data.z_axis],
+                    "size": value[data.height]
+                }
+                list.push(item)
+            });
+        } else if (chart_type === "bubbles" || chart_type === "3dcylinder") {
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data.x_axis],
+                    "key2": value[data.z_axis],
+                    "height": value[data.height],
+                    "radius": value[data.radius]
+                }
+                list.push(item)
+            });
+        }
     }
     return list
 }
