@@ -271,6 +271,17 @@ This component shows a doughnut chart.
 ]
 ```
 
+### geototemchart component
+
+This component shows a totem in order to change the data of the visualizations that it's targeting.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| charts_id          | List of HTML IDs of the charts that will change their data  | array | - |
+| data_list          | List of datasets that the totem will switch `[{"data":"Data 1", "path": "data_examples/data1.json"}, {"data": "Data 2", "path": "data_examples/data2.json"}, ...]`  | JSON (list of objects) | - |
+
 ## Querier/Filter/Mapper and other components API
 
 ### querier_json component
@@ -333,8 +344,6 @@ This component must be in the same entity than filterdata and it needs also a ch
 | width            | Field of the data selected by filterdata that will be mapped as the width of the geometry **(only for box geometry)**.  | string | - |
 | depth        | Field of the data selected by filterdata that will be mapped as the depth of the geometry **(only for box geometry)**. | string   | - |
 
-
- |
 
 
 
