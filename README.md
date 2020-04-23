@@ -284,6 +284,23 @@ This component shows a totem in order to change the data of the visualizations t
 
 ## Querier/Filter/Mapper and other components API
 
+### querier_es component
+
+Component that will retrieve data from an ElasticSearch. It uses [ElasticSearch URI](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html) search to do it.
+
+This component will put the data retrieved into the `baratariaData` attribute of the entity.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ------ |
+| elasticsearch_url             | Url of ElasticSearch  | string | - |
+| index        | Index of the query | string   | - |
+| size         | Size of the max results of the query | int   | 10 |
+| query        | Query using the Lucene query string syntax, p.e: `q=name:dlumbrer`  | string   | - |
+
+> **Important**: The ElasticSearch must have enabled cross-origin resource sharing because the queries are made by the browser. See this [ElasticSearch reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html)
+
 ### querier_json component
 
 Component that will retrieve data from a JSON input that can be defined as an url or directly embedded.
