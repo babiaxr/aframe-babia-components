@@ -22,7 +22,7 @@ Thing you need:
 
 ![Example](https://i.imgur.com/pB327Pn.png)
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/pie_chart/)
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/pie_chart_querier/)
 
 ## Simple bar chart (2D bars chart)
 
@@ -36,7 +36,7 @@ Thing you need:
 
 
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/simplebar_chart/)
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/simplebar_chart_querier/)
 
 
 ## 3D bar chart
@@ -52,7 +52,7 @@ Thing you need:
 
 
 
-[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/3dbars_chart/)
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/3dbars_chart_querier/)
 
 
 ## Bubbles chart
@@ -68,11 +68,51 @@ Thing you need:
 ![Example](https://i.imgur.com/5cw40tj.png)
 
 
-
-[Click here to go a live example](https://dlumbrer.github.io/aframe-babia-components/examples/bubbles_chart/)
-
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/bubbles_chart_querier/)
 
 
+## 3D Cylinder chart
 
-### [Full examples](https://dlumbrer.github.io/aframe-babia-components)
+1. Add the component `vismapper` to same entity that has the `filterdata` component with the next attributes:
+    - `x-axis`: the field of the data filtered by `filterdata` that will define the tags of the x-axis of the chart (as a keys). (Make sure that this field has unique values!)
+    - `z-axis`: the field of the data filtered by `filterdata` that will define the tags of the z-axis of the chart (as a keys). (Make sure that this field has unique values!)
+    - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the cylinders.
+    - `radius`: the **numeric** field of the data filtered by `filterdata` that will define the radius/size of the cylinders.
+
+2. Finally, add the component `geo3dcylinderchart` (with its optional params if you want):
+
+![Example](https://i.imgur.com/2OAOBhW.png)
+
+
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/3dcylinder_chart_querier/)
+
+
+## Cylinder chart (2D cylinders)
+
+1. Add the component `vismapper` to same entity that has the `filterdata` component with the next attributes:
+    - `x-axis`: the field of the data filtered by `filterdata` that will define the tags of the x-axis of the chart (as a keys). (Make sure that this field has unique values!)
+    - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the cylinders.
+    - `radius`: the **numeric** field of the data filtered by `filterdata` that will define the radius/size of the cylinders.
+
+2. Finally, add the component `geocylinderchart` (with its optional params if you want):
+
+![Example](https://i.imgur.com/frDHfoB.png)
+
+
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/cylinder_chart_querier/)
+
+## Doughnut chart
+
+1. Add the component `vismapper` to same entity that has the `filterdata` component with the next attributes:
+    - `slice`: the field of the data filtered by `filterdata` that will define each slice of the pie. (Make sure that this field has unique values!)
+    - `height`: the **numeric** field of the data filtered by `filterdata` that will define the size of the slices.
+
+2. Finally, add the component `geopiechart` (with its optional params if you want):
+
+![Example](https://i.imgur.com/LtWp1Bn.png)
+
+[Click here to go a live example](https://babiaxr.gitlab.io/aframe-babia-components/examples/charts_querier/doughnut_chart_querier/)
+
+
+### [Full examples](https://babiaxr.gitlab.io/aframe-babia-components)
 #### More content will be added soon... 
