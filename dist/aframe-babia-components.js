@@ -320,7 +320,8 @@ AFRAME.registerComponent('geo3dbarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        axis: { type: 'boolean', default: true }
+        axis: { type: 'boolean', default: true },
+        palette: {type: 'string', default: 'ubuntu'},
     },
 
     /**
@@ -384,6 +385,7 @@ AFRAME.registerComponent('geo3dbarchart', {
 let generateBarChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
+        const palette = data.palette
 
         let colorid = 0
         let maxColorId = 0
@@ -445,7 +447,7 @@ let generateBarChart = (data, element) => {
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette);
 
             //Prepare legend
             if (data.legend) {
@@ -458,8 +460,8 @@ let generateBarChart = (data, element) => {
 
         // Axis
         if (data.axis) {
-            showXAxis(element, maxX, xaxis_dict)
-            showZAxis(element, maxZ, zaxis_dict)
+            showXAxis(element, maxX, xaxis_dict, palette)
+            showZAxis(element, maxZ, zaxis_dict, palette)
             showYAxis(element, maxY)
         }
     }
@@ -467,15 +469,26 @@ let generateBarChart = (data, element) => {
 
 let widthBars = 1
 
-function generateBar(size, width, color, positionX, positionZ) {
+function generateBar(size, width, colorid, positionX, positionZ, palette) {
+    let color = getColor(colorid, palette)
     console.log("Generating bar...")
     let entity = document.createElement('a-box');
-    entity.setAttribute('color', colors[color]);
+    entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     entity.setAttribute('height', size);
     entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
     return entity;
+}
+
+function getColor(colorid, palette){
+    let color
+    for (let i in colors){
+        if(colors[i][palette]){
+            color = colors[i][palette][colorid%4]
+        }
+    }
+    return color
 }
 
 function generateLegend(bar) {
@@ -497,9 +510,6 @@ function generateLegend(bar) {
         'width': 6,
         'color': 'black'
     });
-    entity.setAttribute('light', {
-        'intensity': 0.3
-    });
     return entity;
 }
 
@@ -517,7 +527,7 @@ function showLegend(barEntity, bar) {
 }
 
 
-function showXAxis(parent, xEnd, bars_printed) {
+function showXAxis(parent, xEnd, bars_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -531,12 +541,13 @@ function showXAxis(parent, xEnd, bars_printed) {
 
     //Print keys
     bars_printed.forEach(e => {
+        let color = getColor(e.colorid, palette)
         let key = document.createElement('a-entity');
         key.setAttribute('text', {
             'value': e.key,
             'align': 'left',
             'width': 10,
-            'color': colors[e.colorid]
+            'color': color
         });
         key.setAttribute('position', { x: e.posX, y: 0, z: -widthBars-5 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
@@ -547,7 +558,7 @@ function showXAxis(parent, xEnd, bars_printed) {
     parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, bars_printed) {
+function showZAxis(parent, zEnd, bars_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -562,11 +573,12 @@ function showZAxis(parent, zEnd, bars_printed) {
     //Print keys
     bars_printed.forEach(e => {
         let key = document.createElement('a-entity');
+        let color = getColor(e.colorid, palette)
         key.setAttribute('text', {
             'value': e.key,
             'align': 'right',
             'width': 10,
-            'color': colors[e.colorid]
+            'color': color
         });
         key.setAttribute('position', { x: -widthBars-5.2, y: 0, z: e.posZ })
         key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
@@ -606,46 +618,17 @@ function showYAxis(parent, yEnd) {
     parent.appendChild(axis)
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+let colors = [
+    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 
 /***/ }),
@@ -664,7 +647,8 @@ AFRAME.registerComponent('geo3dcylinderchart', {
   schema: {
     data: { type: 'string' },
     legend: { type: 'boolean' },
-    axis: { type: 'boolean', default: true }
+    axis: { type: 'boolean', default: true },
+    palette: {type: 'string', default: 'ubuntu'},
   },
 
       /**
@@ -729,6 +713,7 @@ AFRAME.registerComponent('geo3dcylinderchart', {
 let generateCylinderChart = (data, element) => {
   if (data.data) {
     const dataToPrint = JSON.parse(data.data)
+    const palette = data.palette
 
     let colorid = 0
     let maxColorId = 0
@@ -791,7 +776,7 @@ let generateCylinderChart = (data, element) => {
             maxZ += 2 * maxRadius + 1
         }
 
-        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, stepX, stepZ);
+        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ);
         
         //Prepare legend
         if (data.legend) {
@@ -804,7 +789,7 @@ let generateCylinderChart = (data, element) => {
 
     // Axis
     if (data.axis) {
-        showXAxis(element, maxX, xaxis_dict)
+        showXAxis(element, maxX, xaxis_dict, palette)
         showZAxis(element, maxZ, zaxis_dict)
         showYAxis(element, maxY)
     }
@@ -813,17 +798,27 @@ let generateCylinderChart = (data, element) => {
 
 let maxRadius
 
-function generateCylinder(height, radius, color, positionX, positionZ) {
+function generateCylinder(height, radius, colorid, palette, positionX, positionZ) {
+  let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
-  entity.setAttribute('color', colors[color]);
+  entity.setAttribute('color', color);
   entity.setAttribute('height', height);
   entity.setAttribute('radius', radius);
   entity.setAttribute('position', { x: positionX, y: height/2, z: positionZ });
   return entity;
 }
 
+function getColor(colorid, palette){
+  let color
+  for (let i in colors){
+      if(colors[i][palette]){
+          color = colors[i][palette][colorid%4]
+      }
+  }
+  return color
+}
 
-function showXAxis(parent, xEnd, cylinder_printed) {
+function showXAxis(parent, xEnd, cylinder_printed, palette) {
   let axis = document.createElement('a-entity');
 
   //Print line
@@ -839,11 +834,12 @@ function showXAxis(parent, xEnd, cylinder_printed) {
   //Print keys
   cylinder_printed.forEach(e => {
       let key = document.createElement('a-entity');
+      let color = getColor(e.colorid, palette)
       key.setAttribute('text', {
           'value': e.key,
           'align': 'left',
           'width': 30,
-          'color': colors[e.colorid]
+          'color': color
       });
       key.setAttribute('position', { x: e.posX, y: 0.1, z: -maxRadius - 16.5 })
       key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
@@ -953,52 +949,20 @@ function generateLegend(cylinder) {
       'width': 20,
       'color': 'black'
   });
-  entity.setAttribute('light', {
-      'intensity': 0.3
-  });
   return entity;
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+let colors = [
+  {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+  {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+  {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+  {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+  {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+  {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+  {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+  {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+  {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 /***/ }),
 /* 4 */
@@ -1016,7 +980,8 @@ AFRAME.registerComponent('geobubbleschart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        axis: { type: 'boolean', default: true }
+        axis: { type: 'boolean', default: true },
+        palette: {type: 'string', default: 'ubuntu'},
     },
 
     /**
@@ -1080,6 +1045,7 @@ AFRAME.registerComponent('geobubbleschart', {
 let generateBubblesChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
+        const palette = data.palette
 
         let colorid = 0
         let maxColorId = 0
@@ -1143,7 +1109,7 @@ let generateBubblesChart = (data, element) => {
                 maxZ += widthBubbles + widthBubbles / 4
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, stepX, stepZ);
+            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ);
 
             //Prepare legend
             if (data.legend) {
@@ -1165,13 +1131,24 @@ let generateBubblesChart = (data, element) => {
 
 let widthBubbles = 0
 
-function generateBubble(radius, height, width, color, positionX, positionZ) {
+function generateBubble(radius, height, width, colorid, palette, positionX, positionZ) {
+    let color = getColor(colorid, palette)
     console.log("Generating bubble...")
     let entity = document.createElement('a-sphere');
-    entity.setAttribute('color', colors[color]);
+    entity.setAttribute('color', color);
     entity.setAttribute('radius', radius);
     entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
     return entity;
+}
+
+function getColor(colorid, palette){
+    let color
+    for (let i in colors){
+        if(colors[i][palette]){
+            color = colors[i][palette][colorid%4]
+        }
+    }
+    return color
 }
 
 function generateLegend(bubble) {
@@ -1193,9 +1170,6 @@ function generateLegend(bubble) {
         'width': 6,
         'color': 'black'
     });
-    entity.setAttribute('light', {
-        'intensity': 0.3
-    });
     return entity;
 }
 
@@ -1213,7 +1187,7 @@ function showLegend(bubbleEntity, bubble) {
 }
 
 
-function showXAxis(parent, xEnd, bubbles_printed) {
+function showXAxis(parent, xEnd, bubbles_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -1228,11 +1202,12 @@ function showXAxis(parent, xEnd, bubbles_printed) {
     //Print keys
     bubbles_printed.forEach(e => {
         let key = document.createElement('a-entity');
+        let color = getColor(e.colorid, palette)
         key.setAttribute('text', {
             'value': e.key,
             'align': 'left',
             'width': 10,
-            'color': colors[e.colorid]
+            'color': color
         });
         key.setAttribute('position', { x: e.posX, y: 0, z: -widthBubbles-3.2 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
@@ -1243,7 +1218,7 @@ function showXAxis(parent, xEnd, bubbles_printed) {
     parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, bubbles_printed) {
+function showZAxis(parent, zEnd, bubbles_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -1258,11 +1233,12 @@ function showZAxis(parent, zEnd, bubbles_printed) {
     //Print keys
     bubbles_printed.forEach(e => {
         let key = document.createElement('a-entity');
+        let color = getColor(e.colorid, palette)
         key.setAttribute('text', {
             'value': e.key,
             'align': 'right',
             'width': 10,
-            'color': colors[e.colorid]
+            'color': color
         });
         key.setAttribute('position', { x: -widthBubbles-5.2, y: 0, z: e.posZ })
         key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
@@ -1302,46 +1278,17 @@ function showYAxis(parent, yEnd) {
     parent.appendChild(axis)
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+let colors = [
+    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 
 /***/ }),
@@ -2728,7 +2675,8 @@ AFRAME.registerComponent('geocylinderchart', {
   schema: {
     data: { type: 'string' },
     legend: { type: 'boolean' },
-    axis: { type: 'boolean', default: true }
+    axis: { type: 'boolean', default: true },
+    palette: {type: 'string', default: 'ubuntu'},
   },
 
       /**
@@ -2793,6 +2741,7 @@ AFRAME.registerComponent('geocylinderchart', {
 let generateCylinderChart = (data, element) => {
   if (data.data){
     const dataToPrint = JSON.parse(data.data)
+    const palette = data.palette
 
     let colorid = 0
     let stepX = 0
@@ -2813,7 +2762,7 @@ let generateCylinderChart = (data, element) => {
         firstradius = radius
       }
 
-      let cylinderEntity = generateCylinder(height, radius, colorid, stepX)
+      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX)
       element.appendChild(cylinderEntity);
 
       //Prepare legend
@@ -2838,7 +2787,7 @@ let generateCylinderChart = (data, element) => {
 
     //Print axis
     if (data.axis) {
-      showXAxis(element, stepX + lastradius, axis_dict)
+      showXAxis(element, stepX + lastradius, axis_dict, palette)
       showYAxis(element, maxY)
     }
   }
@@ -2847,17 +2796,27 @@ let generateCylinderChart = (data, element) => {
 let firstradius
 let maxRadius
 
-function generateCylinder(height, radius, color, position) {
+function generateCylinder(height, radius, colorid, palette, position) {
+  let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
-  entity.setAttribute('color', colors[color]);
+  entity.setAttribute('color', color);
   entity.setAttribute('height', height);
   entity.setAttribute('radius', radius);
   entity.setAttribute('position', { x: position, y: height/2, z: 0 });
   return entity;
 }
 
+function getColor(colorid, palette){
+  let color
+  for (let i in colors){
+      if(colors[i][palette]){
+          color = colors[i][palette][colorid%4]
+      }
+  }
+  return color
+}
 
-function showXAxis(parent, xEnd, cylinder_printed) {
+function showXAxis(parent, xEnd, cylinder_printed, palette) {
   let axis = document.createElement('a-entity');
 
   //Print line
@@ -2873,11 +2832,12 @@ function showXAxis(parent, xEnd, cylinder_printed) {
   //Print keys
   cylinder_printed.forEach(e => {
       let key = document.createElement('a-entity');
+      let color = getColor(e.colorid, palette)
       key.setAttribute('text', {
           'value': e.key,
           'align': 'right',
           'width': 20,
-          'color': colors[e.colorid]
+          'color': color
       });
       key.setAttribute('position', { x: e.posX, y: 0.1, z: maxRadius + 11.5 })
       key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
@@ -2948,52 +2908,20 @@ function generateLegend(cylinder) {
       'width': 20,
       'color': 'black'
   });
-  entity.setAttribute('light', {
-      'intensity': 0.3
-  });
   return entity;
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+let colors = [
+  {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+  {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+  {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+  {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+  {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+  {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+  {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+  {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+  {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 /***/ }),
 /* 7 */
@@ -3010,7 +2938,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('geodoughnutchart', {
     schema: {
         data: { type: 'string' },
-        legend: { type: 'boolean' }
+        legend: { type: 'boolean' },
+        palette: {type: 'string', default: 'ubuntu'},
     },
 
     /**
@@ -3074,6 +3003,7 @@ AFRAME.registerComponent('geodoughnutchart', {
 let generateDoughnut = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
+        const palette = data.palette
 
         // Change size to degrees
         let totalSize = 0
@@ -3088,7 +3018,7 @@ let generateDoughnut = (data, element) => {
         for (let slice of dataToPrint) {
             //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
-            let sliceEntity = generateDoughnutSlice(degreeStart, degreeEnd, 1, colorid);
+            let sliceEntity = generateDoughnutSlice(degreeStart, degreeEnd, 1, colorid, palette);
             //Move degree offset
             degreeStart += degreeEnd;
 
@@ -3103,10 +3033,11 @@ let generateDoughnut = (data, element) => {
     }
 }
 
-function generateDoughnutSlice(position_start, arc, radius, color) {
+function generateDoughnutSlice(position_start, arc, radius, colorid, palette) {
+    let color = getColor(colorid, palette)
     console.log("Generating slice...")
     let entity = document.createElement('a-torus');
-    entity.setAttribute('color', colors[color]);
+    entity.setAttribute('color', color);
     entity.setAttribute('rotation', {x: 90, y: 0, z: position_start})
     entity.setAttribute('arc', arc);
     entity.setAttribute('side', 'double');
@@ -3115,10 +3046,18 @@ function generateDoughnutSlice(position_start, arc, radius, color) {
     return entity;
 }
 
+function getColor(colorid, palette){
+    let color
+    for (let i in colors){
+        if(colors[i][palette]){
+            color = colors[i][palette][colorid%4]
+        }
+    }
+    return color
+}
+
 function generateLegend(slice) {
     let text = slice['key'] + ': ' + slice['size'];
-    console.log('Creando leyenda...')
-    console.log(text)
 
     let width = 2;
     if (text.length > 16)
@@ -3136,9 +3075,6 @@ function generateLegend(slice) {
         'width': 6,
         'color': 'black'
     });
-    entity.setAttribute('light', {
-        'intensity': 0.1
-    });
     return entity;
 }
 
@@ -3155,46 +3091,17 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+let colors = [
+    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 
 /***/ }),
@@ -3212,7 +3119,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('geopiechart', {
     schema: {
         data: { type: 'string' },
-        legend: { type: 'boolean' }
+        legend: { type: 'boolean' },
+        palette: {type: 'string', default: 'ubuntu'}
     },
 
     /**
@@ -3275,6 +3183,7 @@ AFRAME.registerComponent('geopiechart', {
 let generatePie = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
+        const palette = data.palette
 
         // Change size to degrees
         let totalSize = 0
@@ -3289,7 +3198,7 @@ let generatePie = (data, element) => {
         for (let slice of dataToPrint) {
             //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
-            let sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid);
+            let sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid, palette);
             //Move degree offset
             degreeStart += degreeEnd;
 
@@ -3304,15 +3213,26 @@ let generatePie = (data, element) => {
     }
 }
 
-function generateSlice(theta_start, theta_length, radius, color) {
+function generateSlice(theta_start, theta_length, radius, colorid, palette) {
+    let color = getColor(colorid, palette)
     console.log("Generating slice...")
     let entity = document.createElement('a-cylinder');
-    entity.setAttribute('color', colors[color]);
+    entity.setAttribute('color', color);
     entity.setAttribute('theta-start', theta_start);
     entity.setAttribute('theta-length', theta_length);
     entity.setAttribute('side', 'double');
     entity.setAttribute('radius', radius);
     return entity;
+}
+
+function getColor(colorid, palette){
+    let color
+    for (let i in colors){
+        if(colors[i][palette]){
+            color = colors[i][palette][colorid%4]
+        }
+    }
+    return color
 }
 
 function generateLegend(slice) {
@@ -3334,9 +3254,6 @@ function generateLegend(slice) {
         'width': 6,
         'color': 'black'
     });
-    entity.setAttribute('light', {
-        'intensity': 0.3
-    });
     return entity;
 }
 
@@ -3353,46 +3270,17 @@ function showLegend(sliceEntity, slice) {
     });
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+let colors = [
+    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 
    
@@ -3413,7 +3301,8 @@ AFRAME.registerComponent('geosimplebarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean', default: false },
-        axis: { type: 'boolean', default: true }
+        axis: { type: 'boolean', default: true },
+        palette: {type: 'string', default: 'ubuntu'},
     },
 
     /**
@@ -3476,6 +3365,7 @@ AFRAME.registerComponent('geosimplebarchart', {
 let generateBarChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
+        const palette = data.palette
 
         let colorid = 0
         let stepX = 0
@@ -3485,7 +3375,7 @@ let generateBarChart = (data, element) => {
 
 
         for (let bar of dataToPrint) {
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette);
 
 
             //Prepare legend
@@ -3511,7 +3401,7 @@ let generateBarChart = (data, element) => {
 
         //Print axis
         if (data.axis) {
-            showXAxis(element, stepX, axis_dict)
+            showXAxis(element, stepX, axis_dict, palette)
             showYAxis(element, maxY)
         }
     }
@@ -3519,15 +3409,26 @@ let generateBarChart = (data, element) => {
 
 let widthBars = 1
 
-function generateBar(size, width, color, position) {
+function generateBar(size, width, colorid, position, palette) {
+    let color = getColor(colorid, palette)
     console.log("Generating bar...")
     let entity = document.createElement('a-box');
-    entity.setAttribute('color', colors[color]);
+    entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     entity.setAttribute('height', size);
     entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
     return entity;
+}
+
+function getColor(colorid, palette){
+    let color
+    for (let i in colors){
+        if(colors[i][palette]){
+            color = colors[i][palette][colorid%4]
+        }
+    }
+    return color
 }
 
 function generateLegend(bar) {
@@ -3549,13 +3450,10 @@ function generateLegend(bar) {
         'width': 6,
         'color': 'black'
     });
-    entity.setAttribute('light', {
-        'intensity': 0.3
-    });
     return entity;
 }
 
-function showXAxis(parent, xEnd, bars_printed) {
+function showXAxis(parent, xEnd, bars_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -3570,11 +3468,12 @@ function showXAxis(parent, xEnd, bars_printed) {
     //Print keys
     bars_printed.forEach(e => {
         let key = document.createElement('a-entity');
+        let color = getColor(e.colorid, palette)
         key.setAttribute('text', {
             'value': e.key,
             'align': 'right',
             'width': 10,
-            'color': colors[e.colorid]
+            'color': color
         });
         key.setAttribute('position', { x: e.posX, y: 0, z: widthBars+5.2 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
@@ -3626,47 +3525,18 @@ function showLegend(barEntity, bar) {
     });
 }
 
-let colors = ["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
-    "#f205e6", "#1c0365", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
-    "#d2737d", "#c0a43c", "#f2510e", "#651be6", "#79806e", "#61da5e", "#cd2f00",
-    "#9348af", "#01ac53", "#c5a4fb", "#996635", "#b11573", "#4bb473", "#75d89e",
-    "#2f3f94", "#2f7b99", "#da967d", "#34891f", "#b0d87b", "#ca4751", "#7e50a8",
-    "#c4d647", "#e0eeb8", "#11dec1", "#289812", "#566ca0", "#ffdbe1", "#2f1179",
-    "#935b6d", "#916988", "#513d98", "#aead3a", "#9e6d71", "#4b5bdc", "#0cd36d",
-    "#250662", "#cb5bea", "#228916", "#ac3e1b", "#df514a", "#539397", "#880977",
-    "#f697c1", "#ba96ce", "#679c9d", "#c6c42c", "#5d2c52", "#48b41b", "#e1cf3b",
-    "#5be4f0", "#57c4d8", "#a4d17a", "#225b8", "#be608b", "#96b00c", "#088baf",
-    "#f158bf", "#e145ba", "#ee91e3", "#05d371", "#5426e0", "#4834d0", "#802234",
-    "#6749e8", "#0971f0", "#8fb413", "#b2b4f0", "#c3c89d", "#c9a941", "#41d158",
-    "#fb21a3", "#51aed9", "#5bb32d", "#807fb", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#21538e", "#89d534", "#d36647",
-    "#7fb411", "#0023b8", "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3",
-    "#79352c", "#521250", "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec",
-    "#1bb699", "#6b2e5f", "#64820f", "#1c271", "#9cb64a", "#996c48", "#9ab9b7",
-    "#06e052", "#e3a481", "#0eb621", "#fc458e", "#b2db15", "#aa226d", "#792ed8",
-    "#73872a", "#520d3a", "#cefcb8", "#a5b3d9", "#7d1d85", "#c4fd57", "#f1ae16",
-    "#8fe22a", "#ef6e3c", "#243eeb", "#1dc18", "#dd93fd", "#3f8473", "#e7dbce",
-    "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a", "#15b9ee", "#0f5997",
-    "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7", "#cb2582", "#ce00be",
-    "#32d5d6", "#17232", "#608572", "#c79bc2", "#00f87c", "#77772a", "#6995ba",
-    "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e", "#d00043",
-    "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052", "#e08c56",
-    "#28fcfd", "#bb09b", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
-    "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
-    "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
-    "#615af0", "#4be47", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4",
-    "#7ad236", "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06",
-    "#f53b2a", "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a",
-    "#4cf09d", "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#ff065",
-    "#71b1f4", "#a2f8a5", "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35",
-    "#1c65cb", "#5d1d0c", "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44",
-    "#1bede6", "#8798a4", "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#25b67",
-    "#88e9b8", "#c2b0e2", "#86e98f", "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff",
-    "#f812b3", "#b17fc9", "#8d6c2f", "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6",
-    "#dba2e6", "#76fc1b", "#608fa4", "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
 
+let colors = [
+    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
+    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
+    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
+    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
+    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
+    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
+    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
+    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
+    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+]
 
 /***/ }),
 /* 10 */
