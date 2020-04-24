@@ -576,7 +576,8 @@ let Zone = class {
                 color: base_color, inner: false,
                 wireframe: wireframe, visible: visible,
                 buffered: buffered,
-                id: area.data['id']
+                id: area.data['id'],
+                rawarea: 0
             });
             el.appendChild(base);
             let root_el = base;
@@ -605,7 +606,8 @@ let Zone = class {
                 model: model,
                 visible: visible,
                 buffered: buffered,
-                id: area.data['id']
+                id: area.data['id'],
+                rawarea: area.data['area']
             });
             box.setAttribute('class', 'mouseentertitles');
             el.appendChild(box);
@@ -999,7 +1001,7 @@ let Rectangle = class {
      * @param {string} model Link to the glTF model
      */
     box({ height, elevation = 0, color = 'red', model = null, inner = true,
-        wireframe = false, visible = true, buffered = false, id = "" }) {
+        wireframe = false, visible = true, buffered = false, id = "", rawarea = 0}) {
         let depth, width;
         if (inner) {
             [depth, width] = [this.idepth, this.iwidth];
@@ -1044,6 +1046,7 @@ let Rectangle = class {
             };
         };
         box.setAttribute('id', id);
+        box.setAttribute('babiaxr-rawarea', rawarea);
 
 
 
@@ -1303,6 +1306,7 @@ function time_evol(){
                     let prevPos = document.getElementById(item.id).getAttribute("position")
                     let prevWidth = document.getElementById(item.id).getAttribute("geometry").width
                     let prevDepth = document.getElementById(item.id).getAttribute("geometry").depth
+                    let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
                     let oldRawArea = parseFloat(document.getElementById(item.id).getAttribute("babiaxr-rawarea"))
 
                     // Calculate Aspect Ratio
@@ -1330,7 +1334,7 @@ function time_evol(){
                     document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
                     document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
                     document.getElementById(item.id).setAttribute("geometry", "height", item.height)
-                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: item.height / 2, z: prevPos.z })
+                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y-prevHeight/2)+(item.height/2), z: prevPos.z })
                 }
             })
 
