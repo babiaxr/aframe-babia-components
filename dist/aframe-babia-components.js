@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -4034,6 +4034,137 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
+AFRAME.registerComponent('querier_es', {
+    schema: {
+        elasticsearch_url: { type: 'string' },
+        index: { type: 'string' },
+        query: { type: 'string' },
+        size: { type: 'int', default: 10 },
+        user: { type: 'string' },
+        password: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+
+        if (data.elasticsearch_url && data.index) {
+            requestJSONDataFromES(data, el)
+        } else {
+            console.error("elasicsearch_url, index and body must be defined")
+        }
+
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+
+        if (data.elasticsearch_url !== oldData.elasticsearch_url || 
+            data.index !== oldData.index || 
+            data.query !== oldData.query ||
+            data.size !== oldData.size) {
+            requestJSONDataFromES(data, el)
+        } else {
+            console.error("elasicsearch_url, index and body must be defined")
+        }
+
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+
+let requestJSONDataFromES = (data, el) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            //console.log("data OK in request.response", request.response)
+
+            // Save data
+            if (typeof request.response === 'string' || request.response instanceof String) {
+                dataRaw = JSON.parse(request.response).hits.hits
+                data.dataRetrieved = {}
+                for (let i = 0; i < dataRaw.length; i++) {
+                    data.dataRetrieved[i] = dataRaw[i]._source
+                }
+                console.log("ds")
+            } else {
+                data.dataRetrieved = request.response
+            }
+            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+
+            // Dispatch/Trigger/Fire the event
+            el.emit("dataReady" + el.id, data.dataRetrieved)
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+    };
+    request.send();
+}
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
 AFRAME.registerComponent('querier_github', {
     schema: {
         user: { type: 'string' },
@@ -4188,7 +4319,7 @@ let allReposParse = (data) => {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -4309,7 +4440,7 @@ let parseEmbeddedJSONData = (data, el) => {
 }
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -4501,12 +4632,13 @@ let generateCodecityList = (data, dataToProcess) => {
 function normalize(val, min, max) { return (val - min) / (max - min); }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(12)
 __webpack_require__(13)
 __webpack_require__(14)
+__webpack_require__(12)
+__webpack_require__(15)
 __webpack_require__(1)
 __webpack_require__(11)
 __webpack_require__(0)

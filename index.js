@@ -1,5 +1,6 @@
 require('./querier_github')
 require('./querier_json')
+require('./querier_es')
 require('./vismapper')
 require('./filterdata')
 require('./interaction-mapper')
