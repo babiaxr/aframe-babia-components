@@ -124,6 +124,7 @@ This component shows a pie chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -146,6 +147,7 @@ This component shows a simple 2D bar chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -169,6 +171,7 @@ This component shows a 3D bar chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -191,7 +194,8 @@ This component shows a 3D bar chart.
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bubble  | boolean | false |
-| axis          | Shows chart axis  | boolean | true
+| axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -215,6 +219,7 @@ This component shows a cylinder chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -237,7 +242,8 @@ This component shows a 3D cylinder chart.
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
-| axis          | Shows chart axis  | boolean | true
+| axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -261,6 +267,7 @@ This component shows a doughnut chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -281,6 +288,11 @@ This component shows a totem in order to change the data of the visualizations t
 | --------        | -----------           | ----   | ----- |
 | charts_id          | List of HTML IDs of the charts that will change their data  | array | - |
 | data_list          | List of datasets that the totem will switch `[{"data":"Data 1", "path": "data_examples/data1.json"}, {"data": "Data 2", "path": "data_examples/data2.json"}, ...]`  | JSON (list of objects) | - |
+
+### COLOR PALETTES
+
+![palettes](https://i.imgur.com/Ibk5bMo.png)
+
 
 ## Querier/Filter/Mapper and other components API
 
