@@ -288,7 +288,7 @@ This component shows a totem in order to change the data of the visualizations t
 
 Component that will retrieve data from an ElasticSearch. It uses [ElasticSearch URI](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html) search to do it.
 
-This component will put the data retrieved into the `baratariaData` attribute of the entity.
+This component will put the data retrieved into the `babiaData` attribute of the entity.
 
 #### API
 
@@ -305,7 +305,7 @@ This component will put the data retrieved into the `baratariaData` attribute of
 
 Component that will retrieve data from a JSON input that can be defined as an url or directly embedded.
 
-This component will put the data retrieved into the `baratariaData` attribute of the entity.
+This component will put the data retrieved into the `babiaData` attribute of the entity.
 
 #### API
 
@@ -319,7 +319,7 @@ This component will put the data retrieved into the `baratariaData` attribute of
 
 Component that will retrieve data related to the repositories from an user using the GitHub API. It can be defined the username in order to get info about all the repositories or also it can be defined an array of repos in order to analyse just them (instead of all).
 
-This component will put the data retrieved into the `baratariaData` attribute of the entity.
+This component will put the data retrieved into the `babiaData` attribute of the entity.
 
 
 #### API
@@ -333,7 +333,7 @@ This component will put the data retrieved into the `baratariaData` attribute of
 ### filterdata component
 
 This component must be used with one of the `querier` components. This component will select a part of the data retrieved (by a key/filter) in order to represent just that part of the data. If the filter is not defined, it will retrieve all the data.
-This component will put the data selected into the `baratariaData` attribute of the entity.
+This component will put the data selected into the `babiaData` attribute of the entity.
 
 #### API
 
@@ -366,7 +366,7 @@ This component must be in the same entity than filterdata and it needs also a ch
 
 ### debug_data component
 
-This component force the entity to hear an event, when this event occurs, a debug plane with the data of the `baratariaData` entity attribute will appear in the position (or close) of the entity that it belongs.
+This component force the entity to hear an event, when this event occurs, a debug plane with the data of the `babiaData` entity attribute will appear in the position (or close) of the entity that it belongs.
 
 #### API
 

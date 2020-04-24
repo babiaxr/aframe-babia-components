@@ -107,7 +107,7 @@ let requestReposFromList = (data, el) => {
 
     // Save data
     data.dataRetrieved = dataOfRepos
-    el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+    el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
     // Dispatch/Trigger/Fire the event
     el.emit("dataReady" + el.id, data.dataRetrieved)
@@ -130,7 +130,7 @@ let requestAllReposFromUser = (data, el) => {
 
             // Save data
             data.dataRetrieved = allReposParse(JSON.parse(request.response))
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
             // Dispatch/Trigger/Fire the event
             el.emit("dataReady" + el.id, data.dataRetrieved)

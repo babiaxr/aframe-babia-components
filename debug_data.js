@@ -85,7 +85,7 @@ let listenEvent = (data, el) => {
 let showDebugPlane = (data, el) => {
     if (!el.querySelector('.debug_data')) {
         // Get data from the attribute of the entity
-        let debugPanel = generateDebugPanel(data, el, el.getAttribute('baratariaData'));
+        let debugPanel = generateDebugPanel(data, el, el.getAttribute('babiaData'));
         el.appendChild(debugPanel)
     }
 }

@@ -157,7 +157,7 @@ let listenEvent = (data, el) => {
 let showDebugPlane = (data, el) => {
     if (!el.querySelector('.debug_data')) {
         // Get data from the attribute of the entity
-        let debugPanel = generateDebugPanel(data, el, el.getAttribute('baratariaData'));
+        let debugPanel = generateDebugPanel(data, el, el.getAttribute('babiaData'));
         el.appendChild(debugPanel)
     }
 }
@@ -230,8 +230,8 @@ AFRAME.registerComponent('filterdata', {
     let el = this.el;
 
     let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('baratariaData')) {
-      let dataFromQuerier = JSON.parse(querierElement.getAttribute('baratariaData'));
+    if (querierElement.getAttribute('babiaData')) {
+      let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
       // Get if key or filter
       saveEntityData(data, el, dataFromQuerier, data.filter)
     } else {
@@ -297,10 +297,10 @@ AFRAME.registerComponent('filterdata', {
 let saveEntityData = (data, el, dataToSave, filter) => {
   if (filter) {
     data.dataRetrieved = dataToSave[filter]
-    el.setAttribute("baratariaData", JSON.stringify(dataToSave[filter]))
+    el.setAttribute("babiaData", JSON.stringify(dataToSave[filter]))
   } else {
     data.dataRetrieved = dataToSave
-    el.setAttribute("baratariaData", JSON.stringify(dataToSave))
+    el.setAttribute("babiaData", JSON.stringify(dataToSave))
   }
 }
 
@@ -4078,10 +4078,7 @@ AFRAME.registerComponent('querier_es', {
             data.query !== oldData.query ||
             data.size !== oldData.size) {
             requestJSONDataFromES(data, el)
-        } else {
-            console.error("elasicsearch_url, index and body must be defined")
         }
-
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -4118,8 +4115,6 @@ let requestJSONDataFromES = (data, el) => {
     // Send it
     request.onload = function () {
         if (this.status >= 200 && this.status < 300) {
-            //console.log("data OK in request.response", request.response)
-
             // Save data
             if (typeof request.response === 'string' || request.response instanceof String) {
                 dataRaw = JSON.parse(request.response).hits.hits
@@ -4127,11 +4122,10 @@ let requestJSONDataFromES = (data, el) => {
                 for (let i = 0; i < dataRaw.length; i++) {
                     data.dataRetrieved[i] = dataRaw[i]._source
                 }
-                console.log("ds")
             } else {
                 data.dataRetrieved = request.response
             }
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
             // Dispatch/Trigger/Fire the event
             el.emit("dataReady" + el.id, data.dataRetrieved)
@@ -4266,7 +4260,7 @@ let requestReposFromList = (data, el) => {
 
     // Save data
     data.dataRetrieved = dataOfRepos
-    el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+    el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
     // Dispatch/Trigger/Fire the event
     el.emit("dataReady" + el.id, data.dataRetrieved)
@@ -4289,7 +4283,7 @@ let requestAllReposFromUser = (data, el) => {
 
             // Save data
             data.dataRetrieved = allReposParse(JSON.parse(request.response))
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
             // Dispatch/Trigger/Fire the event
             el.emit("dataReady" + el.id, data.dataRetrieved)
@@ -4409,7 +4403,7 @@ let requestJSONDataFromURL = (data, el) => {
             } else {
                 data.dataRetrieved = request.response
             }
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
             // Dispatch/Trigger/Fire the event
             el.emit("dataReady" + el.id, data.dataRetrieved)
@@ -4433,7 +4427,7 @@ let requestJSONDataFromURL = (data, el) => {
 let parseEmbeddedJSONData = (data, el) => {
     // Save data
     data.dataRetrieved = JSON.parse(data.embedded)
-    el.setAttribute("baratariaData", data.embedded)
+    el.setAttribute("babiaData", data.embedded)
 
     // Dispatch/Trigger/Fire the event
     el.emit("dataReady" + el.id, data.embedded)

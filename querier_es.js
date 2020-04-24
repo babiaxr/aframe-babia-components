@@ -97,7 +97,7 @@ let requestJSONDataFromES = (data, el) => {
             } else {
                 data.dataRetrieved = request.response
             }
-            el.setAttribute("baratariaData", JSON.stringify(data.dataRetrieved))
+            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
 
             // Dispatch/Trigger/Fire the event
             el.emit("dataReady" + el.id, data.dataRetrieved)

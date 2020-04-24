@@ -26,8 +26,8 @@ AFRAME.registerComponent('filterdata', {
     let el = this.el;
 
     let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('baratariaData')) {
-      let dataFromQuerier = JSON.parse(querierElement.getAttribute('baratariaData'));
+    if (querierElement.getAttribute('babiaData')) {
+      let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
       // Get if key or filter
       saveEntityData(data, el, dataFromQuerier, data.filter)
     } else {
@@ -93,9 +93,9 @@ AFRAME.registerComponent('filterdata', {
 let saveEntityData = (data, el, dataToSave, filter) => {
   if (filter) {
     data.dataRetrieved = dataToSave[filter]
-    el.setAttribute("baratariaData", JSON.stringify(dataToSave[filter]))
+    el.setAttribute("babiaData", JSON.stringify(dataToSave[filter]))
   } else {
     data.dataRetrieved = dataToSave
-    el.setAttribute("baratariaData", JSON.stringify(dataToSave))
+    el.setAttribute("babiaData", JSON.stringify(dataToSave))
   }
 }
