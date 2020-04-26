@@ -40,11 +40,11 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_angular.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_angular.csv.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_angular.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_angular/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
@@ -172,8 +172,8 @@ def generate_entities(data, entities):
                     continue
                 new_leaf = {
                     "id": leaf['id'],
-                    "area": leaf['value'],
-                    "max_area": leaf['value_max'],
+                    "area": leaf['area'],
+                    "max_area": leaf['max_area'],
                     "height": leaf['height']
                 }
                 new_item['children'].append(new_leaf)
@@ -322,8 +322,8 @@ def extract_data(df_raw, date):
         entity_project = {
             "id": str(project),
             "children": [],
-            #"value": df_project['loc'].sum()
-            "value": len(df_project.index)
+            #'area': df_project['loc'].sum()
+            'area': len(df_project.index)
         }
 
         for repository in df_project['origin'].unique():
@@ -331,8 +331,8 @@ def extract_data(df_raw, date):
             entity_repo = {
                 "id": str(repository),
                 "children": [],
-                #"value": df_repo['loc'].sum(),
-                "value": len(df_repo.index)
+                #'area': df_repo['loc'].sum(),
+                'area': len(df_repo.index)
             }
             build_folders(df_repo, entity_repo['children'], 0, df['n_folders'].max(), df_raw)
 
@@ -377,8 +377,8 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     "id": df_folder['file_path'].values[0],
                     "name": str(folder),
                     'height': max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1),
-                    'value': df_folder['{}_normalized'.format(AREA_FIELD)].sum(),
-                    'value_max': df_raw_filtered['{}_normalized'.format(AREA_FIELD)].max()
+                    'area': df_folder['{}_normalized'.format(AREA_FIELD)].sum(),
+                    'max_area': df_raw_filtered['{}_normalized'.format(AREA_FIELD)].max()
                 }
                 leafs_folder['children'].append(leaf)
             # Is parent of leaf
@@ -389,7 +389,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
                 entity_folder = {
                     "id": str(folder),
                     'children': [],
-                    'value': len(df_raw_filtered['file_path'].unique())
+                    'area': len(df_raw_filtered['file_path'].unique())
                 }
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels, df_raw)
                 
@@ -402,8 +402,8 @@ def build_folders(df, arr, index, max_levels, df_raw):
                             "id": row['file_path'],
                             "name": str(row['folder_{}'.format(index+1)]),
                             'height': -0.2,
-                            'value': row['{}_normalized'.format(AREA_FIELD)],
-                            'value_max': df_raw_filtered_leaf['{}_normalized'.format(AREA_FIELD)].max()
+                            'area': row['{}_normalized'.format(AREA_FIELD)],
+                            'max_area': df_raw_filtered_leaf['{}_normalized'.format(AREA_FIELD)].max()
                         }
                         entity_folder['children'][0]['children'].append(leaf_not_now)
                 ###################################################################
@@ -414,7 +414,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
                 entity_folder = {
                     "id": str(folder),
                     'children': [],
-                    'value': len(df_folder.index)
+                    'area': len(df_folder.index)
                 }
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels, df_raw)
                 arr.append(entity_folder)

@@ -1297,7 +1297,7 @@ function time_evol(){
 
             let changedItems = []
             quarterItems[index].forEach((item) => {
-                if (document.getElementById(item.id) != undefined && item.value != 0.0) {
+                if (document.getElementById(item.id) != undefined && item.area != 0.0) {
                     
                     // Add to changed items
                     changedItems.push(item.id)
@@ -1318,7 +1318,7 @@ function time_evol(){
                     }
 
                     // New area that depends on the city
-                    let newAreaDep = (item.value * (prevDepth * prevWidth)) / oldRawArea
+                    let newAreaDep = (item.area * (prevDepth * prevWidth)) / oldRawArea
 
                     // New size for the building based on the AR and the Area depend
                     let newWidth = Math.sqrt(newAreaDep * AR)
@@ -1330,7 +1330,7 @@ function time_evol(){
 
 
                     // Write the new values
-                    document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.value)
+                    document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.area)
                     document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
                     document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
                     document.getElementById(item.id).setAttribute("geometry", "height", item.height)
