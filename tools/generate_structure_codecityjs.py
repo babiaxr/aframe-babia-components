@@ -41,7 +41,7 @@ from elasticsearch.connection import create_ssl_context
 
 HTTPS_CHECK_CERT = False
 INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_angular.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_angular.csv.csv'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_angular.csv'
 DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_angular.csv'
 
 CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_angular/'
