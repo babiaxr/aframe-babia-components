@@ -37,6 +37,11 @@ AFRAME.registerComponent('codecity', {
             type: 'string',
             default: 'area'
         },
+        // Field in data items to represent as max_area
+        fmaxarea: {
+            type: 'string',
+            default: 'max_area'
+        },
         // Field in data items to represent as area
         fheight: {
             type: 'string',
@@ -142,7 +147,7 @@ AFRAME.registerComponent('codecity', {
         let zone = new Zone({
             data: this.zone_data,
             extra: function (area) { return area * data.extra; },
-            farea: data.farea, fheight: data.fheight
+            farea: data.farea, fheight: data.fheight, fmaxarea: data.fmaxarea
         });
 
         let width, depth;
@@ -201,7 +206,7 @@ AFRAME.registerComponent('codecity', {
 
         // Time Evolution starts
         if (time_evolution) {
-           time_evol()
+            time_evol()
         }
     },
 
@@ -474,11 +479,12 @@ let Zone = class {
      * @param {string} fheight Field to consider as height in leaf items
      */
     constructor({ data, extra = function (area) { return area; },
-        farea = 'area', fheight = 'height' }) {
+        farea = 'area', fmaxarea = 'max_area', fheight = 'height' }) {
         this.data = data;
         this.id = this.data.id;
         this.extra = extra;
         this.farea = farea;
+        this.fmaxarea = fmaxarea;
         this.fheight = fheight;
         this.areas = this.areas_tree();
         // Root element (a-entity) of the codecity for this Zone
@@ -511,7 +517,9 @@ let Zone = class {
         } else {
             // Leaf node
             node.area = data_node[this.farea];
-            node.inner = node.area;
+            node.max_area = data_node[this.fmaxarea]
+            node.inner = node.max_area;
+            node.inner_real = node.area;
         };
         node.canvas = this.extra(node.inner, level);
         return node;
@@ -526,7 +534,7 @@ let Zone = class {
     add_rects({ rect, area = this.areas, relative = true, split = 'naive' } = {}) {
         // Make this the rectangle for the area, and compute its inner dimensions
         area.rect = rect;
-        area.rect.inner(area.canvas, area.inner);
+        area.rect.inner(area.canvas, area.inner, area.inner_real);
         if ('children' in area) {
             let child_areas = new Values(area.children.map(child => child.canvas),
                 area.inner);
@@ -576,7 +584,8 @@ let Zone = class {
                 color: base_color, inner: false,
                 wireframe: wireframe, visible: visible,
                 buffered: buffered,
-                id: area.data['id']
+                id: area.data['id'],
+                rawarea: 0
             });
             el.appendChild(base);
             let root_el = base;
@@ -605,7 +614,9 @@ let Zone = class {
                 model: model,
                 visible: visible,
                 buffered: buffered,
-                id: area.data['id']
+                id: area.data['id'],
+                rawarea: area.data[this.farea],
+                inner_real: true
             });
             box.setAttribute('class', 'mouseentertitles');
             el.appendChild(box);
@@ -838,7 +849,7 @@ let Rectangle = class {
      * @param {number} canvas Value for area of canvas
      * @param {number} area Value for area of inner
      */
-    inner(acanvas, ainner) {
+    inner(acanvas, ainner, ainner_real) {
         if (acanvas < ainner) {
             throw "Rectangle.inner: Area for inner rectangle larger than my area"
         };
@@ -846,6 +857,12 @@ let Rectangle = class {
             let ratio = Math.sqrt(ainner / acanvas);
             this.iwidth = ratio * this.width;
             this.idepth = ratio * this.depth;
+            if (ainner_real) {
+                // The area to print may be less than the max area (of the past)
+                let ratio_real = Math.sqrt(ainner_real / acanvas);
+                this.iwidth_real = ratio_real * this.width;
+                this.idepth_real = ratio_real * this.depth;
+            }
         } else {
             this.iwidth = this.width;
             this.idepth = this.depth;
@@ -999,9 +1016,11 @@ let Rectangle = class {
      * @param {string} model Link to the glTF model
      */
     box({ height, elevation = 0, color = 'red', model = null, inner = true,
-        wireframe = false, visible = true, buffered = false, id = "" }) {
+        wireframe = false, visible = true, buffered = false, id = "", rawarea = 0, inner_real = false }) {
         let depth, width;
-        if (inner) {
+        if (inner_real) {
+            [depth, width] = [this.idepth_real, this.iwidth_real];
+        } else if (inner) {
             [depth, width] = [this.idepth, this.iwidth];
         } else {
             [depth, width] = [this.depth, this.width];
@@ -1044,6 +1063,7 @@ let Rectangle = class {
             };
         };
         box.setAttribute('id', id);
+        box.setAttribute('babiaxr-rawarea', rawarea);
 
 
 
@@ -1163,12 +1183,12 @@ let dates = []
  *  This function generate a plane with date of files
  */
 function dateBar(data) {
-    if (data.data_files){
+    if (data.data_files) {
         let date_files = data.data_files
 
         // get entity codecity
-        let component  
-        if(document.getElementById('scene')){
+        let component
+        if (document.getElementById('scene')) {
             component = document.getElementById('scene')
         } else {
             component = document.getElementsByTagName('a-scene')
@@ -1184,12 +1204,12 @@ function dateBar(data) {
 
         let entity = document.createElement('a-plane')
         entity.setAttribute('id', 'date')
-        entity.setAttribute('position', {x: -13, y: 10, z: -3})
-        entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+        entity.setAttribute('position', { x: -13, y: 10, z: -3 })
+        entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
         entity.setAttribute('color', "white")
         entity.setAttribute('height', 0.5)
         entity.setAttribute('width', 2)
-        entity.setAttribute('scale', {x: 3, y:3, z: 1 })
+        entity.setAttribute('scale', { x: 3, y: 3, z: 1 })
 
         let text = new Date(date_files[0].date * 1000).toLocaleDateString()
         entity.setAttribute('text', {
@@ -1199,7 +1219,7 @@ function dateBar(data) {
             'color': 'black'
         })
         // Create point
-        for (let data in date_files){
+        for (let data in date_files) {
             let date = new Date(date_files[data].date * 1000)
             dates.push(date.toLocaleDateString())
         }
@@ -1207,7 +1227,7 @@ function dateBar(data) {
         component.appendChild(entity)
         return date_files
     }
-    
+
 }
 
 /**
@@ -1245,7 +1265,7 @@ let generateLegend = (text, buildingEntity, model) => {
     return entity;
 }
 
-function time_evol(){
+function time_evol() {
     const quarterItems = []
     let initItems = undefined
     const arrayPromises = []
@@ -1289,13 +1309,13 @@ function time_evol(){
             console.log("Loop number", i)
 
             // Change Date
-            let text = dates[i+1]
+            let text = dates[i + 1]
             document.getElementById('date').setAttribute('text', 'value', text)
 
             let changedItems = []
             quarterItems[index].forEach((item) => {
-                if (document.getElementById(item.id) != undefined && item.value != 0.0) {
-                    
+                if (document.getElementById(item.id) != undefined && item.area != 0.0) {
+
                     // Add to changed items
                     changedItems.push(item.id)
 
@@ -1303,6 +1323,7 @@ function time_evol(){
                     let prevPos = document.getElementById(item.id).getAttribute("position")
                     let prevWidth = document.getElementById(item.id).getAttribute("geometry").width
                     let prevDepth = document.getElementById(item.id).getAttribute("geometry").depth
+                    let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
                     let oldRawArea = parseFloat(document.getElementById(item.id).getAttribute("babiaxr-rawarea"))
 
                     // Calculate Aspect Ratio
@@ -1314,7 +1335,7 @@ function time_evol(){
                     }
 
                     // New area that depends on the city
-                    let newAreaDep = (item.value * (prevDepth * prevWidth)) / oldRawArea
+                    let newAreaDep = (item.area * (prevDepth * prevWidth)) / oldRawArea
 
                     // New size for the building based on the AR and the Area depend
                     let newWidth = Math.sqrt(newAreaDep * AR)
@@ -1326,17 +1347,17 @@ function time_evol(){
 
 
                     // Write the new values
-                    document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.value)
+                    document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.area)
                     document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
                     document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
                     document.getElementById(item.id).setAttribute("geometry", "height", item.height)
-                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: item.height / 2, z: prevPos.z })
+                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (item.height / 2), z: prevPos.z })
                 }
             })
 
             // Put height 0 those that not exists
             initItems.forEach((item) => {
-                if (!changedItems.includes(item.id)){
+                if (!changedItems.includes(item.id)) {
                     let prevPos = document.getElementById(item.id).getAttribute("position")
                     document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
                     document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: 0, z: prevPos.z })
@@ -1353,7 +1374,7 @@ function time_evol(){
             document.getElementById('codecity').children[0].removeAttribute('material')
             document.getElementById('codecity').children[0].setAttribute('geometry-merger', { preserveOriginal: true })
             document.getElementById('codecity').children[0].setAttribute('material', { vertexColors: 'face' });
-            
+
             if (i < maxFiles - 1) {
                 loop();
             }
