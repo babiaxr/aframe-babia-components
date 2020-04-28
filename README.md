@@ -286,8 +286,22 @@ This component shows a totem in order to change the data of the visualizations t
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| charts_id          | List of HTML IDs of the charts that will change their data  | array | - |
-| data_list          | List of datasets that the totem will switch `[{"data":"Data 1", "path": "data_examples/data1.json"}, {"data": "Data 2", "path": "data_examples/data2.json"}, ...]`  | JSON (list of objects) | - |
+| charts_id          | List of HTML IDs of the charts that will change their data  | JSON  stringfied (list of objects) | - |
+| data_list          | List of datasets that the totem will switch  | JSON stringfied (list of objects) | - |
+
+#### attributtes format
+
+You can change the data of a geo*chart or a vismapper and retrieve the data from a JSON or querier.
+
+- charts_id, define in "type" key if it a geo*chart or a vismapper:
+    ```
+    charts_id: [{"id": "pie1", "type": "geopiechart"}, {"id": "bars1", "type": "vismapper"}, ...]
+    ```
+
+- data_list, define a path of the JSON or a ID of the querier to get the data:
+    ```
+    data_list: [{"data":"Data 4", "from_querier": "<querier HTML id>"}, {"data": "Data 5", "path": "<json_path>"}, ...]
+    ```
 
 ### COLOR PALETTES
 
