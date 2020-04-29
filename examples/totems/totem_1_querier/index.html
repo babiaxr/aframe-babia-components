@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Babia components</title>
+    <meta name="description" content="Bubble example for A-Charts component." />
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment="playArea: 10"></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <a-entity id="data1" querier_json="url: data_examples/data1.json;"></a-entity>
+        <a-entity id="data2" querier_json="url: data_examples/data2.json;"></a-entity>
+        <a-entity id="data3" querier_json="url: data_examples/data3.json;"></a-entity>
+
+        <a-entity id="pie1" geopiechart='legend: true' filterdata="from: data1" vismapper="slice: key; height: size"
+        position="-8 6 5" rotation="90 40 0" scale="1.5 1.5 1.5"></a-entity>
+        
+        <a-entity id="bars1" geosimplebarchart='legend: true' filterdata="from: data1" vismapper="x-axis: key; height: size" 
+        position="0 0 5" rotation="0 0 0" scale="0.5 0.5 0.5" ></a-entity>
+
+
+        <a-entity geototemchart='charts_id: [{"id": "pie1", "type": "vismapper"}, {"id": "bars1", "type": "vismapper"}];
+        data_list: [{"data":"Data 1", "from_querier": "data1"}, {"data": "Data 2", "from_querier": "data2"}, {"data": "Data 3", "from_querier": "data3"}]'
+        position="-11 0 0" rotation="0 0 0"></a-entity>
+
+
+        <a-entity movement-controls="fly: true" position="-3 5 20">
+            <a-entity camera position="0 2 -5" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+    </a-scene>
+
+</body>
+</html>
