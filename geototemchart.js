@@ -171,7 +171,7 @@ function generateTotemData(element, list) {
 function generateTotemTitle(element, x, y, z, rotation_y, width, title) {
 
     let entity = document.createElement('a-plane')
-    entity.setAttribute('id', my_id)
+    entity.setAttribute('class', 'title')
     entity.setAttribute('position', { x: x, y: y, z: z })
     entity.setAttribute('rotation', { x: 0, y: rotation_y, z: 0 })
     entity.setAttribute('height', 1)
@@ -227,7 +227,7 @@ function generateTotem(element, x, y, z, rotation, width, list, list_used) {
                         'color': 'white'
                     })
                 } else if (!children[child].id) {
-                    if (child !== "length") {
+                    if (children[child].className !== "title") {
                         children[child].setAttribute('color', 'white')
                         children[child].setAttribute('text', {
                             'color': 'black'
