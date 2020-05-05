@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>BabiaXR Demo - COVID-19 Data into BabiaXr Charts </title>
+  <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
+  </meta>
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v6.0.0/dist/aframe-extras.min.js"></script>
+  <script src="../../../dist/aframe-babia-components.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+  <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+</head>
+
+<body>
+  <a-scene id="scene" light="defaultLightsEnabled: false">  
+      
+    <!-- Assets -->
+    <a-assets>
+        <img id="test" src="assets/prueba.png">
+        <img id="pietitle" src="assets/pietitle.png">
+        <img id="bartitle" src="assets/simplebartitle.png">
+        <img id="3dbartitle" src="assets/3dbartitle.png">
+        <img id="bubblestitle" src="assets/bubblestitle.png">
+        <img id="cylindertitle" src="assets/cylindertitle.png">
+        <img id="3dcylindertitle" src="assets/3dcylindertitle.png">
+        <img id="doughnuttitle" src="assets/doughnuttitle.png">
+        <img id="totemtitle" src="assets/totemtitle.png">
+        <img id="codecitytitle" src="assets/codecitytitle.png">
+    </a-assets>
+
+    <!-- Enviroment -->
+    <a-entity environment="preset: forest; playArea: 10; dressingAmount: 150"></a-entity>
+
+    <!-- Querier Components -->
+    <a-entity id="piedata1" querier_json="url: data_examples/europe.json;"></a-entity>
+    <a-entity id="piedata2" querier_json="url: data_examples/america.json;"></a-entity>
+    <a-entity id="doughnutdata" querier_json="url: data_examples/asia.json;"></a-entity>
+    <a-entity id="simplebardata" querier_json="url: data_examples/usa2.json;"></a-entity>
+    <a-entity id="3dbardata" querier_json="url: data_examples/USA.json;"></a-entity>
+    <a-entity id="cylinderdata" querier_json="url: data_examples/europe2.json;"></a-entity>
+    <a-entity id="3dcylinderdata" querier_json="url: data_examples/continents.json;"></a-entity>
+    <a-entity id="bubblesdata" querier_json="url: data_examples/continents.json;"></a-entity>
+
+    <!-- Simple Components -->
+    <a-entity id = "pie" geopiechart = 'legend: true; palette: blues'
+        filterdata="from: piedata1" vismapper="slice: country; height: cases" 
+        position = "5.5 3.5 -21" rotation = "90 -45 0" scale = "3 1.5 3"></a-entity>
+    <a-entity id = "doughnut" geodoughnutchart = 'legend: true; palette: pearl'
+        filterdata="from: doughnutdata" vismapper="slice: country; height: cases"
+        position = "-16.5 4.5 3" rotation = "90 90 0" scale = "3 3 3"></a-entity> 
+    <a-entity id = "bar" geosimplebarchart='legend: true; axis: true' 
+        filterdata="from: simplebardata" vismapper="x_axis: date; height: deaths" 
+        position="-40.5 0.1 -4" rotation="0 90 0" scale = "0.6 0.6 0.6"></a-entity>
+    <a-entity id = "cylinder" geocylinderchart='legend: true; axis: true; palette: sunset' 
+        filterdata="from: cylinderdata" vismapper="x_axis: country; height: cases; radius: deaths" 
+        position="38.5 0.1 14.5" rotation="0 -136 0" scale = "0.5 0.5 0.5"></a-entity>
+    
+    <!-- 3D Components -->
+    <a-entity id = "3dbar" geo3dbarchart='legend: true; palette: foxy'
+        filterdata="from: 3dbardata" vismapper="x_axis: date; z_axis: list; height: cases"
+        position="28 0.1 -6.5" rotation="0 -90 0" scale = "0.75 0.75 0.75"></a-entity>
+    <a-entity id = "3dcylinder" geo3dcylinderchart='legend: true; palette: flat' 
+        filterdata="from: 3dcylinderdata" vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
+        position="6.5 0.1 24.5" rotation="0 180 0" scale="0.08 0.08 0.08"></a-entity>
+    <a-entity id = "bubbles" geobubbleschart='legend: true; palette: icecream' 
+        filterdata="from: bubblesdata" vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
+        position="-16 0.1 37" rotation="0 -140 0" scale="0.15 0.15 0.15"></a-entity>
+    
+    <!-- Totem Component -->
+    <a-entity id="totem1" geototemchart='legend: true; axis: true; charts_id: [{"id": "pie", "type": "vismapper"}];
+    data_list: [{"data":"Europe", "from_querier": "piedata1"}, {"data": "America", "from_querier": "piedata2"}]'
+        position="19 -1 -18" rotation="0 -45 0"></a-entity>
+
+    <!-- CodeCity Component-->
+
+    <a-entity id = "codecity" position="-17 0 -21" scale= "0.5 0.5 0.5" rotation= "0 45 0"
+        codecity='width: 20; depth: 20; streets: true; color: green;
+              extra: 1.5; base_thick: 0.3; split: naive; fmaxarea: area;
+              data:
+            {"id": "Root",
+            "children":
+            [{"id": "BlockA",
+            "children": [{"id": "BlockA0",
+                    "children": [{"id": "A0A", "area": 2, "height": 1}]},
+                    {"id": "BlockA1",
+                    "children": [{"id": "A1A", "area": 2, "height": 1},
+                                {"id": "A1B", "area": 5, "height": 4},
+                                {"id": "A1C", "area": 4, "height": 6},
+                                {"id": "A1D", "area": 6, "height": 2}]},
+                    {"id": "BlockA2",
+                    "children": [{"id": "A2A", "area": 1, "height": 3},
+                                {"id": "A2B", "area": 5, "height": 6},
+                                {"id": "A2C", "area": 8, "height": 4}]},
+                    {"id": "BlockA3",
+                    "children": [{"id": "A3A", "area": 4, "height": 7},
+                                {"id": "A3B", "area": 5, "height": 3},
+                                {"id": "A3C", "area": 8, "height": 1}]}
+                    ]},
+            {"id": "BlockB",
+            "children": [{"id": "BlockB1",
+                    "children": [{"id": "B1A", "area": 3, "height": 5},
+                                {"id": "B1B", "area": 5, "height": 4},
+                                {"id": "B1C", "area": 1, "height": 3},
+                                {"id": "B1D", "area": 6, "height": 2},
+                                {"id": "B1E", "area": 4, "height": 6},
+                                {"id": "B1F", "area": 3, "height": 1},
+                                {"id": "B1G", "area": 2, "height": 5},
+                                {"id": "B1H", "area": 1, "height": 3}]},
+                    {"id": "BlockB2",
+                    "children": [{"id": "B2A", "area": 2, "height": 9},
+                                {"id": "B2B", "area": 6, "height": 3},
+                                {"id": "B2C", "area": 1, "height": 3},
+                                {"id": "B2D", "area": 8, "height": 1},
+                                {"id": "B2E", "area": 3, "height": 6},
+                                {"id": "B2F", "area": 1, "height": 7}]},
+                    {"id": "Block3",
+                    "children": [{"id": "B3A", "area": 6, "height": 2},
+                                {"id": "B3B", "area": 8, "height": 4},
+                                {"id": "B3C", "area": 3, "height": 6}]},
+                    {"id": "Block4",
+                    "children": [{"id": "B4A", "area": 2, "height": 9},
+                                {"id": "B4B", "area": 6, "height": 1},
+                                {"id": "B4C", "area": 7, "height": 6},
+                                {"id": "B4D", "area": 8, "height": 5},
+                                {"id": "B4E", "area": 3, "height": 6},
+                                {"id": "B4F", "area": 9, "height": 4}]},
+                    {"id": "Block5",
+                    "children": [{"id": "B5A", "area": 2, "height": 9},
+                                {"id": "B5B", "area": 6, "height": 3},
+                                {"id": "B5C", "area": 5, "height": 8},
+                                {"id": "B5D", "area": 5, "height": 7}]},
+                    {"id": "Block6",
+                    "children": [{"id": "B6A", "area": 2, "height": 9},
+                                {"id": "B6B", "area": 6, "height": 3},
+                                {"id": "B6C", "area": 2, "height": 6},
+                                {"id": "B6D", "area": 4, "height": 1},
+                                {"id": "B6E", "area": 6, "height": 6},
+                                {"id": "B6F", "area": 1, "height": 7},
+                                {"id": "B6G", "area": 4, "height": 3},
+                                {"id": "B6H", "area": 2, "height": 5},
+                                {"id": "B6I", "area": 7, "height": 1},
+                                {"id": "B6J", "area": 3, "height": 2},
+                                {"id": "B6K", "area": 1, "height": 3}]}
+                    ]}
+            ]
+    }'></a-entity>
+
+    <!-- Component's Description -->
+    <a-image id="piedescription" src="#pietitle" side="front" scale="3 2.5 3" position="1.5 1.5 -23" rotation="0 -45 0 "></a-image>
+    <a-image id="doughnutdescription" src="#doughnuttitle" side="front" scale="3 2.5 3" position="-11.5 2.5 7" rotation="0 90 0 "></a-image>
+    <a-image id="totemdescription" src="#totemtitle" side="front" scale="3 2.5 3" position="12 8.5 -15" rotation="0 -45 0 "></a-image>
+    <a-image id="bardescription" src="#bartitle" side="front" scale="3 2.5 3" position="-37.5 3 -1" rotation="0 90 0 "></a-image>
+    <a-image id="3dbardescription" src="#3dbartitle" side="front" scale="3 2.5 3" position="22.5 2 -10" rotation="0 -90 0 "></a-image>
+    <a-image id="cylinderdescription" src="#cylindertitle" side="front" scale="3 2.5 3" position="39 3 10" rotation="0 -136 0 "></a-image>
+    <a-image id="3dcylinderdescription" src="#3dcylindertitle" side="front" scale="3 2.5 3" position="10.5 1.5 15" rotation="0 180 0 "></a-image>
+    <a-image id="bubbledescription" src="#bubblestitle" side="front" scale="3 2.5 3" position="-11.5 1.5 38.5" rotation="0 160 0 "></a-image>
+    <a-image id="codecitydescription" src="#codecitytitle" side="front" scale="3 2.5 3" position="-17 7 -21" rotation="0 45 0 "></a-image>
+
+    <!-- Lights -->
+    <a-entity light="color: #fff ; type: ambient; intensity: 0.5"></a-entity>
+    
+    <!-- Controls and Camera -->
+    <a-entity movement-controls="fly: true" position = "0 0 0" rotation = "0 0 0" >
+        <a-entity camera position="1 3 -3" look-controls></a-entity>
+        <a-entity cursor="rayOrigin:mouse"></a-entity>
+        <a-entity laser-controls="hand: right"></a-entity>
+    </a-entity>
+
+  </a-scene>
+
+<style>.gitlab-corner-wrapper{overflow:hidden;width:100px;height:100px;position:absolute;top:0;right:0}.gitlab-corner{position:absolute;top:-16px;right:-50px;transform:rotate(45deg);background:#548;border:44px solid #548;border-bottom:none;border-top:#548 solid 16px}.gitlab-corner svg{width:60px;height:60px;margin-bottom:-4px}.cls-1{fill:#fc6d26}.cls-2{fill:#e24329}.cls-3{fill:#fca326}.gitlab-corner:hover .cls-1{animation:cycle .6s}.gitlab-corner:hover .cls-2{animation:cycleMid .6s}.gitlab-corner:hover .cls-3{animation:cycleEnd .6s}@keyframes cycle{100%,15%,60%{fill:#fc6d26}30%,75%{fill:#e24329}45%,90%{fill:#fca326}}@keyframes cycleMid{100%,15%,60%{fill:#e24329}30%,75%{fill:#fca326}45%,90%{fill:#fc6d26}}@keyframes cycleEnd{100%,15%,60%{fill:#fca326}30%,75%{fill:#fc6d26}45%,90%{fill:#e24329}}@media (max-width:500px){.gitlab-corner:hover .cls-1,.gitlab-corner:hover .cls-2,.gitlab-corner:hover .cls-3{animation:none}.gitlab-corner .cls-1{animation:cycle .6s}.gitlab-corner .cls-2{animation:cycleMid .6s}.gitlab-corner .cls-3{animation:cycleEnd .6s}}</style><div class="gitlab-corner-wrapper"><a href="https://gitlab.com/babiaxr/aframe-babia-components" class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559"><g id="g44"><path id="path46" class="cls-1" d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39"/></g><g id="g48"><path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z"/></g><g id="g56"><path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z"/></g><g id="g64"><path id="path66" class="cls-3" d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z"/></g><g id="g72"><path id="path74" class="cls-2" d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z"/></g><g id="g76"><path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z"/></g><g id="g80"><path id="path82" class="cls-3" d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z"/></g><g id="g84"><path id="path86" class="cls-2" d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z"/></g></svg></a></div>
+</body>
+
+</html>
