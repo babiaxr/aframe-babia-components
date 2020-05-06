@@ -148,6 +148,7 @@ This component shows a simple 2D bar chart.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -172,6 +173,7 @@ This component shows a 3D bar chart.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -196,6 +198,7 @@ This component shows a 3D bar chart.
 | legend          | Shows a legend when hovering a bubble  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -220,6 +223,7 @@ This component shows a cylinder chart.
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -244,6 +248,7 @@ This component shows a 3D cylinder chart.
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format

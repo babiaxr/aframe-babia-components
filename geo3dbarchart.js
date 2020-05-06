@@ -11,6 +11,7 @@ AFRAME.registerComponent('geo3dbarchart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
+        animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
     },
 
@@ -87,6 +88,7 @@ let generateBarChart = (data, element) => {
         let z_axis = {}
         let xaxis_dict = []
         let zaxis_dict = []
+        let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
 
@@ -137,7 +139,7 @@ let generateBarChart = (data, element) => {
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation);
 
             //Prepare legend
             if (data.legend) {
@@ -159,15 +161,33 @@ let generateBarChart = (data, element) => {
 
 let widthBars = 1
 
-function generateBar(size, width, colorid, positionX, positionZ, palette) {
+function generateBar(size, width, colorid, positionX, positionZ, palette, animation) {
     let color = getColor(colorid, palette)
+
     console.log("Generating bar...")
     let entity = document.createElement('a-box');
     entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
-    entity.setAttribute('height', size);
-    entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
+    // Add animation
+    if (animation){
+        var duration = 4000
+        var increment = 10 * size / duration 
+        var height = 0
+        var id = setInterval(animation, 10);
+        function animation() {
+            if (parseInt(height) == size) {
+                clearInterval(id);
+            } else {
+                height += increment;
+                entity.setAttribute('height', height);
+                entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ }); 
+            }  
+        }
+    } else {
+        entity.setAttribute('height', size);
+        entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
+    }
     return entity;
 }
 

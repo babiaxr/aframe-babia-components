@@ -11,6 +11,7 @@ AFRAME.registerComponent('geocylinderchart', {
     data: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
+    animation: {type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
   },
 
@@ -82,6 +83,7 @@ let generateCylinderChart = (data, element) => {
     let stepX = 0
     let lastradius = 0
     let axis_dict = []
+    let animation = data.animation
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))    
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
@@ -97,7 +99,9 @@ let generateCylinderChart = (data, element) => {
         firstradius = radius
       }
 
-      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX)
+
+      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation)
+
       element.appendChild(cylinderEntity);
 
       //Prepare legend
@@ -131,13 +135,32 @@ let generateCylinderChart = (data, element) => {
 let firstradius
 let maxRadius
 
-function generateCylinder(height, radius, colorid, palette, position) {
+
+function generateCylinder(height, radius, colorid, palette, position, animation) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   entity.setAttribute('color', color);
   entity.setAttribute('height', height);
   entity.setAttribute('radius', radius);
-  entity.setAttribute('position', { x: position, y: height/2, z: 0 });
+  // Add animation
+  if (animation){
+    var duration = 4000
+    var increment = 20 * height / duration 
+    var size = 0
+    var id = setInterval(animation, 1);
+    function animation() {
+        if (parseInt(size) == height) {
+            clearInterval(id);
+        } else {
+            size += increment;
+            entity.setAttribute('height', size);
+            entity.setAttribute('position', { x: position, y: size / 2, z: 0 }); 
+        }  
+    }
+  } else {
+    entity.setAttribute('height', height);
+    entity.setAttribute('position', { x: position, y: height / 2, z: 0 });
+  }
   return entity;
 }
 

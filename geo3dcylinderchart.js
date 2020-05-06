@@ -11,6 +11,7 @@ AFRAME.registerComponent('geo3dcylinderchart', {
     data: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
+    animation: { type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
   },
 
@@ -88,6 +89,7 @@ let generateCylinderChart = (data, element) => {
     let z_axis = {}
     let xaxis_dict = []
     let zaxis_dict = []
+    let animation = data.animation
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
@@ -139,7 +141,7 @@ let generateCylinderChart = (data, element) => {
             maxZ += 2 * maxRadius + 1
         }
 
-        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ);
+        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation);
         
         //Prepare legend
         if (data.legend) {
@@ -161,13 +163,31 @@ let generateCylinderChart = (data, element) => {
 
 let maxRadius
 
-function generateCylinder(height, radius, colorid, palette, positionX, positionZ) {
+function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   entity.setAttribute('color', color);
   entity.setAttribute('height', height);
   entity.setAttribute('radius', radius);
-  entity.setAttribute('position', { x: positionX, y: height/2, z: positionZ });
+  // Add animation
+  if (animation){
+    var duration = 4000
+    var increment = 20 * height / duration 
+    var size = 0
+    var id = setInterval(animation, 1);
+    function animation() {
+        if (parseInt(size) == height) {
+            clearInterval(id);
+        } else {
+            size += increment;
+            entity.setAttribute('height', size);
+            entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ }); 
+        }  
+    }
+  } else {
+    entity.setAttribute('height', height);
+    entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ });
+  }
   return entity;
 }
 
