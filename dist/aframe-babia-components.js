@@ -321,6 +321,7 @@ AFRAME.registerComponent('geo3dbarchart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
+        animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
     },
 
@@ -397,6 +398,7 @@ let generateBarChart = (data, element) => {
         let z_axis = {}
         let xaxis_dict = []
         let zaxis_dict = []
+        let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
 
@@ -447,7 +449,7 @@ let generateBarChart = (data, element) => {
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation);
 
             //Prepare legend
             if (data.legend) {
@@ -469,15 +471,33 @@ let generateBarChart = (data, element) => {
 
 let widthBars = 1
 
-function generateBar(size, width, colorid, positionX, positionZ, palette) {
+function generateBar(size, width, colorid, positionX, positionZ, palette, animation) {
     let color = getColor(colorid, palette)
+
     console.log("Generating bar...")
     let entity = document.createElement('a-box');
     entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
-    entity.setAttribute('height', size);
-    entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
+    // Add animation
+    if (animation){
+        var duration = 4000
+        var increment = 10 * size / duration 
+        var height = 0
+        var id = setInterval(animation, 10);
+        function animation() {
+            if (parseInt(height) == size) {
+                clearInterval(id);
+            } else {
+                height += increment;
+                entity.setAttribute('height', height);
+                entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ }); 
+            }  
+        }
+    } else {
+        entity.setAttribute('height', size);
+        entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
+    }
     return entity;
 }
 
@@ -648,6 +668,7 @@ AFRAME.registerComponent('geo3dcylinderchart', {
     data: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
+    animation: { type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
   },
 
@@ -725,6 +746,7 @@ let generateCylinderChart = (data, element) => {
     let z_axis = {}
     let xaxis_dict = []
     let zaxis_dict = []
+    let animation = data.animation
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
@@ -776,7 +798,7 @@ let generateCylinderChart = (data, element) => {
             maxZ += 2 * maxRadius + 1
         }
 
-        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ);
+        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation);
         
         //Prepare legend
         if (data.legend) {
@@ -798,13 +820,31 @@ let generateCylinderChart = (data, element) => {
 
 let maxRadius
 
-function generateCylinder(height, radius, colorid, palette, positionX, positionZ) {
+function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   entity.setAttribute('color', color);
   entity.setAttribute('height', height);
   entity.setAttribute('radius', radius);
-  entity.setAttribute('position', { x: positionX, y: height/2, z: positionZ });
+  // Add animation
+  if (animation){
+    var duration = 4000
+    var increment = 20 * height / duration 
+    var size = 0
+    var id = setInterval(animation, 1);
+    function animation() {
+        if (parseInt(size) == height) {
+            clearInterval(id);
+        } else {
+            size += increment;
+            entity.setAttribute('height', size);
+            entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ }); 
+        }  
+    }
+  } else {
+    entity.setAttribute('height', height);
+    entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ });
+  }
   return entity;
 }
 
@@ -981,6 +1021,7 @@ AFRAME.registerComponent('geobubbleschart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
+        animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
     },
 
@@ -1057,6 +1098,7 @@ let generateBubblesChart = (data, element) => {
         let z_axis = {}
         let xaxis_dict = []
         let zaxis_dict = []
+        let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
 
@@ -1109,7 +1151,7 @@ let generateBubblesChart = (data, element) => {
                 maxZ += widthBubbles + widthBubbles / 4
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ);
+            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation);
 
             //Prepare legend
             if (data.legend) {
@@ -1131,13 +1173,26 @@ let generateBubblesChart = (data, element) => {
 
 let widthBubbles = 0
 
-function generateBubble(radius, height, width, colorid, palette, positionX, positionZ) {
+function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation) {
     let color = getColor(colorid, palette)
     console.log("Generating bubble...")
     let entity = document.createElement('a-sphere');
     entity.setAttribute('color', color);
     entity.setAttribute('radius', radius);
+    // Add Animation
+  if (animation) {
+    let from = positionX.toString() + " " + radius.toString() + " " + positionZ.toString()
+    let to = positionX.toString() + " " + (radius + height).toString() + " " + positionZ.toString()
+    entity.setAttribute('animation__position',{
+      'property': 'position',
+      'from': from,
+      'to': to,
+      'dur': '3000',
+      'easing': 'linear',
+    })
+  } else {
     entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
+  }
     return entity;
 }
 
@@ -2697,6 +2752,7 @@ AFRAME.registerComponent('geocylinderchart', {
     data: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
+    animation: {type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
   },
 
@@ -2768,6 +2824,7 @@ let generateCylinderChart = (data, element) => {
     let stepX = 0
     let lastradius = 0
     let axis_dict = []
+    let animation = data.animation
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))    
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
@@ -2783,7 +2840,9 @@ let generateCylinderChart = (data, element) => {
         firstradius = radius
       }
 
-      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX)
+
+      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation)
+
       element.appendChild(cylinderEntity);
 
       //Prepare legend
@@ -2817,13 +2876,32 @@ let generateCylinderChart = (data, element) => {
 let firstradius
 let maxRadius
 
-function generateCylinder(height, radius, colorid, palette, position) {
+
+function generateCylinder(height, radius, colorid, palette, position, animation) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   entity.setAttribute('color', color);
   entity.setAttribute('height', height);
   entity.setAttribute('radius', radius);
-  entity.setAttribute('position', { x: position, y: height/2, z: 0 });
+  // Add animation
+  if (animation){
+    var duration = 4000
+    var increment = 20 * height / duration 
+    var size = 0
+    var id = setInterval(animation, 1);
+    function animation() {
+        if (parseInt(size) == height) {
+            clearInterval(id);
+        } else {
+            size += increment;
+            entity.setAttribute('height', size);
+            entity.setAttribute('position', { x: position, y: size / 2, z: 0 }); 
+        }  
+    }
+  } else {
+    entity.setAttribute('height', height);
+    entity.setAttribute('position', { x: position, y: height / 2, z: 0 });
+  }
   return entity;
 }
 
@@ -3323,6 +3401,7 @@ AFRAME.registerComponent('geosimplebarchart', {
         data: { type: 'string' },
         legend: { type: 'boolean', default: false },
         axis: { type: 'boolean', default: true },
+        animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
     },
 
@@ -3391,13 +3470,14 @@ let generateBarChart = (data, element) => {
         let colorid = 0
         let stepX = 0
         let axis_dict = []
+        let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function(o) { return o.size; }))
 
 
         for (let bar of dataToPrint) {
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette);
 
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation);
 
             //Prepare legend
             if (data.legend) {
@@ -3430,15 +3510,35 @@ let generateBarChart = (data, element) => {
 
 let widthBars = 1
 
-function generateBar(size, width, colorid, position, palette) {
+function generateBar(size, width, colorid, position, palette, animation) {
     let color = getColor(colorid, palette)
     console.log("Generating bar...")
     let entity = document.createElement('a-box');
     entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
-    entity.setAttribute('height', size);
-    entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
+    entity.setAttribute('height', 0);
+    entity.setAttribute('position', { x: position, y: 0, z: 0 });
+    // Add animation
+    if (animation){
+        var duration = 4000
+        var increment = 10 * size / duration 
+        var height = 0
+        var id = setInterval(animation, 10);
+        function animation() {
+            if (parseInt(height) == size) {
+                clearInterval(id);
+            } else {
+                height += increment;
+                entity.setAttribute('height', height);
+                entity.setAttribute('position', { x: position, y: height / 2, z: 0 }); 
+            }  
+        }
+    } else {
+        entity.setAttribute('height', size);
+        entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
+    }
+
     return entity;
 }
 

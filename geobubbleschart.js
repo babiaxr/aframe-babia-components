@@ -11,6 +11,7 @@ AFRAME.registerComponent('geobubbleschart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
+        animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
     },
 
@@ -87,6 +88,7 @@ let generateBubblesChart = (data, element) => {
         let z_axis = {}
         let xaxis_dict = []
         let zaxis_dict = []
+        let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
 
@@ -139,7 +141,7 @@ let generateBubblesChart = (data, element) => {
                 maxZ += widthBubbles + widthBubbles / 4
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ);
+            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation);
 
             //Prepare legend
             if (data.legend) {
@@ -161,13 +163,26 @@ let generateBubblesChart = (data, element) => {
 
 let widthBubbles = 0
 
-function generateBubble(radius, height, width, colorid, palette, positionX, positionZ) {
+function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation) {
     let color = getColor(colorid, palette)
     console.log("Generating bubble...")
     let entity = document.createElement('a-sphere');
     entity.setAttribute('color', color);
     entity.setAttribute('radius', radius);
+    // Add Animation
+  if (animation) {
+    let from = positionX.toString() + " " + radius.toString() + " " + positionZ.toString()
+    let to = positionX.toString() + " " + (radius + height).toString() + " " + positionZ.toString()
+    entity.setAttribute('animation__position',{
+      'property': 'position',
+      'from': from,
+      'to': to,
+      'dur': '3000',
+      'easing': 'linear',
+    })
+  } else {
     entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
+  }
     return entity;
 }
 
