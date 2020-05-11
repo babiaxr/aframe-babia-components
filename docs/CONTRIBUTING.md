@@ -31,13 +31,9 @@ The core developers organize the development using springs of two weeks of durat
 - Epics are big and complex tasks that have smaller and defined subtasks as children, each epic has a topic assigned. Once all the tasks of an epic are resolved, the epic will be resolved as well. Are defined as issues in GitLab with the `Epic` tag.
 - The common tasks are issues on GitLab and these issues depend on an epic or are a bug/feature.
 
-#### Srpings/Milestones
+#### Springs/Milestones
 
-| Name        | Start date           | End Date   | Information | Board |
-| --------        | -----------           | ----   | ----- | ------ |
-| Akira         | 2020-04-22   |   2020-05-06  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/2) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Akira) |
-| Bobobo         | 2020-05-06   |   2020-05-20 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/3) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Bobobo) |
-| Cowboy Bepop         | 2020-05-20   |  2020-06-03  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/4) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Cowboy%20Bepop) |
+Please, for further information about the Springs, go to the [RELEASE_NOTES.md](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/RELEASE_NOTES.md) doc.
 
 ### Pending tasks
 

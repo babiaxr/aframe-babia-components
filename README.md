@@ -11,6 +11,7 @@ For [A-Frame](https://aframe.io).
 
 **Important**: The repository is hosted on [GitLab](https://gitlab.com/babiaxr/aframe-babia-components), if you are on GitHub, note that this is a mirror from the GitLab repository, if you want to open an [**issue**](https://gitlab.com/babiaxr/aframe-babia-components/-/issues), [**PR/MR**](https://gitlab.com/babiaxr/aframe-babia-components/-/merge_requests) or [**contribute**](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/CONTRIBUTING.md) to the project, please visit:
 - Repository: https://gitlab.com/babiaxr/aframe-babia-components
+- Release Notes: https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/RELEASE_NOTES.md
 - Components webpage: https://babiaxr.gitlab.io/aframe-babia-components/
 - BabiaXR webpage: https://babiaxr.gitlab.io
 
