@@ -85,6 +85,12 @@ let generatePie = (data, element) => {
         let degreeEnd = 0;
 
         let colorid = 0
+
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let slice of dataToPrint) {
             //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
@@ -94,10 +100,10 @@ let generatePie = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(sliceEntity, slice)
+                showLegend(sliceEntity, slice, element)
             }
 
-            element.appendChild(sliceEntity);
+            chart_entity.appendChild(sliceEntity);
             colorid++
         }
     }
@@ -144,19 +150,20 @@ function generateLegend(slice) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
-function showLegend(sliceEntity, slice) {
+function showLegend(sliceEntity, slice, element) {
     sliceEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
         legend = generateLegend(slice);
-        this.appendChild(legend);
+        element.appendChild(legend);
     });
 
     sliceEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
 }
 

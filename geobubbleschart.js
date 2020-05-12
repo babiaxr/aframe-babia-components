@@ -94,6 +94,11 @@ let generateBubblesChart = (data, element) => {
 
         widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
 
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let bubble of dataToPrint) {
             // Check if used in order to put the bubble in the parent row
             if (keys_used[bubble['key']]) {
@@ -145,10 +150,10 @@ let generateBubblesChart = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(bubbleEntity, bubble)
+                showLegend(bubbleEntity, bubble, element)
             }
 
-            element.appendChild(bubbleEntity);
+            chart_entity.appendChild(bubbleEntity);
 
         }
 
@@ -196,15 +201,17 @@ function getColor(colorid, palette){
     return color
 }
 
-function generateLegend(bubble) {
+function generateLegend(bubble, bubbleEntity) {
     let text = bubble['key'] + ': \n Radius:' + bubble['radius'] + '\nHeight:' + bubble['height'];
 
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
+    let bubblePosition = bubbleEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bubble['radius'] + 1, z: bubble['radius'] + 0.1 });
+    entity.setAttribute('position', { x: bubblePosition.x, y: bubblePosition.y + bubble['radius'] + 1,
+                                      z: bubblePosition.z + bubble['radius'] + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -215,19 +222,20 @@ function generateLegend(bubble) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
-function showLegend(bubbleEntity, bubble) {
+function showLegend(bubbleEntity, bubble, element) {
     bubbleEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bubble);
-        this.appendChild(legend);
+        legend = generateLegend(bubble, bubbleEntity);
+        element.appendChild(legend);
     });
 
     bubbleEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
 }
 

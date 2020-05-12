@@ -402,6 +402,11 @@ let generateBarChart = (data, element) => {
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
 
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let bar of dataToPrint) {
             // Check if used in order to put the bar in the parent row
             if (keys_used[bar['key']]) {
@@ -453,10 +458,10 @@ let generateBarChart = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar)
+                showLegend(barEntity, bar, element)
             }
 
-            element.appendChild(barEntity);
+            chart_entity.appendChild(barEntity);
 
         }
 
@@ -511,15 +516,16 @@ function getColor(colorid, palette){
     return color
 }
 
-function generateLegend(bar) {
+function generateLegend(bar, barEntity) {
     let text = bar['key'] + ': ' + bar['size'];
 
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
+    let barPosition = barEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bar['size'] / 2 + 1, z: widthBars + 0.1 });
+    entity.setAttribute('position', { x: barPosition.x, y: barPosition.y + bar['size'] / 2 + 1, z: barPosition.z + widthBars + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -530,19 +536,20 @@ function generateLegend(bar) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
-function showLegend(barEntity, bar) {
+function showLegend(barEntity, bar, element) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar);
-        this.appendChild(legend);
+        legend = generateLegend(bar, barEntity);
+        element.appendChild(legend);
     });
 
     barEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
 }
 
@@ -751,6 +758,11 @@ let generateCylinderChart = (data, element) => {
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
 
+    let chart_entity = document.createElement('a-entity');
+    chart_entity.classList.add('babiaxrChart')
+
+    element.appendChild(chart_entity)
+
     for (let cylinder of dataToPrint) {
         // Check if used in order to put the cylinder in the parent row
         if (keys_used[cylinder['key']]) {
@@ -802,10 +814,10 @@ let generateCylinderChart = (data, element) => {
         
         //Prepare legend
         if (data.legend) {
-            showLegend(cylinderEntity, cylinder)
+            showLegend(cylinderEntity, cylinder, element)
         }
 
-        element.appendChild(cylinderEntity);
+        chart_entity.appendChild(cylinderEntity, element)
 
     }
 
@@ -950,20 +962,20 @@ function showZAxis(parent, zEnd, cylinder_printed) {
 }
 
 
-function showLegend(cylinderEntity, cylinder) {
+function showLegend(cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
       this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-      legend = generateLegend(cylinder);
-      this.appendChild(legend);
+      legend = generateLegend(cylinder, cylinderEntity);
+      element.appendChild(legend);
   });
 
   cylinderEntity.addEventListener('mouseleave', function () {
       this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-      this.removeChild(legend);
+      element.removeChild(legend);
   });
 }
 
-function generateLegend(cylinder) {
+function generateLegend(cylinder, cylinderEntity) {
   let text = ''
   let lines = []
   lines.push(cylinder['key'] + ' ' + cylinder['key2'] + '\n');
@@ -977,8 +989,10 @@ function generateLegend(cylinder) {
     text += line
   }
 
+  let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: 0, y: cylinder['height'] / 2 + 2.5, z: cylinder['radius'] / 2});
+  entity.setAttribute('position', { x: cylinderPosition.x, y: cylinderPosition.y + cylinder['height'] / 2 + 5, 
+                                    z: cylinderPosition.z + cylinder['radius'] / 2});
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '4');
   entity.setAttribute('width', width );
@@ -989,6 +1003,7 @@ function generateLegend(cylinder) {
       'width': 20,
       'color': 'black'
   });
+  entity.classList.add("babiaxrLegend")
   return entity;
 }
 
@@ -1104,6 +1119,11 @@ let generateBubblesChart = (data, element) => {
 
         widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
 
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let bubble of dataToPrint) {
             // Check if used in order to put the bubble in the parent row
             if (keys_used[bubble['key']]) {
@@ -1155,10 +1175,10 @@ let generateBubblesChart = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(bubbleEntity, bubble)
+                showLegend(bubbleEntity, bubble, element)
             }
 
-            element.appendChild(bubbleEntity);
+            chart_entity.appendChild(bubbleEntity);
 
         }
 
@@ -1206,15 +1226,17 @@ function getColor(colorid, palette){
     return color
 }
 
-function generateLegend(bubble) {
+function generateLegend(bubble, bubbleEntity) {
     let text = bubble['key'] + ': \n Radius:' + bubble['radius'] + '\nHeight:' + bubble['height'];
 
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
+    let bubblePosition = bubbleEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bubble['radius'] + 1, z: bubble['radius'] + 0.1 });
+    entity.setAttribute('position', { x: bubblePosition.x, y: bubblePosition.y + bubble['radius'] + 1,
+                                      z: bubblePosition.z + bubble['radius'] + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -1225,19 +1247,20 @@ function generateLegend(bubble) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
-function showLegend(bubbleEntity, bubble) {
+function showLegend(bubbleEntity, bubble, element) {
     bubbleEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bubble);
-        this.appendChild(legend);
+        legend = generateLegend(bubble, bubbleEntity);
+        element.appendChild(legend);
     });
 
     bubbleEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
 }
 
@@ -2829,6 +2852,11 @@ let generateCylinderChart = (data, element) => {
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))    
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
 
+    let chart_entity = document.createElement('a-entity');
+    chart_entity.classList.add('babiaxrChart')
+
+    element.appendChild(chart_entity)
+
     for (let cylinder of dataToPrint) {
       let radius = cylinder['radius']
       let height = cylinder['height']
@@ -2843,11 +2871,11 @@ let generateCylinderChart = (data, element) => {
 
       let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation)
 
-      element.appendChild(cylinderEntity);
+      chart_entity.appendChild(cylinderEntity);
 
       //Prepare legend
       if (data.legend) {
-        showLegend(cylinderEntity, cylinder)
+        showLegend(cylinderEntity, cylinder, element)
       }
 
       //Axis dict
@@ -2976,27 +3004,29 @@ function showYAxis(parent, yEnd) {
   parent.appendChild(axis)
 }
 
-function showLegend(cylinderEntity, cylinder) {
+function showLegend(cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
       this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-      legend = generateLegend(cylinder);
-      this.appendChild(legend);
+      legend = generateLegend(cylinder, cylinderEntity);
+      element.appendChild(legend);
   });
 
   cylinderEntity.addEventListener('mouseleave', function () {
       this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-      this.removeChild(legend);
+      element.removeChild(legend);
   });
 }
 
-function generateLegend(cylinder) {
+function generateLegend(cylinder, cylinderEntity) {
   let text = cylinder['key'] + ': ' + cylinder['height'];
   let width = 5;
   if (text.length > 16)
       width = text.length / 2;
 
+  let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: 0, y: cylinder['height'] / 2 + 1, z: maxRadius + 0.1 });
+  entity.setAttribute('position', { x: cylinderPosition.x, y: cylinderPosition.y + cylinder['height'] / 2 + 3,
+                                    z: cylinderPosition.z + maxRadius + 0.5 });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '1.5');
   entity.setAttribute('width', width);
@@ -3007,6 +3037,7 @@ function generateLegend(cylinder) {
       'width': 20,
       'color': 'black'
   });
+  entity.classList.add("babiaxrLegend")
   return entity;
 }
 
@@ -3114,6 +3145,12 @@ let generateDoughnut = (data, element) => {
         let degreeEnd = 0;
 
         let colorid = 0
+
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let slice of dataToPrint) {
             //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
@@ -3126,7 +3163,7 @@ let generateDoughnut = (data, element) => {
                 showLegend(sliceEntity, slice, element)
             }
 
-            element.appendChild(sliceEntity);
+            chart_entity.appendChild(sliceEntity);
             colorid++
         }
     }
@@ -3174,6 +3211,7 @@ function generateLegend(slice) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
@@ -3219,8 +3257,7 @@ AFRAME.registerComponent('geopiechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'}
+        palette: {type: 'string', default: 'ubuntu'}
     },
 
     /**
@@ -3284,7 +3321,6 @@ let generatePie = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
-        const title = data.title
 
         // Change size to degrees
         let totalSize = 0
@@ -3296,6 +3332,12 @@ let generatePie = (data, element) => {
         let degreeEnd = 0;
 
         let colorid = 0
+
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let slice of dataToPrint) {
             //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
@@ -3305,15 +3347,12 @@ let generatePie = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(sliceEntity, slice)
+                showLegend(sliceEntity, slice, element)
             }
 
-            element.appendChild(sliceEntity);
+            chart_entity.appendChild(sliceEntity);
             colorid++
         }
-
-        let title_3d = showTitle(title);
-        element.appendChild(title_3d);
     }
 }
 
@@ -3358,30 +3397,21 @@ function generateLegend(slice) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
-function showLegend(sliceEntity, slice) {
+function showLegend(sliceEntity, slice, element) {
     sliceEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
         legend = generateLegend(slice);
-        this.appendChild(legend);
+        element.appendChild(legend);
     });
 
     sliceEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
-}
-
-function showTitle(title){
-    let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
-    });
-    entity.setAttribute('position', {x: -2, y: 0, z: 2})
-    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
-    return entity;
 }
 
 let colors = [
@@ -3489,6 +3519,11 @@ let generateBarChart = (data, element) => {
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function(o) { return o.size; }))
 
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
 
         for (let bar of dataToPrint) {
 
@@ -3496,7 +3531,7 @@ let generateBarChart = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar)
+                showLegend(barEntity, bar, element)
             }
 
             //Axis dict
@@ -3508,7 +3543,7 @@ let generateBarChart = (data, element) => {
             axis_dict.push(bar_printed)
 
 
-            element.appendChild(barEntity);
+            chart_entity.appendChild(barEntity);
             //Calculate stepX
             stepX += widthBars + widthBars / 4
             //Increase color id
@@ -3567,15 +3602,17 @@ function getColor(colorid, palette){
     return color
 }
 
-function generateLegend(bar) {
+function generateLegend(bar, barEntity) {
     let text = bar['key'] + ': ' + bar['size'];
 
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
+        let barPosition = barEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bar['size'] / 2 + 1, z: widthBars + 0.1 });
+    entity.setAttribute('position', { x: barPosition.x, y: barPosition.y + bar['size'] / 2 + 1, 
+                                      z: barPosition.z + widthBars + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -3586,6 +3623,7 @@ function generateLegend(bar) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
@@ -3648,16 +3686,16 @@ function showYAxis(parent, yEnd) {
     parent.appendChild(axis)
 }
 
-function showLegend(barEntity, bar) {
+function showLegend(barEntity, bar, element) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar);
-        this.appendChild(legend);
+        legend = generateLegend(bar, barEntity);
+        element.appendChild(legend);
     });
 
     barEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
 }
 

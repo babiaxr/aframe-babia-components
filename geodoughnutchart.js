@@ -86,6 +86,12 @@ let generateDoughnut = (data, element) => {
         let degreeEnd = 0;
 
         let colorid = 0
+
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let slice of dataToPrint) {
             //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
@@ -98,7 +104,7 @@ let generateDoughnut = (data, element) => {
                 showLegend(sliceEntity, slice, element)
             }
 
-            element.appendChild(sliceEntity);
+            chart_entity.appendChild(sliceEntity);
             colorid++
         }
     }
@@ -146,6 +152,7 @@ function generateLegend(slice) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 

@@ -88,6 +88,11 @@ let generateCylinderChart = (data, element) => {
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))    
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
 
+    let chart_entity = document.createElement('a-entity');
+    chart_entity.classList.add('babiaxrChart')
+
+    element.appendChild(chart_entity)
+
     for (let cylinder of dataToPrint) {
       let radius = cylinder['radius']
       let height = cylinder['height']
@@ -102,11 +107,11 @@ let generateCylinderChart = (data, element) => {
 
       let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation)
 
-      element.appendChild(cylinderEntity);
+      chart_entity.appendChild(cylinderEntity);
 
       //Prepare legend
       if (data.legend) {
-        showLegend(cylinderEntity, cylinder)
+        showLegend(cylinderEntity, cylinder, element)
       }
 
       //Axis dict
@@ -235,27 +240,29 @@ function showYAxis(parent, yEnd) {
   parent.appendChild(axis)
 }
 
-function showLegend(cylinderEntity, cylinder) {
+function showLegend(cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
       this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-      legend = generateLegend(cylinder);
-      this.appendChild(legend);
+      legend = generateLegend(cylinder, cylinderEntity);
+      element.appendChild(legend);
   });
 
   cylinderEntity.addEventListener('mouseleave', function () {
       this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-      this.removeChild(legend);
+      element.removeChild(legend);
   });
 }
 
-function generateLegend(cylinder) {
+function generateLegend(cylinder, cylinderEntity) {
   let text = cylinder['key'] + ': ' + cylinder['height'];
   let width = 5;
   if (text.length > 16)
       width = text.length / 2;
 
+  let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: 0, y: cylinder['height'] / 2 + 1, z: maxRadius + 0.1 });
+  entity.setAttribute('position', { x: cylinderPosition.x, y: cylinderPosition.y + cylinder['height'] / 2 + 3,
+                                    z: cylinderPosition.z + maxRadius + 0.5 });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '1.5');
   entity.setAttribute('width', width);
@@ -266,6 +273,7 @@ function generateLegend(cylinder) {
       'width': 20,
       'color': 'black'
   });
+  entity.classList.add("babiaxrLegend")
   return entity;
 }
 
