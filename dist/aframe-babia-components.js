@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -3219,7 +3219,8 @@ AFRAME.registerComponent('geopiechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'}
+        palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'}
     },
 
     /**
@@ -3283,6 +3284,7 @@ let generatePie = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
 
         // Change size to degrees
         let totalSize = 0
@@ -3309,6 +3311,9 @@ let generatePie = (data, element) => {
             element.appendChild(sliceEntity);
             colorid++
         }
+
+        let title_3d = showTitle(title);
+        element.appendChild(title_3d);
     }
 }
 
@@ -3367,6 +3372,16 @@ function showLegend(sliceEntity, slice) {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
         this.removeChild(legend);
     });
+}
+
+function showTitle(title){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    entity.setAttribute('position', {x: -2, y: 0, z: 2})
+    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    return entity;
 }
 
 let colors = [
@@ -4455,6 +4470,49 @@ let parseEmbeddedJSONData = (data, el) => {
 /* 15 */
 /***/ (function(module, exports) {
 
+AFRAME.registerComponent('terrain-elevation', {
+    schema: {
+      width: {type: 'number', default: 1},
+      height: {type: 'number', default: 1},
+      segmentsHeight: {type: 'number', default: 1},
+      segmentsWidth: {type: 'number', default: 1},
+      data: {type: 'array'},
+    },
+  
+    /**
+     * Initial creation and setting of the mesh.
+     */
+    init: function () {
+        var data = this.data;
+        var el = this.el;
+
+        var vertices = data.data
+        console.log(vertices)
+
+        // Create geometry.
+        this.geometry = new THREE.PlaneGeometry(data.width, data.height, data.segmentsHeight, data.segmentsWidth);
+        for (var i = 0, l = this.geometry.vertices.length; i < l; i++) {
+            this.geometry.vertices[i].z = vertices[i];
+        }
+  
+      // Create material.
+        this.material = new THREE.MeshPhongMaterial({
+            color: 0xdddddd,
+            wireframe: true
+        });
+  
+      // Create mesh.
+      this.mesh = new THREE.Mesh(this.geometry, this.material);
+  
+      // Set mesh on entity.
+      el.setObject3D('mesh', this.mesh);
+    }
+  });
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -4644,13 +4702,13 @@ let generateCodecityList = (data, dataToProcess) => {
 function normalize(val, min, max) { return (val - min) / (max - min); }
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13)
 __webpack_require__(14)
 __webpack_require__(12)
-__webpack_require__(15)
+__webpack_require__(16)
 __webpack_require__(1)
 __webpack_require__(11)
 __webpack_require__(0)
@@ -4663,6 +4721,7 @@ __webpack_require__(6)
 __webpack_require__(3)
 __webpack_require__(7)
 __webpack_require__(10)
+__webpack_require__(15)
 
 /***/ })
 /******/ ]);
