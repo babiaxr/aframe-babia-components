@@ -92,6 +92,11 @@ let generateBarChart = (data, element) => {
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
 
+        let chart_entity = document.createElement('a-entity');
+        chart_entity.classList.add('babiaxrChart')
+
+        element.appendChild(chart_entity)
+
         for (let bar of dataToPrint) {
             // Check if used in order to put the bar in the parent row
             if (keys_used[bar['key']]) {
@@ -143,10 +148,10 @@ let generateBarChart = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar)
+                showLegend(barEntity, bar, element)
             }
 
-            element.appendChild(barEntity);
+            chart_entity.appendChild(barEntity);
 
         }
 
@@ -201,15 +206,16 @@ function getColor(colorid, palette){
     return color
 }
 
-function generateLegend(bar) {
+function generateLegend(bar, barEntity) {
     let text = bar['key'] + ': ' + bar['size'];
 
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
+    let barPosition = barEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: bar['size'] / 2 + 1, z: widthBars + 0.1 });
+    entity.setAttribute('position', { x: barPosition.x, y: barPosition.y + bar['size'] / 2 + 1, z: barPosition.z + widthBars + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -220,19 +226,20 @@ function generateLegend(bar) {
         'width': 6,
         'color': 'black'
     });
+    entity.classList.add("babiaxrLegend")
     return entity;
 }
 
-function showLegend(barEntity, bar) {
+function showLegend(barEntity, bar, element) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar);
-        this.appendChild(legend);
+        legend = generateLegend(bar, barEntity);
+        element.appendChild(legend);
     });
 
     barEntity.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend);
+        element.removeChild(legend);
     });
 }
 
