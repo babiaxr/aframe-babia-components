@@ -40,11 +40,11 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_angular.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_angular.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_angular.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_angular/'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
@@ -269,7 +269,7 @@ def get_dataframe(file, repo):
             logging.debug("Inserting item {}/{} to csv".format(i, len(rows)))
             df = df.append(item, ignore_index=True)
         
-        i = i + 10
+        i = i + 1
         '''
         if item[key_field] not in data:
             entity = generate_entity(item, key_field)
@@ -373,10 +373,17 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     (len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and
                      str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan'):
                 df_raw_filtered = df_raw[df_raw['folder_acc_{}'.format(index)] == acc_folder]
+                
+                # Check if the file exists in the current snapshot
+                if df_folder['ext'].isnull().values.any():
+                    height_final = -0.2
+                else:
+                    height_final = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
+                    
                 leaf = {
                     "id": df_folder['file_path'].values[0],
                     "name": str(folder),
-                    'height': max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1),
+                    'height': height_final,
                     'area': df_folder['{}_normalized'.format(AREA_FIELD)].sum(),
                     'max_area': df_raw_filtered['{}_normalized'.format(AREA_FIELD)].max()
                 }
