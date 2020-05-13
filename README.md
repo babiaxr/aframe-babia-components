@@ -439,6 +439,32 @@ The dataset returned from the parsing of the `querier` components must has this 
 
 ```
 
+## Terrain Component
+This component creates a terrain using vertices data.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| width          | Width of the terrain  | number | 1 |
+| height          | Height of the terrain  | number | 1 |
+| segmentsWidth          | Number of width segments  | number | 1 |
+| segmentsHeight          | Number of height segments  | number | 1 |
+| color          | Color of the terrain  | string | #FFFFFF |
+| filled          | Fill the terrain  | boolean | false |
+| data          | Data about vertices of the terrain  | array | - |
+
+#### Data Format
+Data length must be the same as the vertices = segmentsWidth x segmentsHeight.
+```
+data:   0, 3, 6, 3, 0, 0, 2, 4, 2,
+        0, 2, 0, 0, 2, 4, 6, 4, 2,
+
+        ...
+
+        0, 2, 0, 0, 2, 4, 6, 4, 2,
+        0, 3, 6, 3, 0, 0, 2, 4, 2
+```
 
 
 ### Examples available at the "examples folder" and [here](https://babiaxr.gitlab.io/aframe-babia-components/)

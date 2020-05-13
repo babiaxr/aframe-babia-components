@@ -4515,6 +4515,8 @@ AFRAME.registerComponent('terrain-elevation', {
       segmentsHeight: {type: 'number', default: 1},
       segmentsWidth: {type: 'number', default: 1},
       data: {type: 'array'},
+      color: {type: 'string', default: '0xdddddd'},
+      filled: {type: 'boolean', default: false}
     },
   
     /**
@@ -4525,6 +4527,7 @@ AFRAME.registerComponent('terrain-elevation', {
         var el = this.el;
 
         var vertices = data.data
+        console.log("Vertices:")
         console.log(vertices)
 
         // Create geometry.
@@ -4534,11 +4537,19 @@ AFRAME.registerComponent('terrain-elevation', {
         }
   
       // Create material.
-        this.material = new THREE.MeshPhongMaterial({
-            color: 0xdddddd,
+        var color = data.color
+        if (data.filled){
+          this.material = new THREE.MeshPhongMaterial({
+            color: color,
+            wireframe: false
+          });
+        } else {
+          this.material = new THREE.MeshPhongMaterial({
+            color: color,
             wireframe: true
-        });
-  
+          }); 
+        }
+
       // Create mesh.
       this.mesh = new THREE.Mesh(this.geometry, this.material);
   
