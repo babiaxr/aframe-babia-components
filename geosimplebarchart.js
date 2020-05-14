@@ -13,6 +13,10 @@ AFRAME.registerComponent('geosimplebarchart', {
         axis: { type: 'boolean', default: true },
         animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -76,6 +80,10 @@ let generateBarChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
+        const title_position = data.titlePosition
 
         let colorid = 0
         let stepX = 0
@@ -120,6 +128,10 @@ let generateBarChart = (data, element) => {
             showXAxis(element, stepX, axis_dict, palette)
             showYAxis(element, maxY)
         }
+
+        //Print Title
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
     }
 }
 
@@ -264,6 +276,27 @@ function showLegend(barEntity, bar, element) {
     });
 }
 
+function showTitle(title, font, color, position){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
+}
 
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},

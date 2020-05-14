@@ -323,6 +323,10 @@ AFRAME.registerComponent('geo3dbarchart', {
         axis: { type: 'boolean', default: true },
         animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -387,6 +391,10 @@ let generateBarChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
+        const title_position = data.titlePosition
 
         let colorid = 0
         let maxColorId = 0
@@ -462,6 +470,10 @@ let generateBarChart = (data, element) => {
             }
 
             chart_entity.appendChild(barEntity);
+
+            //Print Title
+            let title_3d = showTitle(title, font, color, title_position);
+            element.appendChild(title_3d);
 
         }
 
@@ -645,6 +657,28 @@ function showYAxis(parent, yEnd) {
     parent.appendChild(axis)
 }
 
+function showTitle(title, font, color, position){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
+}
+
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
     {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
@@ -677,6 +711,10 @@ AFRAME.registerComponent('geo3dcylinderchart', {
     axis: { type: 'boolean', default: true },
     animation: { type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
+    title: {type: 'string'},
+    titleFont: {type: 'string'},
+    titleColor: {type: 'string'},
+    titlePosition: {type: 'string', default: "0 0 0"},
   },
 
       /**
@@ -742,6 +780,10 @@ let generateCylinderChart = (data, element) => {
   if (data.data) {
     const dataToPrint = JSON.parse(data.data)
     const palette = data.palette
+    const title = data.title
+    const font = data.titleFont
+    const color = data.titleColor
+    const title_position = data.titlePosition
 
     let colorid = 0
     let maxColorId = 0
@@ -818,7 +860,10 @@ let generateCylinderChart = (data, element) => {
         }
 
         chart_entity.appendChild(cylinderEntity, element)
-
+        
+        //Print Title
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
     }
 
     // Axis
@@ -1007,6 +1052,28 @@ function generateLegend(cylinder, cylinderEntity) {
   return entity;
 }
 
+function showTitle(title, font, color, position){
+  let entity = document.createElement('a-entity');
+  entity.setAttribute('text-geometry',{
+      value : title,
+  });
+  if (font){
+      entity.setAttribute('text-geometry', {
+          font: font,
+      })
+  }
+  if (color){
+      entity.setAttribute('material' ,{
+          color : color
+      })
+  }
+  var position = position.split(" ") 
+  entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+  entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+  entity.classList.add("babiaxrTitle")
+  return entity;
+}
+
 let colors = [
   {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
   {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
@@ -1038,6 +1105,10 @@ AFRAME.registerComponent('geobubbleschart', {
         axis: { type: 'boolean', default: true },
         animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -1102,6 +1173,10 @@ let generateBubblesChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
+        const title_position = data.titlePosition
 
         let colorid = 0
         let maxColorId = 0
@@ -1188,6 +1263,10 @@ let generateBubblesChart = (data, element) => {
             showZAxis(element, maxZ, zaxis_dict)
             showYAxis(element, maxY)
         }
+
+        //Print Title
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
     }
 }
 
@@ -1354,6 +1433,28 @@ function showYAxis(parent, yEnd) {
 
     //axis completion
     parent.appendChild(axis)
+}
+
+function showTitle(title, font, color, position){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
 }
 
 let colors = [
@@ -2777,6 +2878,10 @@ AFRAME.registerComponent('geocylinderchart', {
     axis: { type: 'boolean', default: true },
     animation: {type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
+    title: {type: 'string'},
+    titleFont: {type: 'string'},
+    titleColor: {type: 'string'},
+    titlePosition: {type: 'string', default: "0 0 0"},
   },
 
       /**
@@ -2842,6 +2947,10 @@ let generateCylinderChart = (data, element) => {
   if (data.data){
     const dataToPrint = JSON.parse(data.data)
     const palette = data.palette
+    const title = data.title
+    const font = data.titleFont
+    const color = data.titleColor
+    const title_position = data.titlePosition
 
     let colorid = 0
     let stepX = 0
@@ -2898,6 +3007,11 @@ let generateCylinderChart = (data, element) => {
       showXAxis(element, stepX + lastradius, axis_dict, palette)
       showYAxis(element, maxY)
     }
+
+    //Print Title
+    let title_3d = showTitle(title, font, color, title_position);
+    element.appendChild(title_3d);
+
   }
 }
 
@@ -3041,6 +3155,28 @@ function generateLegend(cylinder, cylinderEntity) {
   return entity;
 }
 
+function showTitle(title, font, color, position){
+  let entity = document.createElement('a-entity');
+  entity.setAttribute('text-geometry',{
+      value : title,
+  });
+  if (font){
+      entity.setAttribute('text-geometry', {
+          font: font,
+      })
+  }
+  if (color){
+      entity.setAttribute('material' ,{
+          color : color
+      })
+  }
+  var position = position.split(" ") 
+  entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+  entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+  entity.classList.add("babiaxrTitle")
+  return entity;
+}
+
 let colors = [
   {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
   {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
@@ -3070,6 +3206,10 @@ AFRAME.registerComponent('geodoughnutchart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -3134,6 +3274,10 @@ let generateDoughnut = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
+        const title_position = data.titlePosition
 
         // Change size to degrees
         let totalSize = 0
@@ -3166,6 +3310,10 @@ let generateDoughnut = (data, element) => {
             chart_entity.appendChild(sliceEntity);
             colorid++
         }
+
+        //Print Title
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
     }
 }
 
@@ -3228,6 +3376,28 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
+function showTitle(title, font, color, position){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
+}
+
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
     {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
@@ -3257,7 +3427,11 @@ AFRAME.registerComponent('geopiechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'}
+        palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -3321,6 +3495,10 @@ let generatePie = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
+        const title_position = data.titlePosition
 
         // Change size to degrees
         let totalSize = 0
@@ -3353,6 +3531,9 @@ let generatePie = (data, element) => {
             chart_entity.appendChild(sliceEntity);
             colorid++
         }
+
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
     }
 }
 
@@ -3414,6 +3595,28 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
+function showTitle(title, font, color, position){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
+}
+
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
     {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
@@ -3425,6 +3628,7 @@ let colors = [
     {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
     {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
 ]
+
 
 
    
@@ -3448,6 +3652,10 @@ AFRAME.registerComponent('geosimplebarchart', {
         axis: { type: 'boolean', default: true },
         animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -3511,6 +3719,10 @@ let generateBarChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
+        const title_position = data.titlePosition
 
         let colorid = 0
         let stepX = 0
@@ -3555,6 +3767,10 @@ let generateBarChart = (data, element) => {
             showXAxis(element, stepX, axis_dict, palette)
             showYAxis(element, maxY)
         }
+
+        //Print Title
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
     }
 }
 
@@ -3699,6 +3915,27 @@ function showLegend(barEntity, bar, element) {
     });
 }
 
+function showTitle(title, font, color, position){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
+    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
+}
 
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
