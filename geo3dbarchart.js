@@ -13,6 +13,9 @@ AFRAME.registerComponent('geo3dbarchart', {
         axis: { type: 'boolean', default: true },
         animation: {type: 'boolean', default: false},
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
     },
 
     /**
@@ -77,6 +80,9 @@ let generateBarChart = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
 
         let colorid = 0
         let maxColorId = 0
@@ -152,6 +158,10 @@ let generateBarChart = (data, element) => {
             }
 
             chart_entity.appendChild(barEntity);
+
+            //Print Title
+            let title_3d = showTitle(title, font, color);
+            element.appendChild(title_3d);
 
         }
 
@@ -333,6 +343,28 @@ function showYAxis(parent, yEnd) {
 
     //axis completion
     parent.appendChild(axis)
+}
+
+function showTitle(title, font, color){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = title.length / 2 
+    entity.setAttribute('position', {x: -position, y: 0.2, z: -(widthBars / 2 + widthBars / 4)})
+    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
 }
 
 let colors = [

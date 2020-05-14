@@ -13,6 +13,9 @@ AFRAME.registerComponent('geocylinderchart', {
     axis: { type: 'boolean', default: true },
     animation: {type: 'boolean', default: false},
     palette: {type: 'string', default: 'ubuntu'},
+    title: {type: 'string'},
+    titleFont: {type: 'string'},
+    titleColor: {type: 'string'},
   },
 
       /**
@@ -78,6 +81,9 @@ let generateCylinderChart = (data, element) => {
   if (data.data){
     const dataToPrint = JSON.parse(data.data)
     const palette = data.palette
+    const title = data.title
+    const font = data.titleFont
+    const color = data.titleColor
 
     let colorid = 0
     let stepX = 0
@@ -134,6 +140,11 @@ let generateCylinderChart = (data, element) => {
       showXAxis(element, stepX + lastradius, axis_dict, palette)
       showYAxis(element, maxY)
     }
+
+    //Print Title
+    let title_3d = showTitle(title, font, color);
+    element.appendChild(title_3d);
+
   }
 }
 
@@ -274,6 +285,28 @@ function generateLegend(cylinder, cylinderEntity) {
       'color': 'black'
   });
   entity.classList.add("babiaxrLegend")
+  return entity;
+}
+
+function showTitle(title, font, color){
+  let entity = document.createElement('a-entity');
+  entity.setAttribute('text-geometry',{
+      value : title,
+  });
+  if (font){
+      entity.setAttribute('text-geometry', {
+          font: font,
+      })
+  }
+  if (color){
+      entity.setAttribute('material' ,{
+          color : color
+      })
+  }
+  var position = title.length / 2 + maxRadius / 2
+  entity.setAttribute('position', {x: -position, y: 0.2, z: maxRadius + 1 })
+  entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+  entity.classList.add("babiaxrTitle")
   return entity;
 }
 

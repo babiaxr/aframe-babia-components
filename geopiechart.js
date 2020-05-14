@@ -10,7 +10,10 @@ AFRAME.registerComponent('geopiechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'}
+        palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
     },
 
     /**
@@ -74,6 +77,9 @@ let generatePie = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
 
         // Change size to degrees
         let totalSize = 0
@@ -106,6 +112,9 @@ let generatePie = (data, element) => {
             chart_entity.appendChild(sliceEntity);
             colorid++
         }
+
+        let title_3d = showTitle(title, font, color);
+        element.appendChild(title_3d);
     }
 }
 
@@ -167,6 +176,29 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
+function showTitle(title, font, color){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = title.length / 5 
+    console.log(entity)
+    entity.setAttribute('position', {x: -position, y: 0, z: 2})
+    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
+}
+
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
     {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
@@ -178,6 +210,7 @@ let colors = [
     {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
     {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
 ]
+
 
 
    

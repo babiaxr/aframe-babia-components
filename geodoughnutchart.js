@@ -11,6 +11,9 @@ AFRAME.registerComponent('geodoughnutchart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         palette: {type: 'string', default: 'ubuntu'},
+        title: {type: 'string'},
+        titleFont: {type: 'string'},
+        titleColor: {type: 'string'},
     },
 
     /**
@@ -75,6 +78,9 @@ let generateDoughnut = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
+        const title = data.title
+        const font = data.titleFont
+        const color = data.titleColor
 
         // Change size to degrees
         let totalSize = 0
@@ -107,6 +113,10 @@ let generateDoughnut = (data, element) => {
             chart_entity.appendChild(sliceEntity);
             colorid++
         }
+
+        //Print Title
+        let title_3d = showTitle(title, font, color);
+        element.appendChild(title_3d);
     }
 }
 
@@ -167,6 +177,29 @@ function showLegend(sliceEntity, slice, element) {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
         element.removeChild(legend);
     });
+}
+
+function showTitle(title, font, color){
+    let entity = document.createElement('a-entity');
+    entity.setAttribute('text-geometry',{
+        value : title,
+    });
+    if (font){
+        entity.setAttribute('text-geometry', {
+            font: font,
+        })
+    }
+    if (color){
+        entity.setAttribute('material' ,{
+            color : color
+        })
+    }
+    var position = title.length / 6 
+    console.log(entity)
+    entity.setAttribute('position', {x: -position, y: 0.5, z: 2})
+    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    entity.classList.add("babiaxrTitle")
+    return entity;
 }
 
 let colors = [
