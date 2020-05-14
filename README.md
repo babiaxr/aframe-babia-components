@@ -126,6 +126,10 @@ This component shows a pie chart.
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -149,6 +153,10 @@ This component shows a simple 2D bar chart.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
@@ -174,6 +182,10 @@ This component shows a 3D bar chart.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
@@ -199,6 +211,10 @@ This component shows a 3D bar chart.
 | legend          | Shows a legend when hovering a bubble  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
@@ -224,6 +240,10 @@ This component shows a cylinder chart.
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
@@ -249,6 +269,10 @@ This component shows a 3D cylinder chart.
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
@@ -274,6 +298,10 @@ This component shows a doughnut chart.
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| title          | Shows chart title  | string | - |
+| titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
+| titleColor          | Color of the title  | string | #FFFFFF |
+| titlePosition          | Position of the title  | string | 0 0 0 |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -312,6 +340,23 @@ You can change the data of a geo*chart or a vismapper and retrieve the data from
 ### COLOR PALETTES
 
 ![palettes](https://i.imgur.com/Ibk5bMo.png)
+
+### FONTS
+
+The title of the chart uses `typeface.json` files, which are Web Fonts converted to
+JSON for three.js.  Typeface fonts can be generated from fonts using this
+**[typeface font generator](http://gero3.github.io/facetype.js/)**. Select JSON
+format and we recommend restricting the character set to only the characters
+you need. You may also have to check *reverse font direction* if you get odd font results.
+
+You can also find some sample generated fonts in the `examples/fonts` directory
+in the [three.js repository](https://github.com/mrdoob/three.js).
+
+By default, the text geometry component points to Helvetiker (Regular). Each
+font is fairly large, from at least 60KB to hundreds of KBs.
+
+To include a font for use with the text component, it is recommended to define
+it in `<a-asset-item>` and point at it with a selector.
 
 
 ## Querier/Filter/Mapper and other components API
