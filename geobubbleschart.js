@@ -16,6 +16,7 @@ AFRAME.registerComponent('geobubbleschart', {
         title: {type: 'string'},
         titleFont: {type: 'string'},
         titleColor: {type: 'string'},
+        titlePosition: {type: 'string', default: "0 0 0"},
     },
 
     /**
@@ -83,6 +84,7 @@ let generateBubblesChart = (data, element) => {
         const title = data.title
         const font = data.titleFont
         const color = data.titleColor
+        const title_position = data.titlePosition
 
         let colorid = 0
         let maxColorId = 0
@@ -171,7 +173,7 @@ let generateBubblesChart = (data, element) => {
         }
 
         //Print Title
-        let title_3d = showTitle(title, font, color);
+        let title_3d = showTitle(title, font, color, title_position);
         element.appendChild(title_3d);
     }
 }
@@ -341,7 +343,7 @@ function showYAxis(parent, yEnd) {
     parent.appendChild(axis)
 }
 
-function showTitle(title, font, color){
+function showTitle(title, font, color, position){
     let entity = document.createElement('a-entity');
     entity.setAttribute('text-geometry',{
         value : title,
@@ -356,12 +358,12 @@ function showTitle(title, font, color){
             color : color
         })
     }
-    var position = title.length / 2 + widthBubbles
-    entity.setAttribute('position', {x: -position, y: 0.2, z: -(widthBubbles / 2 + widthBubbles / 4)})
+    var position = position.split(" ") 
+    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
     entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
     entity.classList.add("babiaxrTitle")
     return entity;
-  }
+}
 
 let colors = [
     {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
