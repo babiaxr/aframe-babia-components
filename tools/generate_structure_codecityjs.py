@@ -40,11 +40,11 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval.csv'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_perceval_commitbycommit.json.json'
+DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval_commitbycommit.csv'
+DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval_commitbycommit.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution/'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_perceval_commitbycommit/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
@@ -107,27 +107,54 @@ def main():
             "sampling_days": args.time_evolution,
             "init_data": "data_0_tree.json",
             "time_evolution": True,
+            "time_evolution_commit_by_commit": False,
             "data_files": []
         }
         
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        # TODO: Change
-        #for i in range(0, N_TIME_EVOLUTION):
-        not_ok = False
         i = 0
-        while i < int(args.samples):
-            logging.debug("{} lap of time evolution".format(i))
-            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
+        
+        if args.samples and not args.commitbycommit:
+            # Time evolution defining samples number
+            while i < int(args.samples):
+                logging.debug("{} lap of time evolution".format(i))
+                data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
+                entities_simple = find_children(data, [])
+                entities_tree = generate_entities(data, [])
+                dump_codecity_data(entities_simple, "data_{}.json".format(i))
+                dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+    
+                main_json["data_files"].append({
+                    'date': dt.datetime.timestamp(
+                        dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution))),
+                    'file': "data_{}.json".format(i)
+                })
+                i += 1
+        elif not args.samples and args.commitbycommit:
+            # Time evolution commit by commit
+            main_json['time_evolution_commit_by_commit'] = True
+            # First, get the first city, the most updated
+            logging.debug("{} lap of time evolution, initial tree".format(i))
+            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i * float(args.time_evolution)))
             entities_simple = find_children(data, [])
             entities_tree = generate_entities(data, [])
             dump_codecity_data(entities_simple, "data_{}.json".format(i))
             dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
 
             main_json["data_files"].append({
-                'date': dt.datetime.timestamp(dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution))),
+                'date': dt.datetime.timestamp(
+                    dt.datetime.now(pytz.utc) - dt.timedelta(days=i * float(args.time_evolution))),
                 'file': "data_{}.json".format(i)
             })
-            i += 1
+            
+            # Go for the commits
+            commit_list = get_commit_list(df,
+                                          dt.datetime.now(pytz.utc) -
+                                          dt.timedelta(days=i * float(args.time_evolution)),
+                                          main_json)
+            main_json['commit_list'] = commit_list
+            logging.debug("Commit by commit finished")
+            
             
         # Export the main
         dump_codecity_data(main_json, "main_data.json")
@@ -138,6 +165,48 @@ def main():
         dump_codecity_data(entities, "data.json")
 
     print("exit")
+
+
+def get_commit_list(df, date, main_json):
+    commit_list = []
+    i = 1
+
+    diff = (df[DATE_FIELD] - date)
+    indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
+    last_commit = df.ix[indexmax]
+    main_json["data_files"][0]['commit_sha'] = last_commit['commit_sha']
+    
+    while True:
+        logging.debug("{} lap of time evolution commit by commit".format(i))
+        
+        commit_list.append(last_commit['commit_sha'])
+        
+        # Check if has parents
+        if last_commit['commit_parents'] != '[]':
+            next_commit = last_commit['commit_parents'].split('\'')[1]
+        else:
+            break
+    
+        # Extract data from the commit
+        df_next_commit = df[df['commit_sha'] == next_commit]
+        data = extract_data_from_df_filtered(df_next_commit, df_next_commit)
+        
+        # Save data
+        entities_simple = find_children(data, [])
+        entities_tree = generate_entities(data, [])
+        dump_codecity_data(entities_simple, "data_{}.json".format(i))
+        dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+        main_json["data_files"].append({
+            'date': dt.datetime.timestamp(df_next_commit.iloc[0][DATE_FIELD]),
+            'commit_sha': next_commit,
+            'file': "data_{}.json".format(i)
+        })
+        
+        # Increment last_commit and i var
+        last_commit = df_next_commit.iloc[0]
+        i += 1
+    
+    return commit_list
 
 
 def find_children(data, entities):
@@ -208,6 +277,8 @@ def parse_args():
                         help='Time evolution analisys')
     parser.add_argument('-s', '--samples', required=False,
                         help='Time evolution analisys')
+    parser.add_argument('-cbc', '--commitbycommit', required=False, action='store_true',
+                        help='Time evolution analisys commit by commit')
 
     return parser.parse_args()
 
@@ -315,6 +386,11 @@ def normalize_column(df, field, scalar_bottom, scalar_top):
 def extract_data(df_raw, date):
     # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
     df = filter_closest_date(df_raw, date)
+    entities = extract_data_from_df_filtered(df_raw, df)
+    return entities
+    
+    
+def extract_data_from_df_filtered(df_raw, df):
     entities = []
 
     for project in df['project'].unique():
