@@ -1,0 +1,1 @@
+{"id": "GrimoireLab", "children": [{"id": "https://github.com/chaoss/grimoirelab-perceval", "children": [{"id": "perceval", "children": [{"id": "backends", "children": [{"id": "core", "children": [{"id": ".", "children": [{"id": "perceval/backends/core/supybot.py", "area": 4.423611111111111, "max_area": 4.423611111111111, "height": 0.3778317348549228}]}]}]}]}]}]}

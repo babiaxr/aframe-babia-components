@@ -1,0 +1,1 @@
+{"id": "GrimoireLab", "children": [{"id": "https://github.com/chaoss/grimoirelab-perceval", "children": [{"id": "perceval", "children": [{"id": "backends", "children": [{"id": "core", "children": [{"id": ".", "children": [{"id": "perceval/backends/core/launchpad.py", "area": 8.652777777777779, "max_area": 8.652777777777779, "height": 0.5324511351220104}]}]}]}]}]}]}
