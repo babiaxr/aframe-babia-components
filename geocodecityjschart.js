@@ -1205,25 +1205,25 @@ function dateBar(data) {
             }*/
         }
 
-        let entity = document.createElement('a-plane')
+        let entity = document.createElement('a-entity')
         entity.classList.add('babiaxrDateBar')
         entity.setAttribute('position', { x: -13, y: 10, z: -3 })
         entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-        entity.setAttribute('color', "white")
+        entity.setAttribute('material' ,{
+            color : 'black'
+        })
         entity.setAttribute('height', 0.5)
         entity.setAttribute('width', 2)
-        entity.setAttribute('scale', { x: 3, y: 3, z: 1 })
+        entity.setAttribute('scale', { x: 1, y: 1, z: 1 })
 
         let text = "Date: " + new Date(date_files[0].date * 1000).toLocaleDateString()
         if (date_files[0].commit_sha) {
             text += "\n\n Commit: " + date_files[0].commit_sha
         }
-        entity.setAttribute('text', {
-            'value': text,
-            'align': 'center',
-            'width': 6,
-            'color': 'black'
-        })
+        entity.setAttribute('text-geometry',{
+            value : text,
+        });
+    
         // Create point
         for (let data in date_files) {
             let date = { date: new Date(date_files[data].date * 1000).toLocaleDateString() }
@@ -1321,9 +1321,9 @@ function time_evol() {
             // Change Date
             let text = "Date: " + dates[i + 1].date
             if (dates[i + 1].commit_sha) {
-                text += "\n\n Commit: " + dates[i + 1].commit_sha
+                text += "\n\nCommit: " + dates[i + 1].commit_sha
             }
-            dateBarEntity.setAttribute('text', 'value', text)
+            dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             let changedItems = []
             quarterItems[index].forEach((item) => {
