@@ -118,6 +118,11 @@ AFRAME.registerComponent('codecity', {
                 'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
                 'olive', 'navy', 'palegreen']
         },
+        // Time evolution time changing between snapshots
+        time_evolution_delta: {
+            type: 'number',
+            default: 8000
+        }
     },
 
     /**
@@ -142,6 +147,8 @@ AFRAME.registerComponent('codecity', {
         } else {
             raw_items = data.data;
         };
+
+        deltaTimeEvolution = data.time_evolution_delta
 
         this.zone_data = raw_items;
         let zone = new Zone({
@@ -1181,6 +1188,7 @@ let time_evolution = false
 let time_evolution_commit_by_commit = false
 let dates = []
 let dateBarEntity
+let deltaTimeEvolution = 8000
 
 /**
  *  This function generate a plane with date of files
@@ -1209,8 +1217,8 @@ function dateBar(data) {
         entity.classList.add('babiaxrDateBar')
         entity.setAttribute('position', { x: -13, y: 10, z: -3 })
         entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-        entity.setAttribute('material' ,{
-            color : 'black'
+        entity.setAttribute('material', {
+            color: 'black'
         })
         entity.setAttribute('height', 0.5)
         entity.setAttribute('width', 2)
@@ -1220,10 +1228,10 @@ function dateBar(data) {
         if (date_files[0].commit_sha) {
             text += "\n\n Commit: " + date_files[0].commit_sha
         }
-        entity.setAttribute('text-geometry',{
-            value : text,
+        entity.setAttribute('text-geometry', {
+            value: text,
         });
-    
+
         // Create point
         for (let data in date_files) {
             let date = { date: new Date(date_files[data].date * 1000).toLocaleDateString() }
@@ -1393,6 +1401,6 @@ function time_evol() {
             if (i < maxFiles - 1) {
                 loop();
             }
-        }, 8000);
+        }, deltaTimeEvolution);
     }
 }
