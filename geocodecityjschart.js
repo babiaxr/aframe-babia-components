@@ -1171,13 +1171,16 @@ let requestJSONDataFromURL = (items) => {
 
     if (raw_items.time_evolution) {
         time_evolution = true
+        time_evolution_commit_by_commit = raw_items.time_evolution_commit_by_commit
         raw_items = requestJSONDataFromURL(raw_items.init_data)
     }
     return raw_items
 }
 
 let time_evolution = false
+let time_evolution_commit_by_commit = false
 let dates = []
+let dateBarEntity
 
 /**
  *  This function generate a plane with date of files
@@ -1202,29 +1205,36 @@ function dateBar(data) {
             }*/
         }
 
-        let entity = document.createElement('a-plane')
-        entity.setAttribute('id', 'date')
+        let entity = document.createElement('a-entity')
+        entity.classList.add('babiaxrDateBar')
         entity.setAttribute('position', { x: -13, y: 10, z: -3 })
         entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-        entity.setAttribute('color', "white")
+        entity.setAttribute('material' ,{
+            color : 'black'
+        })
         entity.setAttribute('height', 0.5)
         entity.setAttribute('width', 2)
-        entity.setAttribute('scale', { x: 3, y: 3, z: 1 })
+        entity.setAttribute('scale', { x: 1, y: 1, z: 1 })
 
-        let text = new Date(date_files[0].date * 1000).toLocaleDateString()
-        entity.setAttribute('text', {
-            'value': text,
-            'align': 'center',
-            'width': 6,
-            'color': 'black'
-        })
+        let text = "Date: " + new Date(date_files[0].date * 1000).toLocaleDateString()
+        if (date_files[0].commit_sha) {
+            text += "\n\n Commit: " + date_files[0].commit_sha
+        }
+        entity.setAttribute('text-geometry',{
+            value : text,
+        });
+    
         // Create point
         for (let data in date_files) {
-            let date = new Date(date_files[data].date * 1000)
-            dates.push(date.toLocaleDateString())
+            let date = { date: new Date(date_files[data].date * 1000).toLocaleDateString() }
+            if (date_files[data].commit_sha) {
+                date.commit_sha = date_files[data].commit_sha
+            }
+            dates.push(date)
         }
 
         component.appendChild(entity)
+        dateBarEntity = entity
         return date_files
     }
 
@@ -1309,8 +1319,11 @@ function time_evol() {
             console.log("Loop number", i)
 
             // Change Date
-            let text = dates[i + 1]
-            document.getElementById('date').setAttribute('text', 'value', text)
+            let text = "Date: " + dates[i + 1].date
+            if (dates[i + 1].commit_sha) {
+                text += "\n\nCommit: " + dates[i + 1].commit_sha
+            }
+            dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             let changedItems = []
             quarterItems[index].forEach((item) => {
@@ -1356,13 +1369,15 @@ function time_evol() {
             })
 
             // Put height 0 those that not exists
-            initItems.forEach((item) => {
-                if (!changedItems.includes(item.id)) {
-                    let prevPos = document.getElementById(item.id).getAttribute("position")
-                    document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
-                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: 0, z: prevPos.z })
-                }
-            })
+            if (!time_evolution_commit_by_commit) {
+                initItems.forEach((item) => {
+                    if (!changedItems.includes(item.id)) {
+                        let prevPos = document.getElementById(item.id).getAttribute("position")
+                        document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
+                        document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: 0, z: prevPos.z })
+                    }
+                })
+            }
 
             index++
             if (index > maxFiles - 1) {

@@ -1,0 +1,1 @@
+{"id": "GrimoireLab", "children": [{"id": "https://github.com/chaoss/grimoirelab-perceval", "children": [{"id": "perceval", "children": [{"id": ".", "children": [{"id": "perceval/__init__.py", "area": 1.0, "max_area": 1.0, "height": 0.10362389219375986}]}]}, {"id": ".", "children": [{"id": "setup.py", "area": 1.0, "max_area": 1.0, "height": 0.11328760471045285}]}]}]}
