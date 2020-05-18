@@ -1284,7 +1284,7 @@ let generateLegend = (text, buildingEntity, model) => {
 }
 
 function time_evol() {
-    const quarterItems = []
+    const quarterItems = {}
     let initItems = undefined
     const arrayPromises = []
     const maxFiles = dates.length
@@ -1299,12 +1299,14 @@ function time_evol() {
     arrayPromises.push(init2)
 
     for (let i = 1; i < maxFiles; i++) {
-        let p1 = fetch("data_" + i + ".json").then(function (response) {
+        let file_to_retrieve = "data_" + i + ".json"
+        let p1 = fetch(file_to_retrieve).then(function (response) {
             return response.json();
         })
         p2 = p1.then(function (json) {
             // do a bunch of stuff
-            quarterItems.push(json)
+            console.log(file_to_retrieve)
+            quarterItems[file_to_retrieve] = json
         });
         arrayPromises.push(p2)
     }
@@ -1334,7 +1336,7 @@ function time_evol() {
             dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             let changedItems = []
-            quarterItems[index].forEach((item) => {
+            quarterItems["data_" + (index + 1) + ".json"].forEach((item) => {
                 if (document.getElementById(item.id) != undefined && item.area != 0.0) {
 
                     // Add to changed items
