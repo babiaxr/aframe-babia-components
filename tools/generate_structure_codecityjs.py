@@ -183,13 +183,27 @@ def get_commit_list(df, date, main_json):
         
         # Check if has parents
         if last_commit['commit_parents'] != '[]':
-            next_commit = last_commit['commit_parents'].split('\'')[1]
+            splitted = last_commit['commit_parents'].split('\'')
+            if len(splitted) > 3:
+                next_commit = last_commit['commit_parents'].split('\'')[3]
+            else:
+                next_commit = last_commit['commit_parents'].split('\'')[1]
         else:
             break
     
         # Extract data from the commit
         df_next_commit = df[df['commit_sha'] == next_commit]
-        data = extract_data_from_df_filtered(df_next_commit, df_next_commit)
+        df_next_commit['put_negative_height'] = False
+
+        # Adds files that has been deleted
+        df_files_to_delete = df[df['parent_commit_created'] == next_commit]
+        df_files_to_delete['put_negative_height'] = True
+        
+        # Create final DF
+        df_to_analyse = pd.concat([df_next_commit, df_files_to_delete])
+        
+        # Extract data
+        data = extract_data_from_df_filtered(df_to_analyse, df_to_analyse)
         
         # Save data
         entities_simple = find_children(data, [])
@@ -368,6 +382,22 @@ def enrich_data(df, repo):
             acc += "/" + item
             df.set_value(i, 'folder_{}'.format(n), item)
             df.set_value(i, 'folder_acc_{}'.format(n), acc)
+        
+        # Find when the file was created
+        df_file = df[df['file_path'] == row['file_path']]
+        creation_date = df_file[DATE_FIELD].min()
+        df.set_value(i, 'file_created_on', creation_date)
+        
+        if row[DATE_FIELD] == creation_date:
+            if row['commit_parents'] != '[]':
+                df.set_value(i, 'parent_commit_created', row['commit_parents'].split('\'')[1])
+            else:
+                df.set_value(i, 'parent_commit_created', "not parent")
+        else:
+            df.set_value(i, 'parent_commit_created', "none")
+
+        
+        
 
     # Normalize height
     df = normalize_column(df, HEIGHT_FIELD, 0.1, 20)
@@ -455,6 +485,11 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     height_final = -0.2
                 else:
                     height_final = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
+                    
+                # If commit by commit evolution and the flag put_negative_height is on
+                if 'put_negative_height' in df_folder and df_folder.iloc[0]['put_negative_height']:
+                    height_final = -0.2
+                    
                     
                 leaf = {
                     "id": df_folder['file_path'].values[0],
