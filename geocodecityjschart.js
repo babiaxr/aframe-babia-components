@@ -1176,10 +1176,16 @@ let requestJSONDataFromURL = (items) => {
     };
     request.send();
 
+    // If time evolution
     if (raw_items.time_evolution) {
+        main_json = raw_items
         time_evolution = true
         time_evolution_commit_by_commit = raw_items.time_evolution_commit_by_commit
-        raw_items = requestJSONDataFromURL(raw_items.init_data)
+
+        // Get first tree
+        let first_tree = raw_items.data_files.find(o => o.key_tree === (raw_items.init_data + "_tree"));
+        raw_items = first_tree[main_json.init_data + "_tree"]
+        initItems = first_tree[main_json.init_data]
     }
     return raw_items
 }
@@ -1189,6 +1195,8 @@ let time_evolution_commit_by_commit = false
 let dates = []
 let dateBarEntity
 let deltaTimeEvolution = 8000
+let main_json = {}
+let initItems = undefined
 
 /**
  *  This function generate a plane with date of files
@@ -1285,10 +1293,12 @@ let generateLegend = (text, buildingEntity, model) => {
 
 function time_evol() {
     const quarterItems = {}
-    let initItems = undefined
-    const arrayPromises = []
     const maxFiles = dates.length
 
+
+
+    /*
+    const arrayPromises = []
     let init1 = fetch("data_0.json").then(function (response) {
         return response.json();
     })
@@ -1314,10 +1324,16 @@ function time_evol() {
     Promise.all(arrayPromises).then(values => {
         doIt()
     });
+    */
 
+    for (let i = 1; i < maxFiles; i++) {
+        let array_of_tree_to_retrieve = "data_" + i
+        quarterItems[array_of_tree_to_retrieve] = main_json.data_files[i][array_of_tree_to_retrieve]
+    }
+
+   
 
     let doIt = () => {
-        //document.getElementById("cityevolve").setAttribute("codecity-quarter", "items", JSON.stringify(quarterItems[0]))
         loop();
     }
 
@@ -1336,7 +1352,7 @@ function time_evol() {
             dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             let changedItems = []
-            quarterItems["data_" + (index + 1) + ".json"].forEach((item) => {
+            quarterItems["data_" + (index + 1)].forEach((item) => {
                 if (document.getElementById(item.id) != undefined && item.area != 0.0) {
 
                     // Add to changed items
@@ -1405,4 +1421,6 @@ function time_evol() {
             }
         }, deltaTimeEvolution);
     }
+
+    doIt();
 }
