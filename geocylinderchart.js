@@ -17,6 +17,8 @@ AFRAME.registerComponent('geocylinderchart', {
     titleFont: {type: 'string'},
     titleColor: {type: 'string'},
     titlePosition: {type: 'string', default: "0 0 0"},
+    scale: {type: 'number'},
+    heightMax: {type: 'number'}
   },
 
       /**
@@ -86,6 +88,8 @@ let generateCylinderChart = (data, element) => {
     const font = data.titleFont
     const color = data.titleColor
     const title_position = data.titlePosition
+    const scale = data.scale
+    const heightMax = data.heightMax
 
     let colorid = 0
     let stepX = 0
@@ -93,7 +97,14 @@ let generateCylinderChart = (data, element) => {
     let axis_dict = []
     let animation = data.animation
 
-    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))    
+    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; })) 
+    if (scale) {
+        maxY = maxY / scale
+    } else if (heightMax){
+        valueMax = maxY
+        proportion = heightMax / maxY
+        maxY = heightMax
+    }   
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
 
     let chart_entity = document.createElement('a-entity');
@@ -112,9 +123,7 @@ let generateCylinderChart = (data, element) => {
         firstradius = radius
       }
 
-
-      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation)
-
+      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation, scale)
       chart_entity.appendChild(cylinderEntity);
 
       //Prepare legend
@@ -140,7 +149,7 @@ let generateCylinderChart = (data, element) => {
     //Print axis
     if (data.axis) {
       showXAxis(element, stepX + lastradius, axis_dict, palette)
-      showYAxis(element, maxY)
+      showYAxis(element, maxY, scale)
     }
 
     //Print Title
@@ -152,13 +161,20 @@ let generateCylinderChart = (data, element) => {
 
 let firstradius
 let maxRadius
+let proportion
+let valueMax
 
 
-function generateCylinder(height, radius, colorid, palette, position, animation) {
+function generateCylinder(height, radius, colorid, palette, position, animation, scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
+  if (scale) {
+      height = height / scale
+  } else if (proportion){
+      height = proportion * height
+  }
   entity.setAttribute('color', color);
-  entity.setAttribute('height', height);
+  entity.setAttribute('height', 0);
   entity.setAttribute('radius', radius);
   // Add animation
   if (animation){
@@ -167,7 +183,7 @@ function generateCylinder(height, radius, colorid, palette, position, animation)
     var size = 0
     var id = setInterval(animation, 1);
     function animation() {
-        if (parseInt(size) == height) {
+        if (size >= height) {
             clearInterval(id);
         } else {
             size += increment;
@@ -224,9 +240,9 @@ function showXAxis(parent, xEnd, cylinder_printed, palette) {
   parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd) {
+function showYAxis(parent, yEnd, scale) {
   let axis = document.createElement('a-entity');
-  
+  let yLimit = yEnd
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__yaxis', {
@@ -236,16 +252,31 @@ function showYAxis(parent, yEnd) {
   });
   axis_line.setAttribute('position', { x: 0, y: 0, z: maxRadius + 1});
   axis.appendChild(axis_line)
-  
-  for (let i = 0; i<=yEnd; i++){
+
+  if (proportion){
+    yLimit = yLimit / proportion
+    var mod = Math.floor(Math.log10(valueMax))
+  }   
+  for (let i = 0; i<=yLimit; i++){
       let key = document.createElement('a-entity');
-      key.setAttribute('text', {
-          'value': i,
-          'align': 'right',
-          'width': 10,
-          'color': 'white '
-      });
-      key.setAttribute('position', { x: -maxRadius-5.2, y: i, z: maxRadius + 1})
+      let value = i
+      let pow = Math.pow(10, mod-1)
+      if (!proportion || (proportion && i%pow === 0)){  
+        key.setAttribute('text', {
+            'value': value,
+            'align': 'right',
+            'width': 10,
+            'color': 'white '
+        });
+        if (scale){
+            key.setAttribute('text', {'value': value * scale})
+            key.setAttribute('position', { x: -maxRadius-5.2, y: value, z: maxRadius + 1})
+        } else if (proportion){
+            key.setAttribute('position', {x: -maxRadius-5.2, y: i * proportion, z: maxRadius + 1})
+        } else {
+            key.setAttribute('position', {x: -maxRadius-5.2, y: i, z: maxRadius + 1})
+        }      
+    }
       axis.appendChild(key)
   }
 

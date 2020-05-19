@@ -17,6 +17,8 @@ AFRAME.registerComponent('geobubbleschart', {
         titleFont: {type: 'string'},
         titleColor: {type: 'string'},
         titlePosition: {type: 'string', default: "0 0 0"},
+        scale: {type: 'number'},
+        heightMax: {type: 'number'}
     },
 
     /**
@@ -85,6 +87,8 @@ let generateBubblesChart = (data, element) => {
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
+        const scale = data.scale
+        const heightMax = data.heightMax
 
         let colorid = 0
         let maxColorId = 0
@@ -99,7 +103,13 @@ let generateBubblesChart = (data, element) => {
         let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
-
+        if (scale) {
+            maxY = maxY / scale
+        } else if (heightMax){
+            valueMax = maxY
+            proportion = heightMax / maxY
+            maxY = heightMax
+        }
         widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
 
         let chart_entity = document.createElement('a-entity');
@@ -154,7 +164,7 @@ let generateBubblesChart = (data, element) => {
                 maxZ += widthBubbles + widthBubbles / 4
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation);
+            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale);
 
             //Prepare legend
             if (data.legend) {
@@ -179,10 +189,17 @@ let generateBubblesChart = (data, element) => {
 }
 
 let widthBubbles = 0
+let proportion
+let valueMax
 
-function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation) {
+function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation, scale) {
     let color = getColor(colorid, palette)
     console.log("Generating bubble...")
+    if (scale) {
+        height = height / scale
+    } else if (proportion){
+        height = proportion * height
+    }
     let entity = document.createElement('a-sphere');
     entity.setAttribute('color', color);
     entity.setAttribute('radius', radius);
