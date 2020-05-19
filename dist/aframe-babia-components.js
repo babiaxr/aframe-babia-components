@@ -555,7 +555,7 @@ function generateLegend(bar, barEntity) {
 
     let barPosition = barEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: barPosition.x, y: barPosition.y + bar['size'] / 2 + 1, z: barPosition.z + widthBars + 0.1 });
+    entity.setAttribute('position', { x: barPosition.x, y: 2 * barPosition.y + 1, z: barPosition.z + widthBars + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -1729,6 +1729,11 @@ AFRAME.registerComponent('codecity', {
                 'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
                 'olive', 'navy', 'palegreen']
         },
+        // Time evolution time changing between snapshots
+        time_evolution_delta: {
+            type: 'number',
+            default: 8000
+        }
     },
 
     /**
@@ -1753,6 +1758,8 @@ AFRAME.registerComponent('codecity', {
         } else {
             raw_items = data.data;
         };
+
+        deltaTimeEvolution = data.time_evolution_delta
 
         this.zone_data = raw_items;
         let zone = new Zone({
@@ -2780,10 +2787,16 @@ let requestJSONDataFromURL = (items) => {
     };
     request.send();
 
+    // If time evolution
     if (raw_items.time_evolution) {
+        main_json = raw_items
         time_evolution = true
         time_evolution_commit_by_commit = raw_items.time_evolution_commit_by_commit
-        raw_items = requestJSONDataFromURL(raw_items.init_data)
+
+        // Get first tree
+        let first_tree = raw_items.data_files.find(o => o.key_tree === (raw_items.init_data + "_tree"));
+        raw_items = first_tree[main_json.init_data + "_tree"]
+        initItems = first_tree[main_json.init_data]
     }
     return raw_items
 }
@@ -2792,6 +2805,9 @@ let time_evolution = false
 let time_evolution_commit_by_commit = false
 let dates = []
 let dateBarEntity
+let deltaTimeEvolution = 8000
+let main_json = {}
+let initItems = undefined
 
 /**
  *  This function generate a plane with date of files
@@ -2820,8 +2836,8 @@ function dateBar(data) {
         entity.classList.add('babiaxrDateBar')
         entity.setAttribute('position', { x: -13, y: 10, z: -3 })
         entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-        entity.setAttribute('material' ,{
-            color : 'black'
+        entity.setAttribute('material', {
+            color: 'black'
         })
         entity.setAttribute('height', 0.5)
         entity.setAttribute('width', 2)
@@ -2831,10 +2847,10 @@ function dateBar(data) {
         if (date_files[0].commit_sha) {
             text += "\n\n Commit: " + date_files[0].commit_sha
         }
-        entity.setAttribute('text-geometry',{
-            value : text,
+        entity.setAttribute('text-geometry', {
+            value: text,
         });
-    
+
         // Create point
         for (let data in date_files) {
             let date = { date: new Date(date_files[data].date * 1000).toLocaleDateString() }
@@ -2887,11 +2903,13 @@ let generateLegend = (text, buildingEntity, model) => {
 }
 
 function time_evol() {
-    const quarterItems = []
-    let initItems = undefined
-    const arrayPromises = []
+    const quarterItems = {}
     const maxFiles = dates.length
 
+
+
+    /*
+    const arrayPromises = []
     let init1 = fetch("data_0.json").then(function (response) {
         return response.json();
     })
@@ -2902,12 +2920,14 @@ function time_evol() {
     arrayPromises.push(init2)
 
     for (let i = 1; i < maxFiles; i++) {
-        let p1 = fetch("data_" + i + ".json").then(function (response) {
+        let file_to_retrieve = "data_" + i + ".json"
+        let p1 = fetch(file_to_retrieve).then(function (response) {
             return response.json();
         })
         p2 = p1.then(function (json) {
             // do a bunch of stuff
-            quarterItems.push(json)
+            console.log(file_to_retrieve)
+            quarterItems[file_to_retrieve] = json
         });
         arrayPromises.push(p2)
     }
@@ -2915,10 +2935,16 @@ function time_evol() {
     Promise.all(arrayPromises).then(values => {
         doIt()
     });
+    */
 
+    for (let i = 1; i < maxFiles; i++) {
+        let array_of_tree_to_retrieve = "data_" + i
+        quarterItems[array_of_tree_to_retrieve] = main_json.data_files[i][array_of_tree_to_retrieve]
+    }
+
+   
 
     let doIt = () => {
-        //document.getElementById("cityevolve").setAttribute("codecity-quarter", "items", JSON.stringify(quarterItems[0]))
         loop();
     }
 
@@ -2937,7 +2963,7 @@ function time_evol() {
             dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             let changedItems = []
-            quarterItems[index].forEach((item) => {
+            quarterItems["data_" + (index + 1)].forEach((item) => {
                 if (document.getElementById(item.id) != undefined && item.area != 0.0) {
 
                     // Add to changed items
@@ -3004,8 +3030,10 @@ function time_evol() {
             if (i < maxFiles - 1) {
                 loop();
             }
-        }, 8000);
+        }, deltaTimeEvolution);
     }
+
+    doIt();
 }
 
 

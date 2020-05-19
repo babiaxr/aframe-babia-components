@@ -40,7 +40,7 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_perceval_commitbycommit.json.json'
+INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_perceval_commitbycommit.json'
 DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval_commitbycommit.csv'
 DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval_commitbycommit.csv'
 
@@ -104,8 +104,7 @@ def main():
     if args.time_evolution:
         main_json = {
             "date_field": DATE_FIELD,
-            "sampling_days": args.time_evolution,
-            "init_data": "data_0_tree.json",
+            "init_data": "data_0",
             "time_evolution": True,
             "time_evolution_commit_by_commit": False,
             "data_files": []
@@ -114,20 +113,26 @@ def main():
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
         i = 0
         
-        if args.samples and not args.commitbycommit:
+        if args.delta_days and args.samples and not args.commitbycommit:
+            main_json["sampling_days"] = args.delta_days
             # Time evolution defining samples number
             while i < int(args.samples):
                 logging.debug("{} lap of time evolution".format(i))
-                data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution)))
+                data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days)))
                 entities_simple = find_children(data, [])
                 entities_tree = generate_entities(data, [])
-                dump_codecity_data(entities_simple, "data_{}.json".format(i))
-                dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+                if args.export_snapshots:
+                    dump_codecity_data(entities_simple, "data_{}.json".format(i))
+                    dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
     
                 main_json["data_files"].append({
                     'date': dt.datetime.timestamp(
-                        dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.time_evolution))),
-                    'file': "data_{}.json".format(i)
+                        dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days))),
+                    'file': "data_{}.json".format(i),
+                    'key': "data_{}".format(i),
+                    'key_tree': "data_{}_tree".format(i),
+                    'data_{}'.format(i): entities_simple,
+                    'data_{}_tree'.format(i): entities_tree[0]
                 })
                 i += 1
         elif not args.samples and args.commitbycommit:
@@ -135,23 +140,29 @@ def main():
             main_json['time_evolution_commit_by_commit'] = True
             # First, get the first city, the most updated
             logging.debug("{} lap of time evolution, initial tree".format(i))
-            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i * float(args.time_evolution)))
+            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=0))
             entities_simple = find_children(data, [])
             entities_tree = generate_entities(data, [])
-            dump_codecity_data(entities_simple, "data_{}.json".format(i))
-            dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+            if args.export_snapshots:
+                dump_codecity_data(entities_simple, "data_{}.json".format(i))
+                dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
 
             main_json["data_files"].append({
                 'date': dt.datetime.timestamp(
-                    dt.datetime.now(pytz.utc) - dt.timedelta(days=i * float(args.time_evolution))),
-                'file': "data_{}.json".format(i)
+                    dt.datetime.now(pytz.utc) - dt.timedelta(days=0)),
+                'file': "data_{}.json".format(i),
+                'key': "data_{}".format(i),
+                'key_tree': "data_{}_tree".format(i),
+                'data_{}'.format(i): entities_simple,
+                'data_{}_tree'.format(i): entities_tree[0]
             })
             
             # Go for the commits
             commit_list = get_commit_list(df,
                                           dt.datetime.now(pytz.utc) -
-                                          dt.timedelta(days=i * float(args.time_evolution)),
-                                          main_json)
+                                          dt.timedelta(days=0),
+                                          main_json,
+                                          args)
             main_json['commit_list'] = commit_list
             logging.debug("Commit by commit finished")
             
@@ -167,7 +178,7 @@ def main():
     print("exit")
 
 
-def get_commit_list(df, date, main_json):
+def get_commit_list(df, date, main_json, args):
     commit_list = []
     i = 1
 
@@ -183,23 +194,50 @@ def get_commit_list(df, date, main_json):
         
         # Check if has parents
         if last_commit['commit_parents'] != '[]':
-            next_commit = last_commit['commit_parents'].split('\'')[1]
+            splitted = last_commit['commit_parents'].split('\'')
+            if len(splitted) > 3:
+                next_commit = last_commit['commit_parents'].split('\'')[3]
+            else:
+                next_commit = last_commit['commit_parents'].split('\'')[1]
         else:
             break
     
         # Extract data from the commit
         df_next_commit = df[df['commit_sha'] == next_commit]
+        next_files = eval(df_next_commit.iloc[0]['files_at_commit'])
+        prev_files = eval(last_commit['files_at_commit'])
+        df_next_commit['put_negative_height'] = False
+
+        # Adds files that has been deleted
+        rows_to_add = []
+        difference = list(set(prev_files) - set(next_files))
+        for to_delete in difference:
+            row_to_delete = df[df['file_path'] == to_delete]
+            if not row_to_delete.empty:
+                row_to_delete['put_negative_height'] = True
+                rows_to_add.append(row_to_delete.iloc[0])
+        
+        # Create final DF
+        if len(rows_to_add) > 0:
+            df_next_commit = df_next_commit.append(rows_to_add)
+        
+        # Extract data
         data = extract_data_from_df_filtered(df_next_commit, df_next_commit)
         
         # Save data
         entities_simple = find_children(data, [])
         entities_tree = generate_entities(data, [])
-        dump_codecity_data(entities_simple, "data_{}.json".format(i))
-        dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+        if args.export_snapshots:
+            dump_codecity_data(entities_simple, "data_{}.json".format(i))
+            # dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
         main_json["data_files"].append({
             'date': dt.datetime.timestamp(df_next_commit.iloc[0][DATE_FIELD]),
             'commit_sha': next_commit,
-            'file': "data_{}.json".format(i)
+            'key': "data_{}".format(i),
+            'key_tree': "data_{}_tree".format(i),
+            'file': "data_{}.json".format(i),
+            'data_{}'.format(i): entities_simple,
+            'data_{}_tree'.format(i): entities_tree[0]
         })
         
         # Increment last_commit and i var
@@ -273,11 +311,15 @@ def parse_args():
                         help='Export the dataframe of the index data"')
     parser.add_argument('-exedf', '--export-enriched-dataframe', action='store_true',
                         help='Export the enriched dataframe of the index data"')
-    parser.add_argument('-time', '--time-evolution', required=False,
+    parser.add_argument('-time', '--time-evolution', required=False, action='store_true',
                         help='Time evolution analisys')
+    parser.add_argument('-ddays', '--delta-days', required=False,
+                        help='Sampling days for the time evolution analisys')
     parser.add_argument('-s', '--samples', required=False,
                         help='Time evolution analisys')
     parser.add_argument('-cbc', '--commitbycommit', required=False, action='store_true',
+                        help='Time evolution analisys commit by commit')
+    parser.add_argument('-exsnap', '--export-snapshots', required=False, action='store_true',
                         help='Time evolution analisys commit by commit')
 
     return parser.parse_args()
@@ -368,6 +410,22 @@ def enrich_data(df, repo):
             acc += "/" + item
             df.set_value(i, 'folder_{}'.format(n), item)
             df.set_value(i, 'folder_acc_{}'.format(n), acc)
+        
+        # Find when the file was created
+        df_file = df[df['file_path'] == row['file_path']]
+        creation_date = df_file[DATE_FIELD].min()
+        df.set_value(i, 'file_created_on', creation_date)
+        
+        if row[DATE_FIELD] == creation_date:
+            if 'commit_parents' in row and row['commit_parents'] != '[]':
+                df.set_value(i, 'parent_commit_created', row['commit_parents'].split('\'')[1])
+            else:
+                df.set_value(i, 'parent_commit_created', "not parent")
+        else:
+            df.set_value(i, 'parent_commit_created', "none")
+
+        
+        
 
     # Normalize height
     df = normalize_column(df, HEIGHT_FIELD, 0.1, 20)
@@ -455,6 +513,11 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     height_final = -0.2
                 else:
                     height_final = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
+                    
+                # If commit by commit evolution and the flag put_negative_height is on
+                if 'put_negative_height' in df_folder and df_folder.iloc[0]['put_negative_height']:
+                    height_final = -0.2
+                    
                     
                 leaf = {
                     "id": df_folder['file_path'].values[0],
