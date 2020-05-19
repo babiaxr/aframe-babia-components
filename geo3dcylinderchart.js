@@ -17,6 +17,9 @@ AFRAME.registerComponent('geo3dcylinderchart', {
     titleFont: {type: 'string'},
     titleColor: {type: 'string'},
     titlePosition: {type: 'string', default: "0 0 0"},
+    scale: {type: 'number'},
+    heightMax: {type: 'number'},
+    radiusMax: {type: 'number'},
   },
 
       /**
@@ -86,6 +89,9 @@ let generateCylinderChart = (data, element) => {
     const font = data.titleFont
     const color = data.titleColor
     const title_position = data.titlePosition
+    const scale = data.scale
+    const heightMax = data.heightMax
+    const radiusMax = data.radiusMax
 
     let colorid = 0
     let maxColorId = 0
@@ -101,6 +107,21 @@ let generateCylinderChart = (data, element) => {
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
     maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
+    if (scale) {
+        maxY = maxY / scale
+        maxRadius = maxRadius / scale
+    } else if (heightMax || radiusMax){
+        if (heightMax){
+          valueMax = maxY
+          proportion = heightMax / maxY
+          maxY = heightMax
+        }
+        if (radiusMax){
+          stepMax = maxRadius
+          radius_scale = radiusMax / maxRadius
+          maxRadius = radiusMax
+        }
+    }
 
     let chart_entity = document.createElement('a-entity');
     chart_entity.classList.add('babiaxrChart')
@@ -154,7 +175,7 @@ let generateCylinderChart = (data, element) => {
             maxZ += 2 * maxRadius + 1
         }
 
-        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation);
+        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale);
         
         //Prepare legend
         if (data.legend) {
@@ -172,18 +193,33 @@ let generateCylinderChart = (data, element) => {
     if (data.axis) {
         showXAxis(element, maxX, xaxis_dict, palette)
         showZAxis(element, maxZ, zaxis_dict)
-        showYAxis(element, maxY)
+        showYAxis(element, maxY, scale)
     }
   }
 }
 
 let maxRadius
+let proportion
+let valueMax
+let radius_scale
+let stepMax
 
-function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation) {
+function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
+  if (scale) {
+      height = height / scale
+      radius = radius / scale
+  } else if (proportion || radius_scale){
+      if (proportion){
+        height = proportion * height
+      }
+      if (radius_scale){
+        radius = radius_scale * radius
+      }
+  }
   entity.setAttribute('color', color);
-  entity.setAttribute('height', height);
+  entity.setAttribute('height', 0);
   entity.setAttribute('radius', radius);
   // Add animation
   if (animation){
@@ -192,7 +228,7 @@ function generateCylinder(height, radius, colorid, palette, positionX, positionZ
     var size = 0
     var id = setInterval(animation, 1);
     function animation() {
-        if (parseInt(size) == height) {
+        if (size >= height) {
             clearInterval(id);
         } else {
             size += increment;
@@ -249,9 +285,9 @@ function showXAxis(parent, xEnd, cylinder_printed, palette) {
   parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd) {
+function showYAxis(parent, yEnd, scale) {
   let axis = document.createElement('a-entity');
-  
+  let yLimit = yEnd
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__yaxis', {
@@ -261,16 +297,31 @@ function showYAxis(parent, yEnd) {
   });
   axis_line.setAttribute('position', { x: -1, y: 0, z: -maxRadius-1});
   axis.appendChild(axis_line)
-  
-  for (let i = 0; i<=yEnd; i++){
+
+  if (proportion){
+      yLimit = yLimit / proportion
+      var mod = Math.floor(Math.log10(valueMax))
+  } 
+  for (let i = 0; i<=yLimit; i++){
       let key = document.createElement('a-entity');
-      key.setAttribute('text', {
-          'value': i,
-          'align': 'right',
-          'width': 10,
-          'color': 'white '
-      });
-      key.setAttribute('position', { x: -maxRadius - 6.5, y: i, z: -maxRadius - 1})
+      let value = i
+      let pow = Math.pow(10, mod-1)
+      if (!proportion || (proportion && i%pow === 0)){  
+          key.setAttribute('text', {
+              'value': value,
+              'align': 'right',
+              'width': 10,
+              'color': 'white '
+          });
+          if (scale){
+              key.setAttribute('text', {'value': value * scale})
+              key.setAttribute('position', { x: -maxRadius - 6.5, y: value, z: -maxRadius - 1 })
+          } else if (proportion){
+              key.setAttribute('position', { x: -maxRadius - 6.5, y: i * proportion, z: -maxRadius - 1 })
+          } else {
+              key.setAttribute('position', {x: -maxRadius - 6.5, y: i, z: -maxRadius - 1})
+          }     
+      }
       axis.appendChild(key)
   }
 
@@ -338,7 +389,7 @@ function generateLegend(cylinder, cylinderEntity) {
 
   let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: cylinderPosition.x, y: cylinderPosition.y + cylinder['height'] / 2 + 5, 
+  entity.setAttribute('position', { x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3, 
                                     z: cylinderPosition.z + cylinder['radius'] / 2});
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '4');

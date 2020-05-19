@@ -17,6 +17,8 @@ AFRAME.registerComponent('geo3dbarchart', {
         titleFont: {type: 'string'},
         titleColor: {type: 'string'},
         titlePosition: {type: 'string', default: "0 0 0"},
+        scale: {type: 'number'},
+        heightMax: {type: 'number'}
     },
 
     /**
@@ -85,6 +87,8 @@ let generateBarChart = (data, element) => {
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
+        const scale = data.scale
+        const heightMax = data.heightMax
 
         let colorid = 0
         let maxColorId = 0
@@ -99,6 +103,13 @@ let generateBarChart = (data, element) => {
         let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
+        if (scale) {
+            maxY = maxY / scale
+        } else if (heightMax){
+            valueMax = maxY
+            proportion = heightMax / maxY
+            maxY = heightMax
+        }
 
         let chart_entity = document.createElement('a-entity');
         chart_entity.classList.add('babiaxrChart')
@@ -152,7 +163,7 @@ let generateBarChart = (data, element) => {
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation, scale);
 
             //Prepare legend
             if (data.legend) {
@@ -171,17 +182,24 @@ let generateBarChart = (data, element) => {
         if (data.axis) {
             showXAxis(element, maxX, xaxis_dict, palette)
             showZAxis(element, maxZ, zaxis_dict, palette)
-            showYAxis(element, maxY)
+            showYAxis(element, maxY, scale)
         }
     }
 }
 
 let widthBars = 1
+let proportion
+let valueMax
 
-function generateBar(size, width, colorid, positionX, positionZ, palette, animation) {
+function generateBar(size, width, colorid, positionX, positionZ, palette, animation, scale) {
     let color = getColor(colorid, palette)
-
     console.log("Generating bar...")
+    if (scale) {
+        size = size / scale
+    } else if (proportion){
+        size = proportion * size
+    }
+
     let entity = document.createElement('a-box');
     entity.setAttribute('color', color);
     entity.setAttribute('width', width);
@@ -193,7 +211,7 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
         var height = 0
         var id = setInterval(animation, 10);
         function animation() {
-            if (parseInt(height) == size) {
+            if (height >= size) {
                 clearInterval(id);
             } else {
                 height += increment;
@@ -319,8 +337,9 @@ function showZAxis(parent, zEnd, bars_printed, palette) {
 }
 
 
-function showYAxis(parent, yEnd) {
+function showYAxis(parent, yEnd, scale) {
     let axis = document.createElement('a-entity');
+    let yLimit = yEnd
     //Print line
     let axis_line = document.createElement('a-entity');
     axis_line.setAttribute('line__yaxis', {
@@ -331,15 +350,28 @@ function showYAxis(parent, yEnd) {
     axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBars / 2 + widthBars / 4) });
     axis.appendChild(axis_line)
 
-    for (let i = 0; i <= yEnd; i++) {
+    if (proportion){
+        yLimit = yLimit / proportion
+        var mod = Math.floor(Math.log10(valueMax))
+    }   
+    for (let i = 0; i<=yLimit; i++){
         let key = document.createElement('a-entity');
-        key.setAttribute('text', {
-            'value': i,
-            'align': 'right',
-            'width': 10,
-            'color': 'white '
-        });
-        key.setAttribute('position', { x: -widthBars-5.2, y: i, z: -(widthBars / 2 + widthBars / 4) })
+        let value = i
+        let pow = Math.pow(10, mod-1)
+        if (!proportion || (proportion && i%pow === 0)){  
+            key.setAttribute('text', {
+                'value': value,
+                'align': 'right',
+                'width': 10,
+                'color': 'white '
+            });
+            if (scale){
+                key.setAttribute('text', {'value': value * scale})
+                key.setAttribute('position', { x: -widthBars-5.2, y: value, z: -(widthBars / 2 + widthBars / 4) })
+            } else {
+                key.setAttribute('position', { x: -widthBars-5.2, y: i * proportion, z: -(widthBars / 2 + widthBars / 4) })
+            }     
+        }
         axis.appendChild(key)
     }
 

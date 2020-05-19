@@ -152,6 +152,8 @@ This component shows a simple 2D bar chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
+| heightMax          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
@@ -181,6 +183,8 @@ This component shows a 3D bar chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
+| heightMax          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
@@ -210,6 +214,9 @@ This component shows a 3D bar chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a bubble  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
+| heightMax          | Adjusts the height of the chart.  | number | - |
+| radiusMax          | Adjusts bubbles' radius of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
@@ -239,6 +246,9 @@ This component shows a cylinder chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
+| heightMax          | Adjusts the height of the chart.  | number | - |
+| radiusMax          | Adjusts bubbles' radius of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
@@ -268,6 +278,9 @@ This component shows a 3D cylinder chart.
 | --------        | -----------           | ----   | ----- |
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
+| heightMax          | Adjusts the height of the chart.  | number | - |
+| radiusMax          | Adjusts bubbles' radius of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
