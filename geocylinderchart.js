@@ -18,7 +18,8 @@ AFRAME.registerComponent('geocylinderchart', {
     titleColor: {type: 'string'},
     titlePosition: {type: 'string', default: "0 0 0"},
     scale: {type: 'number'},
-    heightMax: {type: 'number'}
+    heightMax: {type: 'number'},
+    radiusMax: {type: 'number'},
   },
 
       /**
@@ -90,6 +91,7 @@ let generateCylinderChart = (data, element) => {
     const title_position = data.titlePosition
     const scale = data.scale
     const heightMax = data.heightMax
+    const radiusMax = data.radiusMax
 
     let colorid = 0
     let stepX = 0
@@ -98,14 +100,22 @@ let generateCylinderChart = (data, element) => {
     let animation = data.animation
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; })) 
+    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
     if (scale) {
         maxY = maxY / scale
-    } else if (heightMax){
-        valueMax = maxY
-        proportion = heightMax / maxY
-        maxY = heightMax
-    }   
-    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
+        maxRadius = maxRadius / scale
+    } else if (heightMax || radiusMax){
+        if (heightMax){
+          valueMax = maxY
+          proportion = heightMax / maxY
+          maxY = heightMax
+        }
+        if (radiusMax){
+          stepMax = maxRadius
+          radius_scale = radiusMax / maxRadius
+          maxRadius = radiusMax
+        }
+    }
 
     let chart_entity = document.createElement('a-entity');
     chart_entity.classList.add('babiaxrChart')
@@ -118,9 +128,22 @@ let generateCylinderChart = (data, element) => {
 
       if (cylinder !== dataToPrint[0]) {
         //Calculate stepX
-        stepX += lastradius + radius + 1
+        if (scale) {
+          stepX += lastradius + radius / scale + 1
+        } else if (radiusMax) {
+          stepX += lastradius + radius * radius_scale + 1
+        } else {
+          stepX += lastradius + radius + 1  
+        }
+        
       } else {
-        firstradius = radius
+        if (scale){
+          firstradius = radius / scale
+        } else if (radiusMax) {
+          firstradius = radius * radius_scale
+        } else {
+          firstradius = radius
+        }
       }
 
       let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation, scale)
@@ -140,8 +163,16 @@ let generateCylinderChart = (data, element) => {
       axis_dict.push(cylinder_printed)
 
       // update lastradius
-      lastradius = radius
-
+      if (!scale && !radius_scale){
+        lastradius = radius
+      } else {
+        if (scale){
+          lastradius = radius / scale
+        } else {
+          lastradius = radius_scale * radius
+        }
+      }
+      
       //Increase color id
       colorid++
     }
@@ -163,15 +194,22 @@ let firstradius
 let maxRadius
 let proportion
 let valueMax
-
+let radius_scale
+let stepMax
 
 function generateCylinder(height, radius, colorid, palette, position, animation, scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   if (scale) {
       height = height / scale
-  } else if (proportion){
+      radius = radius / scale
+  } else if (proportion || radius_scale){
+    if (proportion){
       height = proportion * height
+    }
+    if (radius_scale){
+      radius = radius_scale * radius
+    }
   }
   entity.setAttribute('color', color);
   entity.setAttribute('height', 0);
@@ -305,7 +343,7 @@ function generateLegend(cylinder, cylinderEntity) {
 
   let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: cylinderPosition.x, y: cylinderPosition.y + cylinder['height'] / 2 + 3,
+  entity.setAttribute('position', { x: cylinderPosition.x, y: 2 * cylinderPosition.y + 2,
                                     z: cylinderPosition.z + maxRadius + 0.5 });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '1.5');

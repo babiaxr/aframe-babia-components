@@ -18,7 +18,8 @@ AFRAME.registerComponent('geo3dcylinderchart', {
     titleColor: {type: 'string'},
     titlePosition: {type: 'string', default: "0 0 0"},
     scale: {type: 'number'},
-    heightMax: {type: 'number'}
+    heightMax: {type: 'number'},
+    radiusMax: {type: 'number'},
   },
 
       /**
@@ -90,6 +91,7 @@ let generateCylinderChart = (data, element) => {
     const title_position = data.titlePosition
     const scale = data.scale
     const heightMax = data.heightMax
+    const radiusMax = data.radiusMax
 
     let colorid = 0
     let maxColorId = 0
@@ -104,14 +106,22 @@ let generateCylinderChart = (data, element) => {
     let animation = data.animation
 
     let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
+    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
     if (scale) {
         maxY = maxY / scale
-    } else if (heightMax){
-        valueMax = maxY
-        proportion = heightMax / maxY
-        maxY = heightMax
-    } 
-    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
+        maxRadius = maxRadius / scale
+    } else if (heightMax || radiusMax){
+        if (heightMax){
+          valueMax = maxY
+          proportion = heightMax / maxY
+          maxY = heightMax
+        }
+        if (radiusMax){
+          stepMax = maxRadius
+          radius_scale = radiusMax / maxRadius
+          maxRadius = radiusMax
+        }
+    }
 
     let chart_entity = document.createElement('a-entity');
     chart_entity.classList.add('babiaxrChart')
@@ -191,14 +201,22 @@ let generateCylinderChart = (data, element) => {
 let maxRadius
 let proportion
 let valueMax
+let radius_scale
+let stepMax
 
 function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   if (scale) {
       height = height / scale
-  } else if (proportion){
-      height = proportion * height
+      radius = radius / scale
+  } else if (proportion || radius_scale){
+      if (proportion){
+        height = proportion * height
+      }
+      if (radius_scale){
+        radius = radius_scale * radius
+      }
   }
   entity.setAttribute('color', color);
   entity.setAttribute('height', 0);

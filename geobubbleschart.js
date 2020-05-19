@@ -18,7 +18,8 @@ AFRAME.registerComponent('geobubbleschart', {
         titleColor: {type: 'string'},
         titlePosition: {type: 'string', default: "0 0 0"},
         scale: {type: 'number'},
-        heightMax: {type: 'number'}
+        heightMax: {type: 'number'},
+        radiusMax: {type: 'number'},
     },
 
     /**
@@ -89,6 +90,7 @@ let generateBubblesChart = (data, element) => {
         const title_position = data.titlePosition
         const scale = data.scale
         const heightMax = data.heightMax
+        const radiusMax = data.radiusMax
 
         let colorid = 0
         let maxColorId = 0
@@ -103,14 +105,22 @@ let generateBubblesChart = (data, element) => {
         let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
+        widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
         if (scale) {
             maxY = maxY / scale
-        } else if (heightMax){
-            valueMax = maxY
-            proportion = heightMax / maxY
-            maxY = heightMax
+            widthBubbles = widthBubbles / scale
+        } else if (heightMax || radiusMax){
+            if (heightMax){
+              valueMax = maxY
+              proportion = heightMax / maxY
+              maxY = heightMax
+            }
+            if (radiusMax){
+              stepMax = widthBubbles
+              radius_scale = radiusMax / widthBubbles
+              widthBubbles = radiusMax
+            }
         }
-        widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
 
         let chart_entity = document.createElement('a-entity');
         chart_entity.classList.add('babiaxrChart')
@@ -139,7 +149,7 @@ let generateBubblesChart = (data, element) => {
                 }
                 xaxis_dict.push(bubble_printed)
 
-                maxX += widthBubbles + widthBubbles / 4
+                maxX += 2 * widthBubbles
                 maxColorId++
             }
 
@@ -161,7 +171,7 @@ let generateBubblesChart = (data, element) => {
                 }
                 zaxis_dict.push(bubble_printed)
 
-                maxZ += widthBubbles + widthBubbles / 4
+                maxZ += 2 * widthBubbles
             }
 
             let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale);
@@ -179,7 +189,7 @@ let generateBubblesChart = (data, element) => {
         if (data.axis) {
             showXAxis(element, maxX, xaxis_dict)
             showZAxis(element, maxZ, zaxis_dict)
-            showYAxis(element, maxY)
+            showYAxis(element, maxY, scale)
         }
 
         //Print Title
@@ -191,14 +201,22 @@ let generateBubblesChart = (data, element) => {
 let widthBubbles = 0
 let proportion
 let valueMax
+let radius_scale
+let stepMax
 
 function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation, scale) {
     let color = getColor(colorid, palette)
     console.log("Generating bubble...")
     if (scale) {
         height = height / scale
-    } else if (proportion){
-        height = proportion * height
+        radius = radius / scale
+    } else if (proportion || radius_scale){
+        if (proportion){
+          height = proportion * height
+        }
+        if (radius_scale){
+          radius = radius_scale * radius
+        }
     }
     let entity = document.createElement('a-sphere');
     entity.setAttribute('color', color);
@@ -238,9 +256,10 @@ function generateLegend(bubble, bubbleEntity) {
         width = text.length / 8;
 
     let bubblePosition = bubbleEntity.getAttribute('position')
+    let bubbleRadius = parseFloat(bubbleEntity.getAttribute('radius'))
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: bubblePosition.x, y: bubblePosition.y + bubble['radius'] + 1,
-                                      z: bubblePosition.z + bubble['radius'] + 0.1 });
+    entity.setAttribute('position', { x: bubblePosition.x, y: bubblePosition.y + bubbleRadius + 1,
+                                      z: bubblePosition.z + 0.1 });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -332,27 +351,43 @@ function showZAxis(parent, zEnd, bubbles_printed, palette) {
 }
 
 
-function showYAxis(parent, yEnd) {
+function showYAxis(parent, yEnd, scale) {
     let axis = document.createElement('a-entity');
+    let yLimit = yEnd
     //Print line
     let axis_line = document.createElement('a-entity');
     axis_line.setAttribute('line__yaxis', {
         'start': { x: -widthBubbles, y: 0, z: 0 },
-        'end': { x: -widthBubbles, y: yEnd+1, z: 0 },
+        'end': { x: -widthBubbles, y: yLimit, z: 0 },
         'color': '#ffffff'
     });
     axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBubbles / 2 + widthBubbles / 4) });
     axis.appendChild(axis_line)
 
-    for (let i = 0; i <= yEnd; i++) {
+    if (proportion){
+        yLimit = yLimit / proportion
+        var mod = Math.floor(Math.log10(valueMax))
+    } 
+    for (let i = 0; i<=yLimit; i++){
         let key = document.createElement('a-entity');
-        key.setAttribute('text', {
-            'value': i,
-            'align': 'right',
-            'width': 10,
-            'color': 'white '
-        });
-        key.setAttribute('position', { x: -widthBubbles-5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4) })
+        let value = i
+        let pow = Math.pow(10, mod-1)
+        if (!proportion || (proportion && i%pow === 0)){  
+            key.setAttribute('text', {
+                'value': value,
+                'align': 'right',
+                'width': 10,
+                'color': 'white '
+            });
+            if (scale){
+                key.setAttribute('text', {'value': value * scale})
+                key.setAttribute('position', { x: -widthBubbles-5.2, y: value, z: -(widthBubbles / 2 + widthBubbles / 4) })
+            } else if (proportion){
+                key.setAttribute('position', { x: -widthBubbles-5.2, y: i * proportion, z: -(widthBubbles / 2 + widthBubbles / 4)})
+            } else {
+                key.setAttribute('position', { x: -widthBubbles-5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4)})
+            }     
+        }
         axis.appendChild(key)
     }
 
