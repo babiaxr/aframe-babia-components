@@ -204,17 +204,25 @@ def get_commit_list(df, date, main_json, args):
     
         # Extract data from the commit
         df_next_commit = df[df['commit_sha'] == next_commit]
+        next_files = eval(df_next_commit.iloc[0]['files_at_commit'])
+        prev_files = eval(last_commit['files_at_commit'])
         df_next_commit['put_negative_height'] = False
 
         # Adds files that has been deleted
-        df_files_to_delete = df[df['parent_commit_created'] == next_commit]
-        df_files_to_delete['put_negative_height'] = True
+        rows_to_add = []
+        difference = list(set(prev_files) - set(next_files))
+        for to_delete in difference:
+            row_to_delete = df[df['file_path'] == to_delete]
+            if not row_to_delete.empty:
+                row_to_delete['put_negative_height'] = True
+                rows_to_add.append(row_to_delete.iloc[0])
         
         # Create final DF
-        df_to_analyse = pd.concat([df_next_commit, df_files_to_delete])
+        if len(rows_to_add) > 0:
+            df_next_commit = df_next_commit.append(rows_to_add)
         
         # Extract data
-        data = extract_data_from_df_filtered(df_to_analyse, df_to_analyse)
+        data = extract_data_from_df_filtered(df_next_commit, df_next_commit)
         
         # Save data
         entities_simple = find_children(data, [])
