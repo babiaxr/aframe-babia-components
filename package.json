@@ -1,6 +1,6 @@
 {
   "name": "aframe-babia-components",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A Data visualization components for A-Frame.",
   "main": "index.js",
   "unpkg": "dist/aframe-babia-components.min.js",
