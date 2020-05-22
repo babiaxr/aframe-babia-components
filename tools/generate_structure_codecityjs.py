@@ -50,8 +50,11 @@ HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
 DATE_FIELD = 'grimoire_creation_date'
 
+ENTITIES_SIMPLE_ACC = []
+
 
 def main():
+    global ENTITIES_SIMPLE_ACC
     args = parse_args()
 
     if args.debug:
@@ -142,6 +145,7 @@ def main():
             logging.debug("{} lap of time evolution, initial tree".format(i))
             data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=0))
             entities_simple = find_children(data, [])
+            ENTITIES_SIMPLE_ACC = entities_simple
             entities_tree = generate_entities(data, [])
             if args.export_snapshots:
                 dump_codecity_data(entities_simple, "data_{}.json".format(i))
@@ -179,6 +183,7 @@ def main():
 
 
 def get_commit_list(df, date, main_json, args):
+    global ENTITIES_SIMPLE_ACC
     commit_list = []
     i = 1
 
@@ -226,10 +231,20 @@ def get_commit_list(df, date, main_json, args):
         
         # Save data
         entities_simple = find_children(data, [])
-        entities_tree = generate_entities(data, [])
+        
+        # Acumulated entities to modify for changing the tree of the next snapshots
+        for entity in ENTITIES_SIMPLE_ACC:
+            for entity_for_changing in entities_simple:
+                if entity['id'] == entity_for_changing['id']:
+                    entity['height'] = entity_for_changing['height']
+                    entity['area'] = entity_for_changing['area']
+            
+        
+        # entities_tree = generate_entities(data, [])
         if args.export_snapshots:
             dump_codecity_data(entities_simple, "data_{}.json".format(i))
-            # dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+            # dump_codecity_data(entities_simple_all_commits_tree, "data_{}_tree.json".format(i))
+            dump_codecity_data(ENTITIES_SIMPLE_ACC, "data_{}_allfiles.json".format(i))
         main_json["data_files"].append({
             'date': dt.datetime.timestamp(df_next_commit.iloc[0][DATE_FIELD]),
             'commit_sha': next_commit,
@@ -237,7 +252,8 @@ def get_commit_list(df, date, main_json, args):
             'key_tree': "data_{}_tree".format(i),
             'file': "data_{}.json".format(i),
             'data_{}'.format(i): entities_simple,
-            'data_{}_tree'.format(i): entities_tree[0]
+            # 'data_{}_tree'.format(i): entities_simple_all_commits_tree
+            'data_{}_allfiles'.format(i): ENTITIES_SIMPLE_ACC
         })
         
         # Increment last_commit and i var
