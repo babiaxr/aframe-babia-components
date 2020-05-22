@@ -122,6 +122,11 @@ AFRAME.registerComponent('codecity', {
         time_evolution_delta: {
             type: 'number',
             default: 8000
+        },
+        // Time evolution time changing between snapshots
+        time_evolution_init: {
+            type: 'string',
+            default: 'data_0'
         }
     },
 
@@ -140,7 +145,7 @@ AFRAME.registerComponent('codecity', {
 
         if (typeof data.data == 'string') {
             if (data.data.endsWith('json')) {
-                raw_items = requestJSONDataFromURL(data.data);
+                raw_items = requestJSONDataFromURL(data);
             } else {
                 raw_items = JSON.parse(data.data);
             }
@@ -213,6 +218,7 @@ AFRAME.registerComponent('codecity', {
 
         // Time Evolution starts
         if (time_evolution) {
+            dateBar(data)
             time_evol()
         }
     },
@@ -1141,7 +1147,8 @@ if (typeof module !== 'undefined') {
 /**
  * Request a JSON url
  */
-let requestJSONDataFromURL = (items) => {
+let requestJSONDataFromURL = (data) => {
+    let items = data.data
     let raw_items
     // Create a new request object
     let request = new XMLHttpRequest();
@@ -1155,8 +1162,7 @@ let requestJSONDataFromURL = (items) => {
             // Save data
             if (typeof request.response === 'string' || request.response instanceof String) {
                 raw_items = JSON.parse(request.response)
-                // Save date and files
-                date_files = dateBar(raw_items)
+
             } else {
                 raw_items = request.response
             }
@@ -1183,16 +1189,24 @@ let requestJSONDataFromURL = (items) => {
         time_evolution_commit_by_commit = raw_items.time_evolution_commit_by_commit
 
         // Get first tree
-        let first_tree = raw_items.data_files.find(o => o.key_tree === (raw_items.init_data + "_tree"));
-        raw_items = first_tree[main_json.init_data + "_tree"]
-        initItems = first_tree[main_json.init_data]
+        let first_tree = raw_items.data_files.find(o => o.key_tree === (data.time_evolution_init + "_tree"));
+        raw_items = first_tree[data.time_evolution_init + "_tree"]
+        initItems = first_tree[data.time_evolution_init]
+
+        // Items of the time evolution
+        for (let i = 0; i < main_json.data_files.length; i++) {
+            let array_of_tree_to_retrieve = "data_" + i
+            timeEvolutionItems[array_of_tree_to_retrieve] = main_json.data_files[i]
+        }
+
+
     }
     return raw_items
 }
 
 let time_evolution = false
 let time_evolution_commit_by_commit = false
-let dates = []
+let timeEvolutionItems = {}
 let dateBarEntity
 let deltaTimeEvolution = 8000
 let main_json = {}
@@ -1201,58 +1215,44 @@ let initItems = undefined
 /**
  *  This function generate a plane with date of files
  */
-function dateBar(data) {
-    if (data.data_files) {
-        let date_files = data.data_files
-
-        // get entity codecity
-        let component
-        if (document.getElementById('scene')) {
-            component = document.getElementById('scene')
-        } else {
-            component = document.getElementsByTagName('a-scene')
-            // Others
-            let entities = document.getElementsByTagName('a-entity')
-            /*for (let i in entities)
-            {
-                if (entities[i].attributes && entities[i].attributes['geocodecity']){
-                    component = entities[i]
-                }
-            }*/
-        }
-
-        let entity = document.createElement('a-entity')
-        entity.classList.add('babiaxrDateBar')
-        entity.setAttribute('position', { x: -13, y: 10, z: -3 })
-        entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-        entity.setAttribute('material', {
-            color: 'black'
-        })
-        entity.setAttribute('height', 0.5)
-        entity.setAttribute('width', 2)
-        entity.setAttribute('scale', { x: 1, y: 1, z: 1 })
-
-        let text = "Date: " + new Date(date_files[0].date * 1000).toLocaleDateString()
-        if (date_files[0].commit_sha) {
-            text += "\n\n Commit: " + date_files[0].commit_sha
-        }
-        entity.setAttribute('text-geometry', {
-            value: text,
-        });
-
-        // Create point
-        for (let data in date_files) {
-            let date = { date: new Date(date_files[data].date * 1000).toLocaleDateString() }
-            if (date_files[data].commit_sha) {
-                date.commit_sha = date_files[data].commit_sha
+let dateBar = (data) => {
+    // get entity codecity
+    let component
+    if (document.getElementById('scene')) {
+        component = document.getElementById('scene')
+    } else {
+        component = document.getElementsByTagName('a-scene')
+        // Others
+        let entities = document.getElementsByTagName('a-entity')
+        /*for (let i in entities)
+        {
+            if (entities[i].attributes && entities[i].attributes['geocodecity']){
+                component = entities[i]
             }
-            dates.push(date)
-        }
-
-        component.appendChild(entity)
-        dateBarEntity = entity
-        return date_files
+        }*/
     }
+
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrDateBar')
+    entity.setAttribute('position', { x: -13, y: 10, z: -3 })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
+    entity.setAttribute('material', {
+        color: 'black'
+    })
+    entity.setAttribute('height', 0.5)
+    entity.setAttribute('width', 2)
+    entity.setAttribute('scale', { x: 1, y: 1, z: 1 })
+
+    let text = "Date: " + new Date(timeEvolutionItems[data.time_evolution_init].date * 1000).toLocaleDateString()
+    if (timeEvolutionItems[data.time_evolution_init].commit_sha) {
+        text += "\n\nCommit: " + timeEvolutionItems[data.time_evolution_init].commit_sha
+    }
+    entity.setAttribute('text-geometry', {
+        value: text,
+    });
+
+    dateBarEntity = entity
+    component.appendChild(entity)
 
 }
 
@@ -1292,50 +1292,7 @@ let generateLegend = (text, buildingEntity, model) => {
 }
 
 function time_evol() {
-    const quarterItems = {}
-    const maxFiles = dates.length
-
-
-
-    /*
-    const arrayPromises = []
-    let init1 = fetch("data_0.json").then(function (response) {
-        return response.json();
-    })
-    init2 = init1.then(function (json) {
-        // do a bunch of stuff
-        initItems = json
-    });
-    arrayPromises.push(init2)
-
-    for (let i = 1; i < maxFiles; i++) {
-        let file_to_retrieve = "data_" + i + ".json"
-        let p1 = fetch(file_to_retrieve).then(function (response) {
-            return response.json();
-        })
-        p2 = p1.then(function (json) {
-            // do a bunch of stuff
-            console.log(file_to_retrieve)
-            quarterItems[file_to_retrieve] = json
-        });
-        arrayPromises.push(p2)
-    }
-
-    Promise.all(arrayPromises).then(values => {
-        doIt()
-    });
-    */
-
-    for (let i = 1; i < maxFiles; i++) {
-        let array_of_tree_to_retrieve = "data_" + i
-        quarterItems[array_of_tree_to_retrieve] = main_json.data_files[i][array_of_tree_to_retrieve]
-    }
-
-   
-
-    let doIt = () => {
-        loop();
-    }
+    const maxFiles = Object.keys(timeEvolutionItems).length
 
     let i = 0
     let index = 0
@@ -1343,16 +1300,17 @@ function time_evol() {
     let loop = () => {
         setTimeout(function () {
             console.log("Loop number", i)
+            let key = "data_" + (index + 1)
 
             // Change Date
-            let text = "Date: " + dates[i + 1].date
-            if (dates[i + 1].commit_sha) {
-                text += "\n\nCommit: " + dates[i + 1].commit_sha
+            let text = "Date: " + new Date(timeEvolutionItems[key].date * 1000).toLocaleDateString()
+            if (timeEvolutionItems[key].commit_sha) {
+                text += "\n\nCommit: " + timeEvolutionItems[key].commit_sha
             }
             dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             let changedItems = []
-            quarterItems["data_" + (index + 1)].forEach((item) => {
+            timeEvolutionItems[key][key].forEach((item) => {
                 if (document.getElementById(item.id) != undefined && item.area != 0.0) {
 
                     // Add to changed items
@@ -1420,6 +1378,10 @@ function time_evol() {
                 loop();
             }
         }, deltaTimeEvolution);
+    }
+
+    let doIt = () => {
+        loop();
     }
 
     doIt();
