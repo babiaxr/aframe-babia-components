@@ -232,6 +232,27 @@ def get_commit_list(df, date, main_json, args):
         
         # Save data
         entities_simple = find_children(data, [])
+
+        ############ REVERSE - PAST to PRESENT ###############
+        # Adds files that has been deleted reverse
+        rows_to_add = []
+        difference = list(set(next_files) - set(prev_files))
+        for to_delete in difference:
+            row_to_delete = df[df['file_path'] == to_delete]
+            if not row_to_delete.empty:
+                row_to_delete['put_negative_height'] = True
+                rows_to_add.append(row_to_delete.iloc[0])
+
+        # Create final DF
+        if len(rows_to_add) > 0:
+            df_next_commit = df_next_commit.append(rows_to_add)
+
+        # Extract data
+        data_reverse = extract_data_from_df_filtered(df_next_commit, df_next_commit)
+
+        # Save data
+        entities_simple_reverse = find_children(data_reverse, [])
+        #######################################################
         
         # Acumulated entities to modify for changing the tree of the next snapshots
         for entity in ENTITIES_SIMPLE_ACC:
@@ -253,6 +274,7 @@ def get_commit_list(df, date, main_json, args):
             'key_tree': "data_{}_tree".format(i),
             'file': "data_{}.json".format(i),
             'data_{}'.format(i): entities_simple,
+            'data_reverse_{}'.format(i): entities_simple_reverse,
             # 'data_{}_tree'.format(i): entities_simple_all_commits_tree
             'data_{}_allfiles'.format(i): copy.deepcopy(ENTITIES_SIMPLE_ACC)
         })

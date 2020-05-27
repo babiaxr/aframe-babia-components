@@ -127,6 +127,11 @@ AFRAME.registerComponent('codecity', {
         time_evolution_init: {
             type: 'string',
             default: 'data_0'
+        },
+        // Time evolution direction
+        time_evolution_past_present: {
+            type: 'boolean',
+            default: false
         }
     },
 
@@ -218,6 +223,7 @@ AFRAME.registerComponent('codecity', {
 
         // Time Evolution starts
         if (time_evolution) {
+            time_evolution_past_present = data.time_evolution_past_present
             dateBar(data)
             time_evol()
         }
@@ -1326,6 +1332,13 @@ function time_evol() {
         setTimeout(function () {
             console.log("Loop number", i)
             let key = "data_" + (index + 1)
+            let key2
+            if (time_evolution_past_present) {
+                key2 = "data_reverse_" + (index + 1)
+            } else {
+                key2 = "data_" + (index + 1)
+            }
+            
 
             // Change Date
             let text = "Date: " + new Date(timeEvolutionItems[key].date * 1000).toLocaleDateString()
@@ -1335,7 +1348,7 @@ function time_evol() {
             dateBarEntity.setAttribute('text-geometry', 'value', text)
 
             changedItems = []
-            timeEvolutionItems[key][key].forEach((item) => {
+            timeEvolutionItems[key][key2].forEach((item) => {
                 changeBuildingLayout(item)
             })
 
@@ -1350,10 +1363,18 @@ function time_evol() {
                 })
             }
 
-            index++
-            if (index > maxFiles - 1) {
-                index = 0
+            if (time_evolution_past_present) {
+                index--
+                if (index == 0) {
+                    console.log("finished")
+                }
+            } else {
+                index++
+                if (index > maxFiles - 1) {
+                    index = 0
+                }
             }
+
             i++;
 
             updateCity()
