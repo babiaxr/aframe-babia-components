@@ -34,6 +34,7 @@ import pandas as pd
 import pytz
 from sklearn import preprocessing
 import datetime as dt
+import copy
 
 from elasticsearch import Elasticsearch
 from elasticsearch.connection import create_ssl_context
@@ -157,7 +158,7 @@ def main():
                 'file': "data_{}.json".format(i),
                 'key': "data_{}".format(i),
                 'key_tree': "data_{}_tree".format(i),
-                'data_{}'.format(i): entities_simple,
+                'data_{}'.format(i): copy.deepcopy(entities_simple),
                 'data_{}_tree'.format(i): entities_tree[0]
             })
             
@@ -201,7 +202,7 @@ def get_commit_list(df, date, main_json, args):
         if last_commit['commit_parents'] != '[]':
             splitted = last_commit['commit_parents'].split('\'')
             if len(splitted) > 3:
-                next_commit = last_commit['commit_parents'].split('\'')[3]
+                next_commit = last_commit['commit_parents'].split('\'')[1]
             else:
                 next_commit = last_commit['commit_parents'].split('\'')[1]
         else:
@@ -253,7 +254,7 @@ def get_commit_list(df, date, main_json, args):
             'file': "data_{}.json".format(i),
             'data_{}'.format(i): entities_simple,
             # 'data_{}_tree'.format(i): entities_simple_all_commits_tree
-            'data_{}_allfiles'.format(i): ENTITIES_SIMPLE_ACC
+            'data_{}_allfiles'.format(i): copy.deepcopy(ENTITIES_SIMPLE_ACC)
         })
         
         # Increment last_commit and i var
@@ -282,6 +283,7 @@ def generate_entities(data, entities):
             generate_entities(item['children'], new_item['children'])
             entities.append(new_item)
         else:
+            
             # TODO: Bypass if
             if 'children' not in item:
                 continue
