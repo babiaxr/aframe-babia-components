@@ -15,6 +15,7 @@ AFRAME.registerComponent('geopiechart', {
         titleFont: {type: 'string'},
         titleColor: {type: 'string'},
         titlePosition: {type: 'string', default: "0 0 0"},
+        animation: {type: 'boolean', default: false},
     },
 
     /**
@@ -47,6 +48,7 @@ AFRAME.registerComponent('geopiechart', {
                 this.el.firstChild.remove();
             console.log("Generating pie...")
             generatePie(data, el)
+            loaded = true
         }
     },
     /**
@@ -58,7 +60,23 @@ AFRAME.registerComponent('geopiechart', {
     /**
     * Called on each scene tick.
     */
-    // tick: function (t) { },
+    tick: function (t, delta) {
+        if (animation && loaded ){
+            let elements = document.getElementsByClassName('babiaxrChart')[0].children
+            for (let slice in slice_array){
+                let delay = slice_array[slice].delay
+                let max_length = slice_array[slice].degreeLenght
+                let theta_length = parseFloat(elements[slice].getAttribute('theta-length'))
+                if ((t >= delay) && ( theta_length < max_length )){
+                    theta_length += 360 * delta / total_durtation
+                    if (theta_length > max_length){
+                        theta_length = max_length
+                    }
+                    elements[slice].setAttribute('theta-length', theta_length)
+                }
+            }
+        }
+     },
 
     /**
     * Called when entity pauses.
@@ -74,6 +92,11 @@ AFRAME.registerComponent('geopiechart', {
 
 })
 
+let animation
+let slice_array = []
+let loaded = false
+let total_durtation = 4000
+
 let generatePie = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
@@ -82,6 +105,7 @@ let generatePie = (data, element) => {
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
+        animation = data.animation
 
         // Change size to degrees
         let totalSize = 0
@@ -99,10 +123,24 @@ let generatePie = (data, element) => {
 
         element.appendChild(chart_entity)
 
+        let prev_delay = 0
         for (let slice of dataToPrint) {
-            //Calculate degrees
+            //Calculate degrees        
             degreeEnd = 360 * slice['size'] / totalSize;
-            let sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid, palette);
+
+            let sliceEntity
+            if (animation){
+                let duration_slice = total_durtation * degreeEnd / 360
+                slice_array.push({
+                    degreeLenght : degreeEnd,
+                    duration: duration_slice,
+                    delay : prev_delay
+                })
+                prev_delay += duration_slice;
+                sliceEntity = generateSlice(degreeStart, 0.01, 1, colorid, palette);
+            } else {
+                sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid, palette);
+            }
             //Move degree offset
             degreeStart += degreeEnd;
 

@@ -130,6 +130,7 @@ This component shows a pie chart.
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
 | titlePosition          | Position of the title  | string | 0 0 0 |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
@@ -315,6 +316,7 @@ This component shows a doughnut chart.
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
 | titlePosition          | Position of the title  | string | 0 0 0 |
+| animation          | Animates chart   | boolean | false |
 | data          | Data to show with the chart  | JSON (list of objects) | - |
 
 #### Data format
