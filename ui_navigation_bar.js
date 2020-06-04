@@ -26,10 +26,6 @@ AFRAME.registerComponent('ui-navigation-bar', {
         let data = this.data
         el = this.el
         points = JSON.parse(data.commits)
-        /*points.forEach(point => {
-            console.log(point.date)
-            console.log(point.commit)
-        });*/
     },
 
     /**
@@ -95,7 +91,15 @@ function createTimePoint(point){
     entity.setAttribute('radius', 0.05)
     entity.setAttribute('material', {color: '#FF0000'})
     showInfo(entity, point)
+    setPoint(entity, point)
     return entity
+}
+
+function setPoint(element, data){
+    element.addEventListener('click', function(){
+        console.log('click')
+        el.emit('babiaShow', {data: data})
+    });
 }
 
 function showInfo(element, data){
@@ -214,6 +218,7 @@ function forwardButton(){
 
 function skipPreviousButton(){
     let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrSkipPrev')
     let vertices = [[0, 0, 0], [0, 3, 0], [1, 1.5, 0], [1, 3, 0], [2, 1.5, 0], [2, 3, 0], [2.5, 3, 0],
                     [2.5, 0, 0], [2, 0, 0], [2, 1.5, 0], [1, 0, 0], [1, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
@@ -228,6 +233,7 @@ function skipPreviousButton(){
 
 function skipNextButton(){
     let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrSkipNext')
     let vertices = [[0, 0, 0], [0, 3, 0], [1, 1.5, 0], [1, 3, 0], [2, 1.5, 0], [2, 3, 0], [2.5, 3, 0],
                     [2.5, 0, 0], [2, 0, 0], [2, 1.5, 0], [1, 0, 0], [1, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
@@ -341,6 +347,11 @@ function emitEvents(element, event_name){
         } else if (element.classList == 'babiaxrPause'){
             player.removeChild(pause_button)
             player.appendChild(play_button)
+        } else if ((element.classList == 'babiaxrSkipNext') || (element.classList == 'babiaxrSkipPrev')){
+            if (document.getElementsByClassName('babiaxrPause')[0]){
+                player.removeChild(pause_button)
+                player.appendChild(play_button)
+            }
         }
         console.log('Emit..... ' + event_name)
         el.emit(event_name)
