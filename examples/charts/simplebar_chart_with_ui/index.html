@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Babia components</title>
+    <meta name="description" content="Bubble example for A-Charts component." />
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>    
+</head>
+
+<body>
+
+    <a-scene stats background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment="playArea: 2"></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <a-assets>
+            <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
+        </a-assets>
+
+        <a-entity id="datatest1" querier_json="url: ./data.json;"></a-entity>
+        <a-entity id="datatest2" querier_json="url: ./data2.json;"></a-entity>
+        <a-entity id="datatest3" querier_json="url: ./data3.json;"></a-entity>
+        <a-entity id="datatest4" querier_json="url: ./data4.json;"></a-entity>
+        <a-entity id="datatest5" querier_json="url: ./data5.json;"></a-entity>
+        <a-entity id="datatest6" querier_json="url: ./data6.json;"></a-entity>
+
+        <a-entity id="bar" geosimplebarchart='legend: true; axis: true; palette: commerce;  title: geosimplebarchart;
+            titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -7.5 0.3 0.5; heightMax: 20'
+            filterdata="from: datatest1" vismapper="x_axis: name; height: size"
+        position="0 0 0" rotation="0 0 0"></a-entity>
+
+        <a-entity id="navigationbar" ui-navigation-bar =
+        'commits: [{"date": "01/30/2003", "commit": "datatest1"}, 
+                  {"date": "02/17/2003", "commit": "datatest2"},
+                  {"date": "04/06/2003", "commit": "datatest3"},
+                  {"date": "07/30/2003", "commit": "datatest4"},
+                  {"date": "10/24/2003", "commit": "datatest5"},
+                  {"date": "01/13/2004", "commit": "datatest6"}]'
+        position = '-20 15 5' scale="3 3 3"></a-entity>
+
+        <a-entity event-controller = 'navigation: navigationbar; target: bar'></a-entity>
+
+        <a-entity movement-controls="fly: true" position="-3 5 20">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+    </a-scene>
+
+</body>
+</html>
