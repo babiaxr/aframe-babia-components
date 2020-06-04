@@ -45,7 +45,7 @@ INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_perceval_com
 DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval_commitbycommit.csv'
 DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval_commitbycommit.csv'
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_perceval_commitbycommit/'
+CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_perceval_weeks/'
 
 HEIGHT_FIELD = 'loc'
 AREA_FIELD = 'num_funs'
@@ -123,6 +123,8 @@ def main():
             while i < int(args.samples):
                 logging.debug("{} lap of time evolution".format(i))
                 data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days)))
+                if data is None:
+                    break
                 entities_simple = find_children(data, [])
                 entities_tree = generate_entities(data, [])
                 if args.export_snapshots:
@@ -202,7 +204,7 @@ def get_commit_list(df, date, main_json, args):
         if last_commit['commit_parents'] != '[]':
             splitted = last_commit['commit_parents'].split('\'')
             if len(splitted) > 3:
-                next_commit = last_commit['commit_parents'].split('\'')[1]
+                next_commit = last_commit['commit_parents'].split('\'')[3]
             else:
                 next_commit = last_commit['commit_parents'].split('\'')[1]
         else:
@@ -484,6 +486,8 @@ def normalize_column(df, field, scalar_bottom, scalar_top):
 def extract_data(df_raw, date):
     # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
     df = filter_closest_date(df_raw, date)
+    if df.empty:
+        return None
     entities = extract_data_from_df_filtered(df_raw, df)
     return entities
     
