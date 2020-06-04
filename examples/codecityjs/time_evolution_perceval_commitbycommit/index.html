@@ -6,9 +6,8 @@
   <title>A-Frame CodeCity Component - Time evolution</title>
   <meta name="description" content="Basic example for CodeCity component.">
   </meta>
-  <script src="https://aframe.io/releases/1.0.1/aframe.min.js"></script>
-  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v6.0.0/dist/aframe-extras.min.js"></script>
-  <!--    <script src="../../dist/aframe-codecity-component.min.js"></script> -->
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
   <script src="../../../dist/aframe-babia-components.min.js"></script>
   <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
   <script
@@ -35,13 +34,11 @@
               data: main_data.json; time_evolution_init: data_650; time_evolution_past_present: true'>
     </a-entity>
 
-    <!--      <a-entity movement-controls="fly: true" position="50 20 -4" rotation="-90 0 0"> -->
     <a-entity movement-controls="fly: true" position="0 0 4">
-      <!--      <a-entity movement-controls="fly: true" position="0 15 -7" rotation="-90 0 0"> -->
-      <a-entity camera position="0 3 4" look-controls></a-entity>
-      <a-entity laser-controls="hand: right" cursor="rayOrigin:mouse" raycaster="objects: .mouseentertitles"></a-entity>
-      <a-entity></a-entity>
-    </a-entity>
+      <a-entity camera position="0 6 10" look-controls></a-entity>
+      <a-entity cursor="rayOrigin:mouse"></a-entity>
+      <a-entity laser-controls="hand: right"></a-entity>
+  </a-entity>
 
   </a-scene>
 

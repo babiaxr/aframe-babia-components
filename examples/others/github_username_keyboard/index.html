@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <title>A-Frame CodeCity</title>
     <meta name="description" content="Bubble example for A-Charts component." />
-    <script src="https://aframe.io/releases/1.0.1/aframe.min.js"></script>
-    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
     <script src="https://unpkg.com/aframe-super-keyboard@2.0.2/dist/aframe-super-keyboard.min.js"></script>
     <script src="../../../dist/aframe-babia-components.min.js"></script>
@@ -37,10 +37,11 @@
 
         <a-entity movement-controls="fly: true" position="-3 5 20">
             <a-entity camera position="0 0 0" look-controls></a-entity>
-            <a-entity id="mouseCursor" laser-controls="hand: right" cursor="rayOrigin:mouse"></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
         </a-entity>
 
     </a-scene>
 
 </body>
-</>
+</html>
