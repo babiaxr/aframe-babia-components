@@ -98,7 +98,11 @@ function createTimePoint(point){
 function setPoint(element, data){
     element.addEventListener('click', function(){
         console.log('click')
-        el.emit('babiaShow', {data: data})
+        el.emit('babiaxrShow', {data: data})
+        if (document.getElementsByClassName('babiaxrPause')[0]){
+            player.removeChild(pause_button)
+            player.appendChild(play_button)
+        }
     });
 }
 
@@ -106,12 +110,21 @@ function showInfo(element, data){
     let legend
     element.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
+        //legend = generateLegend(data);
+        //this.appendChild(legend);
+    });
+
+    element.addEventListener('showinfo', function () {
         legend = generateLegend(data);
         this.appendChild(legend);
     });
 
     element.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
+        //this.removeChild(legend);
+    });
+
+    element.addEventListener('removeinfo', function () {
         this.removeChild(legend);
     });
 }
@@ -339,7 +352,6 @@ function merge_model(vertices1, vertices2){
 }
 
 function emitEvents(element, event_name){
-
     element.addEventListener('click', function () {
         if (element.classList == 'babiaxrPlay'){
             player.removeChild(element)
@@ -356,5 +368,4 @@ function emitEvents(element, event_name){
         console.log('Emit..... ' + event_name)
         el.emit(event_name)
     });
-
 }

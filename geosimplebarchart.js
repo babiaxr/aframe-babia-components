@@ -18,7 +18,7 @@ AFRAME.registerComponent('geosimplebarchart', {
         titleColor: {type: 'string'},
         titlePosition: {type: 'string', default: "0 0 0"},
         scale: {type: 'number'},
-        heightMax: {type: 'number'}
+        heightMax: {type: 'number'},
     },
 
     /**
@@ -29,10 +29,7 @@ AFRAME.registerComponent('geosimplebarchart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-    },
+    init: function () {},
 
     /**
     * Called when component is attached and when component data changes.
@@ -41,7 +38,7 @@ AFRAME.registerComponent('geosimplebarchart', {
 
     update: function (oldData) {
         let data = this.data;
-        let el = this.el;
+        let el = this.el; 
 
         /**
          * Update or create chart component
@@ -94,6 +91,10 @@ let generateBarChart = (data, element) => {
         let axis_dict = []
         let animation = data.animation
 
+        //Print Title
+        let title_3d = showTitle(title, font, color, title_position);
+        element.appendChild(title_3d);
+
         let maxY = Math.max.apply(Math, dataToPrint.map(function(o) { return o.size; }))
         if (scale) {
             maxY = maxY / scale
@@ -140,9 +141,6 @@ let generateBarChart = (data, element) => {
             showYAxis(element, maxY, scale)
         }
 
-        //Print Title
-        let title_3d = showTitle(title, font, color, title_position);
-        element.appendChild(title_3d);
     }
 }
 
