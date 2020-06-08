@@ -132,6 +132,11 @@ AFRAME.registerComponent('codecity', {
         time_evolution_past_present: {
             type: 'boolean',
             default: false
+        },
+        // ui navbar UD
+        ui_navbar: {
+            type: 'string',
+            default: ""
         }
     },
 
@@ -1200,9 +1205,21 @@ let requestJSONDataFromURL = (data) => {
         initItems = first_tree["data_0"]
 
         // Items of the time evolution
+        let navbarData = []
         for (let i = 0; i < main_json.data_files.length; i++) {
             let array_of_tree_to_retrieve = "data_" + i
             timeEvolutionItems[array_of_tree_to_retrieve] = main_json.data_files[i]
+            navbarData.push({
+                date: new Date(main_json.data_files[i].date * 1000).toLocaleDateString(),
+                commit: main_json.data_files[i].key,
+                data: i
+            })
+        }
+
+        // Navbar if defined
+        if (data.ui_navbar) {
+            ui_navbar = data.ui_navbar
+            document.getElementById(ui_navbar).setAttribute("ui-navigation-bar", "commits", JSON.stringify(navbarData.reverse()))
         }
 
         // Change init tree if needed
@@ -1235,6 +1252,7 @@ let requestJSONDataFromURL = (data) => {
 
 let time_evolution = false
 let time_evolution_commit_by_commit = false
+let ui_navbar = undefined
 let timeEvolutionItems = {}
 let dateBarEntity
 let deltaTimeEvolution = 8000
@@ -1242,6 +1260,7 @@ let main_json = {}
 let initItems = undefined
 let changedItems = []
 let index = 0
+let timeEvolTimeout = undefined
 
 
 /**
@@ -1328,56 +1347,56 @@ function time_evol() {
 
     let i = 0
 
+    if (ui_navbar) {
+        // Events from the navbar
+        document.addEventListener('babiaxrToPast', function () {
+            time_evolution_past_present = false
+        })
+        document.addEventListener('babiaxrToPresent', function () {
+            time_evolution_past_present = true
+        })
+        document.addEventListener('babiaxrStop', function () {
+            clearInterval(timeEvolTimeout)
+        })
+        document.addEventListener('babiaxrContinue', function () {
+            timeEvolTimeout = setTimeout(function () {
+
+                loopLogic(maxFiles, i)
+
+                if (i < maxFiles - 1) {
+                    loop();
+                }
+            }, deltaTimeEvolution);
+        })
+        document.addEventListener('babiaxrSkipNext', function () {
+            time_evolution_past_present = false
+            clearInterval(timeEvolTimeout)
+            i--
+            index--
+            changeCity()
+        })
+        document.addEventListener('babiaxrSkipPrev', function () {
+            time_evolution_past_present = true
+            clearInterval(timeEvolTimeout)
+            i++
+            index++
+            changeCity()
+        })
+        document.addEventListener('babiaxrShow', function (event) {
+            clearInterval(timeEvolTimeout)
+            eventData = event.detail.data
+            i = eventData.data
+            index = i - 1
+            changeCity()
+        })
+
+    }
     let loop = () => {
-        setTimeout(function () {
-            console.log("Loop number", i)
-            let key = "data_" + (index + 1)
-            let key2
-            if (time_evolution_past_present) {
-                key2 = "data_reverse_" + (index + 1)
-            } else {
-                key2 = "data_" + (index + 1)
-            }
-            
+        timeEvolTimeout = setTimeout(function () {
 
-            // Change Date
-            let text = "Date: " + new Date(timeEvolutionItems[key].date * 1000).toLocaleDateString()
-            if (timeEvolutionItems[key].commit_sha) {
-                text += "\n\nCommit: " + timeEvolutionItems[key].commit_sha
-            }
-            dateBarEntity.setAttribute('text-geometry', 'value', text)
+            loopLogic(maxFiles, i)
 
-            changedItems = []
-            timeEvolutionItems[key][key2].forEach((item) => {
-                changeBuildingLayout(item)
-            })
 
-            // Put height 0 those that not exists
-            if (!time_evolution_commit_by_commit) {
-                initItems.forEach((item) => {
-                    if (!changedItems.includes(item.id)) {
-                        let prevPos = document.getElementById(item.id).getAttribute("position")
-                        document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
-                        document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: 0, z: prevPos.z })
-                    }
-                })
-            }
-
-            if (time_evolution_past_present) {
-                index--
-                if (index == 0) {
-                    console.log("finished")
-                }
-            } else {
-                index++
-                if (index > maxFiles - 1) {
-                    index = 0
-                }
-            }
-
-            i++;
-
-            updateCity()
 
             if (i < maxFiles - 1) {
                 loop();
@@ -1390,6 +1409,70 @@ function time_evol() {
     }
 
     doIt();
+
+}
+
+let loopLogic = (maxFiles, i) => {
+    console.log("Loop number", i)
+
+    changeCity()
+
+    if (time_evolution_past_present) {
+        index--
+        if (index == 0) {
+            console.log("finished")
+        }
+        i--
+    } else {
+        index++
+        i++;
+        if (index > maxFiles - 1) {
+            index = 0
+        }
+    }
+
+}
+
+let changeCity = () => {
+    let key = "data_" + (index + 1)
+    let key2
+    if (time_evolution_past_present) {
+        key2 = "data_reverse_" + (index + 1)
+    } else {
+        key2 = "data_" + (index + 1)
+    }
+
+
+    // Change Date
+    let text = "Date: " + new Date(timeEvolutionItems[key].date * 1000).toLocaleDateString()
+    if (timeEvolutionItems[key].commit_sha) {
+        text += "\n\nCommit: " + timeEvolutionItems[key].commit_sha
+    }
+    dateBarEntity.setAttribute('text-geometry', 'value', text)
+
+    changedItems = []
+    if (timeEvolutionItems[key][key2]) {
+        timeEvolutionItems[key][key2].forEach((item) => {
+            changeBuildingLayout(item)
+        })
+    } else {
+        timeEvolutionItems[key][key].forEach((item) => {
+            changeBuildingLayout(item)
+        })
+    }
+
+    // Put height 0 those that not exists
+    if (!time_evolution_commit_by_commit) {
+        initItems.forEach((item) => {
+            if (!changedItems.includes(item.id)) {
+                let prevPos = document.getElementById(item.id).getAttribute("position")
+                let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
+                document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
+                document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (-0.1 / 2), z: prevPos.z })
+            }
+        })
+    }
+    updateCity()
 }
 
 let changeBuildingLayout = (item) => {

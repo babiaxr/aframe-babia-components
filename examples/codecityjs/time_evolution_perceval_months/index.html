@@ -13,7 +13,8 @@
   <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
   <script
     src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
-  <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+  <script
+    src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
 </head>
 
 <body>
@@ -31,8 +32,10 @@
 
     <a-entity position="0 0 -3" id="codecity" codecity='width: 20; depth: 20; streets: true; color: green;
               extra: 1.5; base_thick: 0.3; split: pivot; titles: true;
-              data: main_data.json'>
+              data: main_data.json; ui_navbar: navigationbar'>
     </a-entity>
+
+    <a-entity id="navigationbar" ui-navigation-bar position='-20 15 0' scale="3 3 3"></a-entity>
 
     <!--      <a-entity movement-controls="fly: true" position="50 20 -4" rotation="-90 0 0"> -->
     <a-entity movement-controls="fly: true" position="0 0 4">
