@@ -130,7 +130,9 @@ function showInfo(element, data){
     });
 
     element.addEventListener('removeinfo', function () {
-        this.removeChild(legend);
+        if(legend){
+            this.removeChild(legend);
+        }
     });
 }
 
