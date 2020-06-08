@@ -1218,6 +1218,7 @@ let requestJSONDataFromURL = (data) => {
 
         // Navbar if defined
         if (data.ui_navbar) {
+            last_uinavbar = parseInt(data.time_evolution_init.split("_")[1])
             ui_navbar = data.ui_navbar
             document.getElementById(ui_navbar).setAttribute("ui-navigation-bar", "commits", JSON.stringify(navbarData.reverse()))
         }
@@ -1253,6 +1254,7 @@ let requestJSONDataFromURL = (data) => {
 let time_evolution = false
 let time_evolution_commit_by_commit = false
 let ui_navbar = undefined
+let last_uinavbar = undefined
 let timeEvolutionItems = {}
 let dateBarEntity
 let deltaTimeEvolution = 8000
@@ -1347,6 +1349,8 @@ function time_evol() {
 
     let i = 0
 
+
+
     if (ui_navbar) {
         // Events from the navbar
         document.addEventListener('babiaxrToPast', function () {
@@ -1371,13 +1375,18 @@ function time_evol() {
         document.addEventListener('babiaxrSkipNext', function () {
             time_evolution_past_present = false
             clearInterval(timeEvolTimeout)
+            showLegendUiNavBar(maxFiles - index - 1)
+            last_uinavbar = maxFiles - index - 1
             i--
             index--
+            
             changeCity()
         })
         document.addEventListener('babiaxrSkipPrev', function () {
             time_evolution_past_present = true
             clearInterval(timeEvolTimeout)
+            showLegendUiNavBar(maxFiles - index - 3)
+            last_uinavbar = maxFiles - index - 3
             i++
             index++
             changeCity()
@@ -1386,6 +1395,8 @@ function time_evol() {
             clearInterval(timeEvolTimeout)
             eventData = event.detail.data
             i = eventData.data
+            showLegendUiNavBar(maxFiles - i - 1)
+            last_uinavbar = maxFiles - i - 1
             index = i - 1
             changeCity()
         })
@@ -1394,9 +1405,12 @@ function time_evol() {
     let loop = () => {
         timeEvolTimeout = setTimeout(function () {
 
+            if (ui_navbar) {
+                showLegendUiNavBar(maxFiles - index - 2)
+            }
+            last_uinavbar = maxFiles - index - 2
+
             loopLogic(maxFiles, i)
-
-
 
             if (i < maxFiles - 1) {
                 loop();
@@ -1534,4 +1548,14 @@ let findLeafs = (data, entities) => {
         }
     })
     return entities
-}   
+}
+
+let showLegendUiNavBar = (i) => {
+    let entities = document.getElementsByClassName('babiaxrTimeBar')[0].children
+    if (last_uinavbar || last_uinavbar == 0) {
+        let pointToHide = entities[last_uinavbar]
+        pointToHide.emit('removeinfo')
+    }
+    let pointToShow = entities[i]
+    pointToShow.emit('showinfo')
+}
