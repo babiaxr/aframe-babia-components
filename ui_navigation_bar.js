@@ -4,6 +4,7 @@ if (typeof AFRAME === 'undefined') {
 }
 
 let points
+let size
 let play_button
 let pause_button
 let player
@@ -12,6 +13,7 @@ let el
 AFRAME.registerComponent('ui-navigation-bar', {
     schema: {
         commits: { type: 'string' },
+        size: { type: 'number', default: '5'},
     },
 
     /**
@@ -26,6 +28,7 @@ AFRAME.registerComponent('ui-navigation-bar', {
         let data = this.data
         el = this.el
         points = JSON.parse(data.commits)
+        size = data.size
     },
 
     /**
@@ -34,7 +37,7 @@ AFRAME.registerComponent('ui-navigation-bar', {
     */
 
    update: function (oldData) {
-       let time_bar = createTimeBar(points)
+       let time_bar = createTimeBar(points, size)
        this.el.appendChild(time_bar)
        player = createPlayer()
        this.el.appendChild(player)
@@ -61,12 +64,12 @@ AFRAME.registerComponent('ui-navigation-bar', {
 })
 
 
-function createTimeBar(elements){
+function createTimeBar(elements, size){
     let timebar_entity = document.createElement('a-entity')
     timebar_entity.classList.add('babiaxrTimeBar')
 
     let posX = 0
-    let stepX = 5 / (elements.length - 1)
+    let stepX = size / (elements.length - 1)
 
     elements.forEach(i => {
         let point = createTimePoint(i)
@@ -79,7 +82,7 @@ function createTimeBar(elements){
     let bar_line = document.createElement('a-entity')
     bar_line.setAttribute('line',{
         start : '0 0 0',
-        end : '5 0 0',
+        end : size + ' 0 0',
         color : '#FF0000',
     })
     timebar_entity.appendChild(bar_line)
@@ -90,6 +93,7 @@ function createTimePoint(point){
     let entity = document.createElement('a-sphere')
     entity.setAttribute('radius', 0.05)
     entity.setAttribute('material', {color: '#FF0000'})
+    entity.setAttribute('legend', false)
     showInfo(entity, point)
     setPoint(entity, point)
     return entity
@@ -108,10 +112,11 @@ function setPoint(element, data){
 
 function showInfo(element, data){
     let legend
+    let legend2
     element.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        //legend = generateLegend(data);
-        //this.appendChild(legend);
+        legend2 = generateLegend(data);
+        this.appendChild(legend2);
     });
 
     element.addEventListener('showinfo', function () {
@@ -121,7 +126,7 @@ function showInfo(element, data){
 
     element.addEventListener('mouseleave', function () {
         this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        //this.removeChild(legend);
+        this.removeChild(legend2);
     });
 
     element.addEventListener('removeinfo', function () {
@@ -162,6 +167,7 @@ function createPlayer(){
     // New entity player and then create buttons
     let player_entity = document.createElement('a-entity')
     player_entity.classList.add('babiaxrPlayer')
+    player_entity.setAttribute('position', {x: (size - 5)/2, y: 0, z: 0})
 
     play_button = playButton(player_entity)
     play_button.setAttribute('position', {x: 2.35, y: -0.65, z: 0})
