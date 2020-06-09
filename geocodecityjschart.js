@@ -4,6 +4,8 @@ if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+let rootCodecityEntity
+
 /**
  * CodeCity component for A-Frame.
  */
@@ -152,6 +154,7 @@ AFRAME.registerComponent('codecity', {
         this.loader = new THREE.FileLoader();
         let data = this.data;
         let el = this.el;
+        rootCodecityEntity = el;
 
         if (typeof data.data == 'string') {
             if (data.data.endsWith('json')) {
@@ -650,6 +653,7 @@ let Zone = class {
                 let legend;
                 box.addEventListener('mouseenter', function () {
                     let oldGeometry = box.getAttribute('geometry')
+                    let boxPosition = box.getAttribute("position")
                     this.setAttribute('geometry', {
                         height: oldGeometry.height + 0.1,
                         depth: oldGeometry.depth + 0.1,
@@ -658,8 +662,8 @@ let Zone = class {
                     this.setAttribute('material', {
                         'visible': true
                     });
-                    legend = generateLegend(this.getAttribute("id"), this, null);
-                    this.appendChild(legend)
+                    legend = generateLegend(this.getAttribute("id"), this, boxPosition, null);
+                    rootCodecityEntity.appendChild(legend)
                 })
 
                 box.addEventListener('mouseleave', function () {
@@ -672,7 +676,7 @@ let Zone = class {
                     this.setAttribute('material', {
                         'visible': false
                     });
-                    this.removeChild(legend)
+                    rootCodecityEntity.removeChild(legend)
                 })
             }
         };
@@ -1312,7 +1316,7 @@ let dateBar = (data) => {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (text, buildingEntity, model) => {
+let generateLegend = (text, buildingEntity, boxPosition, model) => {
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
@@ -1326,7 +1330,7 @@ let generateLegend = (text, buildingEntity, model) => {
 
     let entity = document.createElement('a-plane');
 
-    entity.setAttribute('position', { x: 0, y: height / 2 + 1, z: 0 });
+    entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -1533,10 +1537,10 @@ let changeBuildingLayout = (item) => {
 
 let updateCity = () => {
     console.log("Changing city")
-    document.getElementById('codecity').children[0].removeAttribute('geometry-merger')
-    document.getElementById('codecity').children[0].removeAttribute('material')
-    document.getElementById('codecity').children[0].setAttribute('geometry-merger', { preserveOriginal: true })
-    document.getElementById('codecity').children[0].setAttribute('material', { vertexColors: 'face' });
+    rootCodecityEntity.children[0].removeAttribute('geometry-merger')
+    rootCodecityEntity.children[0].removeAttribute('material')
+    rootCodecityEntity.children[0].setAttribute('geometry-merger', { preserveOriginal: true })
+    rootCodecityEntity.children[0].setAttribute('material', { vertexColors: 'face' });
 }
 
 let findLeafs = (data, entities) => {
