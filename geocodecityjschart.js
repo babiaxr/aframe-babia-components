@@ -1222,7 +1222,11 @@ let requestJSONDataFromURL = (data) => {
 
         // Navbar if defined
         if (data.ui_navbar) {
-            last_uinavbar = parseInt(data.time_evolution_init.split("_")[1])
+            if (data.time_evolution_past_present){
+                last_uinavbar = parseInt(data.time_evolution_init.split("_")[1])
+            } else {
+                last_uinavbar = main_json.data_files.length - 1
+            }
             ui_navbar = data.ui_navbar
             document.getElementById(ui_navbar).setAttribute("ui-navigation-bar", "commits", JSON.stringify(navbarData.reverse()))
         }
