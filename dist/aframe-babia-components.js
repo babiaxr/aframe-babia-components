@@ -239,6 +239,7 @@ AFRAME.registerComponent('event-controller', {
         chart = data.target
 
         time_evol(navigation)
+        
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -274,6 +275,7 @@ let current
 let last
 let reverse = false
 let first_time = true
+let firts_point = 0
 
 function time_evol(navigation){ 
     let commits = document.getElementById(navigation).getAttribute('ui-navigation-bar').commits
@@ -285,9 +287,14 @@ function time_evol(navigation){
         data_array_reverse.reverse() 
         
         // First current
-        showDate(0)
-        current = data_array[0]
-        last = '0'
+        if (reverse){
+            let position = (data_array.length - 1) - firts_point
+            current = data_array_reverse[firts_point]
+            last = position
+        } else {
+            current = data_array[firts_point]
+            last = firts_point
+        }
         first_time = false
         controls()
     }
@@ -366,8 +373,12 @@ function changeChart(){
 }
 
 function controls(){
-    play(data_array)
-
+    if (reverse){
+        play(data_array_reverse)
+    } else {
+        play(data_array)
+    }
+    
     document.addEventListener('babiaxrShow', function (event) {
         changePoint(event.detail.data)
         el.emit('babiaxrStop')
@@ -1836,6 +1847,8 @@ if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+let rootCodecityEntity
+
 /**
  * CodeCity component for A-Frame.
  */
@@ -1984,6 +1997,7 @@ AFRAME.registerComponent('codecity', {
         this.loader = new THREE.FileLoader();
         let data = this.data;
         let el = this.el;
+        rootCodecityEntity = el;
 
         if (typeof data.data == 'string') {
             if (data.data.endsWith('json')) {
@@ -2482,6 +2496,7 @@ let Zone = class {
                 let legend;
                 box.addEventListener('mouseenter', function () {
                     let oldGeometry = box.getAttribute('geometry')
+                    let boxPosition = box.getAttribute("position")
                     this.setAttribute('geometry', {
                         height: oldGeometry.height + 0.1,
                         depth: oldGeometry.depth + 0.1,
@@ -2490,8 +2505,8 @@ let Zone = class {
                     this.setAttribute('material', {
                         'visible': true
                     });
-                    legend = generateLegend(this.getAttribute("id"), this, null);
-                    this.appendChild(legend)
+                    legend = generateLegend(this.getAttribute("id"), this, boxPosition, null);
+                    rootCodecityEntity.appendChild(legend)
                 })
 
                 box.addEventListener('mouseleave', function () {
@@ -2504,7 +2519,7 @@ let Zone = class {
                     this.setAttribute('material', {
                         'visible': false
                     });
-                    this.removeChild(legend)
+                    rootCodecityEntity.removeChild(legend)
                 })
             }
         };
@@ -3050,7 +3065,11 @@ let requestJSONDataFromURL = (data) => {
 
         // Navbar if defined
         if (data.ui_navbar) {
-            last_uinavbar = parseInt(data.time_evolution_init.split("_")[1])
+            if (data.time_evolution_past_present){
+                last_uinavbar = parseInt(data.time_evolution_init.split("_")[1])
+            } else {
+                last_uinavbar = main_json.data_files.length - 1
+            }
             ui_navbar = data.ui_navbar
             document.getElementById(ui_navbar).setAttribute("ui-navigation-bar", "commits", JSON.stringify(navbarData.reverse()))
         }
@@ -3144,7 +3163,7 @@ let dateBar = (data) => {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (text, buildingEntity, model) => {
+let generateLegend = (text, buildingEntity, boxPosition, model) => {
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
@@ -3158,7 +3177,7 @@ let generateLegend = (text, buildingEntity, model) => {
 
     let entity = document.createElement('a-plane');
 
-    entity.setAttribute('position', { x: 0, y: height / 2 + 1, z: 0 });
+    entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -3365,10 +3384,10 @@ let changeBuildingLayout = (item) => {
 
 let updateCity = () => {
     console.log("Changing city")
-    document.getElementById('codecity').children[0].removeAttribute('geometry-merger')
-    document.getElementById('codecity').children[0].removeAttribute('material')
-    document.getElementById('codecity').children[0].setAttribute('geometry-merger', { preserveOriginal: true })
-    document.getElementById('codecity').children[0].setAttribute('material', { vertexColors: 'face' });
+    rootCodecityEntity.children[0].removeAttribute('geometry-merger')
+    rootCodecityEntity.children[0].removeAttribute('material')
+    rootCodecityEntity.children[0].setAttribute('geometry-merger', { preserveOriginal: true })
+    rootCodecityEntity.children[0].setAttribute('material', { vertexColors: 'face' });
 }
 
 let findLeafs = (data, entities) => {
@@ -5520,11 +5539,17 @@ let play_button
 let pause_button
 let player
 let el
+let last_color
+let point_color
+let to
+let start
 
 AFRAME.registerComponent('ui-navigation-bar', {
     schema: {
         commits: { type: 'string' },
         size: { type: 'number', default: '5'},
+        to: {type: 'string', default: 'left'},
+        start_point: {type: 'number', default: '0'},
     },
 
     /**
@@ -5540,6 +5565,13 @@ AFRAME.registerComponent('ui-navigation-bar', {
         el = this.el
         points = JSON.parse(data.commits)
         size = data.size
+        to = data.to
+        start = data.start_point 
+        let time_bar = createTimeBar(points, size)
+        this.el.appendChild(time_bar)
+        player = createPlayer()
+        this.el.appendChild(player)
+        setStart()
     },
 
     /**
@@ -5548,10 +5580,6 @@ AFRAME.registerComponent('ui-navigation-bar', {
     */
 
    update: function (oldData) {
-       let time_bar = createTimeBar(points, size)
-       this.el.appendChild(time_bar)
-       player = createPlayer()
-       this.el.appendChild(player)
    },
 
     /**
@@ -5597,6 +5625,7 @@ function createTimeBar(elements, size){
         color : '#FF0000',
     })
     timebar_entity.appendChild(bar_line)
+
     return timebar_entity
 }
 
@@ -5604,15 +5633,24 @@ function createTimePoint(point){
     let entity = document.createElement('a-sphere')
     entity.setAttribute('radius', 0.05)
     entity.setAttribute('material', {color: '#FF0000'})
-    entity.setAttribute('legend', false)
     showInfo(entity, point)
     setPoint(entity, point)
     return entity
 }
 
+function setStart(){
+    let points = document.getElementsByClassName('babiaxrTimeBar')[0].children
+    for (let i in points){
+        if ((i == start)){
+            points[i].emit('showinfo')
+        }
+    }
+}
+
 function setPoint(element, data){
     element.addEventListener('click', function(){
-        console.log('click')
+        this.setAttribute('material', {color : '#00AA00'})
+        point_color = this.getAttribute('material').color
         el.emit('babiaxrShow', {data: data})
         if (document.getElementsByClassName('babiaxrPause')[0]){
             player.removeChild(pause_button)
@@ -5625,24 +5663,29 @@ function showInfo(element, data){
     let legend
     let legend2
     element.addEventListener('mouseenter', function () {
-        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend2 = generateLegend(data);
-        this.appendChild(legend2);
+        point_color = this.getAttribute('material').color
+        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 })
+        this.setAttribute('material', {color : '#AAAA00'})
+        legend2 = generateLegend(data)
+        this.appendChild(legend2)
     });
 
     element.addEventListener('showinfo', function () {
-        legend = generateLegend(data);
-        this.appendChild(legend);
+        legend = generateLegend(data)
+        this.setAttribute('material', {color : '#00AA00'})
+        this.appendChild(legend)
     });
 
     element.addEventListener('mouseleave', function () {
-        this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend2);
+        this.setAttribute('scale', { x: 1, y: 1, z: 1 })
+        this.setAttribute('material', {color: point_color})
+        this.removeChild(legend2)
     });
 
     element.addEventListener('removeinfo', function () {
         if(legend){
-            this.removeChild(legend);
+            this.removeChild(legend)
+            this.setAttribute('material', {color: '#FF0000'})
         }
     });
 }
@@ -5677,7 +5720,7 @@ function generateLegend (data) {
 }
 
 function createPlayer(){
-    // New entity player and then create buttons
+
     let player_entity = document.createElement('a-entity')
     player_entity.classList.add('babiaxrPlayer')
     player_entity.setAttribute('position', {x: (size - 5)/2, y: 0, z: 0})
@@ -5715,35 +5758,46 @@ function playButton(player){
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrContinue')
+    mouseOver(entity)
 
     return entity
 }
 
 function rewindButton(){
     let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrRewind')
     let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
                     [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
     entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
+    if (to == 'left'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrToPast')
+    mouseOver(entity)
 
     return entity
 }
 
 function forwardButton(){
     let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrForward')
     let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
                     [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
+    if (to == 'right'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrToPresent')
+    mouseOver(entity)
 
     return entity
 }
@@ -5757,8 +5811,9 @@ function skipPreviousButton(){
     entity.setObject3D('mesh', button);
     entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrSkipPrev')
+    mouseOver(entity)
 
     return entity
 }
@@ -5771,8 +5826,9 @@ function skipNextButton(){
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrSkipNext')
+    mouseOver(entity)
 
     return entity
 }
@@ -5785,8 +5841,9 @@ function pauseButton(){
     let button = merge_model(vertices_1, vertices_2);
     entity.setObject3D('mesh', button);
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrStop')
+    mouseOver(entity)
 
     return entity
 }
@@ -5870,6 +5927,17 @@ function merge_model(vertices1, vertices2){
     return mesh_extrude2;
 }
 
+function mouseOver(element){
+    element.addEventListener('mouseenter', function(){
+        last_color = Object.assign({}, this.object3DMap.mesh.material.color)
+        this.object3DMap.mesh.material.color = {r: 170/255, g: 170/255, b: 170/255}
+    })
+
+    element.addEventListener('mouseleave', function(){
+        this.object3DMap.mesh.material.color = last_color
+    })
+}
+
 function emitEvents(element, event_name){
     element.addEventListener('click', function () {
         if (element.classList == 'babiaxrPlay'){
@@ -5883,6 +5951,14 @@ function emitEvents(element, event_name){
                 player.removeChild(pause_button)
                 player.appendChild(play_button)
             }
+        } else if (element.classList == 'babiaxrForward'){
+            last_color = { r: 85/255, g: 85/255, b: 85/255 }
+            let button = document.getElementsByClassName('babiaxrRewind')[0]
+            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
+        } else if (element.classList == 'babiaxrRewind'){
+            last_color = { r: 85/255, g: 85/255, b: 85/255 }
+            let button = document.getElementsByClassName('babiaxrForward')[0]
+            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
         }
         console.log('Emit..... ' + event_name)
         el.emit(event_name)

@@ -9,11 +9,17 @@ let play_button
 let pause_button
 let player
 let el
+let last_color
+let point_color
+let to
+let start
 
 AFRAME.registerComponent('ui-navigation-bar', {
     schema: {
         commits: { type: 'string' },
         size: { type: 'number', default: '5'},
+        to: {type: 'string', default: 'left'},
+        start_point: {type: 'number', default: '0'},
     },
 
     /**
@@ -29,6 +35,13 @@ AFRAME.registerComponent('ui-navigation-bar', {
         el = this.el
         points = JSON.parse(data.commits)
         size = data.size
+        to = data.to
+        start = data.start_point 
+        let time_bar = createTimeBar(points, size)
+        this.el.appendChild(time_bar)
+        player = createPlayer()
+        this.el.appendChild(player)
+        setStart()
     },
 
     /**
@@ -37,10 +50,6 @@ AFRAME.registerComponent('ui-navigation-bar', {
     */
 
    update: function (oldData) {
-       let time_bar = createTimeBar(points, size)
-       this.el.appendChild(time_bar)
-       player = createPlayer()
-       this.el.appendChild(player)
    },
 
     /**
@@ -86,6 +95,7 @@ function createTimeBar(elements, size){
         color : '#FF0000',
     })
     timebar_entity.appendChild(bar_line)
+
     return timebar_entity
 }
 
@@ -93,15 +103,24 @@ function createTimePoint(point){
     let entity = document.createElement('a-sphere')
     entity.setAttribute('radius', 0.05)
     entity.setAttribute('material', {color: '#FF0000'})
-    entity.setAttribute('legend', false)
     showInfo(entity, point)
     setPoint(entity, point)
     return entity
 }
 
+function setStart(){
+    let points = document.getElementsByClassName('babiaxrTimeBar')[0].children
+    for (let i in points){
+        if ((i == start)){
+            points[i].emit('showinfo')
+        }
+    }
+}
+
 function setPoint(element, data){
     element.addEventListener('click', function(){
-        console.log('click')
+        this.setAttribute('material', {color : '#00AA00'})
+        point_color = this.getAttribute('material').color
         el.emit('babiaxrShow', {data: data})
         if (document.getElementsByClassName('babiaxrPause')[0]){
             player.removeChild(pause_button)
@@ -114,24 +133,29 @@ function showInfo(element, data){
     let legend
     let legend2
     element.addEventListener('mouseenter', function () {
-        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend2 = generateLegend(data);
-        this.appendChild(legend2);
+        point_color = this.getAttribute('material').color
+        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 })
+        this.setAttribute('material', {color : '#AAAA00'})
+        legend2 = generateLegend(data)
+        this.appendChild(legend2)
     });
 
     element.addEventListener('showinfo', function () {
-        legend = generateLegend(data);
-        this.appendChild(legend);
+        legend = generateLegend(data)
+        this.setAttribute('material', {color : '#00AA00'})
+        this.appendChild(legend)
     });
 
     element.addEventListener('mouseleave', function () {
-        this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-        this.removeChild(legend2);
+        this.setAttribute('scale', { x: 1, y: 1, z: 1 })
+        this.setAttribute('material', {color: point_color})
+        this.removeChild(legend2)
     });
 
     element.addEventListener('removeinfo', function () {
         if(legend){
-            this.removeChild(legend);
+            this.removeChild(legend)
+            this.setAttribute('material', {color: '#FF0000'})
         }
     });
 }
@@ -166,7 +190,7 @@ function generateLegend (data) {
 }
 
 function createPlayer(){
-    // New entity player and then create buttons
+
     let player_entity = document.createElement('a-entity')
     player_entity.classList.add('babiaxrPlayer')
     player_entity.setAttribute('position', {x: (size - 5)/2, y: 0, z: 0})
@@ -204,35 +228,46 @@ function playButton(player){
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrContinue')
+    mouseOver(entity)
 
     return entity
 }
 
 function rewindButton(){
     let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrRewind')
     let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
                     [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
     entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
+    if (to == 'left'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrToPast')
+    mouseOver(entity)
 
     return entity
 }
 
 function forwardButton(){
     let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrForward')
     let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
                     [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
+    if (to == 'right'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrToPresent')
+    mouseOver(entity)
 
     return entity
 }
@@ -246,8 +281,9 @@ function skipPreviousButton(){
     entity.setObject3D('mesh', button);
     entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrSkipPrev')
+    mouseOver(entity)
 
     return entity
 }
@@ -260,8 +296,9 @@ function skipNextButton(){
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrSkipNext')
+    mouseOver(entity)
 
     return entity
 }
@@ -274,8 +311,9 @@ function pauseButton(){
     let button = merge_model(vertices_1, vertices_2);
     entity.setObject3D('mesh', button);
 
-    // Event
+    // Events
     emitEvents(entity, 'babiaxrStop')
+    mouseOver(entity)
 
     return entity
 }
@@ -359,6 +397,17 @@ function merge_model(vertices1, vertices2){
     return mesh_extrude2;
 }
 
+function mouseOver(element){
+    element.addEventListener('mouseenter', function(){
+        last_color = Object.assign({}, this.object3DMap.mesh.material.color)
+        this.object3DMap.mesh.material.color = {r: 170/255, g: 170/255, b: 170/255}
+    })
+
+    element.addEventListener('mouseleave', function(){
+        this.object3DMap.mesh.material.color = last_color
+    })
+}
+
 function emitEvents(element, event_name){
     element.addEventListener('click', function () {
         if (element.classList == 'babiaxrPlay'){
@@ -372,6 +421,14 @@ function emitEvents(element, event_name){
                 player.removeChild(pause_button)
                 player.appendChild(play_button)
             }
+        } else if (element.classList == 'babiaxrForward'){
+            last_color = { r: 85/255, g: 85/255, b: 85/255 }
+            let button = document.getElementsByClassName('babiaxrRewind')[0]
+            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
+        } else if (element.classList == 'babiaxrRewind'){
+            last_color = { r: 85/255, g: 85/255, b: 85/255 }
+            let button = document.getElementsByClassName('babiaxrForward')[0]
+            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
         }
         console.log('Emit..... ' + event_name)
         el.emit(event_name)

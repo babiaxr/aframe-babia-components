@@ -361,6 +361,9 @@ This component creates a timeline bar that changes a chart using an array of dat
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | commits          | List of HTML IDs of the querier data and dates  | JSON  stringfied (list of objects) | - |
+| size          | Size of the navigation bar   | number | 5 |
+| to          | Direction of the process  | string | right |
+| start_point          | Position of the starting point  | number | 0 |
 
 ```html
         <a-entity id="datatest1" querier_json="url: ./data.json;"></a-entity>
