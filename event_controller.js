@@ -35,6 +35,7 @@ AFRAME.registerComponent('event-controller', {
         chart = data.target
 
         time_evol(navigation)
+        
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -70,6 +71,7 @@ let current
 let last
 let reverse = false
 let first_time = true
+let firts_point = 0
 
 function time_evol(navigation){ 
     let commits = document.getElementById(navigation).getAttribute('ui-navigation-bar').commits
@@ -81,9 +83,14 @@ function time_evol(navigation){
         data_array_reverse.reverse() 
         
         // First current
-        showDate(0)
-        current = data_array[0]
-        last = '0'
+        if (reverse){
+            let position = (data_array.length - 1) - firts_point
+            current = data_array_reverse[firts_point]
+            last = position
+        } else {
+            current = data_array[firts_point]
+            last = firts_point
+        }
         first_time = false
         controls()
     }
@@ -162,8 +169,12 @@ function changeChart(){
 }
 
 function controls(){
-    play(data_array)
-
+    if (reverse){
+        play(data_array_reverse)
+    } else {
+        play(data_array)
+    }
+    
     document.addEventListener('babiaxrShow', function (event) {
         changePoint(event.detail.data)
         el.emit('babiaxrStop')

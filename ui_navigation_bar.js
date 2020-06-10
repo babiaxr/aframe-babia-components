@@ -11,12 +11,15 @@ let player
 let el
 let last_color
 let point_color
-
+let to
+let start
 
 AFRAME.registerComponent('ui-navigation-bar', {
     schema: {
         commits: { type: 'string' },
         size: { type: 'number', default: '5'},
+        to: {type: 'string', default: 'left'},
+        start_point: {type: 'number', default: '0'},
     },
 
     /**
@@ -32,6 +35,13 @@ AFRAME.registerComponent('ui-navigation-bar', {
         el = this.el
         points = JSON.parse(data.commits)
         size = data.size
+        to = data.to
+        start = data.start_point 
+        let time_bar = createTimeBar(points, size)
+        this.el.appendChild(time_bar)
+        player = createPlayer()
+        this.el.appendChild(player)
+        setStart()
     },
 
     /**
@@ -40,10 +50,6 @@ AFRAME.registerComponent('ui-navigation-bar', {
     */
 
    update: function (oldData) {
-       let time_bar = createTimeBar(points, size)
-       this.el.appendChild(time_bar)
-       player = createPlayer()
-       this.el.appendChild(player)
    },
 
     /**
@@ -89,6 +95,7 @@ function createTimeBar(elements, size){
         color : '#FF0000',
     })
     timebar_entity.appendChild(bar_line)
+
     return timebar_entity
 }
 
@@ -101,9 +108,17 @@ function createTimePoint(point){
     return entity
 }
 
+function setStart(){
+    let points = document.getElementsByClassName('babiaxrTimeBar')[0].children
+    for (let i in points){
+        if ((i == start)){
+            points[i].emit('showinfo')
+        }
+    }
+}
+
 function setPoint(element, data){
     element.addEventListener('click', function(){
-        console.log('click')
         this.setAttribute('material', {color : '#00AA00'})
         point_color = this.getAttribute('material').color
         el.emit('babiaxrShow', {data: data})
@@ -228,6 +243,9 @@ function rewindButton(){
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
     entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
+    if (to == 'left'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
 
     // Events
     emitEvents(entity, 'babiaxrToPast')
@@ -243,7 +261,9 @@ function forwardButton(){
                     [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
     let button = load_model(vertices);
     entity.setObject3D('mesh', button);
-    entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    if (to == 'right'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
 
     // Events
     emitEvents(entity, 'babiaxrToPresent')
