@@ -83,6 +83,7 @@ function createTimeBar(elements, size){
     elements.forEach(i => {
         let point = createTimePoint(i)
         point.setAttribute('position', {x: posX, y: 0, z: 0});
+        point.classList.add('babiaxraycasterclass');
         posX += stepX
         timebar_entity.appendChild(point)
     });
@@ -194,28 +195,35 @@ function createPlayer(){
     let player_entity = document.createElement('a-entity')
     player_entity.classList.add('babiaxrPlayer')
     player_entity.setAttribute('position', {x: (size - 5)/2, y: 0, z: 0})
+    player_entity.classList.add('babiaxraycasterclass');
 
     play_button = playButton(player_entity)
     play_button.setAttribute('position', {x: 2.35, y: -0.65, z: 0})
+    play_button.classList.add('babiaxraycasterclass');
 
     pause_button = pauseButton()
     pause_button.setAttribute('position', {x: 2.35, y: -0.65 , z: 0})
+    pause_button.classList.add('babiaxraycasterclass');
     player_entity.appendChild(pause_button)
 
     let rewind_button = rewindButton()
     rewind_button.setAttribute('position', {x: 1.25, y: -0.65 , z: 0})
+    rewind_button.classList.add('babiaxraycasterclass');
     player_entity.appendChild(rewind_button)
 
     let forward_button = forwardButton()
     forward_button.setAttribute('position', {x: 3.7, y: -0.65 , z: 0})
+    forward_button.classList.add('babiaxraycasterclass');
     player_entity.appendChild(forward_button)
 
     let skip_prev_button = skipPreviousButton()
     skip_prev_button.setAttribute('position', {x: 1.95, y: -0.65 , z: 0})
+    skip_prev_button.classList.add('babiaxraycasterclass');
     player_entity.appendChild(skip_prev_button)
 
     let skip_next_button = skipNextButton()
     skip_next_button.setAttribute('position', {x: 3, y: -0.65 , z: 0})
+    skip_next_button.classList.add('babiaxraycasterclass');
     player_entity.appendChild(skip_next_button)
 
     return player_entity
@@ -410,22 +418,22 @@ function mouseOver(element){
 
 function emitEvents(element, event_name){
     element.addEventListener('click', function () {
-        if (element.classList == 'babiaxrPlay'){
+        if (element.classList.contains('babiaxrPlay')){
             player.removeChild(element)
             player.appendChild(pause_button)
-        } else if (element.classList == 'babiaxrPause'){
+        } else if (element.classList.contains('babiaxrPause')){
             player.removeChild(pause_button)
             player.appendChild(play_button)
-        } else if ((element.classList == 'babiaxrSkipNext') || (element.classList == 'babiaxrSkipPrev')){
+        } else if ((element.classList.contains('babiaxrSkipNext')) || (element.classList.contains('babiaxrSkipPrev'))){
             if (document.getElementsByClassName('babiaxrPause')[0]){
                 player.removeChild(pause_button)
                 player.appendChild(play_button)
             }
-        } else if (element.classList == 'babiaxrForward'){
+        } else if (element.classList.contains('babiaxrForward')){
             last_color = { r: 85/255, g: 85/255, b: 85/255 }
             let button = document.getElementsByClassName('babiaxrRewind')[0]
             button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
-        } else if (element.classList == 'babiaxrRewind'){
+        } else if (element.classList.contains('babiaxrRewind')){
             last_color = { r: 85/255, g: 85/255, b: 85/255 }
             let button = document.getElementsByClassName('babiaxrForward')[0]
             button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
