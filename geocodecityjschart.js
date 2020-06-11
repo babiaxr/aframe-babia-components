@@ -614,6 +614,41 @@ let Zone = class {
                 id: area.data['id'],
                 rawarea: 0
             });
+
+            // Titles on quarters
+            if (titles) {
+                let legend;
+                let transparentBox;
+                base.addEventListener('click', function () {
+                    console.log(this.getAttribute("id"))
+                    if (legend) {
+                        rootCodecityEntity.removeChild(transparentBox)
+                        rootCodecityEntity.removeChild(legend)
+                        legend = undefined
+                        transparentBox = undefined
+                    } else {
+                        transparentBox = document.createElement('a-entity');
+                        let oldGeometry = base.getAttribute('geometry')
+                        let boxPosition = base.getAttribute("position")
+                        transparentBox.setAttribute('geometry', {
+                            height: oldGeometry.height + 10,
+                            depth: oldGeometry.depth,
+                            width: oldGeometry.width
+                        });
+                        transparentBox.setAttribute('position', boxPosition)
+                        transparentBox.setAttribute('material', {
+                            'visible': true,
+                            'opacity': 0.4
+                        });
+                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 10, boxPosition, null);
+                        rootCodecityEntity.appendChild(legend)
+                        rootCodecityEntity.appendChild(transparentBox)
+                    }
+                })
+
+            }
+
+            base.setAttribute('class', 'babiaxraycasterclass');
             el.appendChild(base);
             let root_el = base;
             if (!relative) { root_el = el };
@@ -645,38 +680,35 @@ let Zone = class {
                 rawarea: area.data[this.farea],
                 inner_real: true
             });
-            box.setAttribute('class', 'mouseentertitles');
+            box.setAttribute('class', 'babiaxraycasterclass');
             el.appendChild(box);
 
             // Titles
             if (titles) {
                 let legend;
+                let legendBox;
                 box.addEventListener('mouseenter', function () {
+                    legendBox = document.createElement('a-entity');
                     let oldGeometry = box.getAttribute('geometry')
                     let boxPosition = box.getAttribute("position")
-                    this.setAttribute('geometry', {
+                    legendBox.setAttribute('position', boxPosition)
+                    legendBox.setAttribute('material', {
+                        'visible': true
+                    });
+                    legendBox.setAttribute('geometry', {
                         height: oldGeometry.height + 0.1,
                         depth: oldGeometry.depth + 0.1,
                         width: oldGeometry.width + 0.1
                     });
-                    this.setAttribute('material', {
-                        'visible': true
-                    });
-                    legend = generateLegend(this.getAttribute("id"), this, boxPosition, null);
+                    legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null);
                     rootCodecityEntity.appendChild(legend)
+                    rootCodecityEntity.appendChild(legendBox)
                 })
 
                 box.addEventListener('mouseleave', function () {
-                    let oldGeometry = this.getAttribute('geometry')
-                    this.setAttribute('geometry', {
-                        height: oldGeometry.height - 0.1,
-                        depth: oldGeometry.depth - 0.1,
-                        width: oldGeometry.width - 0.1
-                    });
-                    this.setAttribute('material', {
-                        'visible': false
-                    });
                     rootCodecityEntity.removeChild(legend)
+                    rootCodecityEntity.removeChild(legendBox)
+                    legendBox = undefined
                 })
             }
         };
@@ -1222,7 +1254,7 @@ let requestJSONDataFromURL = (data) => {
 
         // Navbar if defined
         if (data.ui_navbar) {
-            if (data.time_evolution_past_present){
+            if (data.time_evolution_past_present) {
                 last_uinavbar = parseInt(data.time_evolution_init.split("_")[1])
             } else {
                 last_uinavbar = main_json.data_files.length - 1
@@ -1320,17 +1352,12 @@ let dateBar = (data) => {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (text, buildingEntity, boxPosition, model) => {
+let generateLegend = (text, heightItem, boxPosition, model) => {
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
 
-    let height;
-    if (model == null) {
-        height = buildingEntity.getAttribute('geometry').height
-    } else {
-        height = buildingEntity.getAttribute("autoscale").y
-    }
+    let height = heightItem
 
     let entity = document.createElement('a-plane');
 
@@ -1387,7 +1414,7 @@ function time_evol() {
             last_uinavbar = maxFiles - index - 1
             i--
             index--
-            
+
             changeCity()
         })
         document.addEventListener('babiaxrSkipPrev', function () {
