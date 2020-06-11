@@ -620,7 +620,6 @@ let Zone = class {
                 let legend;
                 let transparentBox;
                 base.addEventListener('click', function () {
-                    console.log(this.getAttribute("id"))
                     if (legend) {
                         rootCodecityEntity.removeChild(transparentBox)
                         rootCodecityEntity.removeChild(legend)

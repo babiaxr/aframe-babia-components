@@ -37,9 +37,9 @@
     <a-entity id="navigationbar" ui-navigation-bar= 'to: left; start_point: 4' position='-20 15 0' scale="3 3 3"></a-entity>
 
     <a-entity movement-controls="fly: true" position="0 0 4">
-      <a-entity camera position="0 6 10" look-controls></a-entity>
-      <a-entity cursor="rayOrigin:mouse"></a-entity>
-      <a-entity laser-controls="hand: right"></a-entity>
+      <a-entity camera position="0 3 4" look-controls></a-entity>
+      <a-entity laser-controls="hand: right" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+      <a-entity></a-entity>
     </a-entity>
 
   </a-scene>
