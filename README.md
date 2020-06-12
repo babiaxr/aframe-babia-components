@@ -362,6 +362,7 @@ This component creates a timeline bar that changes a chart using an array of dat
 | --------        | -----------           | ----   | ----- |
 | commits          | List of HTML IDs of the querier data and dates  | JSON  stringfied (list of objects) | - |
 | size          | Size of the navigation bar   | number | 5 |
+| points_by_line          | Number of points by line.    | number | 5 |
 | to          | Direction of the process  | string | right |
 | start_point          | Position of the starting point  | number | 0 |
 
