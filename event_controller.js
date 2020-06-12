@@ -9,7 +9,7 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('event-controller', {
     schema: {
         navigation : {type : 'string'},
-        target : { type: 'string' },
+        targets : { type: 'string' },
     },
 
     /**
@@ -32,7 +32,9 @@ AFRAME.registerComponent('event-controller', {
         let data = this.data
         
         navigation = data.navigation
-        chart = data.target
+        charts = JSON.parse(data.targets)
+        console.log(charts)
+        
 
         time_evol(navigation)
         
@@ -64,7 +66,7 @@ AFRAME.registerComponent('event-controller', {
 
 let el
 let navigation
-let chart
+let charts
 var data_array
 var data_array_reverse = [] 
 let current
@@ -164,8 +166,12 @@ function changePoint(point){
 
 function changeChart(){
     let data= document.getElementById(current.commit).getAttribute('babiadata')
-    let entity = document.getElementById(chart)
-    entity.setAttribute('vismapper', 'dataToShow', data)
+    for (let i in charts){
+        let entity = document.getElementById(charts[i].id)
+        if (entity){
+            entity.setAttribute('vismapper', 'dataToShow', data)
+        }
+    }
 }
 
 function controls(){
