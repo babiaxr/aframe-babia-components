@@ -33,11 +33,8 @@ AFRAME.registerComponent('event-controller', {
         
         navigation = data.navigation
         charts = JSON.parse(data.targets)
-        console.log(charts)
-        
 
-        time_evol(navigation)
-        
+        time_evol(navigation)      
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).

@@ -13,11 +13,13 @@ let last_color
 let point_color
 let to
 let start
+let max_points
 
 AFRAME.registerComponent('ui-navigation-bar', {
     schema: {
         commits: { type: 'string' },
         size: { type: 'number', default: '5'},
+        points_by_line: {type: 'number', default: '5'},
         to: {type: 'string', default: 'left'},
         start_point: {type: 'number', default: '0'},
     },
@@ -37,7 +39,8 @@ AFRAME.registerComponent('ui-navigation-bar', {
         size = data.size
         to = data.to
         start = data.start_point 
-        let time_bar = createTimeBar(points, size)
+        max_points = data.points_by_line
+        let time_bar = createTimeBar(points, size, max_points)
         this.el.appendChild(time_bar)
         player = createPlayer()
         this.el.appendChild(player)
@@ -73,29 +76,59 @@ AFRAME.registerComponent('ui-navigation-bar', {
 })
 
 
-function createTimeBar(elements, size){
+function createTimeBar(elements, size, maxpoints){
     let timebar_entity = document.createElement('a-entity')
     timebar_entity.classList.add('babiaxrTimeBar')
 
     let posX = 0
-    let stepX = size / (elements.length - 1)
+    let posY = (Math.ceil((elements.length / maxpoints)) / 5) - 0.2
+    let stepX = size / (maxpoints - 1)
+    let last_posX = 0
+    let lines = 1
 
-    elements.forEach(i => {
-        let point = createTimePoint(i)
-        point.setAttribute('position', {x: posX, y: 0, z: 0});
+    for (let i in elements){
+        
+        let point = createTimePoint(elements[i])
         point.classList.add('babiaxraycasterclass');
-        posX += stepX
+        point.setAttribute('position', {x: posX, y: posY, z: 0});
         timebar_entity.appendChild(point)
-    });
 
-    // Add Line
-    let bar_line = document.createElement('a-entity')
-    bar_line.setAttribute('line',{
-        start : '0 0 0',
-        end : size + ' 0 0',
-        color : '#FF0000',
-    })
-    timebar_entity.appendChild(bar_line)
+        let x = i % maxpoints
+        if ((x == maxpoints-1) && (i != elements.length - 1)) {
+            lines++
+            posY -= 0.2
+            posX = 0
+        } else if (i != elements.length - 1){
+            posX += stepX
+        }
+        last_posX = posX
+    };
+
+    // Add Line 
+    for (let i = 0; i < lines; i++){
+        let bar_line = document.createElement('a-entity')      
+        if ((last_posX != 0 && i == 0) || (max_points == 1) ){  
+            bar_line.setAttribute('line',{
+                start : '0 ' + posY + ' 0',
+                end : last_posX + ' ' + posY + ' 0',
+                color : '#FF0000',
+            })  
+        } else if ((last_posX == 0 && i == 0)){
+            bar_line.setAttribute('line',{
+                start : '0 ' + posY + ' 0',
+                end : last_posX + ' ' + posY + ' 0',
+                color : '#FF0000',
+            })    
+        } else {
+            bar_line.setAttribute('line',{
+                start : '0 ' + posY + ' 0',
+                end : size + ' ' + posY + ' 0',
+                color : '#FF0000',
+            }) 
+        }
+        posY += 0.2
+        timebar_entity.appendChild(bar_line)  
+    } 
 
     return timebar_entity
 }
@@ -175,7 +208,7 @@ function generateLegend (data) {
     }
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: 0.4, z: 0 })
+    entity.setAttribute('position', { x: 0, y: 0.4, z: 0.1 })
     entity.setAttribute('scale', { x: 0.5, y: 0.5, z: 1 })
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
