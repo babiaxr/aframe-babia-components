@@ -34,12 +34,12 @@
             filterdata="from: datatest1" vismapper="x_axis: name; height: size"
         position="0 0 0" rotation="0 0 0"></a-entity>
 
-        <a-entity id="pie" geopiechart='legend: true; palette: sunset;  title: geopiechart;
+        <a-entity id="pie" geopiechart='legend: true; palette: sunset;  title: geopiechart; 
             titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -5 0.3 0.5' 
             filterdata="from: datatest1" vismapper="slice: name; height: size" 
         position="-12 7 0" rotation="90 0 0" scale="3 3 3"></a-entity>
 
-        <a-entity id="navigationbar" ui-navigation-bar = ' size: 5; to: right;
+        <a-entity id="navigationbar" ui-navigation-bar = ' size: 5; to: right; points_by_line:6;
         commits: [{"date": "01/30/2003", "commit": "datatest1"}, 
                   {"date": "02/17/2003", "commit": "datatest2"},
                   {"date": "04/06/2003", "commit": "datatest3"},
@@ -52,8 +52,7 @@
 
         <a-entity movement-controls="fly: true" position="-3 5 20">
             <a-entity camera position="0 0 0" look-controls></a-entity>
-            <a-entity cursor="rayOrigin:mouse"></a-entity>
-            <a-entity laser-controls="hand: right"></a-entity>
+            <a-entity laser-controls="hand: right" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
         </a-entity>
 
     </a-scene>
