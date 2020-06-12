@@ -43,7 +43,7 @@
                   {"date": "01/13/2004", "commit": "datatest6"}]'
         position = '-20 15 5' scale="3 3 3"></a-entity>
 
-        <a-entity event-controller = 'navigation: navigationbar; target: bar'></a-entity>
+        <a-entity event-controller = 'navigation: navigationbar; targets: [{"id": "bar"}, {"id": "bar2"}]'></a-entity>
 
         <a-entity movement-controls="fly: true" position="-3 5 20">
             <a-entity camera position="0 0 0" look-controls></a-entity>
