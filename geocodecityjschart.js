@@ -686,28 +686,47 @@ let Zone = class {
             if (titles) {
                 let legend;
                 let legendBox;
+                let alreadyActive = false;
+                box.addEventListener('click', function () {
+                    if (alreadyActive) {
+                        rootCodecityEntity.removeChild(legend)
+                        rootCodecityEntity.removeChild(legendBox)
+                        legend = undefined
+                        legendBox = undefined
+                        alreadyActive = false
+                    } else {
+                        alreadyActive = true
+                    }
+
+                })
+
                 box.addEventListener('mouseenter', function () {
-                    legendBox = document.createElement('a-entity');
-                    let oldGeometry = box.getAttribute('geometry')
-                    let boxPosition = box.getAttribute("position")
-                    legendBox.setAttribute('position', boxPosition)
-                    legendBox.setAttribute('material', {
-                        'visible': true
-                    });
-                    legendBox.setAttribute('geometry', {
-                        height: oldGeometry.height + 0.1,
-                        depth: oldGeometry.depth + 0.1,
-                        width: oldGeometry.width + 0.1
-                    });
-                    legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null);
-                    rootCodecityEntity.appendChild(legend)
-                    rootCodecityEntity.appendChild(legendBox)
+                    if (!alreadyActive) {
+                        legendBox = document.createElement('a-entity');
+                        let oldGeometry = box.getAttribute('geometry')
+                        let boxPosition = box.getAttribute("position")
+                        legendBox.setAttribute('position', boxPosition)
+                        legendBox.setAttribute('material', {
+                            'visible': true
+                        });
+                        legendBox.setAttribute('geometry', {
+                            height: oldGeometry.height + 0.1,
+                            depth: oldGeometry.depth + 0.1,
+                            width: oldGeometry.width + 0.1
+                        });
+                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null);
+                        rootCodecityEntity.appendChild(legend)
+                        rootCodecityEntity.appendChild(legendBox)
+                    }
                 })
 
                 box.addEventListener('mouseleave', function () {
-                    rootCodecityEntity.removeChild(legend)
-                    rootCodecityEntity.removeChild(legendBox)
-                    legendBox = undefined
+                    if (!alreadyActive && legend) {
+                        rootCodecityEntity.removeChild(legend)
+                        rootCodecityEntity.removeChild(legendBox)
+                        legend = undefined
+                        legendBox = undefined
+                    }
                 })
             }
         };
