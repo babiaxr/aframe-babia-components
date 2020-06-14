@@ -1451,7 +1451,7 @@ function time_evol() {
             showLegendUiNavBar(maxFiles - i - 1)
             last_uinavbar = maxFiles - i - 1
             index = i - 1
-            changeCity()
+            changeCity(true)
         })
 
     }
@@ -1500,13 +1500,19 @@ let loopLogic = (maxFiles, i) => {
 
 }
 
-let changeCity = () => {
+let changeCity = (bigStepCommitByCommit) => {
     let key = "data_" + (index + 1)
+
+    //key2 only for commit by commit analysis
     let key2
-    if (time_evolution_past_present) {
-        key2 = "data_reverse_" + (index + 1)
+    if (bigStepCommitByCommit) {
+        key2 = "data_" + (index + 1) + "_allfiles"
     } else {
-        key2 = "data_" + (index + 1)
+        if (time_evolution_past_present) {
+            key2 = "data_reverse_" + (index + 1)
+        } else {
+            key2 = "data_" + (index + 1)
+        }
     }
 
 
@@ -1518,6 +1524,7 @@ let changeCity = () => {
     dateBarEntity.setAttribute('text-geometry', 'value', text)
 
     changedItems = []
+    // Check if commit by commit or time snapshots (time snapshots = same key)
     if (timeEvolutionItems[key][key2]) {
         timeEvolutionItems[key][key2].forEach((item) => {
             changeBuildingLayout(item)
