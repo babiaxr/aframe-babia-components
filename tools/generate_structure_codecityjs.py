@@ -41,21 +41,17 @@ from elasticsearch.connection import create_ssl_context
 
 
 HTTPS_CHECK_CERT = False
-INDEX_DATA_FILE = 'index_backups/index_backup_graal_cocom_incubator_perceval_commitbycommit.json'
-DATAFRAME_CSV_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_perceval_commitbycommit.csv'
-DATAFRAME_CSV_ENRICHED_EXPORT_FILE = 'df_backups/index_dataframe_graal_cocom_incubator_enriched_perceval_commitbycommit.csv'
+CODECITY_OUTPUT_DATA = ''
 
-CODECITY_OUTPUT_DATA = '../examples/codecityjs/time_evolution_perceval_weeks/'
-
-HEIGHT_FIELD = 'loc'
-AREA_FIELD = 'num_funs'
-DATE_FIELD = 'grimoire_creation_date'
+HEIGHT_FIELD = ''
+AREA_FIELD = ''
+DATE_FIELD = ''
 
 ENTITIES_SIMPLE_ACC = []
 
 
 def main():
-    global ENTITIES_SIMPLE_ACC
+    global ENTITIES_SIMPLE_ACC, CODECITY_OUTPUT_DATA, HEIGHT_FIELD, AREA_FIELD, DATE_FIELD
     args = parse_args()
 
     if args.debug:
@@ -65,24 +61,37 @@ def main():
         logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("requests").setLevel(logging.WARNING)
+    
+    if not args.output_file:
+        sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
+    else:
+        CODECITY_OUTPUT_DATA = args.output_file
+        
+    if not args.height_field or not args.area_field or not args.date_field:
+        sys.exit('Error, you must define the height area and date field of the index to define the metrics'
+                 'of the city, please see help [-h]')
+    else:
+        HEIGHT_FIELD = args.height_field
+        AREA_FIELD = args.area_field
+        DATE_FIELD = args.date_field
 
     if not args.enriched_dataframe:
         # Retrieve index and generate index backup
         if args.elastic_url and args.index and not (args.index_file or args.dataframe):
-            if os.path.exists(INDEX_DATA_FILE):
-                os.remove(INDEX_DATA_FILE)
-            get_index_data(args.elastic_url, args.index)
+            if os.path.exists(args.index_file):
+                os.remove(args.index_file)
+            get_index_data(args.elastic_url, args.index, args.index_file)
 
         # Generate dataframe
         if args.index_file:
             df = get_dataframe(args.index_file, args.repo)
         elif not args.index_file and not args.dataframe:
-            df = get_dataframe(INDEX_DATA_FILE, args.repo)
+            sys.exit('Error, no dataframe/index_file defined, please see help [-h]')
 
         # Export dataframe
         if args.export_dataframe:
             logging.debug("Exporting index data to csv")
-            df.to_csv(DATAFRAME_CSV_EXPORT_FILE)
+            df.to_csv(args.export_dataframe)
 
         # Load dataframe from file
         if args.dataframe:
@@ -99,7 +108,7 @@ def main():
         # Export enriched dataframe
         if args.export_enriched_dataframe:
             logging.debug("Exporting enriched index data to csv")
-            df.to_csv(DATAFRAME_CSV_ENRICHED_EXPORT_FILE)
+            df.to_csv(args.export_enriched_dataframe)
     else:
         # We have the enriched dataframe, so we can go with it
         logging.debug("Loading enriched dataframe from csv file")
@@ -349,9 +358,9 @@ def parse_args():
                         help='Instead of the elastic, load data by dataframe')
     parser.add_argument('-edf', '--enriched-dataframe', required=False,
                         help='Instead of the elastic, load data by dataframe')
-    parser.add_argument('-exdf', '--export-dataframe', action='store_true',
+    parser.add_argument('-exdf', '--export-dataframe', required=False,
                         help='Export the dataframe of the index data"')
-    parser.add_argument('-exedf', '--export-enriched-dataframe', action='store_true',
+    parser.add_argument('-exedf', '--export-enriched-dataframe', required=False,
                         help='Export the enriched dataframe of the index data"')
     parser.add_argument('-time', '--time-evolution', required=False, action='store_true',
                         help='Time evolution analisys')
@@ -363,11 +372,19 @@ def parse_args():
                         help='Time evolution analisys commit by commit')
     parser.add_argument('-exsnap', '--export-snapshots', required=False, action='store_true',
                         help='Time evolution analisys commit by commit')
+    parser.add_argument('-o', '--output-file', required=True,
+                        help='Define the path of the produced files')
+    parser.add_argument('-hfield', '--height-field', required=True,
+                        help='Define the field that will be used as building heights')
+    parser.add_argument('-afield', '--area-field', required=True,
+                        help='Define the field that will be used as building areas')
+    parser.add_argument('-dfield', '--date-field', required=True,
+                        help='Define the field that will be used as date')
 
     return parser.parse_args()
 
 
-def get_index_data(es_url=None, index=None):
+def get_index_data(es_url=None, index=None, index_file=None):
     ssl_context = create_ssl_context()
     ssl_context.check_hostname = False
     ssl_context.verify_mode = ssl.CERT_NONE
@@ -400,7 +417,7 @@ def get_index_data(es_url=None, index=None):
     while scroll_size > 0:
         for item in page['hits']['hits']:
             logging.debug("Writing to json")
-            with open(INDEX_DATA_FILE, 'a') as f:
+            with open(index_file, 'a') as f:
                 json.dump(item['_source'], f)
                 f.write('\n')
 
@@ -470,6 +487,7 @@ def enrich_data(df, repo):
         
 
     # Normalize height
+    df[HEIGHT_FIELD] = df[HEIGHT_FIELD].fillna(0.1)
     df = normalize_column(df, HEIGHT_FIELD, 0.1, 20)
     df[AREA_FIELD] = df[AREA_FIELD].fillna(0.1)
     df = normalize_column(df, AREA_FIELD, 1, 30)
@@ -562,7 +580,6 @@ def build_folders(df, arr, index, max_levels, df_raw):
                 if 'put_negative_height' in df_folder and df_folder.iloc[0]['put_negative_height']:
                     height_final = -0.2
                     
-                    
                 leaf = {
                     "id": df_folder['file_path'].values[0],
                     "name": str(folder),
@@ -570,6 +587,9 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     'area': df_folder['{}_normalized'.format(AREA_FIELD)].sum(),
                     'max_area': df_raw_filtered['{}_normalized'.format(AREA_FIELD)].max()
                 }
+                # Name of the folder that contains the leafs
+                if index > 0:
+                    leafs_folder['id'] = str('{}/.'.format(df_folder['folder_acc_{}'.format(index - 1)].unique()[0]))
                 leafs_folder['children'].append(leaf)
             # Is parent of leaf
             elif (index == max_levels-2) or \
@@ -577,7 +597,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
                      str(df_folder['folder_{}'.format(index + 2)].unique()[0]) == 'nan'):
                 df_raw_filtered = df_raw[df_raw['folder_acc_{}'.format(index)] == acc_folder]
                 entity_folder = {
-                    "id": str(folder),
+                    "id": str(acc_folder),
                     'children': [],
                     'area': len(df_raw_filtered['file_path'].unique())
                 }
@@ -602,7 +622,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
             else:
                 # df_raw_filtered = df_raw[df_raw['folder_{}'.format(index)] == folder]
                 entity_folder = {
-                    "id": str(folder),
+                    "id": str(acc_folder),
                     'children': [],
                     'area': len(df_folder.index)
                 }
