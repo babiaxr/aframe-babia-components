@@ -131,7 +131,7 @@ def main():
             # Time evolution defining samples number
             while i < int(args.samples):
                 logging.debug("{} lap of time evolution".format(i))
-                data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days)))
+                data, commit_sha = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days)))
                 if data is None:
                     break
                 entities_simple = find_children(data, [])
@@ -146,6 +146,7 @@ def main():
                     'file': "data_{}.json".format(i),
                     'key': "data_{}".format(i),
                     'key_tree': "data_{}_tree".format(i),
+                    'commit_sha': commit_sha,
                     'data_{}'.format(i): entities_simple,
                     'data_{}_tree'.format(i): entities_tree[0]
                 })
@@ -155,7 +156,7 @@ def main():
             main_json['time_evolution_commit_by_commit'] = True
             # First, get the first city, the most updated
             logging.debug("{} lap of time evolution, initial tree".format(i))
-            data = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=0))
+            data, _ = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=0))
             entities_simple = find_children(data, [])
             ENTITIES_SIMPLE_ACC = entities_simple
             entities_tree = generate_entities(data, [])
@@ -187,7 +188,7 @@ def main():
         dump_codecity_data(main_json, "main_data.json")
     else:
         df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        data = extract_data(df, dt.datetime.now(pytz.utc))
+        data, _ = extract_data(df, dt.datetime.now(pytz.utc))
         entities = generate_entities(data, [])
         dump_codecity_data(entities, "data.json")
 
@@ -503,11 +504,11 @@ def normalize_column(df, field, scalar_bottom, scalar_top):
 
 def extract_data(df_raw, date):
     # df = df_raw[df_raw[DATE_FIELD].str.contains('2018')]
-    df = filter_closest_date(df_raw, date)
+    df, commit_sha = filter_closest_date(df_raw, date)
     if df.empty:
-        return None
+        return None, None
     entities = extract_data_from_df_filtered(df_raw, df)
-    return entities
+    return entities, commit_sha
     
     
 def extract_data_from_df_filtered(df_raw, df):
@@ -549,8 +550,16 @@ def filter_closest_date(df, date):
             df_filtered = df_filtered.append(df_file.ix[[indexmax]])
         except ValueError:
             continue
+            
+    # Get last commit of date
+    if not df_filtered.empty:
+        diff = (df_filtered[DATE_FIELD] - date)
+        indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
+        commit_sha = df_filtered.ix[[indexmax]].iloc[0]['commit_sha']
+    else:
+        commit_sha = None
 
-    return df_filtered
+    return df_filtered, commit_sha
 
 
 def build_folders(df, arr, index, max_levels, df_raw):

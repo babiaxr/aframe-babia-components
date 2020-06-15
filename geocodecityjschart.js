@@ -1265,7 +1265,7 @@ let requestJSONDataFromURL = (data) => {
             timeEvolutionItems[array_of_tree_to_retrieve] = main_json.data_files[i]
             navbarData.push({
                 date: new Date(main_json.data_files[i].date * 1000).toLocaleDateString(),
-                commit: main_json.data_files[i].key,
+                commit: main_json.data_files[i].commit_sha,
                 data: i
             })
         }
