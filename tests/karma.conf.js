@@ -14,9 +14,11 @@ module.exports = function (config) {
     envPreprocessor: ['TEST_ENV'],
     files: [
       // Define test files.
+      'tests/__init.test.js',
       {pattern: 'tests/**/*.test.js'},
+//      'tests/index.test.js',
       // Serve test assets.
-      {pattern: 'tests/assets/**/*', included: false, served: true}
+//      {pattern: 'tests/assets/**/*', included: false, served: true}
     ],
     frameworks: ['mocha', 'sinon-chai', 'chai-shallow-deep-equal', 'browserify'],
     preprocessors: {'tests/**/*.js': ['browserify', 'env']},
