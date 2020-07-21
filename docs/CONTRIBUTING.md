@@ -17,6 +17,7 @@ A high level overview of our contributing guidelines.
 - [Deploy a dev server locally](#deploy-a-dev-server-locally)
 - [Build distribution files](#build-distribution-files)
 - [Develop code in BabiaXR](#develop-code-in-babiaxr)
+- [Testing code in BabiaXR](#testing-code-in-babiaxr)
 
 
 ## Contributing process to the project
@@ -102,3 +103,27 @@ require('your_file_path')
 
 This is neccessary since the distribution files are based on the information of the `index.js` file (see [Build distribution files](#build-distribution-files) section
 ). Once the file is added, you can now deploy the dev server and 
+
+
+## Testing code in BabiaXR
+
+Currently, we use `karma` testing runner.
+
+In order to test code in this project, just create a testing file into the directory `/tests` using `mocha`, `chai` and `sinon` syntax. These files must be named like:
+```
+YOUR_TEST.test.js
+```
+
+To start testing, execute the next command:
+```
+npm run test
+```
+
+If you want to test only one browser (`firefox` or `chrome`):
+```
+npm run test:firefox
+```
+or 
+```
+npm run test:chrome
+```
