@@ -18,6 +18,11 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### Excel Saga
+
+- Added some unit tests for codecity component.
+- Updated [CONTRIBUTING.md](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/CONTRIBUTING.md#testing-code-in-babiaxr) with infomation about `how to test code in BabiaXR`. 
+
 ### Detective Conan
 
 > NPM 1.0.10 version
