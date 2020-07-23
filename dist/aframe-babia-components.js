@@ -464,15 +464,18 @@ AFRAME.registerComponent('filterdata', {
     let data = this.data;
     let el = this.el;
 
+    console.log("FILTERDATA:" + data.filter)
+    filter = data.filter.split('=')
+    console.log(filter)
     let querierElement = document.getElementById(data.from)
     if (querierElement.getAttribute('babiaData')) {
       let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
       // Get if key or filter
-      saveEntityData(data, el, dataFromQuerier, data.filter)
+      saveEntityData(data, el, dataFromQuerier, filter[0], filter[1])
     } else {
       // Get if key or filter
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        saveEntityData(data, el, e.detail, data.filter)
+        saveEntityData(data, el, e.detail, filter[0], filter[1])
         el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
       })
     }
@@ -498,7 +501,7 @@ AFRAME.registerComponent('filterdata', {
       document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
       // Listen the event when querier ready
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        saveEntityData(data, el, e.detail[data.filter])
+        saveEntityData(data, el, e.detail, filter[0], filter[1])
         el.setAttribute("vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
       });
     }
@@ -529,10 +532,18 @@ AFRAME.registerComponent('filterdata', {
 
 })
 
-let saveEntityData = (data, el, dataToSave, filter) => {
-  if (filter) {
-    data.dataRetrieved = dataToSave[filter]
-    el.setAttribute("babiaData", JSON.stringify(dataToSave[filter]))
+let filter
+
+let saveEntityData = (data, el, dataToSave, filter_field, filter_value) => {
+  if (filter_field && !filter_value) {
+    data.dataRetrieved = dataToSave[filter_field]
+    el.setAttribute("babiaData", JSON.stringify(dataToSave[filter_field]))
+  } else if (filter_field && filter_value) {
+    let dataToFilter = Object.values(dataToSave)
+    let dataFiltered = dataToFilter.filter((key) => key[filter_field] == filter_value )
+    dataFiltered = Object.assign({}, dataFiltered); 
+    data.dataRetrieved = dataFiltered
+    el.setAttribute('babiaData', JSON.stringify(dataFiltered))
   } else {
     data.dataRetrieved = dataToSave
     el.setAttribute("babiaData", JSON.stringify(dataToSave))
