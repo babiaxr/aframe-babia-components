@@ -3,3 +3,6 @@ elasticsearch-dsl==6.3.1
 pandas
 sklearn
 numpy
+urllib3==1.24.3
+requests==2.21.0
+PyMySQL==0.9.3
