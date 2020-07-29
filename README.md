@@ -100,6 +100,7 @@ import 'aframe-babia-components'
 The basic Chart components are easy to use, they have few attributes but if you want to see all the components and how to use them, there are user guides in the [docs](https://github.com/dlumbrer/aframe-babia-components/tree/master/docs) folder, here are the links:
 
 - [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
+- [HOW_TO_TIME_EVOLVE_CITY.md](./docs/HOW_TO_TIME_EVOLVE_CITY.md): a simple user guide in order to learn how to create a time evolution codecity from scratch (with the data retrieval process and the scene building).
 
 
 ## Building and Running BabiaXR, and/or Contributing Code
