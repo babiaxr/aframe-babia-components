@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geocylinderchart', {
+AFRAME.registerComponent('babia-cylinderchart', {
   schema: {
     data: { type: 'string' },
     legend: { type: 'boolean' },
@@ -32,7 +32,8 @@ AFRAME.registerComponent('geocylinderchart', {
     */
   init: function () {
     let el = this.el;
-    let data = this.data;
+    let metrics = ['height', 'radius', 'x_axis'];
+    el.setAttribute('babiaToRepresent', metrics);
   },
 
     /**

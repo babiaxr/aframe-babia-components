@@ -24,11 +24,11 @@
         <a-entity id="data4" querier_json="url: data_examples/data4.json;"></a-entity>
         <a-entity id="data5" querier_json="url: data_examples/data5.json;"></a-entity>
 
-        <a-entity id="pie1" geopiechart='legend: true' filterdata="from: data1" vismapper="slice: key; height: size" 
+        <a-entity id="pie1" babia-piechart='legend: true' filterdata="from: data1" vismapper="slice: key; height: size" 
         position="-8 2.8 5" rotation="90 30 0" scale="1.5 1.5 1.5"></a-entity>
-        <a-entity id="bars1" geosimplebarchart='legend: true' filterdata="from: data1" vismapper="x-axis: key; height: size" 
+        <a-entity id="bars1" babia-simplebarchart='legend: true' filterdata="from: data1" vismapper="x-axis: key; height: size" 
         position="-17 0 5" rotation="0 0 0" scale="0.3 0.3 0.3" ></a-entity>
-        <a-entity id="cylinder3" scale = "0.2 0.2 0.2" geo3dcylinderchart='legend: true;' filterdata="from: data4" 
+        <a-entity id="cylinder3" scale = "0.2 0.2 0.2" babia-3dcylinderchart='legend: true;' filterdata="from: data4" 
         vismapper="x_axis: key; z_axis: key2; height: height; radius: radius"
         position="10 0 -3" rotation="0 0 0"></a-entity>
         <a-entity id="bubbles" scale="0.2 0.2 0.2" geobubbleschart='legend: true' filterdata="from: data4" 

@@ -29,12 +29,12 @@
         <a-entity id="datatest5" querier_json="url: ./data5.json;"></a-entity>
         <a-entity id="datatest6" querier_json="url: ./data6.json;"></a-entity>
 
-        <a-entity id="bar" geosimplebarchart='legend: true; axis: true; palette: sunset;  title: geosimplebarchart;
+        <a-entity id="bar" babia-simplebarchart='legend: true; axis: true; palette: sunset;  title: babia-simplebarchart;
             titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -7.5 0.3 0.5; heightMax: 20'
             filterdata="from: datatest1" vismapper="x_axis: name; height: size"
         position="0 0 0" rotation="0 0 0"></a-entity>
 
-        <a-entity id="pie" geopiechart='legend: true; palette: sunset;  title: geopiechart; 
+        <a-entity id="pie" babia-piechart='legend: true; palette: sunset;  title: babia-piechart; 
             titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -5 0.3 0.5' 
             filterdata="from: datatest1" vismapper="slice: name; height: size" 
         position="-12 7 0" rotation="90 0 0" scale="3 3 3"></a-entity>
