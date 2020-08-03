@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geopiechart', {
+AFRAME.registerComponent('babia-piechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
@@ -27,8 +27,9 @@ AFRAME.registerComponent('geopiechart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
-        let data = this.data;
         let el = this.el;
+        let metrics = ['slice'];
+        el.setAttribute('babiaToRepresent', metrics);
     },
 
     /**

@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geobubbleschart', {
+AFRAME.registerComponent('babia-bubbleschart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
@@ -31,8 +31,9 @@ AFRAME.registerComponent('geobubbleschart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
-        let data = this.data;
         let el = this.el;
+        let metrics = ['height', 'radius', 'x_axis', 'z_axis'];
+        el.setAttribute('babiaToRepresent', metrics);
     },
 
     /**

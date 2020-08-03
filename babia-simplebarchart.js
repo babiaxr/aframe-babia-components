@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geosimplebarchart', {
+AFRAME.registerComponent('babia-simplebarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean', default: false },
@@ -29,7 +29,11 @@ AFRAME.registerComponent('geosimplebarchart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {},
+    init: function () {
+        let el = this.el;
+        let metrics = ['height', 'x_axis'];
+        el.setAttribute('babiaToRepresent', metrics);
+    },
 
     /**
     * Called when component is attached and when component data changes.
@@ -48,7 +52,7 @@ AFRAME.registerComponent('geosimplebarchart', {
                 this.el.firstChild.remove();
             console.log("Generating barchart...")
             generateBarChart(data, el)
-        }
+        } 
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).

@@ -20,14 +20,14 @@
 
         <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
 
-        <a-entity scale="0.4 0.4 0.4" geobubbleschart='legend: true' filterdata="from: queriertest"
+        <a-entity scale="0.4 0.4 0.4" babia-bubbleschart='legend: true' filterdata="from: queriertest"
             vismapper="x_axis: name; z_axis: age; height: metric2; radius: size" position="0 0 0" rotation="0 0 0">
         </a-entity>
-        <a-entity geo3dbarchart='legend: true' filterdata="from: queriertest"
+        <a-entity babia-3dbarchart='legend: true' filterdata="from: queriertest"
             vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
-        <a-entity geopiechart='legend: true' filterdata="from: queriertest" vismapper="slice: name; height: size"
+        <a-entity babia-piechart='legend: true' filterdata="from: queriertest" vismapper="slice: name; height: size"
             position="-8 5 10" rotation="90 15 0"></a-entity>
-        <a-entity geosimplebarchart='legend: true; axis: true' filterdata="from: queriertest" vismapper="x_axis: name; height: size"
+        <a-entity babia-simplebarchart='legend: true; axis: true' filterdata="from: queriertest" vismapper="x_axis: name; height: size"
             position="25 0 0" rotation="0 -15 0"></a-entity>
 
 

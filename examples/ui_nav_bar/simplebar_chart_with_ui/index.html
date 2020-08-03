@@ -29,9 +29,9 @@
         <a-entity id="datatest5" querier_json="url: ./data5.json;"></a-entity>
         <a-entity id="datatest6" querier_json="url: ./data6.json;"></a-entity>
 
-        <a-entity id="bar" geosimplebarchart='legend: true; axis: true; palette: commerce;  title: geosimplebarchart;
+        <a-entity id="bar" babia-simplebarchart='legend: true; axis: true; palette: commerce;  title: babia-simplebarchart;
             titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -7.5 0.3 0.5; heightMax: 20'
-            filterdata="from: datatest1" vismapper="x_axis: name; height: size"
+            filterdata="from: datatest1; filter: name=Sara" vismapper="x_axis: name; height: size"
         position="0 0 0" rotation="0 0 0"></a-entity>
 
         <a-entity id="navigationbar" ui-navigation-bar = ' size: 5; to: right; points_by_line: 6;

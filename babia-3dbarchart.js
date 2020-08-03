@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geo3dbarchart', {
+AFRAME.registerComponent('babia-3dbarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
@@ -30,8 +30,9 @@ AFRAME.registerComponent('geo3dbarchart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
-        let data = this.data;
         let el = this.el;
+        let metrics = ['height', 'x_axis', 'z_axis'];
+        el.setAttribute('babiaToRepresent', metrics);
     },
 
     /**

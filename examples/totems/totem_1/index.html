@@ -20,14 +20,14 @@
 
         <a-entity id="data1" querier_json="url: data_examples/data1.json;"></a-entity>
 
-        <a-entity id="pie1" geopiechart='legend: true; 
+        <a-entity id="pie1" babia-piechart='legend: true; 
         data: [{"key":"kbn_network","size":10},{"key":"Maria","size":5},{"key":"Dave","size":9},{"key":"Jhon","size":12},{"key":"Sara","size":16},{"key":"Lemar","size":2},{"key":"Dawn","size":1},{"key":"Jesus","size":8},{"key":"Bitergia","size":3},{"key":"URJC","size":6},{"key":"Alice","size":22},{"key":"Pete","size":2},{"key":"Seth","size":6},{"key":"Martin","size":9}]'
         position="-8 6 5" rotation="90 40 0" scale="1.5 1.5 1.5"></a-entity>
-        <a-entity id="bars1" geosimplebarchart='legend: true' filterdata="from: data1" vismapper="slice: key; height: size" 
+        <a-entity id="bars1" babia-simplebarchart='legend: true' filterdata="from: data1" vismapper="slice: key; height: size" 
         position="0 0 5" rotation="0 0 0" scale="0.5 0.5 0.5" ></a-entity>
 
 
-        <a-entity geototemchart='legend: true; axis: true; chart: geopiechart; charts_id: [{"id": "pie1", "type": "geopiechart"}, {"id": "bars1", "type": "geosimplebarchart"}];
+        <a-entity geototemchart='legend: true; axis: true; chart: babia-piechart; charts_id: [{"id": "pie1", "type": "babia-piechart"}, {"id": "bars1", "type": "babia-simplebarchart"}];
         data_list: [{"data":"Data 1", "path": "data_examples/data1.json"}, {"data": "Data 2", "path": "data_examples/data2.json"}, {"data": "Data 3", "path": "data_examples/data3.json"}]'
         position="-11 0 0" rotation="0 0 0"></a-entity>
 

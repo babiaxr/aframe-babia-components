@@ -43,27 +43,27 @@
     <a-entity id="bubblesdata" querier_json="url: data_examples/continents.json;"></a-entity>
 
     <!-- Simple Components -->
-    <a-entity id = "pie" geopiechart = 'legend: true; palette: blues'
+    <a-entity id = "pie" babia-piechart = 'legend: true; palette: blues'
         filterdata="from: piedata1" vismapper="slice: country; height: cases" 
         position = "5.5 3.5 -21" rotation = "90 -45 0" scale = "3 1.5 3"></a-entity>
-    <a-entity id = "doughnut" geodoughnutchart = 'legend: true; palette: pearl'
+    <a-entity id = "doughnut" babia-doughnutchart = 'legend: true; palette: pearl'
         filterdata="from: doughnutdata" vismapper="slice: country; height: cases"
         position = "-16.5 4.5 3" rotation = "90 90 0" scale = "3 3 3"></a-entity> 
-    <a-entity id = "bar" geosimplebarchart='legend: true; axis: true' 
+    <a-entity id = "bar" babia-simplebarchart='legend: true; axis: true' 
         filterdata="from: simplebardata" vismapper="x_axis: date; height: deaths" 
         position="-40.5 0.1 -4" rotation="0 90 0" scale = "0.6 0.6 0.6"></a-entity>
-    <a-entity id = "cylinder" geocylinderchart='legend: true; axis: true; palette: sunset' 
+    <a-entity id = "cylinder" babia-cylinderchart='legend: true; axis: true; palette: sunset' 
         filterdata="from: cylinderdata" vismapper="x_axis: country; height: cases; radius: deaths" 
         position="38.5 0.1 14.5" rotation="0 -136 0" scale = "0.5 0.5 0.5"></a-entity>
     
     <!-- 3D Components -->
-    <a-entity id = "3dbar" geo3dbarchart='legend: true; palette: foxy'
+    <a-entity id = "3dbar" babia-3dbarchart='legend: true; palette: foxy'
         filterdata="from: 3dbardata" vismapper="x_axis: date; z_axis: list; height: cases"
         position="28 0.1 -6.5" rotation="0 -90 0" scale = "0.75 0.75 0.75"></a-entity>
-    <a-entity id = "3dcylinder" geo3dcylinderchart='legend: true; palette: flat' 
+    <a-entity id = "3dcylinder" babia-3dcylinderchart='legend: true; palette: flat' 
         filterdata="from: 3dcylinderdata" vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
         position="6.5 0.1 24.5" rotation="0 180 0" scale="0.08 0.08 0.08"></a-entity>
-    <a-entity id = "bubbles" geobubbleschart='legend: true; palette: icecream' 
+    <a-entity id = "bubbles" babia-bubbleschart='legend: true; palette: icecream' 
         filterdata="from: bubblesdata" vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
         position="-16 0.1 37" rotation="0 -140 0" scale="0.15 0.15 0.15"></a-entity>
     
