@@ -38,7 +38,7 @@ The component to use is `geocodecityjschart`, it has several arguments, most of 
 - `wireframe`: Show materials as wireframe
 - `time_evolution_delta`: Time evolution time changing between snapshots
 - `time_evolution_init`: Time evolution time changing between snapshots
-- `time_evolution_past_present`: Time evolution diretion
+- `time_evolution_past_present`: Time evolution direction
 - `ui_navbar`: UI navbar ID if exists.
 
 ### Examples

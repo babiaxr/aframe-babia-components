@@ -44,14 +44,19 @@ HTTPS_CHECK_CERT = False
 CODECITY_OUTPUT_DATA = ''
 
 HEIGHT_FIELD = ''
+HEIGHT_FIELD_MIN = 0.1
+HEIGHT_FIELD_MAX = 20
 AREA_FIELD = ''
+AREA_FIELD_MIN = 1
+AREA_FIELD_MAX = 30
 DATE_FIELD = ''
 
 ENTITIES_SIMPLE_ACC = []
 
 
 def main():
-    global ENTITIES_SIMPLE_ACC, CODECITY_OUTPUT_DATA, HEIGHT_FIELD, AREA_FIELD, DATE_FIELD
+    global ENTITIES_SIMPLE_ACC, CODECITY_OUTPUT_DATA, HEIGHT_FIELD, HEIGHT_FIELD_MIN, HEIGHT_FIELD_MAX\
+        , AREA_FIELD, AREA_FIELD_MIN, AREA_FIELD_MAX, DATE_FIELD
     args = parse_args()
 
     if args.debug:
@@ -74,10 +79,22 @@ def main():
         HEIGHT_FIELD = args.height_field
         AREA_FIELD = args.area_field
         DATE_FIELD = args.date_field
+        
+    if args.height_field_max:
+        HEIGHT_FIELD_MAX = float(args.height_field_max)
+        
+    if args.height_field_min:
+        HEIGHT_FIELD_MAX = float(args.height_field_min)
+        
+    if args.area_field_max:
+        AREA_FIELD_MAX = float(args.area_field_max)
+        
+    if args.area_field_min:
+        AREA_FIELD_MIN = float(args.area_field_min)
 
     if not args.enriched_dataframe:
         # Retrieve index and generate index backup
-        if args.elastic_url and args.index and not (args.index_file or args.dataframe):
+        if args.elastic_url and args.index and not (args.enriched_dataframe or args.dataframe):
             if os.path.exists(args.index_file):
                 os.remove(args.index_file)
             get_index_data(args.elastic_url, args.index, args.index_file)
@@ -381,6 +398,14 @@ def parse_args():
                         help='Define the field that will be used as building areas')
     parser.add_argument('-dfield', '--date-field', required=True,
                         help='Define the field that will be used as date')
+    parser.add_argument('-hfieldmax', '--height-field-max', required=False,
+                        help='Define the max value of the height field for normalize')
+    parser.add_argument('-hfieldmin', '--height-field-min', required=False,
+                        help='Define the min value of the height field for normalize')
+    parser.add_argument('-afieldmax', '--area-field-max', required=False,
+                        help='Define the max value of the area field for normalize')
+    parser.add_argument('-afieldmin', '--area-field-min', required=False,
+                        help='Define the min value of the area field for normalize')
 
     return parser.parse_args()
 
@@ -489,9 +514,9 @@ def enrich_data(df, repo):
 
     # Normalize height
     df[HEIGHT_FIELD] = df[HEIGHT_FIELD].fillna(0.1)
-    df = normalize_column(df, HEIGHT_FIELD, 0.1, 20)
+    df = normalize_column(df, HEIGHT_FIELD, HEIGHT_FIELD_MIN, HEIGHT_FIELD_MAX)
     df[AREA_FIELD] = df[AREA_FIELD].fillna(0.1)
-    df = normalize_column(df, AREA_FIELD, 1, 30)
+    df = normalize_column(df, AREA_FIELD, AREA_FIELD_MIN, AREA_FIELD_MAX)
 
     return df
 
