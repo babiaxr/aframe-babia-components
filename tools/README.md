@@ -74,7 +74,7 @@ For generating the codecity data for using it with the `geocodecityjs` component
     - `-e, --elastic-url`: define the ElasticSearch URL where the data is stored, the `-i, --index` must be defined and it does not work if the `-df` or `-edf` arguments are active.
     - `-i, --index`: ElasticSearch index where the data is stored.
     - `--repo`: define the repo that will be the codecity.
-    - `-if, --index-file`: by default, the code saves the index in a JSON format. This command is used to load the data from this index file instead from ElasticSearch. Quicker than load the date from ElasticSearch directly.
+    - `-if, --index-file`: by default, the code saves the index in a JSON format. This command is used to load the data from this index file instead from ElasticSearch. Quicker than load the data from ElasticSearch directly.
     - `-exdf, --export-dataframe`: exports a dataframe with the data of the index.
     - `-df, --dataframe`: load the data from the exported dataframe instead from ElasticSearch. Quicker than load the data from the index file.
     - `-exedf, --export-enriched-dataframe`: exports a dataframe with the data of the index enriched (with more columns that have the information for the codecityjs data building process).
@@ -86,7 +86,11 @@ For generating the codecity data for using it with the `geocodecityjs` component
     - `-o, --output-file`: path where the file with the data will be exported.
     - `-exsnap, --export-snapshots`: Export snapshots of each time snapshot analyzed in the time evolution.
     - `-hfield, --height-field`: Field that will define the height of the buildings.
+    - `-hfieldmax, --height-field-max`: Value that will define the max value of the height field for normalizing.
+    - `-hfieldmin, --height-field-min`: Value that will define the min value of the height field for normalizing
     - `-afield, --aeight-field`: Field that will define the area of the buildings.
+    - `-afieldmax, --aeight-field-max`: Value that will define the max value of the area field for normalizing.
+    - `-afieldmin, --aeight-field-min`: Value that will define the min value of the area field for normalizing.
     - `-dfield, --date-field`: Define the field that will be used as date.
 
 3. The returned file have all the needed data for build a city with the `geocodecityjs` component.
@@ -151,7 +155,9 @@ python3 generate_structure_codecityjs.py
 --repo
 https://github.com/chaoss/grimoirelab-perceval
 --export-enriched-dataframe
+/home/dmoreno/devel/phdworkspace/vissoft2020/repr_package/df_backups/index_dataframe_graal_cocom_incubator_enriched_sortinghat_commitbycommit.csv
 --export-dataframe
+/home/dmoreno/devel/phdworkspace/vissoft2020/repr_package/df_backups/index_dataframe_graal_cocom_incubator_sortinghat_commitbycommit.csv
 -if
 index_backups/index_backup_graal_cocom_incubator.json
 --commitbycommit
@@ -170,11 +176,15 @@ Commit by commit time evolution (from an ElasticSearch):
 python3 generate_structure_codecityjs.py 
 --debug
 --export-enriched-dataframe
+/home/dmoreno/devel/phdworkspace/vissoft2020/repr_package/df_backups/index_dataframe_graal_cocom_incubator_enriched_sortinghat_commitbycommit.csv
 --export-dataframe
+/home/dmoreno/devel/phdworkspace/vissoft2020/repr_package/df_backups/index_dataframe_graal_cocom_incubator_sortinghat_commitbycommit.csv
 -e
 https://***:***@elasticsearch_url
 -i
 cocom_perceval_200519_codecity_enrich
+-if
+index_backups/index_backup_graal_cocom_incubator.json
 --repo
 https://github.com/chaoss/grimoirelab-perceval
 --commitbycommit
@@ -185,4 +195,6 @@ loc
 num_funs
 -dfield
 grimoire_creation_date
+-o
+/home/dmoreno/devel/phdworkspace/vissoft2020/repr_package/examples/codecityjs/time_evolution_sortinghat_commitbycommit_inverse/
 ```

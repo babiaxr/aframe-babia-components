@@ -36,187 +36,43 @@ from sklearn import preprocessing
 import datetime as dt
 import copy
 
+import virtualenv
+import pip
+import os
+
 from elasticsearch import Elasticsearch
 from elasticsearch.connection import create_ssl_context
-
 
 HTTPS_CHECK_CERT = False
 CODECITY_OUTPUT_DATA = ''
 
 HEIGHT_FIELD = ''
-HEIGHT_FIELD_MIN = 0.1
-HEIGHT_FIELD_MAX = 20
 AREA_FIELD = ''
-AREA_FIELD_MIN = 1
-AREA_FIELD_MAX = 30
 DATE_FIELD = ''
 
 ENTITIES_SIMPLE_ACC = []
 
 
 def main():
-    global ENTITIES_SIMPLE_ACC, CODECITY_OUTPUT_DATA, HEIGHT_FIELD, HEIGHT_FIELD_MIN, HEIGHT_FIELD_MAX\
-        , AREA_FIELD, AREA_FIELD_MIN, AREA_FIELD_MAX, DATE_FIELD
-    args = parse_args()
-
-    if args.debug:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
-        logging.debug("Debug mode activated")
-    else:
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-    logging.getLogger("requests").setLevel(logging.WARNING)
+    # create and activate the virtual environment
+    venv_dir = os.path.join(os.path.expanduser("~"), ".babiaxr")
+    virtualenv.create_environment(venv_dir)
+    execfile(os.path.join(venv_dir, "bin", "activate_this.py"))
     
-    if not args.output_file:
-        sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
-    else:
-        CODECITY_OUTPUT_DATA = args.output_file
-        
-    if not args.height_field or not args.area_field or not args.date_field:
-        sys.exit('Error, you must define the height area and date field of the index to define the metrics'
-                 'of the city, please see help [-h]')
-    else:
-        HEIGHT_FIELD = args.height_field
-        AREA_FIELD = args.area_field
-        DATE_FIELD = args.date_field
-        
-    if args.height_field_max:
-        HEIGHT_FIELD_MAX = float(args.height_field_max)
-        
-    if args.height_field_min:
-        HEIGHT_FIELD_MAX = float(args.height_field_min)
-        
-    if args.area_field_max:
-        AREA_FIELD_MAX = float(args.area_field_max)
-        
-    if args.area_field_min:
-        AREA_FIELD_MIN = float(args.area_field_min)
-
-    if not args.enriched_dataframe:
-        # Retrieve index and generate index backup
-        if args.elastic_url and args.index and not (args.enriched_dataframe or args.dataframe):
-            if os.path.exists(args.index_file):
-                os.remove(args.index_file)
-            get_index_data(args.elastic_url, args.index, args.index_file)
-
-        # Generate dataframe
-        if args.index_file:
-            df = get_dataframe(args.index_file, args.repo)
-        elif not args.index_file and not args.dataframe:
-            sys.exit('Error, no dataframe/index_file defined, please see help [-h]')
-
-        # Export dataframe
-        if args.export_dataframe:
-            logging.debug("Exporting index data to csv")
-            df.to_csv(args.export_dataframe)
-
-        # Load dataframe from file
-        if args.dataframe:
-            logging.debug("Loading dataframe from csv file")
-            df = pd.read_csv(args.dataframe)
-
-        # Check that at leas the dataframe is defined
-        if not args.dataframe and not args.index_file and not (args.elastic_url and args.index):
-            sys.exit('Error, no elastic url and index or dataframe/index_file defined, please see help [-h]')
-
-        # Enrich data adding columns of each folder
-        df = enrich_data(df, args.repo)
-
-        # Export enriched dataframe
-        if args.export_enriched_dataframe:
-            logging.debug("Exporting enriched index data to csv")
-            df.to_csv(args.export_enriched_dataframe)
-    else:
-        # We have the enriched dataframe, so we can go with it
-        logging.debug("Loading enriched dataframe from csv file")
-        df = pd.read_csv(args.enriched_dataframe)
-
-    if args.time_evolution:
-        main_json = {
-            "date_field": DATE_FIELD,
-            "init_data": "data_0",
-            "time_evolution": True,
-            "time_evolution_commit_by_commit": False,
-            "data_files": []
-        }
-        
-        df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        i = 0
-        
-        if args.delta_days and args.samples and not args.commitbycommit:
-            main_json["sampling_days"] = args.delta_days
-            # Time evolution defining samples number
-            while i < int(args.samples):
-                logging.debug("{} lap of time evolution".format(i))
-                data, commit_sha = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days)))
-                if data is None:
-                    break
-                entities_simple = find_children(data, [])
-                entities_tree = generate_entities(data, [])
-                if args.export_snapshots:
-                    dump_codecity_data(entities_simple, "data_{}.json".format(i))
-                    dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
+    # pip install a package using the venv as a prefix
+    pip.main(["install", "--prefix", venv_dir, "xmltodict"])
+    create_activate_venv()
     
-                main_json["data_files"].append({
-                    'date': dt.datetime.timestamp(
-                        dt.datetime.now(pytz.utc) - dt.timedelta(days=i*float(args.delta_days))),
-                    'file': "data_{}.json".format(i),
-                    'key': "data_{}".format(i),
-                    'key_tree': "data_{}_tree".format(i),
-                    'commit_sha': commit_sha,
-                    'data_{}'.format(i): entities_simple,
-                    'data_{}_tree'.format(i): entities_tree[0]
-                })
-                i += 1
-        elif not args.samples and args.commitbycommit:
-            # Time evolution commit by commit
-            main_json['time_evolution_commit_by_commit'] = True
-            # First, get the first city, the most updated
-            logging.debug("{} lap of time evolution, initial tree".format(i))
-            data, _ = extract_data(df, dt.datetime.now(pytz.utc) - dt.timedelta(days=0))
-            entities_simple = find_children(data, [])
-            ENTITIES_SIMPLE_ACC = entities_simple
-            entities_tree = generate_entities(data, [])
-            if args.export_snapshots:
-                dump_codecity_data(entities_simple, "data_{}.json".format(i))
-                dump_codecity_data(entities_tree[0], "data_{}_tree.json".format(i))
-
-            main_json["data_files"].append({
-                'date': dt.datetime.timestamp(
-                    dt.datetime.now(pytz.utc) - dt.timedelta(days=0)),
-                'file': "data_{}.json".format(i),
-                'key': "data_{}".format(i),
-                'key_tree': "data_{}_tree".format(i),
-                'data_{}'.format(i): copy.deepcopy(entities_simple),
-                'data_{}_tree'.format(i): entities_tree[0]
-            })
-            
-            # Go for the commits
-            commit_list = get_commit_list(df,
-                                          dt.datetime.now(pytz.utc) -
-                                          dt.timedelta(days=0),
-                                          main_json,
-                                          args)
-            main_json['commit_list'] = commit_list
-            logging.debug("Commit by commit finished")
-            
-            
-        # Export the main
-        dump_codecity_data(main_json, "main_data.json")
-    else:
-        df[DATE_FIELD] = pd.to_datetime(df[DATE_FIELD])
-        data, _ = extract_data(df, dt.datetime.now(pytz.utc))
-        entities = generate_entities(data, [])
-        dump_codecity_data(entities, "data.json")
-
-    print("exit")
+def create_activate_venv():
+    print("pepe")
+    
 
 
 def get_commit_list(df, date, main_json, args):
     global ENTITIES_SIMPLE_ACC
     commit_list = []
     i = 1
-
+    
     diff = (df[DATE_FIELD] - date)
     indexmax = (diff[(diff < pd.to_timedelta(0))].idxmax())
     last_commit = df.ix[indexmax]
@@ -236,13 +92,13 @@ def get_commit_list(df, date, main_json, args):
                 next_commit = last_commit['commit_parents'].split('\'')[1]
         else:
             break
-    
+        
         # Extract data from the commit
         df_next_commit = df[df['commit_sha'] == next_commit]
         next_files = eval(df_next_commit.iloc[0]['files_at_commit'])
         prev_files = eval(last_commit['files_at_commit'])
         df_next_commit['put_negative_height'] = False
-
+        
         # Adds files that has been deleted
         rows_to_add = []
         difference = list(set(prev_files) - set(next_files))
@@ -261,7 +117,7 @@ def get_commit_list(df, date, main_json, args):
         
         # Save data
         entities_simple = find_children(data, [])
-
+        
         ############ REVERSE - PAST to PRESENT ###############
         # Adds files that has been deleted reverse
         rows_to_add = []
@@ -271,14 +127,14 @@ def get_commit_list(df, date, main_json, args):
             if not row_to_delete.empty:
                 row_to_delete['put_negative_height'] = True
                 rows_to_add.append(row_to_delete.iloc[0])
-
+        
         # Create final DF
         if len(rows_to_add) > 0:
             df_next_commit = df_next_commit.append(rows_to_add)
-
+        
         # Extract data
         data_reverse = extract_data_from_df_filtered(df_next_commit, df_next_commit)
-
+        
         # Save data
         entities_simple_reverse = find_children(data_reverse, [])
         #######################################################
@@ -289,7 +145,6 @@ def get_commit_list(df, date, main_json, args):
                 if entity['id'] == entity_for_changing['id']:
                     entity['height'] = entity_for_changing['height']
                     entity['area'] = entity_for_changing['area']
-            
         
         # entities_tree = generate_entities(data, [])
         if args.export_snapshots:
@@ -354,7 +209,7 @@ def generate_entities(data, entities):
                 }
                 new_item['children'].append(new_leaf)
             entities.append(new_item)
-
+    
     return entities
 
 
@@ -398,15 +253,7 @@ def parse_args():
                         help='Define the field that will be used as building areas')
     parser.add_argument('-dfield', '--date-field', required=True,
                         help='Define the field that will be used as date')
-    parser.add_argument('-hfieldmax', '--height-field-max', required=False,
-                        help='Define the max value of the height field for normalize')
-    parser.add_argument('-hfieldmin', '--height-field-min', required=False,
-                        help='Define the min value of the height field for normalize')
-    parser.add_argument('-afieldmax', '--area-field-max', required=False,
-                        help='Define the max value of the area field for normalize')
-    parser.add_argument('-afieldmin', '--area-field-min', required=False,
-                        help='Define the min value of the area field for normalize')
-
+    
     return parser.parse_args()
 
 
@@ -414,14 +261,14 @@ def get_index_data(es_url=None, index=None, index_file=None):
     ssl_context = create_ssl_context()
     ssl_context.check_hostname = False
     ssl_context.verify_mode = ssl.CERT_NONE
-
+    
     es = Elasticsearch([es_url], timeout=120, max_retries=20, ssl_context=ssl_context, retry_on_timeout=True,
                        verify_certs=HTTPS_CHECK_CERT)
-
+    
     if not es.indices.exists(index=index):
         print("Index %s doesnt exist!" % index)
         return
-
+    
     page = es.search(
         index=index,
         scroll="1m",
@@ -432,21 +279,21 @@ def get_index_data(es_url=None, index=None, index_file=None):
             }
         }
     )
-
+    
     sid = page['_scroll_id']
     scroll_size = page['hits']['total']
-
+    
     if scroll_size == 0:
         print("No data found!")
         return
-
+    
     while scroll_size > 0:
         for item in page['hits']['hits']:
             logging.debug("Writing to json")
             with open(index_file, 'a') as f:
                 json.dump(item['_source'], f)
                 f.write('\n')
-
+        
         page = es.scroll(scroll_id=sid, scroll='1m')
         sid = page['_scroll_id']
         scroll_size = len(page['hits']['hits'])
@@ -454,10 +301,10 @@ def get_index_data(es_url=None, index=None, index_file=None):
 
 def get_dataframe(file, repo):
     df = pd.DataFrame()
-
+    
     file = open(file, 'r')
     rows = file.readlines()
-
+    
     i = 0
     while i < len(rows):
         line = rows[i]
@@ -475,14 +322,14 @@ def get_dataframe(file, repo):
         else:
             data[item[key_field]]['height'] += 1
         '''
-
+    
     return df
 
 
 def enrich_data(df, repo):
     # TODO: filter by project here
     df = df[df['origin'] == repo]
-
+    
     print(df.head())
     # Divide path in subfolders
     for i, row in df.iterrows():
@@ -508,16 +355,13 @@ def enrich_data(df, repo):
                 df.set_value(i, 'parent_commit_created', "not parent")
         else:
             df.set_value(i, 'parent_commit_created', "none")
-
-        
-        
-
+    
     # Normalize height
     df[HEIGHT_FIELD] = df[HEIGHT_FIELD].fillna(0.1)
-    df = normalize_column(df, HEIGHT_FIELD, HEIGHT_FIELD_MIN, HEIGHT_FIELD_MAX)
-    df[AREA_FIELD] = df[AREA_FIELD].fillna(0.1)
-    df = normalize_column(df, AREA_FIELD, AREA_FIELD_MIN, AREA_FIELD_MAX)
-
+    df = normalize_column(df, HEIGHT_FIELD, 0.1, 20)
+    df[AREA_FIELD] = df[AREA_FIELD].fillna(0.5)
+    df = normalize_column(df, AREA_FIELD, 0.5, 100)
+    
     return df
 
 
@@ -534,34 +378,34 @@ def extract_data(df_raw, date):
         return None, None
     entities = extract_data_from_df_filtered(df_raw, df)
     return entities, commit_sha
-    
-    
+
+
 def extract_data_from_df_filtered(df_raw, df):
     entities = []
-
+    
     for project in df['project'].unique():
         df_project = df[df['project'] == project]
         entity_project = {
             "id": str(project),
             "children": [],
-            #'area': df_project['loc'].sum()
+            # 'area': df_project['loc'].sum()
             'area': len(df_project.index)
         }
-
+        
         for repository in df_project['origin'].unique():
             df_repo = df_project[df_project['origin'] == repository]
             entity_repo = {
                 "id": str(repository),
                 "children": [],
-                #'area': df_repo['loc'].sum(),
+                # 'area': df_repo['loc'].sum(),
                 'area': len(df_repo.index)
             }
             build_folders(df_repo, entity_repo['children'], 0, df['n_folders'].max(), df_raw)
-
+            
             entity_project['children'].append(entity_repo)
-
+        
         entities.append(entity_project)
-
+    
     return entities
 
 
@@ -575,7 +419,7 @@ def filter_closest_date(df, date):
             df_filtered = df_filtered.append(df_file.ix[[indexmax]])
         except ValueError:
             continue
-            
+    
     # Get last commit of date
     if not df_filtered.empty:
         diff = (df_filtered[DATE_FIELD] - date)
@@ -583,14 +427,14 @@ def filter_closest_date(df, date):
         commit_sha = df_filtered.ix[[indexmax]].iloc[0]['commit_sha']
     else:
         commit_sha = None
-
+    
     return df_filtered, commit_sha
 
 
 def build_folders(df, arr, index, max_levels, df_raw):
     # leafs folder
     leafs_folder = {"id": ".", 'children': []}
-
+    
     for acc_folder in df['folder_acc_{}'.format(index)].unique():
         if str(acc_folder) != 'nan':
             folder = acc_folder.split("/")[-1]
@@ -599,7 +443,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
         df_folder = df[df['folder_{}'.format(index)] == folder]
         if str(folder) != 'nan':
             # Is leaf or not in order to put height
-            if (index == max_levels-1) or \
+            if (index == max_levels - 1) or \
                     (len(df_folder['folder_{}'.format(index + 1)].unique()) == 1 and
                      str(df_folder['folder_{}'.format(index + 1)].unique()[0]) == 'nan'):
                 df_raw_filtered = df_raw[df_raw['folder_acc_{}'.format(index)] == acc_folder]
@@ -609,11 +453,11 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     height_final = -0.2
                 else:
                     height_final = max(df_folder['{}_normalized'.format(HEIGHT_FIELD)].sum(), 0.1)
-                    
+                
                 # If commit by commit evolution and the flag put_negative_height is on
                 if 'put_negative_height' in df_folder and df_folder.iloc[0]['put_negative_height']:
                     height_final = -0.2
-                    
+                
                 leaf = {
                     "id": df_folder['file_path'].values[0],
                     "name": str(folder),
@@ -626,7 +470,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
                     leafs_folder['id'] = str('{}/.'.format(df_folder['folder_acc_{}'.format(index - 1)].unique()[0]))
                 leafs_folder['children'].append(leaf)
             # Is parent of leaf
-            elif (index == max_levels-2) or \
+            elif (index == max_levels - 2) or \
                     (len(df_folder['folder_{}'.format(index + 2)].unique()) == 1 and
                      str(df_folder['folder_{}'.format(index + 2)].unique()[0]) == 'nan'):
                 df_raw_filtered = df_raw[df_raw['folder_acc_{}'.format(index)] == acc_folder]
@@ -640,11 +484,11 @@ def build_folders(df, arr, index, max_levels, df_raw):
                 # Add with height negative the files that will exist in the past but not exist in the present
                 for j, row in df_raw_filtered.iterrows():
                     if not any(x["id"] == row['file_path'] for x in entity_folder['children'][0]['children']):
-                        df_raw_filtered_leaf = df_raw[df_raw['folder_acc_{}'.format(index+1)]
-                                                      == row['folder_acc_{}'.format(index+1)]]
+                        df_raw_filtered_leaf = df_raw[df_raw['folder_acc_{}'.format(index + 1)]
+                                                      == row['folder_acc_{}'.format(index + 1)]]
                         leaf_not_now = {
                             "id": row['file_path'],
-                            "name": str(row['folder_{}'.format(index+1)]),
+                            "name": str(row['folder_{}'.format(index + 1)]),
                             'height': -0.2,
                             'area': row['{}_normalized'.format(AREA_FIELD)],
                             'max_area': df_raw_filtered_leaf['{}_normalized'.format(AREA_FIELD)].max()
@@ -662,7 +506,7 @@ def build_folders(df, arr, index, max_levels, df_raw):
                 }
                 build_folders(df_folder, entity_folder['children'], index + 1, max_levels, df_raw)
                 arr.append(entity_folder)
-
+    
     # Adds if filled
     if len(leafs_folder['children']) > 0:
         arr.append(leafs_folder)
