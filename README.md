@@ -19,7 +19,7 @@ For [A-Frame](https://aframe.io).
 
 This pack of components has the aim of visualize data in several ways. There are separated components and each one has an independent aim:
 
-- `geo*` visualize the data prepared by a vismapper in several ways (this type of components must have in the same entity than a vismapper)
+- `babia-*` visualize the data prepared by a vismapper in several ways (this type of components must have in the same entity than a vismapper)
 - `querier_*` the aim of just query data and save it in the entity that it has
 - `filterdata` filter the data saved by one of the queriers
 - `vismapper` map the data filtered by filterdata to geometry attributes of the different charts, it "prepares" the data and save it in the entity that it has.
@@ -27,7 +27,7 @@ This pack of components has the aim of visualize data in several ways. There are
 For instance:
 
 ```html
-<a-entity geo3dbarchart='legend: true; 
+<a-entity babia-3dbarchart='legend: true; 
     data:"[{"key":"David","key2":"2019","size":9},{"key":"David","key2":"2018","size":8},{"key":"David","key2":"2017","size":7},{"key":"David","key2":"2016","size":6},{"key":"David","key2":"2015","size":5},{"key":"Pete","key2":"2011","size":8},{"key":"Pete","key2":"2014","size":7},{"key":"Josh","key2":"2016","size":6},{"key":"Josh","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Jesus","key2":"2011","size":8},{"key":"Jesus","key2":"2014","size":7},{"key":"Jesus","key2":"2016","size":6},{"key":"Jesus","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Steve","key2":"2016","size":9},{"key":"Steve","key2":"2017","size":8},{"key":"Steve","key2":"2014","size":7},{"key":"Steve","key2":"2013","size":6},{"key":"Moreno","key2":"2015","size":5},{"key":"Jesus","key2":"2019","size":10},{"key":"Pete","key2":"2019","size":10}]"' 
 position="-10 0 0" rotation="0 0 0"></a-entity>
 
@@ -37,7 +37,7 @@ or using the querier/filters/mappers components (see [HOW_TO_CHARTS_WITH_QUERIER
 
 ```html
 <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
-<a-entity geo3dbarchart='legend: true' filterdata="from: queriertest"
+<a-entity babia-3dbarchart='legend: true' filterdata="from: queriertest"
             vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
 
 ```
@@ -66,7 +66,7 @@ Install and use by directly including the [browser files](dist):
 
     <a-scene background="color: #A8F3FF" id="AframeScene">
         
-        <a-entity geo3dbarchart='legend: true; 
+        <a-entity babia-3dbarchart='legend: true; 
             data:"[{"key":"David","key2":"2019","size":9},{"key":"David","key2":"2018","size":8},{"key":"David","key2":"2017","size":7},{"key":"David","key2":"2016","size":6},{"key":"David","key2":"2015","size":5},{"key":"Pete","key2":"2011","size":8},{"key":"Pete","key2":"2014","size":7},{"key":"Josh","key2":"2016","size":6},{"key":"Josh","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Jesus","key2":"2011","size":8},{"key":"Jesus","key2":"2014","size":7},{"key":"Jesus","key2":"2016","size":6},{"key":"Jesus","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":9},{"key":"Steve","key2":"2016","size":9},{"key":"Steve","key2":"2017","size":8},{"key":"Steve","key2":"2014","size":7},{"key":"Steve","key2":"2013","size":6},{"key":"Moreno","key2":"2015","size":5},{"key":"Jesus","key2":"2019","size":10},{"key":"Pete","key2":"2019","size":10}]"' 
         position="-10 0 0" rotation="0 0 0"></a-entity>
 
@@ -114,7 +114,7 @@ You might want to build BabiaXR locally to contribute some code, test out the la
 
 The installation contains the following components:
 
-### geopiechart component
+### babia-piechart component
 
 This component must be used with one of the `vismapper` components, with the `slice` and `height` attribute defined.
 
@@ -142,7 +142,7 @@ This component shows a pie chart.
 ]
 ```
 
-### geosimplebarchart component
+### babia-simplebarchart component
 
 This component must be used with one of the `vismapper` components, with the `x-axis` and `height` attribute defined.
 
@@ -173,7 +173,7 @@ This component shows a simple 2D bar chart.
 
 ```
 
-### geo3dbarchart component
+### babia-3dbarchart component
 
 This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis` and `height` attribute defined.
 
@@ -236,7 +236,7 @@ This component shows a 3D bar chart.
 
 ```
 
-### geocylinderchart component
+### babia-cylinderchart component
 
 This component must be used with one of the `vismapper` components, with the `x-axis`, `height` and `radius` attribute defined.
 
@@ -268,7 +268,7 @@ This component shows a cylinder chart.
 
 ```
 
-### geo3dcylinderchart component
+### babia-3dcylinderchart component
 
 This component must be used with one of the `vismapper` components, with the `x-axis`, `z-axis`, `height` and `radius` attribute defined.
 
@@ -300,7 +300,7 @@ This component shows a 3D cylinder chart.
 
 ```
 
-### geodougnutchart component
+### babia-dougnutchart component
 
 This component must be used with one of the `vismapper` components, with the `slice` and `size` attribute defined.
 
@@ -328,7 +328,7 @@ This component shows a doughnut chart.
 ]
 ```
 
-### geototemchart component
+### babia-totemchart component
 
 This component shows a totem in order to change the data of the visualizations that it's targeting.
 
@@ -478,7 +478,7 @@ This component will put the data selected into the `babiaData` attribute of the 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
 | from            | Id of one of the querier components  | string | - |
-| filter (Optional)        | Key of the item that you want to analyse, this key must be in the data retrieved from a querier. **Work in progress: in the next future it will have more filter** | string   | - |
+| filter (Optional)        | Key of the item that you want to analyse, this key must be in the data retrieved from a querier. (ex. `name=David`) | string   | - |
 
 
 ### vismapper component
@@ -491,11 +491,12 @@ This component must be in the same entity than filterdata and it needs also a ch
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| height        | Field of the data selected by filterdata that will be mapped as the height of the items of the charts or a geometry. Valid for **geo3dbarchart, **geocylinderchart**, **geo3dcylinderchart**, **geobubbleschart, geosimplebarchart and box/sphere** | string   | - |
-| radius        | Field of the data selected by filterdata that will be mapped as the radius of the items of the charts or a geometry. Valid for **geocylinderchart**, **geo3dcylinderchart**, **geobubbleschart and sphere** | string   | - |
-| slice        | Field of the data selected by filterdata that will be mapped as the slices of the items of a pie chart. Valid for **piechart** and **geodoughnutchart** | string   | - |
-| z-axis        | Field of the data selected by filterdata that will be mapped as the keys of the Z Axis of the chart component selected. Valid for **geo3dbarchart, geobubblechart and geo3dcylinderchart** | string   | - |
-| x-axis        | Field of the data selected by filterdata that will be mapped as the keys of the X Axis of the chart component selected. Valid for **geo3dbarchart, geo3dcylinderchart, geoubblechart and geosimplebarchart** | string   | - |
+| ui            | Display a UI selector to select what will be mapped. | bolean | `false`|
+| height        | Field of the data selected by filterdata that will be mapped as the height of the items of the charts or a geometry. Valid for **babia-3dbarchart, **babia-cylinderchart**, **babia-3dcylinderchart**, **babia-bubbleschart, babia-simplebarchart and box/sphere** | string   | - |
+| radius        | Field of the data selected by filterdata that will be mapped as the radius of the items of the charts or a geometry. Valid for **babia-cylinderchart**, **babia-3dcylinderchart**, **babia-bubbleschart and sphere** | string   | - |
+| slice        | Field of the data selected by filterdata that will be mapped as the slices of the items of a pie chart. Valid for **babia-piechart** and **babia-doughnutchart** | string   | - |
+| z-axis        | Field of the data selected by filterdata that will be mapped as the keys of the Z Axis of the chart component selected. Valid for **babia-3dbarchart, babia-bubblechart and babia-3dcylinderchart** | string   | - |
+| x-axis        | Field of the data selected by filterdata that will be mapped as the keys of the X Axis of the chart component selected. Valid for **babia-3dbarchart, babia-3dcylinderchart, babia-bubblechart and babia-simplebarchart** | string   | - |
 | width            | Field of the data selected by filterdata that will be mapped as the width of the geometry **(only for box geometry)**.  | string | - |
 | depth        | Field of the data selected by filterdata that will be mapped as the depth of the geometry **(only for box geometry)**. | string   | - |
 
