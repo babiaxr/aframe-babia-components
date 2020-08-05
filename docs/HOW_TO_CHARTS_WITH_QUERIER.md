@@ -7,9 +7,12 @@ Thing you need:
 1. An entity with one of the `querier` components.
 2. Another entity that must have the next components:
     
-    1. `filterdata`: without filter (for now), just selecting the id of the entity that has the `querier` component.
+    1. `filterdata`: filter data selecting the id of the entity that has the `querier` component.
     2. Then, select the chart that you want...
 
+Before using them, you need to understand how the components send data with each other.
+
+![Diagram](https://imgur.com/QoQKvm1.png)
 
 
 ## Pie chart
@@ -18,7 +21,7 @@ Thing you need:
     - `slice`: the field of the data filtered by `filterdata` that will define each slice of the pie. (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the size of the slices.
 
-2. Finally, add the component `geopiechart` (with its optional params if you want):
+2. Finally, add the component `babia-piechart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/pB327Pn.png)
 
@@ -30,7 +33,7 @@ Thing you need:
     - `x-axis`: the field of the data filtered by `filterdata` that will define the tags of the x-axis of the chart (as a keys). (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the bars.
 
-2. Finally, add the component `geosimplebarchart` (with its optional params if you want):
+2. Finally, add the component `babia-simplebarchart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/RZBaaPg.png)
 
@@ -46,7 +49,7 @@ Thing you need:
     - `z-axis`: the field of the data filtered by `filterdata` that will define the tags of the z-axis of the chart (as a keys). (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the bars.
 
-2. Finally, add the component `geo3dbarchart` (with its optional params if you want):
+2. Finally, add the component `babia-3dbarchart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/Kolrz1I.png)
 
@@ -63,7 +66,7 @@ Thing you need:
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the bubbles.
     - `radius`: the **numeric** field of the data filtered by `filterdata` that will define the radius/size of the bubbles.
 
-2. Finally, add the component `geobubbleschart` (with its optional params if you want):
+2. Finally, add the component `babia-bubbleschart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/5cw40tj.png)
 
@@ -79,7 +82,7 @@ Thing you need:
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the cylinders.
     - `radius`: the **numeric** field of the data filtered by `filterdata` that will define the radius/size of the cylinders.
 
-2. Finally, add the component `geo3dcylinderchart` (with its optional params if you want):
+2. Finally, add the component `babia-3dcylinderchart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/2OAOBhW.png)
 
@@ -94,7 +97,7 @@ Thing you need:
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the height of the cylinders.
     - `radius`: the **numeric** field of the data filtered by `filterdata` that will define the radius/size of the cylinders.
 
-2. Finally, add the component `geocylinderchart` (with its optional params if you want):
+2. Finally, add the component `babia-cylinderchart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/frDHfoB.png)
 
@@ -107,7 +110,7 @@ Thing you need:
     - `slice`: the field of the data filtered by `filterdata` that will define each slice of the pie. (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data filtered by `filterdata` that will define the size of the slices.
 
-2. Finally, add the component `geopiechart` (with its optional params if you want):
+2. Finally, add the component `babia-doughnutchart` (with its optional params if you want):
 
 ![Example](https://i.imgur.com/LtWp1Bn.png)
 
