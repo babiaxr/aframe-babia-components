@@ -18,6 +18,13 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### Fairy Tail
+
+- Added filters in filterdata component.
+- Created a UI interface in vismapper component.
+- Changed the names of the babia-components (ex. `babia-3dbarchart`).
+- Created documentation and scripts about [How to create a time evolving software city](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/HOW_TO_TIME_EVOLVE_CITY.md)
+
 ### Excel Saga
 
 - Added some unit tests for codecity component.
