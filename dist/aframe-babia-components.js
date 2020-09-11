@@ -237,6 +237,7 @@ let generateBarChart = (data, element) => {
             }
 
             let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation, scale);
+            barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
@@ -670,6 +671,7 @@ let generateCylinderChart = (data, element) => {
         }
 
         let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale);
+        cylinderEntity.classList.add("babiaxraycasterclass")
         
         //Prepare legend
         if (data.legend) {
@@ -1115,6 +1117,7 @@ let generateBubblesChart = (data, element) => {
             }
 
             let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale);
+            bubbleEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
@@ -1525,6 +1528,7 @@ let generateCylinderChart = (data, element) => {
 
       let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation, scale)
       chart_entity.appendChild(cylinderEntity);
+      cylinderEntity.classList.add("babiaxraycasterclass")
 
       //Prepare legend
       if (data.legend) {
@@ -1920,6 +1924,7 @@ let generateDoughnut = (data, element) => {
             } else {
                 sliceEntity = generateDoughnutSlice(degreeStart, degreeEnd, 1, colorid, palette);
             }
+            sliceEntity.classList.add("babiaxraycasterclass")
 
             //Move degree offset
             degreeStart += degreeEnd;
@@ -2181,6 +2186,8 @@ let generatePie = (data, element) => {
             } else {
                 sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid, palette);
             }
+            sliceEntity.classList.add("babiaxraycasterclass")
+
             //Move degree offset
             degreeStart += degreeEnd;
 
@@ -2417,6 +2424,7 @@ let generateBarChart = (data, element) => {
         for (let bar of dataToPrint) {
 
             let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation, scale);
+            barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
@@ -4971,6 +4979,7 @@ function generateTotem(element, x, y, z, rotation, width, list, list_used) {
         element.appendChild(entity)
         y -= 1
 
+        entity.classList.add("babiaxraycasterclass")
         entity.addEventListener('click', function () {
             let id_totem = entity.parentElement.id
             let children = entity.parentElement.children
