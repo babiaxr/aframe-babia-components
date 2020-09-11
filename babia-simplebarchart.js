@@ -117,6 +117,7 @@ let generateBarChart = (data, element) => {
         for (let bar of dataToPrint) {
 
             let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation, scale);
+            barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {

@@ -142,6 +142,8 @@ let generatePie = (data, element) => {
             } else {
                 sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid, palette);
             }
+            sliceEntity.classList.add("babiaxraycasterclass")
+
             //Move degree offset
             degreeStart += degreeEnd;
 
