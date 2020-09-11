@@ -211,6 +211,7 @@ function generateTotem(element, x, y, z, rotation, width, list, list_used) {
         element.appendChild(entity)
         y -= 1
 
+        entity.classList.add("babiaxraycasterclass")
         entity.addEventListener('click', function () {
             let id_totem = entity.parentElement.id
             let children = entity.parentElement.children

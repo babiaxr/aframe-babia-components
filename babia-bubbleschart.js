@@ -176,6 +176,7 @@ let generateBubblesChart = (data, element) => {
             }
 
             let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale);
+            bubbleEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {

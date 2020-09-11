@@ -177,6 +177,7 @@ let generateCylinderChart = (data, element) => {
         }
 
         let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale);
+        cylinderEntity.classList.add("babiaxraycasterclass")
         
         //Prepare legend
         if (data.legend) {
