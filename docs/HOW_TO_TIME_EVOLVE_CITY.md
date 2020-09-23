@@ -16,7 +16,7 @@ This process will generate a `main_data.json` file.
 
 ## 3. Build the scene
 
-The component to use is `geocodecityjschart`, it has several arguments, most of them are optional, specifically:
+The component to use is `babiaxr-codecity`, it has several arguments, most of them are optional, specifically:
 
 - `data`: mandatory, the data retrieved from the 2. section.
 - `absolute`: Absolute size (width and depth will be used for proportions)
@@ -46,7 +46,7 @@ The component to use is `geocodecityjschart`, it has several arguments, most of 
 Time evolution simple city:
 
 ```
-<a-entity position="0 0 -3" id="codecity" codecity='width: 20; depth: 20; streets: true; color: green;
+<a-entity position="0 0 -3" id="codecity" babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
             extra: 1.5; base_thick: 0.3; split: pivot; titles: true;
             data: main_data.json'>
 </a-entity>
@@ -56,7 +56,7 @@ Time evolution simple city:
 Time evolution commit by commit city with ui navbar:
 ```
 <a-entity position="0 0 -3" id="codecity"
-    codecity='width: 20; depth: 20; streets: true; color: green;
+    babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
             extra: 1.5; base_thick: 0.3; split: pivot; titles: true; time_evolution_delta: 500;
             data: main_data.json; time_evolution_init: data_0; ui_navbar: navigationbar'>
 </a-entity>
