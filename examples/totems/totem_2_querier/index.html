@@ -18,28 +18,28 @@
         <a-entity environment="playArea: 10"></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="data1" querier_json="url: data_examples/data1.json;"></a-entity>
-        <a-entity id="data2" querier_json="url: data_examples/data2.json;"></a-entity>
-        <a-entity id="data3" querier_json="url: data_examples/data3.json;"></a-entity>
-        <a-entity id="data4" querier_json="url: data_examples/data4.json;"></a-entity>
-        <a-entity id="data5" querier_json="url: data_examples/data5.json;"></a-entity>
+        <a-entity id="data1" babiaxr-querier_json="url: data_examples/data1.json;"></a-entity>
+        <a-entity id="data2" babiaxr-querier_json="url: data_examples/data2.json;"></a-entity>
+        <a-entity id="data3" babiaxr-querier_json="url: data_examples/data3.json;"></a-entity>
+        <a-entity id="data4" babiaxr-querier_json="url: data_examples/data4.json;"></a-entity>
+        <a-entity id="data5" babiaxr-querier_json="url: data_examples/data5.json;"></a-entity>
 
-        <a-entity id="pie1" babia-piechart='legend: true' filterdata="from: data1" vismapper="slice: key; height: size" 
+        <a-entity id="pie1" babiaxr-piechart='legend: true' babiaxr-filterdata="from: data1" babiaxr-vismapper="slice: key; height: size" 
         position="-8 2.8 5" rotation="90 30 0" scale="1.5 1.5 1.5"></a-entity>
-        <a-entity id="bars1" babia-simplebarchart='legend: true' filterdata="from: data1" vismapper="x-axis: key; height: size" 
+        <a-entity id="bars1" babiaxr-simplebarchart='legend: true' babiaxr-filterdata="from: data1" babiaxr-vismapper="x-axis: key; height: size" 
         position="-17 0 5" rotation="0 0 0" scale="0.3 0.3 0.3" ></a-entity>
-        <a-entity id="cylinder3" scale = "0.2 0.2 0.2" babia-3dcylinderchart='legend: true;' filterdata="from: data4" 
-        vismapper="x_axis: key; z_axis: key2; height: height; radius: radius"
+        <a-entity id="cylinder3" scale = "0.2 0.2 0.2" babiaxr-3dcylinderchart='legend: true;' babiaxr-filterdata="from: data4" 
+        babiaxr-vismapper="x_axis: key; z_axis: key2; height: height; radius: radius"
         position="10 0 -3" rotation="0 0 0"></a-entity>
-        <a-entity id="bubbles" scale="0.2 0.2 0.2" geobubbleschart='legend: true' filterdata="from: data4" 
-        vismapper="x_axis: key; z_axis: key2; height: height; radius: radius" position="-2 0 0" rotation="0 0 0"></a-entity>
+        <a-entity id="bubbles" scale="0.15 0.15 0.15" babiaxr-bubbleschart='legend: true' babiaxr-filterdata="from: data4" 
+        babiaxr-vismapper="x_axis: key; z_axis: key2; height: height; radius: radius" position="-2 0 0" rotation="0 0 0"></a-entity>
 
 
-        <a-entity id="totem1" geototemchart='charts_id: [{"id": "pie1", "type": "vismapper"}, {"id": "bars1", "type": "vismapper"}];
+        <a-entity id="totem1" babiaxr-totem='charts_id: [{"id": "pie1", "type": "babiaxr-vismapper"}, {"id": "bars1", "type": "babiaxr-vismapper"}];
         data_list: [{"data":"Data 1", "from_querier": "data1"}, {"data": "Data 2", "from_querier": "data2"}, {"data": "Data 3", "from_querier": "data3"}]'
         position="-5 2 4" rotation="-10 0 0"></a-entity>
 
-        <a-entity id="totem2" geototemchart='charts_id: [{"id": "cylinder3", "type": "vismapper"}, {"id": "bubbles", "type": "vismapper"}];
+        <a-entity id="totem2" babiaxr-totem='charts_id: [{"id": "cylinder3", "type": "babiaxr-vismapper"}, {"id": "bubbles", "type": "babiaxr-vismapper"}];
         data_list: [{"data":"Data 4", "from_querier": "data4"}, {"data": "Data 5", "from_querier": "data5"}]'
         position="5 2 4" rotation="-10 0 0"></a-entity>
 

@@ -22,24 +22,22 @@
             <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
         </a-assets>
 
-        <a-entity id="datatest1" querier_json="url: ./data.json;"></a-entity>
-        <a-entity id="datatest2" querier_json="url: ./data2.json;"></a-entity>
-        <a-entity id="datatest3" querier_json="url: ./data3.json;"></a-entity>
-        <a-entity id="datatest4" querier_json="url: ./data4.json;"></a-entity>
-        <a-entity id="datatest5" querier_json="url: ./data5.json;"></a-entity>
-        <a-entity id="datatest6" querier_json="url: ./data6.json;"></a-entity>
+        <a-entity id="datatest1" babiaxr-querier_json="url: ./data.json;"></a-entity>
+        <a-entity id="datatest2" babiaxr-querier_json="url: ./data2.json;"></a-entity>
+        <a-entity id="datatest3" babiaxr-querier_json="url: ./data3.json;"></a-entity>
+        <a-entity id="datatest4" babiaxr-querier_json="url: ./data4.json;"></a-entity>
+        <a-entity id="datatest5" babiaxr-querier_json="url: ./data5.json;"></a-entity>
+        <a-entity id="datatest6" babiaxr-querier_json="url: ./data6.json;"></a-entity>
 
-        <a-entity id="bar" babia-simplebarchart='legend: true; axis: true; palette: sunset;  title: babia-simplebarchart;
-            titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -7.5 0.3 0.5; heightMax: 20'
-            filterdata="from: datatest1" vismapper="x_axis: name; height: size"
+        <a-entity id="bar" babiaxr-simplebarchart='legend: true; axis: true; palette: sunset; heightMax: 20'
+            babiaxr-filterdata="from: datatest1" babiaxr-vismapper="x_axis: name; height: size"
         position="0 0 0" rotation="0 0 0"></a-entity>
 
-        <a-entity id="pie" babia-piechart='legend: true; palette: sunset;  title: babia-piechart; 
-            titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -5 0.3 0.5' 
-            filterdata="from: datatest1" vismapper="slice: name; height: size" 
+        <a-entity id="pie" babiaxr-piechart='legend: true; palette: sunset'   
+            babiaxr-filterdata="from: datatest1" babiaxr-vismapper="slice: name; height: size" 
         position="-12 7 0" rotation="90 0 0" scale="3 3 3"></a-entity>
 
-        <a-entity id="navigationbar" ui-navigation-bar = ' size: 5; to: right; points_by_line:6;
+        <a-entity id="navigationbar" babiaxr-navigation-bar = ' size: 5; to: right; points_by_line:6;
         commits: [{"date": "01/30/2003", "commit": "datatest1"}, 
                   {"date": "02/17/2003", "commit": "datatest2"},
                   {"date": "04/06/2003", "commit": "datatest3"},
@@ -48,7 +46,7 @@
                   {"date": "01/13/2004", "commit": "datatest6"}]'
         position = '-20 15 5' scale="3 3 3"></a-entity>
 
-        <a-entity event-controller = 'navigation: navigationbar; targets: [{"id": "bar"}, {"id": "pie"}]'></a-entity>
+        <a-entity babiaxr-event-controller = 'navigation: navigationbar; targets: [{"id": "bar"}, {"id": "pie"}]'></a-entity>
 
         <a-entity movement-controls="fly: true" position="-3 5 20">
             <a-entity camera position="0 0 0" look-controls></a-entity>

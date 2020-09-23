@@ -33,49 +33,49 @@
     <a-entity environment="preset: forest; playArea: 10; dressingAmount: 150"></a-entity>
 
     <!-- Querier Components -->
-    <a-entity id="piedata1" querier_json="url: data_examples/europe.json;"></a-entity>
-    <a-entity id="piedata2" querier_json="url: data_examples/america.json;"></a-entity>
-    <a-entity id="doughnutdata" querier_json="url: data_examples/asia.json;"></a-entity>
-    <a-entity id="simplebardata" querier_json="url: data_examples/usa2.json;"></a-entity>
-    <a-entity id="3dbardata" querier_json="url: data_examples/USA.json;"></a-entity>
-    <a-entity id="cylinderdata" querier_json="url: data_examples/europe2.json;"></a-entity>
-    <a-entity id="3dcylinderdata" querier_json="url: data_examples/continents.json;"></a-entity>
-    <a-entity id="bubblesdata" querier_json="url: data_examples/continents.json;"></a-entity>
+    <a-entity id="piedata1" babiaxr-querier_json="url: data_examples/europe.json;"></a-entity>
+    <a-entity id="piedata2" babiaxr-querier_json="url: data_examples/america.json;"></a-entity>
+    <a-entity id="doughnutdata" babiaxr-querier_json="url: data_examples/asia.json;"></a-entity>
+    <a-entity id="simplebardata" babiaxr-querier_json="url: data_examples/usa2.json;"></a-entity>
+    <a-entity id="3dbardata" babiaxr-querier_json="url: data_examples/USA.json;"></a-entity>
+    <a-entity id="cylinderdata" babiaxr-querier_json="url: data_examples/europe2.json;"></a-entity>
+    <a-entity id="3dcylinderdata" babiaxr-querier_json="url: data_examples/continents.json;"></a-entity>
+    <a-entity id="bubblesdata" babiaxr-querier_json="url: data_examples/continents.json;"></a-entity>
 
     <!-- Simple Components -->
-    <a-entity id = "pie" babia-piechart = 'legend: true; palette: blues'
-        filterdata="from: piedata1" vismapper="slice: country; height: cases" 
+    <a-entity id = "pie" babiaxr-piechart = 'legend: true; palette: blues'
+        babiaxr-filterdata="from: piedata1" babiaxr-vismapper="slice: country; height: cases" 
         position = "5.5 3.5 -21" rotation = "90 -45 0" scale = "3 1.5 3"></a-entity>
-    <a-entity id = "doughnut" babia-doughnutchart = 'legend: true; palette: pearl'
-        filterdata="from: doughnutdata" vismapper="slice: country; height: cases"
+    <a-entity id = "doughnut" babiaxr-doughnutchart = 'legend: true; palette: pearl'
+        babiaxr-filterdata="from: doughnutdata" babiaxr-vismapper="slice: country; height: cases"
         position = "-16.5 4.5 3" rotation = "90 90 0" scale = "3 3 3"></a-entity> 
-    <a-entity id = "bar" babia-simplebarchart='legend: true; axis: true' 
-        filterdata="from: simplebardata" vismapper="x_axis: date; height: deaths" 
+    <a-entity id = "bar" babiaxr-simplebarchart='legend: true; axis: true' 
+        babiaxr-filterdata="from: simplebardata" babiaxr-vismapper="x_axis: date; height: deaths" 
         position="-40.5 0.1 -4" rotation="0 90 0" scale = "0.6 0.6 0.6"></a-entity>
-    <a-entity id = "cylinder" babia-cylinderchart='legend: true; axis: true; palette: sunset' 
-        filterdata="from: cylinderdata" vismapper="x_axis: country; height: cases; radius: deaths" 
+    <a-entity id = "cylinder" babiaxr-cylinderchart='legend: true; axis: true; palette: sunset' 
+        babiaxr-filterdata="from: cylinderdata" babiaxr-vismapper="x_axis: country; height: cases; radius: deaths" 
         position="38.5 0.1 14.5" rotation="0 -136 0" scale = "0.5 0.5 0.5"></a-entity>
     
     <!-- 3D Components -->
-    <a-entity id = "3dbar" babia-3dbarchart='legend: true; palette: foxy'
-        filterdata="from: 3dbardata" vismapper="x_axis: date; z_axis: list; height: cases"
+    <a-entity id = "3dbar" babiaxr-3dbarchart='legend: true; palette: foxy'
+        babiaxr-filterdata="from: 3dbardata" babiaxr-vismapper="x_axis: date; z_axis: list; height: cases"
         position="28 0.1 -6.5" rotation="0 -90 0" scale = "0.75 0.75 0.75"></a-entity>
-    <a-entity id = "3dcylinder" babia-3dcylinderchart='legend: true; palette: flat' 
-        filterdata="from: 3dcylinderdata" vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
+    <a-entity id = "3dcylinder" babiaxr-3dcylinderchart='legend: true; palette: flat' 
+        babiaxr-filterdata="from: 3dcylinderdata" babiaxr-vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
         position="6.5 0.1 24.5" rotation="0 180 0" scale="0.08 0.08 0.08"></a-entity>
-    <a-entity id = "bubbles" babia-bubbleschart='legend: true; palette: icecream' 
-        filterdata="from: bubblesdata" vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
+    <a-entity id = "bubbles" babiaxr-bubbleschart='legend: true; palette: icecream' 
+        babiaxr-filterdata="from: bubblesdata" babiaxr-vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
         position="-16 0.1 37" rotation="0 -140 0" scale="0.15 0.15 0.15"></a-entity>
     
     <!-- Totem Component -->
-    <a-entity id="totem1" geototemchart='legend: true; axis: true; charts_id: [{"id": "pie", "type": "vismapper"}];
+    <a-entity id="totem1" babiaxr-totem='legend: true; axis: true; charts_id: [{"id": "pie", "type": "babiaxr-vismapper"}];
     data_list: [{"data":"Europe", "from_querier": "piedata1"}, {"data": "America", "from_querier": "piedata2"}]'
         position="19 -1 -18" rotation="0 -45 0"></a-entity>
 
     <!-- CodeCity Component-->
 
     <a-entity id = "codecity" position="-17 0 -21" scale= "0.5 0.5 0.5" rotation= "0 45 0"
-        codecity='width: 20; depth: 20; streets: true; color: green;
+            babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
               extra: 1.5; base_thick: 0.3; split: naive; fmaxarea: area;
               data:
             {"id": "Root",
