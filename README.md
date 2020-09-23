@@ -36,9 +36,9 @@ position="-10 0 0" rotation="0 0 0"></a-entity>
 or using the querier/filters/mappers components (see [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/HOW_TO_CHARTS.md))
 
 ```html
-<a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
-<a-entity babiaxr-3dbarchart='legend: true' filterdata="from: queriertest"
-            vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
+<a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>
+<a-entity babiaxr-3dbarchart='legend: true' babiaxr-filterdata="from: queriertest"
+            babiaxr-vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
 
 ```
 
@@ -503,7 +503,7 @@ This component must be in the same entity than filterdata and it needs also a ch
 
 
 
-### babiaxr-debug_data component
+### babiaxr-debug-data component
 
 This component force the entity to hear an event, when this event occurs, a debug plane with the data of the `babiaData` entity attribute will appear in the position (or close) of the entity that it belongs.
 
