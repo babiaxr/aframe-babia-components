@@ -9,7 +9,7 @@ let rootCodecityEntity
 /**
  * CodeCity component for A-Frame.
  */
-AFRAME.registerComponent('codecity', {
+AFRAME.registerComponent('babiaxr-codecity', {
     schema: {
         // Absolute size (width and depth will be used for proportions)
         absolute: {
@@ -1278,7 +1278,7 @@ let requestJSONDataFromURL = (data) => {
                 last_uinavbar = main_json.data_files.length - 1
             }
             ui_navbar = data.ui_navbar
-            document.getElementById(ui_navbar).setAttribute("ui-navigation-bar", "commits", JSON.stringify(navbarData.reverse()))
+            document.getElementById(ui_navbar).setAttribute("babiaxr-navigation-bar", "commits", JSON.stringify(navbarData.reverse()))
         }
 
         // Change init tree if needed

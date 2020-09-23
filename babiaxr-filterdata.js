@@ -6,8 +6,8 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('filterdata', {
-  dependencies: ['querier', 'vismapper'],
+AFRAME.registerComponent('babiaxr-filterdata', {
+  dependencies: ['babiaxr-querier', 'babiaxr-vismapper'],
   schema: {
     from: { type: 'string' },
     filter: { type: 'string' }
@@ -31,13 +31,14 @@ AFRAME.registerComponent('filterdata', {
     let querierElement = document.getElementById(data.from)
     if (querierElement.getAttribute('babiaData')) {
       let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
+      console.log(dataFromQuerier)
       // Get if key or filter
       saveEntityData(data, el, dataFromQuerier, filter[0], filter[1])
     } else {
       // Get if key or filter
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
         saveEntityData(data, el, e.detail, filter[0], filter[1])
-        el.setAttribute("filterdata", "dataRetrieved", data.dataRetrieved)
+        el.setAttribute("babiaxr-filterdata", "dataRetrieved", data.dataRetrieved)
       })
     }
   },
@@ -53,7 +54,7 @@ AFRAME.registerComponent('filterdata', {
 
     // If entry it means that the data changed
     if (data.dataRetrieved !== oldData.dataRetrieved) {
-      el.setAttribute("vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
+      el.setAttribute("babiaxr-vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
     }
 
     if (data.from !== oldData.from) {
@@ -63,7 +64,7 @@ AFRAME.registerComponent('filterdata', {
       // Listen the event when querier ready
       document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
         saveEntityData(data, el, e.detail, filter[0], filter[1])
-        el.setAttribute("vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
+        el.setAttribute("babiaxr-vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
       });
     }
 

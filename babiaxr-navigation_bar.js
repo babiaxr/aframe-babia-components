@@ -15,7 +15,7 @@ let to
 let start
 let max_points
 
-AFRAME.registerComponent('ui-navigation-bar', {
+AFRAME.registerComponent('babiaxr-navigation-bar', {
     schema: {
         commits: { type: 'string' },
         size: { type: 'number', default: '5'},

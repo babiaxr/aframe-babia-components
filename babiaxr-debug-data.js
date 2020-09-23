@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('debug_data', {
+AFRAME.registerComponent('babiaxr-debug-data', {
     schema: {
         inputEvent: { type: 'string' }
     },
@@ -83,7 +83,7 @@ let listenEvent = (data, el) => {
 }
 
 let showDebugPlane = (data, el) => {
-    if (!el.querySelector('.debug_data')) {
+    if (!el.querySelector('.debug-data')) {
         // Get data from the attribute of the entity
         let debugPanel = generateDebugPanel(data, el, el.getAttribute('babiaData'));
         el.appendChild(debugPanel)

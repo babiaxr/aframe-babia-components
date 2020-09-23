@@ -18,7 +18,7 @@
     <a-entity environment></a-entity>
     <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-    <a-entity id="queriertest" querier_json='embedded: { "kbn_network": {
+    <a-entity id="queriertest" babiaxr-querier_json='embedded: { "kbn_network": {
             "id": 62662964,
             "node_id": "MDEwOlJlcG9zaXRvcnk2MjY2Mjk2NA==",
             "name": "kbn_network",
@@ -104,20 +104,20 @@
 
     <a-entity layout="type: box; columns: 3; margin: 30; align: center">
       <a-entity>
-        <a-entity geometry="primitive: box;" material="color:navy;" filterdata='from: queriertest; filter: kbn_searchtables'
-          vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
-          debug_data='inputEvent: debugevent'></a-entity>
+        <a-entity geometry="primitive: box;" material="color:navy;" babiaxr-filterdata='from: queriertest; filter: kbn_searchtables'
+          babiaxr-vismapper="width: open_issues; depth: open_issues; height: size" babiaxr-interaction-mapper='input: mouseenter; output: debugevent'
+          babiaxr-debug-data='inputEvent: debugevent'></a-entity>
       </a-entity>
       <a-entity>
-        <a-entity geometry="primitive: box;" material="color:red;" filterdata='from: queriertest; filter: kbn_dotplot'
-          vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
-          debug_data='inputEvent: debugevent'></a-entity>
+        <a-entity geometry="primitive: box;" material="color:red;" babiaxr-filterdata='from: queriertest; filter: kbn_dotplot'
+          babiaxr-vismapper="width: open_issues; depth: open_issues; height: size" babiaxr-interaction-mapper='input: mouseenter; output: debugevent'
+          babiaxr-debug-data='inputEvent: debugevent'></a-entity>
       </a-entity>
       <a-entity>
 
-        <a-entity geometry="primitive: box;" material="color:green;" filterdata='from: queriertest; filter: kbn_network'
-          vismapper="width: open_issues; depth: open_issues; height: size" interaction-mapper='input: mouseenter; output: debugevent'
-          debug_data='inputEvent: debugevent'></a-entity>
+        <a-entity geometry="primitive: box;" material="color:green;" babiaxr-filterdata='from: queriertest; filter: kbn_network'
+          babiaxr-vismapper="width: open_issues; depth: open_issues; height: size" babiaxr-interaction-mapper='input: mouseenter; output: debugevent'
+          babiaxr-debug-data='inputEvent: debugevent'></a-entity>
       </a-entity>
     </a-entity>
 

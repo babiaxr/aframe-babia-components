@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('querier_json', {
+AFRAME.registerComponent('babiaxr-querier_json', {
     schema: {
         url: { type: 'string' },
         embedded: { type: 'string' }
@@ -23,7 +23,6 @@ AFRAME.registerComponent('querier_json', {
     init: function () {
         let data = this.data;
         let el = this.el;
-
         if (data.url) {
             requestJSONDataFromURL(data, el)
         } else if (data.embedded) {

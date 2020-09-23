@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * Component for A-Frame.
 */
-AFRAME.registerComponent('event-controller', {
+AFRAME.registerComponent('babiaxr-event-controller', {
     schema: {
         navigation : {type : 'string'},
         targets : { type: 'string' },
@@ -73,7 +73,7 @@ let first_time = true
 let firts_point = 0
 
 function time_evol(navigation){ 
-    let commits = document.getElementById(navigation).getAttribute('ui-navigation-bar').commits
+    let commits = document.getElementById(navigation).getAttribute('babiaxr-navigation-bar').commits
     if (commits && first_time){
         data_array = JSON.parse(commits)
         for ( let i in data_array){
@@ -166,7 +166,7 @@ function changeChart(){
     for (let i in charts){
         let entity = document.getElementById(charts[i].id)
         if (entity){
-            entity.setAttribute('vismapper', 'dataToShow', data)
+            entity.setAttribute('babiaxr-vismapper', 'dataToShow', data)
         }
     }
 }

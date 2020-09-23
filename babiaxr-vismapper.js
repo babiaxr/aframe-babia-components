@@ -8,7 +8,7 @@ let MAX_SIZE_BAR = 10
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('vismapper', {
+AFRAME.registerComponent('babiaxr-vismapper', {
     schema: {
         ui: {type: 'boolean', default: false},
         // Data
@@ -61,27 +61,27 @@ AFRAME.registerComponent('vismapper', {
                     let oldPos = el.getAttribute("position")
                     el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
                 }
-            } else if (el.components['babia-simplebarchart']) {
+            } else if (el.components['babiaxr-simplebarchart']) {
                 let list = generate2Dlist(data, dataJSON, "x_axis")
-                el.setAttribute("babia-simplebarchart", "data", JSON.stringify(list))
-            } else if (el.components['babia-cylinderchart']) {
+                el.setAttribute("babiaxr-simplebarchart", "data", JSON.stringify(list))
+            } else if (el.components['babiaxr-cylinderchart']) {
                 let list = generate2Dlist(data, dataJSON, "x_axis", "cylinder")
-                el.setAttribute("babia-cylinderchart", "data", JSON.stringify(list))
-            } else if (el.components['babia-piechart']) {
+                el.setAttribute("babiaxr-cylinderchart", "data", JSON.stringify(list))
+            } else if (el.components['babiaxr-piechart']) {
                 let list = generate2Dlist(data, dataJSON, "slice")
-                el.setAttribute("babia-piechart", "data", JSON.stringify(list))
-            } else if (el.components['babia-doughnutchart']) {
+                el.setAttribute("babiaxr-piechart", "data", JSON.stringify(list))
+            } else if (el.components['babiaxr-doughnutchart']) {
                 let list = generate2Dlist(data, dataJSON, "slice")
-                el.setAttribute("babia-doughnutchart", "data", JSON.stringify(list))
-            } else if (el.components['babia-3dbarchart']) {
+                el.setAttribute("babiaxr-doughnutchart", "data", JSON.stringify(list))
+            } else if (el.components['babiaxr-3dbarchart']) {
                 let list = generate3Dlist(data, dataJSON, "3dbars")
-                el.setAttribute("babia-3dbarchart", "data", JSON.stringify(list))
-            } else if (el.components['babia-bubbleschart']) {
+                el.setAttribute("babiaxr-3dbarchart", "data", JSON.stringify(list))
+            } else if (el.components['babiaxr-bubbleschart']) {
                 let list = generate3Dlist(data, dataJSON, "bubbles")
-                el.setAttribute("babia-bubbleschart", "data", JSON.stringify(list))
-            } else if (el.components['babia-3dcylinderchart']) {
+                el.setAttribute("babiaxr-bubbleschart", "data", JSON.stringify(list))
+            } else if (el.components['babiaxr-3dcylinderchart']) {
                 let list = generate3Dlist(data, dataJSON, "3dcylinder")
-                el.setAttribute("babia-3dcylinderchart", "data", JSON.stringify(list))
+                el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
             } else if (el.components.geocodecitychart) {
                 let list = generateCodecityList(data, dataJSON)
                 el.setAttribute("geocodecitychart", "data", JSON.stringify(list))
@@ -310,7 +310,7 @@ function selection_events(entity, element){
     entity.addEventListener('click', function(){
         let name = entity.getAttribute('name')
         let metric = entity.getAttribute('text').value
-        element.setAttribute('vismapper', name, metric)
+        element.setAttribute('babiaxr-vismapper', name, metric)
     });
 }
 

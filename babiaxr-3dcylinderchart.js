@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babia-3dcylinderchart', {
+AFRAME.registerComponent('babiaxr-3dcylinderchart', {
   schema: {
     data: { type: 'string' },
     legend: { type: 'boolean' },

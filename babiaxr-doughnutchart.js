@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babia-piechart', {
+AFRAME.registerComponent('babiaxr-doughnutchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
@@ -45,10 +45,11 @@ AFRAME.registerComponent('babia-piechart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
+            //remove previous chart
             while (this.el.firstChild)
                 this.el.firstChild.remove();
             console.log("Generating pie...")
-            generatePie(data, el)
+            generateDoughnut(data, el)
             loaded = true
         }
     },
@@ -61,23 +62,23 @@ AFRAME.registerComponent('babia-piechart', {
     /**
     * Called on each scene tick.
     */
-    tick: function (t, delta) {
+   tick: function (t, delta) {
         if (animation && loaded ){
             let elements = document.getElementsByClassName('babiaxrChart')[0].children
             for (let slice in slice_array){
                 let delay = slice_array[slice].delay
-                let max_length = slice_array[slice].degreeLenght
-                let theta_length = parseFloat(elements[slice].getAttribute('theta-length'))
-                if ((t >= delay) && ( theta_length < max_length )){
-                    theta_length += 360 * delta / total_durtation
-                    if (theta_length > max_length){
-                        theta_length = max_length
+                let max_arc = slice_array[slice].arc
+                let arc = parseFloat(elements[slice].getAttribute('arc'))
+                if ((t >= delay) && ( arc < max_arc )){
+                    arc += 360 * delta / total_durtation
+                    if (arc > max_arc){
+                        arc = max_arc
                     }
-                    elements[slice].setAttribute('theta-length', theta_length)
+                    elements[slice].setAttribute('arc', arc)
                 }
             }
         }
-     },
+    },
 
     /**
     * Called when entity pauses.
@@ -98,7 +99,7 @@ let slice_array = []
 let loaded = false
 let total_durtation = 4000
 
-let generatePie = (data, element) => {
+let generateDoughnut = (data, element) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -121,26 +122,27 @@ let generatePie = (data, element) => {
 
         let chart_entity = document.createElement('a-entity');
         chart_entity.classList.add('babiaxrChart')
+        chart_entity.setAttribute('rotation', {y: 90})
 
         element.appendChild(chart_entity)
 
         let prev_delay = 0
         for (let slice of dataToPrint) {
-            //Calculate degrees        
+            //Calculate degrees
             degreeEnd = 360 * slice['size'] / totalSize;
 
             let sliceEntity
             if (animation){
                 let duration_slice = total_durtation * degreeEnd / 360
                 slice_array.push({
-                    degreeLenght : degreeEnd,
+                    arc : degreeEnd,
                     duration: duration_slice,
                     delay : prev_delay
                 })
                 prev_delay += duration_slice;
-                sliceEntity = generateSlice(degreeStart, 0.01, 1, colorid, palette);
+                sliceEntity = generateDoughnutSlice(degreeStart, 0.01, 1, colorid, palette);
             } else {
-                sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorid, palette);
+                sliceEntity = generateDoughnutSlice(degreeStart, degreeEnd, 1, colorid, palette);
             }
             sliceEntity.classList.add("babiaxraycasterclass")
 
@@ -156,20 +158,22 @@ let generatePie = (data, element) => {
             colorid++
         }
 
+        //Print Title
         let title_3d = showTitle(title, font, color, title_position);
         element.appendChild(title_3d);
     }
 }
 
-function generateSlice(theta_start, theta_length, radius, colorid, palette) {
+function generateDoughnutSlice(position_start, arc, radius, colorid, palette) {
     let color = getColor(colorid, palette)
     console.log("Generating slice...")
-    let entity = document.createElement('a-cylinder');
+    let entity = document.createElement('a-torus');
     entity.setAttribute('color', color);
-    entity.setAttribute('theta-start', theta_start);
-    entity.setAttribute('theta-length', theta_length);
+    entity.setAttribute('rotation', {x: 90, y: 0, z: position_start})
+    entity.setAttribute('arc', arc);
     entity.setAttribute('side', 'double');
     entity.setAttribute('radius', radius);
+    entity.setAttribute('radius-tubular', radius/4);
     return entity;
 }
 
@@ -191,7 +195,7 @@ function generateLegend(slice) {
         width = text.length / 8;
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: 0, z: -2 });
+    entity.setAttribute('position', { x: 0, y: 1, z: -2 });
     entity.setAttribute('rotation', { x: -90, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -252,7 +256,3 @@ let colors = [
     {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
     {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
 ]
-
-
-
-   

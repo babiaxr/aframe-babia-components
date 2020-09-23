@@ -18,9 +18,9 @@
         <a-entity environment="playArea: 2"></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="queriertest" querier_json="url: ./data.json;"></a-entity>
+        <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>
 
-        <a-entity scale="0.4 0.4 0.4" babia-bubbleschart='legend: true' filterdata="from: queriertest" vismapper="ui:true; x_axis: name; z_axis: age; height: metric2; radius: size" position="0 0 0" rotation="0 0 0"></a-entity>
+        <a-entity scale="0.4 0.4 0.4" babiaxr-bubbleschart='legend: true' babiaxr-filterdata="from: queriertest" babiaxr-vismapper="ui:true; x_axis: name; z_axis: age; height: metric2; radius: size" position="0 0 0" rotation="0 0 0"></a-entity>
 
 
         <a-entity movement-controls="fly: true" position="-3 5 20">

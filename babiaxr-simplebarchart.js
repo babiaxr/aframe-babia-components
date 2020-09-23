@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babia-simplebarchart', {
+AFRAME.registerComponent('babiaxr-simplebarchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean', default: false },

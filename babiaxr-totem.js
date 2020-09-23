@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('geototemchart', {
+AFRAME.registerComponent('babiaxr-totem', {
     schema: {
         charts_id: { type: 'string' },
         data_list: { type: 'string' },
@@ -267,7 +267,7 @@ function updateEntity(data, id_totem) {
                         new_data = data_files[file].file
                         //entity.setAttribute('geototemchart', { 'data' : data_files[file].file })
 
-                        if (type === "vismapper") {
+                        if (type === "babiaxr-vismapper") {
                             document.getElementById(id).setAttribute(type, "dataToShow", JSON.stringify(new_data))
                         } else {
                             document.getElementById(id).setAttribute(type, "data", new_data)

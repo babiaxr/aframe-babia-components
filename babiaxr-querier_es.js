@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('querier_es', {
+AFRAME.registerComponent('babiaxr-querier_es', {
     schema: {
         elasticsearch_url: { type: 'string' },
         index: { type: 'string' },

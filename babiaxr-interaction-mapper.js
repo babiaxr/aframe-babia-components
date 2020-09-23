@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('interaction-mapper', {
+AFRAME.registerComponent('babiaxr-interaction-mapper', {
     schema: {
         input: { type: 'string' },
         output: { type: 'string' }

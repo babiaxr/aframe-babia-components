@@ -17,26 +17,26 @@
     <a-scene background="color: #A8F3FF" id="AframeScene">
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="queriertest" querier_github="user: dlumbrer;"></a-entity>
+        <a-entity id="queriertest" babiaxr-querier_github="user: dlumbrer;"></a-entity>
 
-        <a-entity layout="type: box; columns: 3; margin: 30; align: center">
+        <a-entity layout="type: box; columns: 3; margin: 40; align: center">
             <a-entity>
-                <a-entity geometry="primitive: box;" material="color:navy;" filterdata='from: queriertest; filter: kbn_searchtables'
-                    vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+                <a-entity geometry="primitive: box;" material="color:navy;" babiaxr-filterdata='from: queriertest; filter: kbn_searchtables'
+                babiaxr-vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
             </a-entity>
             <a-entity>
-                <a-entity geometry="primitive: box;" material="color:red;" filterdata='from: queriertest; filter: kbn_dotplot'
-                    vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+                <a-entity geometry="primitive: box;" material="color:red;" babiaxr-filterdata='from: queriertest; filter: kbn_dotplot'
+                babiaxr-vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
             </a-entity>
             <a-entity>
 
-                <a-entity geometry="primitive: box;" material="color:green;" filterdata='from: queriertest; filter: kbn_network'
-                    vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
+                <a-entity geometry="primitive: box;" material="color:green;" babiaxr-filterdata='from: queriertest; filter: kbn_network'
+                babiaxr-vismapper="width: open_issues; depth: open_issues; height: size"></a-entity>
             </a-entity>
         </a-entity>
 
 
-        <a-entity movement-controls="fly: true" position="-3 5 20">
+        <a-entity movement-controls="fly: true" position="-3 50 80">
             <a-entity camera position="0 0 0" look-controls></a-entity>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
             <a-entity laser-controls="hand: right"></a-entity>
