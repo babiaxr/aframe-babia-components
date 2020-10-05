@@ -6130,7 +6130,56 @@ AFRAME.registerComponent('babiaxr-vismapper', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { },
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+        let controller;
+        let selector;
+        let dataJSON;
+        let metrics;
+
+        document.addEventListener('dataLoaded', function loadMenu(event){
+            console.log('VISMAPPER: Data Loaded')
+            dataJSON = event.detail.data
+            if (dataJSON){
+                if (data.ui){
+                    // Get selector values
+                    selector = getSelectors(dataJSON)
+                    metrics = el.getAttribute('babiaToRepresent').split(',');
+                    let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
+                    selector_panel.id = "Panel-scene"
+                    document.getElementsByTagName('a-scene')[0].appendChild(selector_panel)
+                    this.removeEventListener('dataLoaded', loadMenu)
+                }
+            }
+        });
+        document.addEventListener('controllerconnected', (event) => {
+            // event.detail.name ----> which VR controller
+            controller = event.detail.name;
+            let hand = event.target.getAttribute(controller).hand
+            if (hand === 'left'){
+                let entity_id = event.target.id
+                let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
+                selector_panel.setAttribute('position', {x:-0.16, y:0.08, z: -0.2});
+                selector_panel.id = "panel-mano"
+                selector_panel.setAttribute('scale', {x: 0.05, y:0.05, z:0.05});
+                selector_panel.setAttribute('rotation', {x:-45})
+                let background = document.createElement('a-plane');
+                background.setAttribute('color', "#AAAAAA")
+                background.setAttribute('position', {x:3.25, y: -0.5, z: -0.15})
+                background.setAttribute('width', 10);
+                background.setAttribute('height', 2.5)
+                background.setAttribute('material', 'opacity', 0.6)
+                selector_panel.appendChild(background)
+                document.getElementById(entity_id).appendChild(selector_panel);
+                document.getElementById('Panel-scene').setAttribute('visible', false);
+                openCloseMenu(event.detail.component.el.id, selector_panel)
+            }
+            
+        });
+
+        
+    },
 
     /**
     * Called when component is attached and when component data changes.
@@ -6146,54 +6195,10 @@ AFRAME.registerComponent('babiaxr-vismapper', {
          */
         if (data.dataToShow) {
             let dataJSON = JSON.parse(data.dataToShow)
-
-            if (el.components.geometry) {
-                if (el.components.geometry.data.primitive === "box") {
-                    el.setAttribute("geometry", "height", (dataJSON[data.height] / 100))
-                    el.setAttribute("geometry", "width", dataJSON[data.width] || 2)
-                    el.setAttribute("geometry", "depth", dataJSON[data.depth] || 2)
-                    let oldPos = el.getAttribute("position")
-                    el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height] / 200, z: oldPos.z })
-                } else if (el.components.geometry.data.primitive === "sphere") {
-                    el.setAttribute("geometry", "radius", (dataJSON[data.radius] / 10000) || 2)
-                    let oldPos = el.getAttribute("position")
-                    el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
-                }
-            } else if (el.components['babiaxr-simplebarchart']) {
-                let list = generate2Dlist(data, dataJSON, "x_axis")
-                el.setAttribute("babiaxr-simplebarchart", "data", JSON.stringify(list))
-            } else if (el.components['babiaxr-cylinderchart']) {
-                let list = generate2Dlist(data, dataJSON, "x_axis", "cylinder")
-                el.setAttribute("babiaxr-cylinderchart", "data", JSON.stringify(list))
-            } else if (el.components['babiaxr-piechart']) {
-                let list = generate2Dlist(data, dataJSON, "slice")
-                el.setAttribute("babiaxr-piechart", "data", JSON.stringify(list))
-            } else if (el.components['babiaxr-doughnutchart']) {
-                let list = generate2Dlist(data, dataJSON, "slice")
-                el.setAttribute("babiaxr-doughnutchart", "data", JSON.stringify(list))
-            } else if (el.components['babiaxr-3dbarchart']) {
-                let list = generate3Dlist(data, dataJSON, "3dbars")
-                el.setAttribute("babiaxr-3dbarchart", "data", JSON.stringify(list))
-            } else if (el.components['babiaxr-bubbleschart']) {
-                let list = generate3Dlist(data, dataJSON, "bubbles")
-                el.setAttribute("babiaxr-bubbleschart", "data", JSON.stringify(list))
-            } else if (el.components['babiaxr-3dcylinderchart']) {
-                let list = generate3Dlist(data, dataJSON, "3dcylinder")
-                el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
-            } else if (el.components.geocodecitychart) {
-                let list = generateCodecityList(data, dataJSON)
-                el.setAttribute("geocodecitychart", "data", JSON.stringify(list))
-            }
-
-            // Create Buttons
-            if (data.ui){
-                // Get selector values
-                let selector = getSelectors(dataJSON)
-                let metrics = el.getAttribute('babiaToRepresent').split(',');
-                let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
-                document.getElementsByTagName('a-scene')[0].appendChild(selector_panel)
-            }
+            el.emit('dataLoaded', {data: dataJSON})
+            updateComponent(el, data, dataJSON)
         }
+
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -6222,6 +6227,46 @@ AFRAME.registerComponent('babiaxr-vismapper', {
 
 const number_parameters = ['height', 'radius', 'width', 'slice', 'depth']
 const string_parameters = ['x_axis', 'z_axis']
+
+function updateComponent(el, data, dataJSON){
+    if (el.components.geometry) {
+        if (el.components.geometry.data.primitive === "box") {
+            el.setAttribute("geometry", "height", (dataJSON[data.height] / 100))
+            el.setAttribute("geometry", "width", dataJSON[data.width] || 2)
+            el.setAttribute("geometry", "depth", dataJSON[data.depth] || 2)
+            let oldPos = el.getAttribute("position")
+            el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height] / 200, z: oldPos.z })
+        } else if (el.components.geometry.data.primitive === "sphere") {
+            el.setAttribute("geometry", "radius", (dataJSON[data.radius] / 10000) || 2)
+            let oldPos = el.getAttribute("position")
+            el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
+        }
+    } else if (el.components['babiaxr-simplebarchart']) {
+        let list = generate2Dlist(data, dataJSON, "x_axis")
+        el.setAttribute("babiaxr-simplebarchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-cylinderchart']) {
+        let list = generate2Dlist(data, dataJSON, "x_axis", "cylinder")
+        el.setAttribute("babiaxr-cylinderchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-piechart']) {
+        let list = generate2Dlist(data, dataJSON, "slice")
+        el.setAttribute("babiaxr-piechart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-doughnutchart']) {
+        let list = generate2Dlist(data, dataJSON, "slice")
+        el.setAttribute("babiaxr-doughnutchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-3dbarchart']) {
+        let list = generate3Dlist(data, dataJSON, "3dbars")
+        el.setAttribute("babiaxr-3dbarchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-bubbleschart']) {
+        let list = generate3Dlist(data, dataJSON, "bubbles")
+        el.setAttribute("babiaxr-bubbleschart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-3dcylinderchart']) {
+        let list = generate3Dlist(data, dataJSON, "3dcylinder")
+        el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
+    } else if (el.components.geocodecitychart) {
+        let list = generateCodecityList(data, dataJSON)
+        el.setAttribute("babiaxr-codecity", "data", JSON.stringify(list))
+    }
+}
 
 let generate2Dlist = (data, dataToProcess, key_type, chart_type) => {
     let list = []
@@ -6324,6 +6369,7 @@ let generateSelectorPanel = (items, metrics, data, element) => {
         for (let x in structure[i].options){
             posX += 3.25
             let button = createButton(structure[i].name, structure[i].options[x], posX, posY, element)
+            button.classList.add("babiaxraycasterclass")
             panel.appendChild(button)
         }
         --posY
@@ -6376,17 +6422,23 @@ let parameterStructure = (metrics, items, data) => {
 }
 
 let createButton = (name, item, positionX, positionY, element) =>{
-    let entity = document.createElement('a-plane')
+    let entity = document.createElement('a-box')
     entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.setAttribute('height', 0.8)
     entity.setAttribute('width', 3)
-    entity.setAttribute('text', {
+    entity.setAttribute('depth', 0.01)
+
+    let text = document.createElement('a-entity')
+    text.setAttribute('text', {
         'value': item,
         'align': 'center',
         'width': '10',
         'color': 'black'
     })
+    text.setAttribute('position', "0 0 0.01")
+    entity.appendChild(text)
+
     entity.setAttribute('name', name)
     entity.setAttribute('color', '#FFFFFF')
     selection_events(entity, element)
@@ -6396,18 +6448,18 @@ let createButton = (name, item, positionX, positionY, element) =>{
 
 function selection_events(entity, element){
     entity.addEventListener('mouseenter', function(){
-        entity.setAttribute('text', {color: '#FFFFFF'})
+        entity.children[0].setAttribute('text', {color: '#FFFFFF'})
         entity.setAttribute('color', '#333333')
     });
 
     entity.addEventListener('mouseleave', function(){
-        entity.setAttribute('text', {color: 'black'})
+        entity.children[0].setAttribute('text', {color: 'black'})
         entity.setAttribute('color', '#FFFFFF')
     });
 
     entity.addEventListener('click', function(){
         let name = entity.getAttribute('name')
-        let metric = entity.getAttribute('text').value
+        let metric = entity.children[0].getAttribute('text').value
         element.setAttribute('babiaxr-vismapper', name, metric)
     });
 }
@@ -6426,6 +6478,20 @@ let createButtonMetric = (item, positionX, positionY) =>{
     })
     entity.setAttribute('color', 'black')
     return entity
+}
+
+function openCloseMenu(hand_id, entity_menu) {
+    let menu_opened = true
+    let entity_hand = document.getElementById(hand_id)
+    entity_hand.addEventListener('gripdown', function(evt){
+        if (menu_opened){
+            menu_opened = false
+            entity_menu.setAttribute('visible', false)
+        } else {
+            menu_opened = true
+            entity_menu.setAttribute('visible', true)
+        }
+    })
 }
 
 /***/ }),
