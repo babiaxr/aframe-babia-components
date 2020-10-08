@@ -1,0 +1,20 @@
+{
+    "baseUrl": "https://localhost:7000",
+    "integrationFolder": "tests",
+    "testFiles": "**/*.js",
+    "video": true,
+    "videosFolder": "tests/videos",
+    "screenshotsFolder": "tests/screenshots",
+    "trashAssetsBeforeRuns": true,
+    "env": {
+      "cypress-movie": {
+        "enabled": true,
+        "cursorTracking": {
+          "enabled": false,
+          "shape": "dot"
+        },
+        "width": 1920,
+        "height": 640
+      }
+    }
+  }
