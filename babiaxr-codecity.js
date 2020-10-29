@@ -150,7 +150,13 @@ AFRAME.registerComponent('babiaxr-codecity', {
     /**
      * Called once when component is attached. Generally for initial setup.
      */
-    init: function () {
+    init: function () {},
+
+    /**
+     * Called when component is attached and when component data changes.
+     * Generally modifies the entity based on the data.
+     */
+    update: function (oldData) {
         this.loader = new THREE.FileLoader();
         let data = this.data;
         let el = this.el;
@@ -165,6 +171,8 @@ AFRAME.registerComponent('babiaxr-codecity', {
         } else {
             raw_items = data.data;
         };
+
+        el.emit('babiaxr-dataLoaded', {data: raw_items, codecity: true})
 
         deltaTimeEvolution = data.time_evolution_delta
 
@@ -235,13 +243,6 @@ AFRAME.registerComponent('babiaxr-codecity', {
             dateBar(data)
             time_evol()
         }
-    },
-
-    /**
-     * Called when component is attached and when component data changes.
-     * Generally modifies the entity based on the data.
-     */
-    update: function (oldData) {
     },
 
     /**
