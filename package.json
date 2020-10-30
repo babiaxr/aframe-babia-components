@@ -13,9 +13,10 @@
     "ghpages": "ghpages",
     "start": "npm run dev",
     "serve": "npm run dev",
-    "test": "karma start ./tests/karma.conf.js",
-    "test:firefox": "karma start ./tests/karma.conf.js --browsers Firefox",
-    "test:chrome": "karma start ./tests/karma.conf.js --browsers Chrome"
+    "test": "cypress run",
+    "devtest": "cypress open",
+    "test:firefox": "cypress run --browser firefox:dev",
+    "test:chrome": "cypress run --browser chrome"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,8 @@
     "budo": "^8.2.2",
     "chai": "^4.1.2",
     "chai-shallow-deep-equal": "^1.3.0",
+    "cypress": "^4.12.0",
+    "cypress-movie": "^3.0.0",
     "envify": "^4.1.0",
     "ghpages": "^0.0.8",
     "karma": "^1.4.1",
