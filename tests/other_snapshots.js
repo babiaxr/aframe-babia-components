@@ -21,7 +21,7 @@ describe('Others examples (screenshot)', () => {
         });
     });
 
-    ['500bars_anime'].forEach((example) => {
+    ['500bars_anime', '500bars_100anime', '500simplebars_100anime', 'vismapper_codecity'].forEach((example) => {
         it(`Screenshot Performance ${example} Example`, () => {
             cy.visit('/examples/performance/' + example + '/index.html');
             cy.wait(20000);
