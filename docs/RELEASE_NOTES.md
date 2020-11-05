@@ -13,10 +13,19 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Excel Saga        | 2020-06-24  |  2020-07-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/6) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Excel%20Saga) | [Link](#excel-saga) | TBD |
 | Fairy Tail        | 2020-07-22   |  2020-08-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/7) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Fairy%20Tail) | [Link](#fairy-tail) | TBD |
 | Gantz         | 2020-08-19   |  2020-09-02  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/8) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Gantz) | [Link](#gantz) | TBD |
-| Haikyu!!         | 2020-09-09   |  2020-10-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/9) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Haikyu!!) | [Link](#haikyu!!)  | 1.0.11 |
+| Haikyu!!         | 2020-09-09   |  2020-10-22  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/9) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Haikyu!!) | [Link](#haikyu!!)  | 1.0.11 |
+| Inuyasha        | 2020-10-22   |  2020-11-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/10) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Inuyasha) | [Link](#inuyasha)  | 1.0.12 |
 
 
 ## Release notes
+
+### Inuyasha
+
+> NPM 1.0.12 version
+
+- Added testing for the components
+- First iteraction of adding the vismapper component to codecity
+- [Demo with screenshots](https://babiaxr.gitlab.io/aframe-babia-components/).
 
 ### Haikyu!!
 
