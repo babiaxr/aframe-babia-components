@@ -1529,7 +1529,13 @@ AFRAME.registerComponent('babiaxr-codecity', {
     /**
      * Called once when component is attached. Generally for initial setup.
      */
-    init: function () {
+    init: function () {},
+
+    /**
+     * Called when component is attached and when component data changes.
+     * Generally modifies the entity based on the data.
+     */
+    update: function (oldData) {
         this.loader = new THREE.FileLoader();
         let data = this.data;
         let el = this.el;
@@ -1544,6 +1550,8 @@ AFRAME.registerComponent('babiaxr-codecity', {
         } else {
             raw_items = data.data;
         };
+
+        el.emit('babiaxr-dataLoaded', {data: raw_items, codecity: true})
 
         deltaTimeEvolution = data.time_evolution_delta
 
@@ -1614,13 +1622,6 @@ AFRAME.registerComponent('babiaxr-codecity', {
             dateBar(data)
             time_evol()
         }
-    },
-
-    /**
-     * Called when component is attached and when component data changes.
-     * Generally modifies the entity based on the data.
-     */
-    update: function (oldData) {
     },
 
     /**
@@ -5432,6 +5433,10 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
+
+        this.time = Date.now();
+        this.anime_finished = false
+
         let el = this.el;
         let metrics = ['height', 'x_axis'];
         el.setAttribute('babiaToRepresent', metrics);
@@ -5446,6 +5451,9 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
         let data = this.data;
         let el = this.el; 
 
+        this.chart
+        this.animation = data.animation
+        this.bar_array = []
         /**
          * Update or create chart component
          */
@@ -5453,7 +5461,8 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
             while (this.el.firstChild)
                 this.el.firstChild.remove();
             console.log("Generating barchart...")
-            generateBarChart(data, el)
+            this.chart = generateBarChart(data, el, this.animation, this.chart, this.bar_array)   
+            console.log(this.chart)       
         } 
     },
     /**
@@ -5465,7 +5474,30 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     /**
     * Called on each scene tick.
     */
-    // tick: function (t) { },
+    tick: function (t, delta) {
+        let new_time = Date.now();
+        if (this.animation && !this.anime_finished && this.chart){
+            let elements = this.chart.children;
+            let diff_time = new_time - this.time;
+            if (diff_time >= time_wait){
+                for (let bar in this.bar_array){  
+                    let prev_height = parseFloat(elements[bar].getAttribute('height'));
+                    let height_max = this.bar_array[bar].height_max;
+                    let pos_x = this.bar_array[bar].position_x;
+                    if (prev_height < height_max){
+                        let new_height = ((diff_time - time_wait) * height_max) / total_duration;
+                        elements[bar].setAttribute('height', new_height);
+                        elements[bar].setAttribute('position', {x: pos_x, y: new_height/2 , z: 0});
+                    } else {
+                        this.anime_finished = true;
+                        elements[bar].setAttribute('height', height_max);
+                        elements[bar].setAttribute('position', {x: pos_x, y: height_max/2 , z: 0});
+                        console.log('Total time (wait + animation): ' + diff_time + 'ms')
+                    }
+                }
+            }
+        }
+    },
 
     /**
     * Called when entity pauses.
@@ -5481,7 +5513,12 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
 
 })
 
-let generateBarChart = (data, element) => {
+
+
+const time_wait = 2000;
+const total_duration = 3000;
+
+let generateBarChart = (data, element, animation, chart, list) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -5495,7 +5532,6 @@ let generateBarChart = (data, element) => {
         let colorid = 0
         let stepX = 0
         let axis_dict = []
-        let animation = data.animation
 
         //Print Title
         let title_3d = showTitle(title, font, color, title_position);
@@ -5518,7 +5554,7 @@ let generateBarChart = (data, element) => {
 
         for (let bar of dataToPrint) {
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation, scale);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation, scale, list);
             barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
@@ -5547,15 +5583,17 @@ let generateBarChart = (data, element) => {
             showXAxis(element, stepX, axis_dict, palette)
             showYAxis(element, maxY, scale)
         }
-
+        
+        chart = element.children[1]
+        return chart;
     }
 }
 
-let widthBars = 1
+const widthBars = 1
 let proportion
 let valueMax
 
-function generateBar(size, width, colorid, position, palette, animation, scale) {
+function generateBar(size, width, colorid, position, palette, animation, scale, bar_array) {
     let color = getColor(colorid, palette)
     console.log("Generating bar...")
     if (scale) {
@@ -5567,28 +5605,22 @@ function generateBar(size, width, colorid, position, palette, animation, scale) 
     entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
-    entity.setAttribute('height', 0);
-    entity.setAttribute('position', { x: position, y: 0, z: 0 });
     // Add animation
     if (animation){
-        var duration = 4000
-        var increment = 10 * size / duration 
-        var height = 0
-        var id = setInterval(animation, 10);
-        function animation() {
-            if (height >= size) {
-                clearInterval(id);
-            } else {
-                height += increment;
-                entity.setAttribute('height', height);
-                entity.setAttribute('position', { x: position, y: height / 2, z: 0 }); 
-            }  
-        }
+        var increment = size / total_duration
+        var height_max = size
+        bar_array.push({
+            increment: increment,
+            height_max: height_max,
+            position_x: position
+        });
+
+        entity.setAttribute('height', 0.001);
+        entity.setAttribute('position', { x: position, y: 0, z: 0 });
     } else {
         entity.setAttribute('height', size);
         entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
     }
-
     return entity;
 }
 
@@ -6119,7 +6151,11 @@ AFRAME.registerComponent('babiaxr-vismapper', {
         // Only for charts
         slice: { type: 'string' },
         x_axis: { type: 'string' },
-        z_axis: { type: 'string' }
+        z_axis: { type: 'string' },
+        // Codecity
+        fmaxarea: { type: 'string' },
+        farea: { type: 'string'},
+        fheight: { type: 'string'}
     },
 
     /**
@@ -6137,19 +6173,26 @@ AFRAME.registerComponent('babiaxr-vismapper', {
         let selector;
         let dataJSON;
         let metrics;
+        let selector_panel
 
-        document.addEventListener('dataLoaded', function loadMenu(event){
+        document.addEventListener('babiaxr-dataLoaded', function loadMenu(event){
             console.log('VISMAPPER: Data Loaded')
             dataJSON = event.detail.data
             if (dataJSON){
                 if (data.ui){
-                    // Get selector values
-                    selector = getSelectors(dataJSON)
-                    metrics = el.getAttribute('babiaToRepresent').split(',');
-                    let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
+                    if (event.detail.codecity){
+                        selector = getSelectorCodecity(dataJSON)
+                        metrics = ['fmaxarea', 'farea', 'fheight']
+                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, true)
+                    } else {
+                        selector = getSelectors(dataJSON)
+                        metrics = el.getAttribute('babiaToRepresent').split(',');
+                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, false)
+                    }
+                    
                     selector_panel.id = "Panel-scene"
                     document.getElementsByTagName('a-scene')[0].appendChild(selector_panel)
-                    this.removeEventListener('dataLoaded', loadMenu)
+                    this.removeEventListener('babiaxr-dataLoaded', loadMenu)
                 }
             }
         });
@@ -6195,8 +6238,10 @@ AFRAME.registerComponent('babiaxr-vismapper', {
          */
         if (data.dataToShow) {
             let dataJSON = JSON.parse(data.dataToShow)
-            el.emit('dataLoaded', {data: dataJSON})
+            el.emit('babiaxr-dataLoaded', {data: dataJSON})
             updateComponent(el, data, dataJSON)
+        } else if (el.components["babiaxr-codecity"]){
+            updateComponent(el, data)
         }
 
     },
@@ -6225,7 +6270,7 @@ AFRAME.registerComponent('babiaxr-vismapper', {
 
 })
 
-const number_parameters = ['height', 'radius', 'width', 'slice', 'depth']
+const number_parameters = ['height', 'radius', 'width', 'slice', 'depth', 'fmaxarea', 'farea', 'fheight']
 const string_parameters = ['x_axis', 'z_axis']
 
 function updateComponent(el, data, dataJSON){
@@ -6262,9 +6307,16 @@ function updateComponent(el, data, dataJSON){
     } else if (el.components['babiaxr-3dcylinderchart']) {
         let list = generate3Dlist(data, dataJSON, "3dcylinder")
         el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
-    } else if (el.components.geocodecitychart) {
-        let list = generateCodecityList(data, dataJSON)
-        el.setAttribute("babiaxr-codecity", "data", JSON.stringify(list))
+    } else if (el.components["babiaxr-codecity"]) {
+        if (data.fmaxarea){
+            el.setAttribute("babiaxr-codecity", "fmaxarea", data.fmaxarea);
+        }
+        if (data.farea){
+            el.setAttribute("babiaxr-codecity", "farea", data.farea);
+        }
+        if (data.fheight){
+            el.setAttribute("babiaxr-codecity", "fheight", data.fheight);
+        }
     }
 }
 
@@ -6325,22 +6377,6 @@ let generate3Dlist = (data, dataToProcess, chart_type) => {
     return list
 }
 
-let generateCodecityList = (data, dataToProcess) => {
-    let list = []
-    Object.values(dataToProcess).forEach(value => {
-        let item = {
-            "key": value[data.key],
-            "height": value[data.height],
-            "depth": value[data.depth],
-            "width": value[data.width],
-            "children": value.children,
-            "position": value.position
-        }
-        list.push(item)
-    });
-    return list
-}
-
 function normalize(val, min, max) { return (val - min) / (max - min); }
 
 let getSelectors = (data) => {
@@ -6355,8 +6391,28 @@ let getSelectors = (data) => {
     return selector
 }
 
-let generateSelectorPanel = (items, metrics, data, element) => {
-    let structure = parameterStructure(metrics, items, data)
+let getSelectorCodecity = (data) => {
+    let selector = []
+    let last_node = findLast(data.children[0])
+    for (let key in Object.keys(last_node)){
+        if (Object.keys(last_node)[key] != 'id'){
+            selector.push(Object.keys(last_node)[key])
+        }  
+    }
+    return selector
+}
+
+let findLast = (e) => {
+    if ('children' in e){
+        return findLast(e.children[0])
+    } else {
+        return e
+    }
+
+}
+
+let generateSelectorPanel = (items, metrics, data, element, codecity) => {
+    let structure = parameterStructure(metrics, items, data, codecity)
     let panel = document.createElement('a-entity')
     panel.setAttribute('class', 'selector')
 
@@ -6380,23 +6436,40 @@ let generateSelectorPanel = (items, metrics, data, element) => {
     return panel
 }
 
-let parameterStructure = (metrics, items, data) => {
+let parameterStructure = (metrics, items, data, codecity) => {
     let structure = []
     let number_items = []
     let string_items = []
 
     // Sort data by type
-    for (let x in data){
+    if (codecity){
+        let last_node = findLast(data)
         for (let i in items){
-            if (data[x][items[i]]){
-                if (typeof data[x][items[i]] == 'number'){
+            if (last_node[items[i]]){
+                if (typeof last_node[items[i]] == 'number'){
                     if (!number_items.includes(items[i])){
                         number_items.push(items[i]);
                     }   
-                } else if (typeof data[x][items[i]] == 'string'){
+                } else if (typeof last_node[items[i]] == 'string'){
                     if (!string_items.includes(items[i])){
                         string_items.push(items[i]);
                     } 
+                }
+            }
+        }
+    } else {
+        for (let x in data){
+            for (let i in items){
+                if (data[x][items[i]]){
+                    if (typeof data[x][items[i]] == 'number'){
+                        if (!number_items.includes(items[i])){
+                            number_items.push(items[i]);
+                        }   
+                    } else if (typeof data[x][items[i]] == 'string'){
+                        if (!string_items.includes(items[i])){
+                            string_items.push(items[i]);
+                        } 
+                    }
                 }
             }
         }

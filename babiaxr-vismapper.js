@@ -21,7 +21,11 @@ AFRAME.registerComponent('babiaxr-vismapper', {
         // Only for charts
         slice: { type: 'string' },
         x_axis: { type: 'string' },
-        z_axis: { type: 'string' }
+        z_axis: { type: 'string' },
+        // Codecity
+        fmaxarea: { type: 'string' },
+        farea: { type: 'string'},
+        fheight: { type: 'string'}
     },
 
     /**
@@ -39,19 +43,26 @@ AFRAME.registerComponent('babiaxr-vismapper', {
         let selector;
         let dataJSON;
         let metrics;
+        let selector_panel
 
-        document.addEventListener('dataLoaded', function loadMenu(event){
+        document.addEventListener('babiaxr-dataLoaded', function loadMenu(event){
             console.log('VISMAPPER: Data Loaded')
             dataJSON = event.detail.data
             if (dataJSON){
                 if (data.ui){
-                    // Get selector values
-                    selector = getSelectors(dataJSON)
-                    metrics = el.getAttribute('babiaToRepresent').split(',');
-                    let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
+                    if (event.detail.codecity){
+                        selector = getSelectorCodecity(dataJSON)
+                        metrics = ['fmaxarea', 'farea', 'fheight']
+                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, true)
+                    } else {
+                        selector = getSelectors(dataJSON)
+                        metrics = el.getAttribute('babiaToRepresent').split(',');
+                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, false)
+                    }
+                    
                     selector_panel.id = "Panel-scene"
                     document.getElementsByTagName('a-scene')[0].appendChild(selector_panel)
-                    this.removeEventListener('dataLoaded', loadMenu)
+                    this.removeEventListener('babiaxr-dataLoaded', loadMenu)
                 }
             }
         });
@@ -97,8 +108,10 @@ AFRAME.registerComponent('babiaxr-vismapper', {
          */
         if (data.dataToShow) {
             let dataJSON = JSON.parse(data.dataToShow)
-            el.emit('dataLoaded', {data: dataJSON})
+            el.emit('babiaxr-dataLoaded', {data: dataJSON})
             updateComponent(el, data, dataJSON)
+        } else if (el.components["babiaxr-codecity"]){
+            updateComponent(el, data)
         }
 
     },
@@ -127,7 +140,7 @@ AFRAME.registerComponent('babiaxr-vismapper', {
 
 })
 
-const number_parameters = ['height', 'radius', 'width', 'slice', 'depth']
+const number_parameters = ['height', 'radius', 'width', 'slice', 'depth', 'fmaxarea', 'farea', 'fheight']
 const string_parameters = ['x_axis', 'z_axis']
 
 function updateComponent(el, data, dataJSON){
@@ -164,9 +177,16 @@ function updateComponent(el, data, dataJSON){
     } else if (el.components['babiaxr-3dcylinderchart']) {
         let list = generate3Dlist(data, dataJSON, "3dcylinder")
         el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
-    } else if (el.components.geocodecitychart) {
-        let list = generateCodecityList(data, dataJSON)
-        el.setAttribute("babiaxr-codecity", "data", JSON.stringify(list))
+    } else if (el.components["babiaxr-codecity"]) {
+        if (data.fmaxarea){
+            el.setAttribute("babiaxr-codecity", "fmaxarea", data.fmaxarea);
+        }
+        if (data.farea){
+            el.setAttribute("babiaxr-codecity", "farea", data.farea);
+        }
+        if (data.fheight){
+            el.setAttribute("babiaxr-codecity", "fheight", data.fheight);
+        }
     }
 }
 
@@ -227,22 +247,6 @@ let generate3Dlist = (data, dataToProcess, chart_type) => {
     return list
 }
 
-let generateCodecityList = (data, dataToProcess) => {
-    let list = []
-    Object.values(dataToProcess).forEach(value => {
-        let item = {
-            "key": value[data.key],
-            "height": value[data.height],
-            "depth": value[data.depth],
-            "width": value[data.width],
-            "children": value.children,
-            "position": value.position
-        }
-        list.push(item)
-    });
-    return list
-}
-
 function normalize(val, min, max) { return (val - min) / (max - min); }
 
 let getSelectors = (data) => {
@@ -257,8 +261,28 @@ let getSelectors = (data) => {
     return selector
 }
 
-let generateSelectorPanel = (items, metrics, data, element) => {
-    let structure = parameterStructure(metrics, items, data)
+let getSelectorCodecity = (data) => {
+    let selector = []
+    let last_node = findLast(data.children[0])
+    for (let key in Object.keys(last_node)){
+        if (Object.keys(last_node)[key] != 'id'){
+            selector.push(Object.keys(last_node)[key])
+        }  
+    }
+    return selector
+}
+
+let findLast = (e) => {
+    if ('children' in e){
+        return findLast(e.children[0])
+    } else {
+        return e
+    }
+
+}
+
+let generateSelectorPanel = (items, metrics, data, element, codecity) => {
+    let structure = parameterStructure(metrics, items, data, codecity)
     let panel = document.createElement('a-entity')
     panel.setAttribute('class', 'selector')
 
@@ -282,23 +306,40 @@ let generateSelectorPanel = (items, metrics, data, element) => {
     return panel
 }
 
-let parameterStructure = (metrics, items, data) => {
+let parameterStructure = (metrics, items, data, codecity) => {
     let structure = []
     let number_items = []
     let string_items = []
 
     // Sort data by type
-    for (let x in data){
+    if (codecity){
+        let last_node = findLast(data)
         for (let i in items){
-            if (data[x][items[i]]){
-                if (typeof data[x][items[i]] == 'number'){
+            if (last_node[items[i]]){
+                if (typeof last_node[items[i]] == 'number'){
                     if (!number_items.includes(items[i])){
                         number_items.push(items[i]);
                     }   
-                } else if (typeof data[x][items[i]] == 'string'){
+                } else if (typeof last_node[items[i]] == 'string'){
                     if (!string_items.includes(items[i])){
                         string_items.push(items[i]);
                     } 
+                }
+            }
+        }
+    } else {
+        for (let x in data){
+            for (let i in items){
+                if (data[x][items[i]]){
+                    if (typeof data[x][items[i]] == 'number'){
+                        if (!number_items.includes(items[i])){
+                            number_items.push(items[i]);
+                        }   
+                    } else if (typeof data[x][items[i]] == 'string'){
+                        if (!string_items.includes(items[i])){
+                            string_items.push(items[i]);
+                        } 
+                    }
                 }
             }
         }
