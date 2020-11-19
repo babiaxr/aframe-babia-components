@@ -113,16 +113,24 @@ This is neccessary since the distribution files are based on the information of 
 
 ## Testing code in BabiaXR
 
-Currently, we use `karma` testing runner.
+Currently, we use `cypress` testing runner.
 
-In order to test code in this project, just create a testing file into the directory `/tests` using `mocha`, `chai` and `sinon` syntax. These files must be named like:
+Before starting the testing, you need to start the server (with SSL):
 ```
-YOUR_TEST.test.js
+npm run ssldev
 ```
 
 To start testing, execute the next command:
 ```
 npm run test
+```
+This will run all the test that you'd created into `tests` folder. 
+
+When a test file includes to create snapshot or videos, will save it into `/screenshots` and `/videos` folders.
+
+While development, if you want to test some tests, you can run cypress using:
+```
+npm run devtest
 ```
 
 If you want to test only one browser (`firefox` or `chrome`):
