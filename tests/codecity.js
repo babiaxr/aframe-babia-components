@@ -34,7 +34,7 @@ describe ('Codecity component', () => {
 
 describe('Codecity component examples (screenshot)', () => {
 
-    ['basic', 'time_evolution_angular'].forEach((example) => {
+    ['basic', 'time_evolution_angular', 'perceval', 'sortinghat'].forEach((example) => {
         it(`Screenshot Performance ${example} Example`, () => {
             cy.visit('/examples/codecityjs/' + example + '/index.html');
             cy.wait(8000);
