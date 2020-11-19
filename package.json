@@ -6,7 +6,8 @@
   "unpkg": "dist/aframe-babia-components.min.js",
   "scripts": {
     "build": "webpack index.js dist/aframe-babia-components.js",
-    "dev": "budo index.js:dist/aframe-babia-components.min.js --port 7000 --live --open --ssl --cors",
+    "dev": "budo index.js:dist/aframe-babia-components.min.js --port 7000 --live --open",
+    "ssldev": "budo index.js:dist/aframe-babia-components.min.js --port 7000 --live --open --ssl --key ./node_modules/public-encrypt/test/test_key.pem --cert ./node_modules/public-encrypt/test/test_cert.pem --cors",
     "dist": "npm run build && uglifyjs dist/aframe-babia-components.js > dist/aframe-babia-components.min.js",
     "lint": "semistandard -v | snazzy",
     "prepublish": "npm run dist",

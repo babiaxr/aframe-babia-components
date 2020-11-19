@@ -67,13 +67,19 @@ The steps to reproduce and deploy a dev server for developing babiaXR are:
     ```
 
 3. Deploy the dev server:
-    ```
-    npm run dev
-    ```
-    or
-    ```
-    npm start
-    ```
+
+    - Without SSL:
+        ```
+        npm run dev
+        ```
+        or
+        ```
+        npm start
+        ```
+    - With SSL:
+        ```
+        npm run ssldev
+        ```
 
 Each change in a file will automatically update the dev server.
 
