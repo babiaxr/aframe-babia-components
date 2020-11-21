@@ -49,20 +49,10 @@ AFRAME.registerComponent('babiaxr-codecity', {
             type: 'string',
             default: 'height'
         },
-        // Merged geometries in a single mesh (improves performance)
-        merged: {
-            type: 'boolean',
-            default: true
-        },
         // Titles on top of the buildings when hovering
         titles: {
             type: 'boolean',
             default: true
-        },
-        // Use buffered geometries (improves performance)
-        buffered: {
-            type: 'boolean',
-            default: false
         },
         // Base: color
         building_color: {
@@ -193,39 +183,13 @@ AFRAME.registerComponent('babiaxr-codecity', {
         };
 
         // New levels are entities relative (children of the previous level) or not
-        let merged = data.merged;
-        let relative = true;
-        if (merged) {
-            relative = false;
-        };
+        let relative = false;
         let canvas = new Rectangle({ width: width, depth: depth, x: 0, z: 0 });
         zone.add_rects({ rect: canvas, split: data.split, relative: relative });
         let base = document.createElement('a-entity');
         this.base = base;
         let visible = true;
-        /*if (merged) {
-            base.addEventListener('loaded', (e) => {
-                if (data.building_model) {
-                    console.log("In loaded, model:", base);
-                    base.setAttribute('gltf-buffer-geometry-merger', { preserveOriginal: true });
-                } else if (data.buffered) {
-                    console.log("In loaded, buffered:", base);
-                    base.setAttribute('material', { vertexColors: 'vertex' });
-                    base.setAttribute('buffer-geometry-merger2', { preserveOriginal: true });
-                } else {
-                    console.log("In loaded, unbuffered:", base);
-                    //base.setAttribute('geometry-merger', { preserveOriginal: true });
-                    //base.setAttribute('material', { vertexColors: 'face' });
-                };
-            });
-            if (data.buffered) {
-                visible = true;
-            } else {
-                visible = true;
-            };
-        };*/
 
-        console.log("Init (relative, buffered, merged):", relative, data.buffered, merged);
         zone.draw_rects({
             ground: canvas, el: base, base: data.base,
             level: 0, elevation: 0, relative: relative,
@@ -233,7 +197,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
             wireframe: data.wireframe,
             building_color: data.building_color, base_color: data.base_color,
             model: data.building_model, visible: visible,
-            buffered: data.buffered, titles: data.titles
+            titles: data.titles
         });
         el.appendChild(base);
 
@@ -381,7 +345,7 @@ let Zone = class {
         level = 0, elevation = 0, relative = true,
         base_thick = .2, wireframe = false,
         building_color = "red", base_color = "green", model = null,
-        visible = true, buffered = false, titles = true }) {
+        visible = true, titles = true }) {
         if (level === 0) {
             this.el = el;
         };
@@ -393,7 +357,6 @@ let Zone = class {
                 height: base_thick,
                 color: base_color, inner: false,
                 wireframe: wireframe, visible: visible,
-                buffered: buffered,
                 id: area.data['id'],
                 rawarea: 0
             });
@@ -444,7 +407,7 @@ let Zone = class {
                     building_color: building_color, base_color: base_color,
                     model: model,
                     base_thick: base_thick, wireframe: wireframe,
-                    visible: visible, buffered: buffered, titles: titles
+                    visible: visible, titles: titles
                 });
             };
         } else {
@@ -457,7 +420,6 @@ let Zone = class {
                 color: building_color,
                 model: model,
                 visible: visible,
-                buffered: buffered,
                 id: area.data['id'],
                 rawarea: area.data[this.farea],
                 inner_real: true
@@ -877,7 +839,7 @@ let Rectangle = class {
      * @param {string} model Link to the glTF model
      */
     box({ height, elevation = 0, color = 'red', model = null, inner = true,
-        wireframe = false, visible = true, buffered = false, id = "", rawarea = 0, inner_real = false }) {
+        wireframe = false, visible = true, id = "", rawarea = 0, inner_real = false }) {
         let depth, width;
         if (inner_real) {
             [depth, width] = [this.idepth_real, this.iwidth_real];
@@ -888,7 +850,6 @@ let Rectangle = class {
         };
         let box = document.createElement('a-entity');
         box.setAttribute('geometry', {
-            buffer: buffered,
             primitive: 'box',
             skipCache: true,
             depth: depth,
@@ -1318,10 +1279,6 @@ let changeBuildingLayout = (item) => {
 
 let updateCity = () => {
     console.log("Changing city")
-    //rootCodecityEntity.children[0].removeAttribute('geometry-merger')
-    //rootCodecityEntity.children[0].removeAttribute('material')
-    //rootCodecityEntity.children[0].setAttribute('geometry-merger', { preserveOriginal: true })
-    //rootCodecityEntity.children[0].setAttribute('material', { vertexColors: 'face' });
 }
 
 let findLeafs = (data, entities) => {
