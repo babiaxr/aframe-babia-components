@@ -203,7 +203,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
         let base = document.createElement('a-entity');
         this.base = base;
         let visible = true;
-        if (merged) {
+        /*if (merged) {
             base.addEventListener('loaded', (e) => {
                 if (data.building_model) {
                     console.log("In loaded, model:", base);
@@ -214,16 +214,16 @@ AFRAME.registerComponent('babiaxr-codecity', {
                     base.setAttribute('buffer-geometry-merger2', { preserveOriginal: true });
                 } else {
                     console.log("In loaded, unbuffered:", base);
-                    base.setAttribute('geometry-merger', { preserveOriginal: true });
-                    base.setAttribute('material', { vertexColors: 'face' });
+                    //base.setAttribute('geometry-merger', { preserveOriginal: true });
+                    //base.setAttribute('material', { vertexColors: 'face' });
                 };
             });
             if (data.buffered) {
-                visible = false;
+                visible = true;
             } else {
-                visible = false;
+                visible = true;
             };
-        };
+        };*/
 
         console.log("Init (relative, buffered, merged):", relative, data.buffered, merged);
         zone.draw_rects({
@@ -269,224 +269,6 @@ AFRAME.registerComponent('babiaxr-codecity', {
     play: function () { }
 
 });
-
-/*
- * Autoscale a component
- *
- * Based on code by Don McCurdy, used to autoscale buildings
- * https://stackoverflow.com/questions/49379435/aframe-how-to-reset-default-scale-after-loading-the-gltf-model
- */
-AFRAME.registerComponent('autoscale', {
-    schema: { type: 'vec3', default: { x: 1, y: 1, z: 1 } },
-    init: function () {
-        this.scale();
-        this.el.addEventListener('object3dset', () => this.scale());
-    },
-    scale: function () {
-        const el = this.el;
-        const data = this.data;
-        const span = new THREE.Vector3(data.x, data.y, data.z);
-        const mesh = el.getObject3D('mesh');
-
-        if (!mesh) return;
-
-        // Compute bounds.
-        const bbox = new THREE.Box3().setFromObject(mesh);
-
-        // Normalize scale.
-        const scale = span.divide(bbox.getSize());
-        mesh.scale.set(scale.x, scale.y, scale.z);
-
-        // Recenter.
-        const offset = bbox.getCenter().multiply(scale);
-        mesh.position.sub(offset);
-    }
-});
-
-AFRAME.registerComponent('gltf-buffer-geometry-merger', {
-    schema: {
-        preserveOriginal: { default: false }
-    },
-
-    init: function () {
-        let self = this;
-        let models = 0;
-        this.el.object3D.traverse(function (mesh) {
-            if (mesh.type == 'Group') {
-                for (component in mesh.el.components) {
-                    if (component == 'gltf-model') {
-                        models++;
-                    };
-                };
-            };
-        });
-
-        this.el.addEventListener('model-loaded', function (e) {
-            models--;
-            if (models <= 0) {
-                self.el.setAttribute('buffer-geometry-merger2',
-                    { preserveOriginal: self.data.preserveOriginal });
-            };
-        });
-    }
-});
-
-/*
- * Merge buffered geometries in elements in the subtree
- *
- * Based on buffer-geometry-merger
- * https://www.npmjs.com/package/aframe-geometry-merger-component
- */
-
-AFRAME.registerComponent('buffer-geometry-merger2', {
-    schema: {
-        preserveOriginal: { default: false }
-    },
-
-    init: function () {
-        var geometries = [];
-        var material = null;
-        let self = this;
-        console.log("Init");
-
-        self.el.object3D.updateMatrixWorld();
-        self.el.object3D.traverse(function (mesh) {
-            if (mesh.type !== 'Mesh' || mesh.el === self.el) { return; };
-            let geometry = mesh.geometry.clone();
-            if (material == null) {
-                material = mesh.material.clone();
-            };
-            let currentMesh = mesh;
-            while (currentMesh !== self.el.object3D) {
-                geometry.applyMatrix(currentMesh.parent.matrix);
-                currentMesh = currentMesh.parent;
-            }
-            geometries.push(geometry);
-            // Remove mesh if not preserving.
-            if (!self.data.preserveOriginal) { mesh.parent.remove(mesh); }
-        });
-
-        const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
-        self.mesh = new THREE.Mesh(geometry, material);
-        self.el.setObject3D('mesh', self.mesh);
-    },
-
-
-});
-
-//AFRAME.registerComponent('buffer-geometry-merger2', {
-//  schema: {
-//    preserveOriginal: {default: false}
-//  },
-//
-//  init: function () {
-//    var geometries = [];
-//    let self = this;
-//
-//    this.el.object3D.updateMatrixWorld();
-//    this.el.object3D.traverse(function (mesh) {
-//      if (mesh.type !== 'Mesh' || mesh.el === self.el) { return; }
-//      let geometry = mesh.geometry.clone();
-//      let currentMesh = mesh;
-//      while (currentMesh !== self.el.object3D) {
-//        geometry.applyMatrix(currentMesh.parent.matrix);
-//        currentMesh = currentMesh.parent;
-//      }
-//      geometries.push(geometry);
-//      mesh.parent.remove(mesh);
-//    });
-//
-//    const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
-//    this.mesh = new THREE.Mesh(geometry);
-//    this.el.setObject3D('mesh', this.mesh);
-//  }
-//});
-
-
-
-
-/*
- * face-colors component    
- * From https://github.com/supermedium/superframe/blob/master/components/geometry-merger/examples/basic/index.html
- */
-AFRAME.registerComponent('face-colors', {
-    dependencies: ['geometry'],
-    schema: {
-        color: { default: '#FFF' }
-    },
-    init: function () {
-        var geometry;
-        var i;
-        geometry = this.el.getObject3D('mesh').geometry;
-        for (i = 0; i < geometry.faces.length; i++) {
-            geometry.faces[i].color.set(this.data.color);
-        }
-        geometry.colorsNeedUpdate = true;
-    }
-});
-
-/*
- * vertex-colors-buffer component
- * Copied from https://github.com/supermedium/superframe/blob/master/components/geometry-merger/examples/buffer/vertex-colors-buffer.js
- */
-var colorHelper = new THREE.Color();
-
-AFRAME.registerComponent('vertex-colors-buffer', {
-    schema: {
-        baseColor: { type: 'color' },
-        itemSize: { default: 3 }
-    },
-
-    update: function (oldData) {
-        var colors;
-        var data = this.data;
-        var i;
-        var el = this.el;
-        var geometry;
-        var mesh;
-        var self = this;
-
-        mesh = this.el.getObject3D('mesh');
-
-        if (!mesh || !mesh.geometry) {
-            el.addEventListener('object3dset', function reUpdate(evt) {
-                if (evt.detail.type !== 'mesh') { return; }
-                el.removeEventListener('object3dset', reUpdate);
-                self.update(oldData);
-            });
-            return;
-        }
-
-        geometry = mesh.geometry;
-
-        // Empty geometry.
-        if (!geometry.attributes.position) {
-            console.warn('Geometry has no vertices', el);
-            return;
-        }
-
-        if (!geometry.attributes.color) {
-            geometry.addAttribute('color',
-                new THREE.BufferAttribute(
-                    new Float32Array(geometry.attributes.position.array.length), 3
-                )
-            );
-        }
-
-        colors = geometry.attributes.color.array;
-
-        // TODO: For some reason, incrementing loop by 3 doesn't work. Need to do by 4 for glTF.
-        colorHelper.set(data.baseColor);
-        for (i = 0; i < colors.length; i += data.itemSize) {
-            colors[i] = colorHelper.r;
-            colors[i + 1] = colorHelper.g;
-            colors[i + 2] = colorHelper.b;
-        }
-
-        geometry.attributes.color.needsUpdate = true;
-    }
-});
-
 
 /*
  * Class for storing zone, with all its subzones and items, to show as buildings
@@ -1105,85 +887,27 @@ let Rectangle = class {
             [depth, width] = [this.depth, this.width];
         };
         let box = document.createElement('a-entity');
-        if (model == null) {
-            box.setAttribute('geometry', {
-                buffer: buffered,
-                primitive: 'box',
-                skipCache: true,
-                depth: depth,
-                width: width,
-                height: height
-            });
-        } else {
-            box.setAttribute('gltf-model', model);
-            box.setAttribute('autoscale', {
-                x: width,
-                y: height,
-                z: depth
-            });
-        };
+        box.setAttribute('geometry', {
+            buffer: buffered,
+            primitive: 'box',
+            skipCache: true,
+            depth: depth,
+            width: width,
+            height: height,
+        });
+
+        box.setAttribute('material', { 'color': color });
 
         box.setAttribute('position', {
             x: this.x,
             y: elevation + height / 2,
             z: this.z
         });
-        if (model == null) {
-            if (buffered) {
-                box.setAttribute('vertex-colors-buffer', { 'baseColor': color });
-                box.setAttribute('material', { 'visible': visible });
-            } else {
-                box.setAttribute('material', {
-                    'wireframe': wireframe,
-                    'vertexColors': 'face',
-                    'visible': visible
-                });
-                box.setAttribute('face-colors', { 'color': color });
-            };
-        };
         box.setAttribute('id', id);
         box.setAttribute('babiaxr-rawarea', rawarea);
-
-
-
         return box;
     }
 
-};
-
-/*
- * Default palette of colors
- */
-const default_colors = ['blue', 'yellow', 'brown', 'orange',
-    'magenta', 'darkcyan', 'grey', 'cyan', 'darkred', 'blueviolet',
-    'coral', 'crimson', 'darkblue', 'darkgrey', 'orchid',
-    'navy', 'palegreen'];
-/*
- * Class for dealing with colors
- */
-let Colors = class {
-    /*
-     * Builds palette of colors, given a list of colors
-     *
-     * @constructor
-     * @param {color[]} colors Colors to build the palette
-     */
-    constructor(colors = default_colors) {
-        this.colors = colors;
-        this.current = -1;
-    };
-
-    /*
-     * Give me the next color
-     */
-    next(color) {
-        if (typeof color !== 'undefined') {
-            return color;
-        } else {
-            this.current = (this.current + 1) % this.colors.length;
-            return this.colors[this.current];
-        };
-    };
 };
 
 
@@ -1594,10 +1318,10 @@ let changeBuildingLayout = (item) => {
 
 let updateCity = () => {
     console.log("Changing city")
-    rootCodecityEntity.children[0].removeAttribute('geometry-merger')
-    rootCodecityEntity.children[0].removeAttribute('material')
-    rootCodecityEntity.children[0].setAttribute('geometry-merger', { preserveOriginal: true })
-    rootCodecityEntity.children[0].setAttribute('material', { vertexColors: 'face' });
+    //rootCodecityEntity.children[0].removeAttribute('geometry-merger')
+    //rootCodecityEntity.children[0].removeAttribute('material')
+    //rootCodecityEntity.children[0].setAttribute('geometry-merger', { preserveOriginal: true })
+    //rootCodecityEntity.children[0].setAttribute('material', { vertexColors: 'face' });
 }
 
 let findLeafs = (data, entities) => {
