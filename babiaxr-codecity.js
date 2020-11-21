@@ -1231,10 +1231,20 @@ let changeCity = (bigStepCommitByCommit) => {
     if (!time_evolution_commit_by_commit) {
         initItems.forEach((item) => {
             if (!changedItems.includes(item.id)) {
-                let prevPos = document.getElementById(item.id).getAttribute("position")
-                let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
-                document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
-                document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (-0.1 / 2), z: prevPos.z })
+                // Put it to opacity 0.3 and black color
+                let oldColor = document.getElementById(item.id).getAttribute('material').color
+                document.getElementById(item.id).setAttribute('material', { 'color': 'black' });
+                document.getElementById(item.id).setAttribute('material', { 'opacity': '0.3' });
+                let dissapearId = setInterval(function () { dissapearBuilding() }, 1000);
+                function dissapearBuilding() {
+                    let prevPos = document.getElementById(item.id).getAttribute("position")
+                    let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
+                    document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
+                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (-0.1 / 2), z: prevPos.z })
+                    document.getElementById(item.id).setAttribute('material', { 'color': oldColor });
+                    document.getElementById(item.id).setAttribute('material', { 'opacity': '1.0' });
+                    clearInterval(dissapearId);
+                }
             }
         })
     }
