@@ -1232,19 +1232,7 @@ let changeCity = (bigStepCommitByCommit) => {
         initItems.forEach((item) => {
             if (!changedItems.includes(item.id)) {
                 // Put it to opacity 0.3 and black color
-                let oldColor = document.getElementById(item.id).getAttribute('material').color
-                document.getElementById(item.id).setAttribute('material', { 'color': 'black' });
-                document.getElementById(item.id).setAttribute('material', { 'opacity': '0.3' });
-                let dissapearId = setInterval(function () { dissapearBuilding() }, 1000);
-                function dissapearBuilding() {
-                    let prevPos = document.getElementById(item.id).getAttribute("position")
-                    let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
-                    document.getElementById(item.id).setAttribute("geometry", "height", -0.1)
-                    document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (-0.1 / 2), z: prevPos.z })
-                    document.getElementById(item.id).setAttribute('material', { 'color': oldColor });
-                    document.getElementById(item.id).setAttribute('material', { 'opacity': '1.0' });
-                    clearInterval(dissapearId);
-                }
+                dissapearBuildingAnimation(item.id)
             }
         })
     }
@@ -1332,7 +1320,10 @@ let changeBuildingLayout = (item) => {
             }
 
             // Change height with animation
-            if (item.height > prevHeight) {
+            if (item.height < 0) {
+                // Has to dissapear
+                dissapearBuildingAnimation(item.id)
+            } else if (item.height > prevHeight) {
                 let increment = 20 * (item.height - prevHeight) / duration
                 let size = prevHeight
                 let idIncH = setInterval(function () { animationHeightIncrease() }, 1);
@@ -1367,6 +1358,23 @@ let changeBuildingLayout = (item) => {
             document.getElementById(item.id).setAttribute("geometry", "height", item.height)
             document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (item.height / 2), z: prevPos.z })
         }
+    }
+}
+
+let dissapearBuildingAnimation = (itemId) => {
+    // Put it to opacity 0.3 and black color
+    let oldColor = document.getElementById(itemId).getAttribute('material').color
+    document.getElementById(itemId).setAttribute('material', { 'color': 'black' });
+    document.getElementById(itemId).setAttribute('material', { 'opacity': '0.3' });
+    let dissapearId = setInterval(function () { dissapearBuilding() }, 1000);
+    function dissapearBuilding() {
+        let prevPos = document.getElementById(itemId).getAttribute("position")
+        let prevHeight = document.getElementById(itemId).getAttribute("geometry").height
+        document.getElementById(itemId).setAttribute("geometry", "height", -0.1)
+        document.getElementById(itemId).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (-0.1 / 2), z: prevPos.z })
+        document.getElementById(itemId).setAttribute('material', { 'color': oldColor });
+        document.getElementById(itemId).setAttribute('material', { 'opacity': '1.0' });
+        clearInterval(dissapearId);
     }
 }
 
