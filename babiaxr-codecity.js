@@ -125,6 +125,10 @@ AFRAME.registerComponent('babiaxr-codecity', {
             type: 'boolean',
             default: false
         },
+        time_evolution_animation: {
+            type: 'boolean',
+            default: true
+        },
         // ui navbar UD
         ui_navbar: {
             type: 'string',
@@ -204,6 +208,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
         // Time Evolution starts
         if (time_evolution) {
             time_evolution_past_present = data.time_evolution_past_present
+            time_evolution_animation = data.time_evolution_animation
             dateBar(data)
             time_evol()
         }
@@ -996,6 +1001,7 @@ let requestJSONDataFromURL = (data) => {
 }
 
 let time_evolution = false
+let time_evolution_animation = true
 let time_evolution_commit_by_commit = false
 let ui_navbar = undefined
 let last_uinavbar = undefined
@@ -1274,78 +1280,83 @@ let changeBuildingLayout = (item) => {
         // Write the new values
         document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.area)
 
-        // Change area with animation
-        let duration = 500
-        if (newWidth > prevWidth || newDepth > prevDepth) {
-            let incrementWidth = 20 * (newWidth - prevWidth) / duration
-            let incrementDepth = 20 * (newDepth - prevDepth) / duration
-            let sizeWidth = prevWidth
-            let sizeDepth = prevDepth
-            let idIncA = setInterval(function () { animationAreaIncrease() }, 1);
-            function animationAreaIncrease() {
-                if (sizeWidth >= newWidth || sizeDepth >= newDepth) {
-                    document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
-                    document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
-                    clearInterval(idIncA);
-                } else {
-                    sizeWidth += incrementWidth;
-                    sizeDepth += incrementDepth
-                    document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
-                    document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
+        if (time_evolution_animation) {
+            // Change area with animation
+            let duration = 500
+            if (newWidth > prevWidth || newDepth > prevDepth) {
+                let incrementWidth = 20 * (newWidth - prevWidth) / duration
+                let incrementDepth = 20 * (newDepth - prevDepth) / duration
+                let sizeWidth = prevWidth
+                let sizeDepth = prevDepth
+                let idIncA = setInterval(function () { animationAreaIncrease() }, 1);
+                function animationAreaIncrease() {
+                    if (sizeWidth >= newWidth || sizeDepth >= newDepth) {
+                        document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+                        document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+                        clearInterval(idIncA);
+                    } else {
+                        sizeWidth += incrementWidth;
+                        sizeDepth += incrementDepth
+                        document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
+                        document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
+                    }
+                }
+            } else if (newWidth < prevWidth || newDepth < prevDepth) {
+                let incrementWidth = 20 * (prevWidth - newWidth) / duration
+                let incrementDepth = 20 * (prevDepth - newDepth) / duration
+                let sizeWidth = prevWidth
+                let sizeDepth = prevDepth
+                let idDecA = setInterval(function () { animationAreaDecrease() }, 1);
+                function animationAreaDecrease() {
+                    if (sizeWidth <= newWidth || sizeDepth <= newDepth) {
+                        document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+                        document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+                        clearInterval(idDecA);
+                    } else {
+                        sizeWidth -= incrementWidth;
+                        sizeDepth -= incrementDepth
+                        document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
+                        document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
+                    }
                 }
             }
-        } else if (newWidth < prevWidth || newDepth < prevDepth) {
-            let incrementWidth = 20 * (prevWidth - newWidth) / duration
-            let incrementDepth = 20 * (prevDepth - newDepth) / duration
-            let sizeWidth = prevWidth
-            let sizeDepth = prevDepth
-            let idDecA = setInterval(function () { animationAreaDecrease() }, 1);
-            function animationAreaDecrease() {
-                if (sizeWidth <= newWidth || sizeDepth <= newDepth) {
-                    document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
-                    document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
-                    clearInterval(idDecA);
-                } else {
-                    sizeWidth -= incrementWidth;
-                    sizeDepth -= incrementDepth
-                    document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
-                    document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
+
+            // Change height with animation
+            if (item.height > prevHeight) {
+                let increment = 20 * (item.height - prevHeight) / duration
+                let size = prevHeight
+                let idIncH = setInterval(function () { animationHeightIncrease() }, 1);
+                function animationHeightIncrease() {
+                    if (size >= item.height) {
+                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
+                        clearInterval(idIncH);
+                    } else {
+                        size += increment;
+                        document.getElementById(item.id).setAttribute("geometry", 'height', size);
+                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
+                    }
+                }
+            } else if (item.height < prevHeight) {
+                let increment = 20 * (prevHeight - item.height) / duration
+                let size = prevHeight
+                let idDecH = setInterval(function () { animationHeightDecrease() }, 1);
+                function animationHeightDecrease() {
+                    if (size <= item.height) {
+                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
+                        clearInterval(idDecH);
+                    } else {
+                        size -= increment;
+                        document.getElementById(item.id).setAttribute("geometry", 'height', size);
+                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
+                    }
                 }
             }
+        } else {
+            document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+            document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+            document.getElementById(item.id).setAttribute("geometry", "height", item.height)
+            document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (item.height / 2), z: prevPos.z })
         }
-
-        // Change height with animation
-        if (item.height > prevHeight) {
-            let increment = 20 * (item.height - prevHeight) / duration
-            let size = prevHeight
-            let idIncH = setInterval(function () { animationHeightIncrease() }, 1);
-            function animationHeightIncrease() {
-                if (size >= item.height) {
-                    document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
-                    clearInterval(idIncH);
-                } else {
-                    size += increment;
-                    document.getElementById(item.id).setAttribute("geometry", 'height', size);
-                    document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
-                }
-            }
-        } else if (item.height < prevHeight) {
-            let increment = 20 * (prevHeight - item.height) / duration
-            let size = prevHeight
-            let idDecH = setInterval(function () { animationHeightDecrease() }, 1);
-            function animationHeightDecrease() {
-                if (size <= item.height) {
-                    document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
-                    clearInterval(idDecH);
-                } else {
-                    size -= increment;
-                    document.getElementById(item.id).setAttribute("geometry", 'height', size);
-                    document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
-                }
-            }
-        }
-
-
     }
 }
 
