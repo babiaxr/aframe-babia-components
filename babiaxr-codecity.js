@@ -129,6 +129,10 @@ AFRAME.registerComponent('babiaxr-codecity', {
             type: 'boolean',
             default: true
         },
+        time_evolution_color: {
+            type: 'boolean',
+            default: false
+        },
         // ui navbar UD
         ui_navbar: {
             type: 'string',
@@ -154,6 +158,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
         this.loader = new THREE.FileLoader();
         let data = this.data;
         let el = this.el;
+        currentColor = data.building_color;
         rootCodecityEntity = el;
 
         if (typeof data.data == 'string') {
@@ -209,6 +214,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
         if (time_evolution) {
             time_evolution_past_present = data.time_evolution_past_present
             time_evolution_animation = data.time_evolution_animation
+            time_evolution_color = data.time_evolution_color
             dateBar(data)
             time_evol()
         }
@@ -1002,6 +1008,7 @@ let requestJSONDataFromURL = (data) => {
 
 let time_evolution = false
 let time_evolution_animation = true
+let time_evolution_color = false
 let time_evolution_commit_by_commit = false
 let ui_navbar = undefined
 let last_uinavbar = undefined
@@ -1216,6 +1223,23 @@ let changeCity = (bigStepCommitByCommit) => {
     dateBarEntity.setAttribute('text-geometry', 'value', text)
 
     changedItems = []
+
+    // Change color by date
+    if (time_evolution_color) {
+        // Change color
+        currentColorPercentage += 5
+        if (currentColorPercentage !== 80) {
+            currentColor = getNewBrightnessColor(currentColor, currentColorPercentage)
+        } else {
+            colorEvolutionArrayStartingPoint++
+            if (colorEvolutionArrayStartingPoint > colorEvolutionArray.length-1){
+                colorEvolutionArrayStartingPoint = 0
+            }
+            currentColor = colorEvolutionArray[colorEvolutionArrayStartingPoint]
+            currentColorPercentage = 20
+        }
+    }
+
     // Check if commit by commit or time snapshots (time snapshots = same key)
     if (timeEvolutionItems[key][key2]) {
         timeEvolutionItems[key][key2].forEach((item) => {
@@ -1227,7 +1251,7 @@ let changeCity = (bigStepCommitByCommit) => {
         })
     }
 
-    // Put height 0 those that not exists, TODO: DESTROY IN ANIMATION
+    // Put height 0 those that not exists
     if (!time_evolution_commit_by_commit) {
         initItems.forEach((item) => {
             if (!changedItems.includes(item.id)) {
@@ -1239,9 +1263,13 @@ let changeCity = (bigStepCommitByCommit) => {
     updateCity()
 }
 
+let currentColorPercentage = 20
+let currentColor
+let colorEvolutionArray = ["#000066", "#006600", "#666600", "#660000"]
+let colorEvolutionArrayStartingPoint = 0
+
 let changeBuildingLayout = (item) => {
     if (document.getElementById(item.id) != undefined && item.area != 0.0) {
-
         // Add to changed items
         changedItems.push(item.id)
 
@@ -1255,108 +1283,113 @@ let changeBuildingLayout = (item) => {
         let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
         let oldRawArea = parseFloat(document.getElementById(item.id).getAttribute("babiaxr-rawarea"))
 
-        // Calculate Aspect Ratio
-        let reverseWidthDepth = false
-        let AR = prevWidth / prevDepth
-        if (AR < 1) {
-            reverseWidthDepth = true
-            AR = prevDepth / prevWidth
-        }
+        if (prevHeight.toFixed(6) !== item.height.toFixed(6) || oldRawArea.toFixed(6) !== item.area.toFixed(6)) {
+            //Change color
+            if (time_evolution_color) { document.getElementById(item.id).setAttribute('material', { 'color': currentColor }); }
 
-        // New area that depends on the city
-        let newAreaDep = (item.area * (prevDepth * prevWidth)) / oldRawArea
-
-        // New size for the building based on the AR and the Area depend
-        let newWidth = Math.sqrt(newAreaDep * AR)
-        let newDepth = Math.sqrt(newAreaDep / AR)
-        if (reverseWidthDepth) {
-            newDepth = Math.sqrt(newAreaDep * AR)
-            newWidth = Math.sqrt(newAreaDep / AR)
-        }
-
-
-        // Write the new values
-        document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.area)
-
-        if (time_evolution_animation) {
-            // Change area with animation
-            let duration = 500
-            if (newWidth > prevWidth || newDepth > prevDepth) {
-                let incrementWidth = 20 * (newWidth - prevWidth) / duration
-                let incrementDepth = 20 * (newDepth - prevDepth) / duration
-                let sizeWidth = prevWidth
-                let sizeDepth = prevDepth
-                let idIncA = setInterval(function () { animationAreaIncrease() }, 1);
-                function animationAreaIncrease() {
-                    if (sizeWidth >= newWidth || sizeDepth >= newDepth) {
-                        document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
-                        document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
-                        clearInterval(idIncA);
-                    } else {
-                        sizeWidth += incrementWidth;
-                        sizeDepth += incrementDepth
-                        document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
-                        document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
-                    }
-                }
-            } else if (newWidth < prevWidth || newDepth < prevDepth) {
-                let incrementWidth = 20 * (prevWidth - newWidth) / duration
-                let incrementDepth = 20 * (prevDepth - newDepth) / duration
-                let sizeWidth = prevWidth
-                let sizeDepth = prevDepth
-                let idDecA = setInterval(function () { animationAreaDecrease() }, 1);
-                function animationAreaDecrease() {
-                    if (sizeWidth <= newWidth || sizeDepth <= newDepth) {
-                        document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
-                        document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
-                        clearInterval(idDecA);
-                    } else {
-                        sizeWidth -= incrementWidth;
-                        sizeDepth -= incrementDepth
-                        document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
-                        document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
-                    }
-                }
+            // Calculate Aspect Ratio
+            let reverseWidthDepth = false
+            let AR = prevWidth / prevDepth
+            if (AR < 1) {
+                reverseWidthDepth = true
+                AR = prevDepth / prevWidth
             }
 
-            // Change height with animation
-            if (item.height < 0) {
-                // Has to dissapear
-                dissapearBuildingAnimation(item.id)
-            } else if (item.height > prevHeight) {
-                let increment = 20 * (item.height - prevHeight) / duration
-                let size = prevHeight
-                let idIncH = setInterval(function () { animationHeightIncrease() }, 1);
-                function animationHeightIncrease() {
-                    if (size >= item.height) {
-                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
-                        clearInterval(idIncH);
-                    } else {
-                        size += increment;
-                        document.getElementById(item.id).setAttribute("geometry", 'height', size);
-                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
-                    }
-                }
-            } else if (item.height < prevHeight) {
-                let increment = 20 * (prevHeight - item.height) / duration
-                let size = prevHeight
-                let idDecH = setInterval(function () { animationHeightDecrease() }, 1);
-                function animationHeightDecrease() {
-                    if (size <= item.height) {
-                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
-                        clearInterval(idDecH);
-                    } else {
-                        size -= increment;
-                        document.getElementById(item.id).setAttribute("geometry", 'height', size);
-                        document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
-                    }
-                }
+            // New area that depends on the city
+            let newAreaDep = (item.area * (prevDepth * prevWidth)) / oldRawArea
+
+            // New size for the building based on the AR and the Area depend
+            let newWidth = Math.sqrt(newAreaDep * AR)
+            let newDepth = Math.sqrt(newAreaDep / AR)
+            if (reverseWidthDepth) {
+                newDepth = Math.sqrt(newAreaDep * AR)
+                newWidth = Math.sqrt(newAreaDep / AR)
             }
-        } else {
-            document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
-            document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
-            document.getElementById(item.id).setAttribute("geometry", "height", item.height)
-            document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (item.height / 2), z: prevPos.z })
+
+
+            // Write the new values
+            document.getElementById(item.id).setAttribute("babiaxr-rawarea", item.area)
+
+            if (time_evolution_animation) {
+                // Change area with animation
+                let duration = 500
+                if (newWidth > prevWidth || newDepth > prevDepth) {
+                    let incrementWidth = 20 * (newWidth - prevWidth) / duration
+                    let incrementDepth = 20 * (newDepth - prevDepth) / duration
+                    let sizeWidth = prevWidth
+                    let sizeDepth = prevDepth
+                    let idIncA = setInterval(function () { animationAreaIncrease() }, 1);
+                    function animationAreaIncrease() {
+                        if (sizeWidth >= newWidth || sizeDepth >= newDepth) {
+                            document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+                            document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+                            clearInterval(idIncA);
+                        } else {
+                            sizeWidth += incrementWidth;
+                            sizeDepth += incrementDepth
+                            document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
+                            document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
+                        }
+                    }
+                } else if (newWidth < prevWidth || newDepth < prevDepth) {
+                    let incrementWidth = 20 * (prevWidth - newWidth) / duration
+                    let incrementDepth = 20 * (prevDepth - newDepth) / duration
+                    let sizeWidth = prevWidth
+                    let sizeDepth = prevDepth
+                    let idDecA = setInterval(function () { animationAreaDecrease() }, 1);
+                    function animationAreaDecrease() {
+                        if (sizeWidth <= newWidth || sizeDepth <= newDepth) {
+                            document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+                            document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+                            clearInterval(idDecA);
+                        } else {
+                            sizeWidth -= incrementWidth;
+                            sizeDepth -= incrementDepth
+                            document.getElementById(item.id).setAttribute("geometry", "width", sizeWidth)
+                            document.getElementById(item.id).setAttribute("geometry", "depth", sizeDepth)
+                        }
+                    }
+                }
+
+                // Change height with animation
+                if (item.height < 0) {
+                    // Has to dissapear
+                    dissapearBuildingAnimation(item.id)
+                } else if (item.height > prevHeight) {
+                    let increment = 20 * (item.height - prevHeight) / duration
+                    let size = prevHeight
+                    let idIncH = setInterval(function () { animationHeightIncrease() }, 1);
+                    function animationHeightIncrease() {
+                        if (size >= item.height) {
+                            document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
+                            clearInterval(idIncH);
+                        } else {
+                            size += increment;
+                            document.getElementById(item.id).setAttribute("geometry", 'height', size);
+                            document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
+                        }
+                    }
+                } else if (item.height < prevHeight) {
+                    let increment = 20 * (prevHeight - item.height) / duration
+                    let size = prevHeight
+                    let idDecH = setInterval(function () { animationHeightDecrease() }, 1);
+                    function animationHeightDecrease() {
+                        if (size <= item.height) {
+                            document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (item.height / 2), z: oldZ })
+                            clearInterval(idDecH);
+                        } else {
+                            size -= increment;
+                            document.getElementById(item.id).setAttribute("geometry", 'height', size);
+                            document.getElementById(item.id).setAttribute("position", { x: oldX, y: (oldY - prevHeight / 2) + (size / 2), z: oldZ })
+                        }
+                    }
+                }
+            } else {
+                document.getElementById(item.id).setAttribute("geometry", "width", newWidth)
+                document.getElementById(item.id).setAttribute("geometry", "depth", newDepth)
+                document.getElementById(item.id).setAttribute("geometry", "height", item.height)
+                document.getElementById(item.id).setAttribute("position", { x: prevPos.x, y: (prevPos.y - prevHeight / 2) + (item.height / 2), z: prevPos.z })
+            }
         }
     }
 }
@@ -1401,4 +1434,95 @@ let showLegendUiNavBar = (i) => {
     }
     let pointToShow = entities[i]
     pointToShow.emit('showinfo')
+}
+
+function getNewBrightnessColor(rgbcode, brightness) {
+    let r = parseInt(rgbcode.slice(1, 3), 16),
+        g = parseInt(rgbcode.slice(3, 5), 16),
+        b = parseInt(rgbcode.slice(5, 7), 16),
+        HSL = rgbToHsl(r, g, b),
+        RGB;
+
+    RGB = hslToRgb(HSL[0], HSL[1], brightness / 100);
+    rgbcode = '#'
+        + convertToTwoDigitHexCodeFromDecimal(RGB[0])
+        + convertToTwoDigitHexCodeFromDecimal(RGB[1])
+        + convertToTwoDigitHexCodeFromDecimal(RGB[2]);
+
+    return rgbcode;
+}
+
+function convertToTwoDigitHexCodeFromDecimal(decimal) {
+    let code = Math.round(decimal).toString(16);
+
+    (code.length > 1) || (code = '0' + code);
+    return code;
+}
+
+/**
+ * Converts an RGB color value to HSL. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes r, g, and b are contained in the set [0, 255] and
+ * returns h, s, and l in the set [0, 1].
+ *
+ * @param   Number  r       The red color value
+ * @param   Number  g       The green color value
+ * @param   Number  b       The blue color value
+ * @return  Array           The HSL representation
+ */
+function rgbToHsl(r, g, b) {
+    r /= 255, g /= 255, b /= 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max == min) {
+        h = s = 0; // achromatic
+    } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [h, s, l];
+}
+
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   Number  h       The hue
+ * @param   Number  s       The saturation
+ * @param   Number  l       The lightness
+ * @return  Array           The RGB representation
+ */
+function hslToRgb(h, s, l) {
+    let r, g, b;
+
+    if (s == 0) {
+        r = g = b = l; // achromatic
+    } else {
+        function hue2rgb(p, q, t) {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1 / 6) return p + (q - p) * 6 * t;
+            if (t < 1 / 2) return q;
+            if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+            return p;
+        }
+
+        let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        let p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1 / 3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1 / 3);
+    }
+
+    return [r * 255, g * 255, b * 255];
 }
