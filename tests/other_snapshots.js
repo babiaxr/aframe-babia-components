@@ -29,4 +29,12 @@ describe('Others examples (screenshot)', () => {
         });
     });
 
+    ['islands', 'islands_plan_view', 'islands2', 'islands_plan_view2', 'island_codecity', 'island_codecity_plan_view'].forEach((example) => {
+        it(`Screenshot Performance ${example} Example`, () => {
+            cy.visit('/examples/islands/' + example + '/index.html');
+            cy.wait(3000);
+            cy.screenshot(example);
+        });
+    });
+
 });
