@@ -1,0 +1,265 @@
+[ 
+    {
+        "id": "/barrio",
+        "children": [
+            {
+                "id": "/barrio/block1",
+                "width": "3",
+                "height": "1",
+                "depth": "3"
+            },
+            {
+                "id": "/barrio/subarrio",
+                "children": [
+                    {
+                        "id": "/barrio/subarrio/block1",
+                        "width": "5",
+                        "height": "2",
+                        "depth": "5"
+                    },
+                    {
+                        "id": "/barrio/subarrio/block2",
+                        "width": "3",
+                        "height": "1",
+                        "depth": "3"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "/barrio2",
+        "children": [
+            {
+                "id": "/barrio2/block1",
+                "width": "3",
+                "height": "1",
+                "depth": "3"
+            },
+            {
+                "id": "/barrio2/subarrio",
+                "children": [
+                    {
+                        "id": "/barrio2/subarrio/block1",
+                        "width": "4",
+                        "height": "2",
+                        "depth": "4"
+                    },
+                    {
+                        "id": "/barrio2/subarrio/block2",
+                        "width": "3",
+                        "height": "1",
+                        "depth": "3"
+                    },
+                    {
+                        "id": "/barrio2/subarrio/block3",
+                        "width": "1",
+                        "height": "5",
+                        "depth": "1"
+                    }
+                ]
+            },
+            {
+                "id": "/barrio2/block2",
+                "width": "2",
+                "height": "3",
+                "depth": "2"
+            }
+        ]
+    },
+    {
+        "id": "/barrio3",
+        "children": [
+            {
+                "id": "/barrio3/block1",
+                "width": "2",
+                "height": "1",
+                "depth": "2"
+            },
+            {
+                "id": "/barrio2/block2",
+                "width": "2",
+                "height": "3",
+                "depth": "2"
+            },
+            {
+                "id": "/barrio3/subarrio",
+                "children": [
+                    {
+                        "id": "/barrio3/subarrio/block2",
+                        "width": "3",
+                        "height": "1",
+                        "depth": "3"
+                    },
+                    {
+                        "id": "/barrio3/subarrio/block3",
+                        "width": "1",
+                        "height": "5",
+                        "depth": "1"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "001",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "003",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "004",
+        "width": "2",
+        "height": "1",
+        "depth": "2"
+    },
+    {
+        "id": "005",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    
+    {
+        "id": "006",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "/barrio4",
+        "children": [
+            {
+                "id": "/barrio4/block1",
+                "width": "3",
+                "height": "1",
+                "depth": "3"
+            },
+            {
+                "id": "/barrio4/subarrio",
+                "children": [
+                    {
+                        "id": "/barrio4/subarrio/block1",
+                        "width": "5",
+                        "height": "2",
+                        "depth": "5"
+                    },
+                    {
+                        "id": "/barrio4/subarrio/block2",
+                        "width": "3",
+                        "height": "1",
+                        "depth": "3"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "001",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "002",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "003",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "004",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "005",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "006",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "001",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "002",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "003",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "004",
+        "width": "4",
+        "height": "1",
+        "depth": "4"
+    },
+    {
+        "id": "005",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "006",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "001",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "001",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "002",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "003",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "004",
+        "width": "4",
+        "height": "1",
+        "depth": "4"
+    }
+]
