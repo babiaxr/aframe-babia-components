@@ -396,7 +396,7 @@ let Zone = class {
                             'visible': true,
                             'opacity': 0.4
                         });
-                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 10, boxPosition, null);
+                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 10, boxPosition, null, rootCodecityEntity);
                         rootCodecityEntity.appendChild(legend)
                         rootCodecityEntity.appendChild(transparentBox)
                     }
@@ -470,7 +470,7 @@ let Zone = class {
                             depth: oldGeometry.depth + 0.1,
                             width: oldGeometry.width + 0.1
                         });
-                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null);
+                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null, rootCodecityEntity);
                         rootCodecityEntity.appendChild(legend)
                         rootCodecityEntity.appendChild(legendBox)
                     }
@@ -1069,7 +1069,7 @@ let dateBar = (data) => {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (text, heightItem, boxPosition, model) => {
+let generateLegend = (text, heightItem, boxPosition, model, rootCodecityEntity) => {
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
@@ -1077,7 +1077,7 @@ let generateLegend = (text, heightItem, boxPosition, model) => {
     let height = heightItem
 
     let entity = document.createElement('a-plane');
-    
+
     entity.setAttribute('look-at', "[camera]")
     entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
@@ -1091,9 +1091,13 @@ let generateLegend = (text, heightItem, boxPosition, model) => {
         'width': 6,
         'color': 'black',
     });
-    /*entity.setAttribute('light', {
-      'intensity': 0.3
-    });*/
+
+    // Check scale
+    let scaleParent = rootCodecityEntity.getAttribute("scale")
+    if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
+        entity.setAttribute('scale', { x: 1 / scaleParent.x, y: 1 / scaleParent.y, z: 1 / scaleParent.z });
+    }
+
     return entity;
 }
 
@@ -1233,7 +1237,7 @@ let changeCity = (bigStepCommitByCommit) => {
             currentColor = getNewBrightnessColor(currentColor, currentColorPercentage)
         } else {
             colorEvolutionArrayStartingPoint++
-            if (colorEvolutionArrayStartingPoint > colorEvolutionArray.length-1){
+            if (colorEvolutionArrayStartingPoint > colorEvolutionArray.length - 1) {
                 colorEvolutionArrayStartingPoint = 0
             }
             currentColor = colorEvolutionArray[colorEvolutionArrayStartingPoint]
