@@ -13,7 +13,9 @@ AFRAME.registerComponent('babiaxr-querier_es', {
         query: { type: 'string' },
         size: { type: 'int', default: 10 },
         user: { type: 'string' },
-        password: { type: 'string' }
+        password: { type: 'string' },
+        // data, for debugging, highest priority
+        data: { type: 'string' }
     },
 
     /**
@@ -28,10 +30,15 @@ AFRAME.registerComponent('babiaxr-querier_es', {
         let data = this.data;
         let el = this.el;
 
-        if (data.elasticsearch_url && data.index) {
-            requestJSONDataFromES(data, el)
+        // Highest priority to data
+        if (data.data) {
+            parseEmbeddedJSONData(data.data, el)
         } else {
-            console.error("elasicsearch_url, index and body must be defined")
+            if (data.elasticsearch_url && data.index) {
+                requestJSONDataFromES(data, el)
+            } else {
+                console.error("elasicsearch_url, index and body must be defined")
+            }
         }
 
     },
@@ -45,11 +52,16 @@ AFRAME.registerComponent('babiaxr-querier_es', {
         let data = this.data;
         let el = this.el;
 
-        if (data.elasticsearch_url !== oldData.elasticsearch_url || 
-            data.index !== oldData.index || 
-            data.query !== oldData.query ||
-            data.size !== oldData.size) {
-            requestJSONDataFromES(data, el)
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            parseEmbeddedJSONData(data.data, el)
+        } else {
+            if (data.elasticsearch_url !== oldData.elasticsearch_url ||
+                data.index !== oldData.index ||
+                data.query !== oldData.query ||
+                data.size !== oldData.size) {
+                requestJSONDataFromES(data, el)
+            }
         }
     },
     /**
@@ -75,6 +87,35 @@ AFRAME.registerComponent('babiaxr-querier_es', {
     */
     play: function () { },
 
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Register function
+     */
+    register: function (interestedElem) {
+        let el = this.el
+        el.components["babiaxr-querier_json"].interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (el.components["babiaxr-querier_json"].babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Interested elements
+     */
+    interestedElements: [],
 })
 
 
@@ -90,23 +131,31 @@ let requestJSONDataFromES = (data, el) => {
             // Save data
             if (typeof request.response === 'string' || request.response instanceof String) {
                 dataRaw = JSON.parse(request.response).hits.hits
-                data.dataRetrieved = {}
+                let dataRetrieved = []
                 for (let i = 0; i < dataRaw.length; i++) {
-                    data.dataRetrieved[i] = dataRaw[i]._source
+                    dataRetrieved[i] = dataRaw[i]._source
                 }
             } else {
-                data.dataRetrieved = request.response
+                // Why this case
+                let dataRetrieved = []
+                console.error("Unexpected response", request.response)
             }
-            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
+
+            // Save
+            el.components["babiaxr-querier_json"].babiaData = dataRetrieved
+            el.components["babiaxr-querier_json"].babiaMetadata = {
+                id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+            }
 
             // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
+            dataReadyToSend(el, "babiaData")
 
         } else {
             reject({
                 status: this.status,
                 statusText: xhr.statusText
             });
+            console.error("Error during requesting data", this.status, xhr.statusText)
         }
     };
     request.onerror = function () {
@@ -114,6 +163,29 @@ let requestJSONDataFromES = (data, el) => {
             status: this.status,
             statusText: xhr.statusText
         });
+        console.error("Error during requesting data", this.status, xhr.statusText)
     };
     request.send();
+}
+
+let parseEmbeddedJSONData = (embedded, el) => {
+    // Save data
+    let dataRetrieved = JSON.parse(embedded)
+    el.components["babiaxr-querier_json"].babiaData = dataRetrieved
+    el.components["babiaxr-querier_json"].babiaMetadata = {
+        id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+    }
+
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend(el, "babiaData")
+}
+
+let dataReadyToSend = (el, propertyName) => {
+    el.components["babiaxr-querier_json"].interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaQuerierDataReady", propertyName)
 }

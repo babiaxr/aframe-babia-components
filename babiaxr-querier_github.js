@@ -10,7 +10,9 @@ AFRAME.registerComponent('babiaxr-querier_github', {
     schema: {
         user: { type: 'string' },
         token: { type: 'string' },
-        repos: { type: 'array' }
+        repos: { type: 'array' },
+        // data, for debugging, highest priority
+        data: { type: 'string' }
     },
 
     /**
@@ -25,10 +27,15 @@ AFRAME.registerComponent('babiaxr-querier_github', {
         let data = this.data;
         let el = this.el;
 
-        if (data.user && (data.repos.length === 0)) {
-            requestAllReposFromUser(data, el)
-        } else if (data.repos.length > 0) {
-            requestReposFromList(data, el)
+        // Highest priority to data
+        if (data.data) {
+            parseEmbeddedJSONData(data.data, el)
+        } else {
+            if (data.user && (data.repos.length === 0)) {
+                requestAllReposFromUser(data, el)
+            } else if (data.repos.length > 0) {
+                requestReposFromList(data, el)
+            }
         }
 
     },
@@ -41,6 +48,20 @@ AFRAME.registerComponent('babiaxr-querier_github', {
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
+
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            parseEmbeddedJSONData(data.data, el)
+        } else {
+            if (oldData.user !== data.user || oldData.repos !== data.repos || oldData.token !== data.token) {
+                if (data.user && (data.repos.length === 0)) {
+                    requestAllReposFromUser(data, el)
+                } else if (data.repos.length > 0) {
+                    requestReposFromList(data, el)
+                }
+            }
+        }
+
 
     },
     /**
@@ -66,10 +87,40 @@ AFRAME.registerComponent('babiaxr-querier_github', {
     */
     play: function () { },
 
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Register function
+     */
+    register: function (interestedElem) {
+        let el = this.el
+        el.components["babiaxr-querier_json"].interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (el.components["babiaxr-querier_json"].babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Interested elements
+     */
+    interestedElements: [],
+
 })
 
 let requestReposFromList = (data, el) => {
-    let dataOfRepos = {}
+    let dataOfRepos = []
 
     data.repos.forEach((e, i) => {
         // Create a new request object
@@ -87,13 +138,14 @@ let requestReposFromList = (data, el) => {
 
                 // Save data
                 let rawData = JSON.parse(request.response)
-                dataOfRepos[rawData.name] = rawData;
+                dataOfRepos.push(rawData);
 
             } else {
                 reject({
                     status: this.status,
                     statusText: xhr.statusText
                 });
+                console.error("Error during requesting data", this.status, xhr.statusText)
             }
         };
         request.onerror = function () {
@@ -101,16 +153,19 @@ let requestReposFromList = (data, el) => {
                 status: this.status,
                 statusText: xhr.statusText
             });
+            console.error("Error during requesting data", this.status, xhr.statusText)
         };
         request.send();
     })
 
     // Save data
-    data.dataRetrieved = dataOfRepos
-    el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
+    el.components["babiaxr-querier_json"].babiaData = dataOfRepos
+    el.components["babiaxr-querier_json"].babiaMetadata = {
+        id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+    }
 
     // Dispatch/Trigger/Fire the event
-    el.emit("dataReady" + el.id, data.dataRetrieved)
+    dataReadyToSend(el, "babiaData")
 }
 
 
@@ -129,17 +184,20 @@ let requestAllReposFromUser = (data, el) => {
             console.log("data OK in request.response", el.id)
 
             // Save data
-            data.dataRetrieved = allReposParse(JSON.parse(request.response))
-            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
+            el.components["babiaxr-querier_json"].babiaData = allReposParse(JSON.parse(request.response))
+            el.components["babiaxr-querier_json"].babiaMetadata = {
+                id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+            }
 
             // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
+            dataReadyToSend(el, "babiaData")
 
         } else {
             reject({
                 status: this.status,
                 statusText: xhr.statusText
             });
+            console.error("Error during requesting data", this.status, xhr.statusText)
         }
     };
     request.onerror = function () {
@@ -147,14 +205,37 @@ let requestAllReposFromUser = (data, el) => {
             status: this.status,
             statusText: xhr.statusText
         });
+        console.error("Error during requesting data", this.status, xhr.statusText)
     };
     request.send();
 }
 
 let allReposParse = (data) => {
-    let dataParsed = {}
+    let dataParsed = []
     data.forEach((e, i) => {
-        dataParsed[e.name] = e
+        dataParsed.push(e)
     });
     return dataParsed
+}
+
+let parseEmbeddedJSONData = (embedded, el) => {
+    // Save data
+    let dataRetrieved = JSON.parse(embedded)
+    el.components["babiaxr-querier_json"].babiaData = dataRetrieved
+    el.components["babiaxr-querier_json"].babiaMetadata = {
+        id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+    }
+
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend(el, "babiaData")
+}
+
+let dataReadyToSend = (el, propertyName) => {
+    el.components["babiaxr-querier_json"].interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaQuerierDataReady", propertyName)
 }
