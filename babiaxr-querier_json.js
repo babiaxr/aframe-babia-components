@@ -9,7 +9,9 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-querier_json', {
     schema: {
         url: { type: 'string' },
-        embedded: { type: 'string' }
+        embedded: { type: 'string' },
+        // data, for debugging, highest priority
+        data: { type: 'string' }
     },
 
     /**
@@ -23,12 +25,17 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     init: function () {
         let data = this.data;
         let el = this.el;
-        if (data.url) {
-            requestJSONDataFromURL(data, el)
-        } else if (data.embedded) {
-            parseEmbeddedJSONData(data, el)
-        }
 
+        // Highest priority to data
+        if (data.data) {
+            parseEmbeddedJSONData(data.data, el)
+        } else {
+            if (data.url) {
+                requestJSONDataFromURL(data, el)
+            } else if (data.embedded) {
+                parseEmbeddedJSONData(data.embedded, el)
+            }
+        }
     },
 
     /**
@@ -39,10 +46,16 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
-        if (oldData.url !== data.url) {
-            requestJSONDataFromURL(data, el)
-        } else if (oldData.embedded !== data.embedded) {
-            parseEmbeddedJSONData(data, el)
+        
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            parseEmbeddedJSONData(data.data, el)
+        } else {
+            if (oldData.url !== data.url) {
+                requestJSONDataFromURL(data, el)
+            } else if (oldData.embedded !== data.embedded) {
+                parseEmbeddedJSONData(data.embedded, el)
+            }
         }
     },
     /**
@@ -150,9 +163,9 @@ let requestJSONDataFromURL = (data, el) => {
     request.send();
 }
 
-let parseEmbeddedJSONData = (data, el) => {
+let parseEmbeddedJSONData = (embedded, el) => {
     // Save data
-    let dataRetrieved = JSON.parse(data.embedded)
+    let dataRetrieved = JSON.parse(embedded)
     el.components["babiaxr-querier_json"].babiaData = dataRetrieved
     el.components["babiaxr-querier_json"].babiaMetadata = {
         id: el.components["babiaxr-querier_json"].babiaMetadata.id++
