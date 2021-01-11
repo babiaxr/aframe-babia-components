@@ -39,7 +39,11 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
-
+        if (oldData.url !== data.url) {
+            requestJSONDataFromURL(data, el)
+        } else if (oldData.embedded !== data.embedded) {
+            parseEmbeddedJSONData(data, el)
+        }
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -64,6 +68,30 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     */
     play: function () { },
 
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Register function
+     */
+    register: function (interestedElem) {
+        let el = this.el
+        el.components["babiaxr-querier_json"].interestedElements.push(interestedElem)
+    },
+
+    /**
+     * Interested elements
+     */
+    interestedElements: [],
 })
 
 
@@ -76,24 +104,35 @@ let requestJSONDataFromURL = (data, el) => {
     // Send it
     request.onload = function () {
         if (this.status >= 200 && this.status < 300) {
-            //console.log("data OK in request.response", request.response)
-
             // Save data
+            let dataRetrieved
             if (typeof request.response === 'string' || request.response instanceof String) {
-                data.dataRetrieved = JSON.parse(request.response)
+                dataRetrieved = JSON.parse(request.response)
             } else {
-                data.dataRetrieved = request.response
+                dataRetrieved = request.response
             }
-            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
+
+            // Check if a list
+            if (!Array.isArray(dataRetrieved)){
+                console.error("Data must be an array")
+                return
+            }
+
+            // Save
+            el.components["babiaxr-querier_json"].babiaData = dataRetrieved
+            el.components["babiaxr-querier_json"].babiaMetadata = {
+                id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+            }
 
             // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
+            dataReadyToSend(el, "babiaData")
 
         } else {
             reject({
                 status: this.status,
                 statusText: xhr.statusText
             });
+            console.error("Error during requesting data", this.status, xhr.statusText)
         }
     };
     request.onerror = function () {
@@ -101,15 +140,25 @@ let requestJSONDataFromURL = (data, el) => {
             status: this.status,
             statusText: xhr.statusText
         });
+        console.error("Error during requesting data", this.status, xhr.statusText)
     };
     request.send();
 }
 
 let parseEmbeddedJSONData = (data, el) => {
     // Save data
-    data.dataRetrieved = JSON.parse(data.embedded)
-    el.setAttribute("babiaData", data.embedded)
+    let dataRetrieved = JSON.parse(data.embedded)
+    el.components["babiaxr-querier_json"].babiaData = dataRetrieved
+    el.components["babiaxr-querier_json"].babiaMetadata = {
+        id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+    }
 
     // Dispatch/Trigger/Fire the event
-    el.emit("dataReady" + el.id, data.embedded)
+    dataReadyToSend(el, "babiaData")
+}
+
+let dataReadyToSend = (el, propertyName) => {
+    el.components["babiaxr-querier_json"].interestedElements.forEach(element => {
+        element.emit("babiaQuerierDataReady", propertyName)
+    });
 }
