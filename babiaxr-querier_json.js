@@ -86,6 +86,11 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     register: function (interestedElem) {
         let el = this.el
         el.components["babiaxr-querier_json"].interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (el.components["babiaxr-querier_json"].babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
     },
 
     /**
@@ -113,7 +118,7 @@ let requestJSONDataFromURL = (data, el) => {
             }
 
             // Check if a list
-            if (!Array.isArray(dataRetrieved)){
+            if (!Array.isArray(dataRetrieved)) {
                 console.error("Data must be an array")
                 return
             }
@@ -159,6 +164,10 @@ let parseEmbeddedJSONData = (data, el) => {
 
 let dataReadyToSend = (el, propertyName) => {
     el.components["babiaxr-querier_json"].interestedElements.forEach(element => {
-        element.emit("babiaQuerierDataReady", propertyName)
+        dispatchEventOnElement(element, propertyName)
     });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaQuerierDataReady", propertyName)
 }
