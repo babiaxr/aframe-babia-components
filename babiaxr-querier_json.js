@@ -48,7 +48,7 @@ AFRAME.registerComponent('babiaxr-querier_json', {
         let data = this.data;
         let el = this.el;
         let self = this;
-        
+
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
             parseEmbeddedJSONData(data.data, el, self)
@@ -105,6 +105,18 @@ AFRAME.registerComponent('babiaxr-querier_json', {
         // Send the latest version of the data
         if (this.babiaData) {
             dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
         }
     },
 

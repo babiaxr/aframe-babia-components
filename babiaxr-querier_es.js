@@ -115,6 +115,18 @@ AFRAME.registerComponent('babiaxr-querier_es', {
     },
 
     /**
+     * Unregister function
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
      * Interested elements
      */
     interestedElements: [],
