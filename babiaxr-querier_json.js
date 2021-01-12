@@ -25,15 +25,16 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     init: function () {
         let data = this.data;
         let el = this.el;
+        let self = this;
 
         // Highest priority to data
         if (data.data) {
-            parseEmbeddedJSONData(data.data, el)
+            parseEmbeddedJSONData(data.data, el, self)
         } else {
             if (data.url) {
-                requestJSONDataFromURL(data, el)
+                requestJSONDataFromURL(data, el, self)
             } else if (data.embedded) {
-                parseEmbeddedJSONData(data.embedded, el)
+                parseEmbeddedJSONData(data.embedded, el, self)
             }
         }
     },
@@ -46,15 +47,16 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
+        let self = this;
         
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
-            parseEmbeddedJSONData(data.data, el)
+            parseEmbeddedJSONData(data.data, el, self)
         } else {
             if (oldData.url !== data.url) {
-                requestJSONDataFromURL(data, el)
+                requestJSONDataFromURL(data, el, self)
             } else if (oldData.embedded !== data.embedded) {
-                parseEmbeddedJSONData(data.embedded, el)
+                parseEmbeddedJSONData(data.embedded, el, self)
             }
         }
     },
@@ -98,10 +100,10 @@ AFRAME.registerComponent('babiaxr-querier_json', {
      */
     register: function (interestedElem) {
         let el = this.el
-        el.components["babiaxr-querier_json"].interestedElements.push(interestedElem)
+        this.interestedElements.push(interestedElem)
 
         // Send the latest version of the data
-        if (el.components["babiaxr-querier_json"].babiaData) {
+        if (this.babiaData) {
             dispatchEventOnElement(interestedElem, "babiaData")
         }
     },
@@ -113,7 +115,7 @@ AFRAME.registerComponent('babiaxr-querier_json', {
 })
 
 
-let requestJSONDataFromURL = (data, el) => {
+let requestJSONDataFromURL = (data, el, self) => {
     // Create a new request object
     let request = new XMLHttpRequest();
 
@@ -137,13 +139,13 @@ let requestJSONDataFromURL = (data, el) => {
             }
 
             // Save
-            el.components["babiaxr-querier_json"].babiaData = dataRetrieved
-            el.components["babiaxr-querier_json"].babiaMetadata = {
-                id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+            self.babiaData = dataRetrieved
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
             }
 
             // Dispatch/Trigger/Fire the event
-            dataReadyToSend(el, "babiaData")
+            dataReadyToSend("babiaData", self)
 
         } else {
             reject({
@@ -163,20 +165,20 @@ let requestJSONDataFromURL = (data, el) => {
     request.send();
 }
 
-let parseEmbeddedJSONData = (embedded, el) => {
+let parseEmbeddedJSONData = (embedded, el, self) => {
     // Save data
     let dataRetrieved = JSON.parse(embedded)
-    el.components["babiaxr-querier_json"].babiaData = dataRetrieved
-    el.components["babiaxr-querier_json"].babiaMetadata = {
-        id: el.components["babiaxr-querier_json"].babiaMetadata.id++
+    self.babiaData = dataRetrieved
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
     }
 
     // Dispatch/Trigger/Fire the event
-    dataReadyToSend(el, "babiaData")
+    dataReadyToSend("babiaData", self)
 }
 
-let dataReadyToSend = (el, propertyName) => {
-    el.components["babiaxr-querier_json"].interestedElements.forEach(element => {
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
         dispatchEventOnElement(element, propertyName)
     });
 }
