@@ -28,11 +28,8 @@ AFRAME.registerComponent('babiaxr-island', {
     init: function () {
         console.log("WELCOME TO BABIAXR ISLAND")
         //Load de json file
-		this.loader = new THREE.FileLoader();
-		let data = this.data;
-		if (data.data) {
-			this.loader.load(data.data, this.onDataLoaded.bind(this));
-		}
+        this.loader = new THREE.FileLoader();
+        this.duration = 2000;
     },
 
     /**
@@ -40,17 +37,28 @@ AFRAME.registerComponent('babiaxr-island', {
     * Generally modifies the entity based on the data.
     */
 
-    update: function (oldData) {},
+    update: function (oldData) {
+        console.log("Updating data...");
+        this.figures = [];
+        if (this.data != oldData){
+            this.loader.load(this.data.data, this.onDataLoaded.bind(this));
+        }
+    },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
     * Generally undoes all modifications to the entity.
     */
-    remove: function () { },
+    remove: function () {},
 
     /**
     * Called on each scene tick.
     */
-    tick: function (t, delta) {},
+    tick: function (t, delta) {
+        if (this.animation){
+            let t = {x: 0, y: 0, z: 0};
+            this.Animation(this.el, this.figures, this.figures_old, delta, t);
+        }
+    },
 
     /**
     * Called when entity pauses.
@@ -65,57 +73,65 @@ AFRAME.registerComponent('babiaxr-island', {
     play: function () { },
 
     onDataLoaded: function (file) { 
-		console.log('Data Loaded');
+        console.log('Data Loaded');
 
         var el = this.el;
         let elements = JSON.parse(file);
         let increment = this.data.border;
 
         // Register all figures before drawing
-        let figures = [];
         let t = {x: 0, y: 0, z: 0};
-        [x, y, t, figures] = this.generateElements(elements, figures, t, increment);
+        [x, y, t, this.figures] = this.generateElements(elements, this.figures, t, increment);
+        console.log(this.figures);
 
         // Draw figures
         t.x = 0;
         t.z = 0;
-        this.drawElements(el, figures, t);
+        if (!this.figures_old){
+            this.drawElements(el, this.figures, t);
+            this.figures_old = this.figures;
+        } else {
+            this.animation = true;
+            this.start_time = Date.now();
+        } 
+        
+
     },
     
     generateElements: function (elements, figures, translate, inc){
+        //if (this.first){
+            //console.log(elements);
+            var increment = inc;  // TEMPORAL increment = inc
+    
+            // Vertical Limits
+            var limit_up = 0;
+            var limit_down = 0;
+            // Horizontal Limits
+            var limit_right = 0;
+            var limit_left = 0; 
 
-        //console.log(elements);
-        let increment = inc;  // TEMPORAL increment = inc
- 
-        // Vertical Limits
-        let limit_up = 0;
-        let limit_down = 0;
-        // Horizontal Limits
-        let limit_right = 0;
-        let limit_left = 0; 
+            //Position Figure
+            var posX = 0; 
+            var posY = 0;
 
-        //Position Figure
-        let posX = 0; 
-        let posY = 0;
+            // Aux to update the limits
+            // Save max limit to update last limit in the next step
+            var max_right = 0;
+            var max_left = 0;
+            var max_down = 0;
+            var max_up = 0;
 
-        // Aux to update the limits
-        // Save max limit to update last limit in the next step
-        let max_right = 0;
-        let max_left = 0;
-        let max_down = 0;
-        let max_up = 0;
+            // control points
+            var current_vertical = 0;
+            var current_horizontal = 0;
 
-        // control points
-        let current_vertical = 0;
-        let current_horizontal = 0;
-
-        // Controllers
-        let up = false;
-        let down = false;
-        let left = false;
-        let right = true;
-
-
+            // Controllers
+            var up = false;
+            var down = false;
+            var left = false;
+            var right = true;
+            
+        //}
         /**
          * Get each element and set its position respectly
          * Then save all data in figures array
@@ -123,6 +139,7 @@ AFRAME.registerComponent('babiaxr-island', {
         for (let i = 0; i < elements.length; i++){
             if (elements[i].children){
                 //console.log("ENTER to the quarter...")
+                this.quarter = true;
                 var children = [];
                 var translate_matrix;
                 // Save Zone's parameters
@@ -216,7 +233,6 @@ AFRAME.registerComponent('babiaxr-island', {
                 }   
             } else {
                 if (this.data.area){
-            
                     figure = {
                         id : elements[i].id,
                         posX : posX,
@@ -225,7 +241,7 @@ AFRAME.registerComponent('babiaxr-island', {
                         height : elements[i][this.data.height],
                         depth : Math.sqrt(elements[i][this.data.area])
                     }
-                    console.log(figure.width);
+                    //console.log(figure.width);
                 } else {
                     figure = {
                         id : elements[i].id,
@@ -239,91 +255,69 @@ AFRAME.registerComponent('babiaxr-island', {
             }
             figures.push(figure);
             //console.log(figure);
-            
-            // Group finished
-            if (i == elements.length - 1){
-                // Check and update last limits
-                if (max_down < limit_down){
-                    limit_down = max_down;
-                }
-                if (max_left < limit_down){
-                    limit_left = max_left;
-                }
-                if (max_up > limit_up){
-                    limit_up = max_up;
-                }
-                if (max_right > limit_right){
-                    limit_right = max_right;
-                }
-                
-                if (current_vertical < limit_left){
-                    limit_left = current_vertical;
-                }
-                if (current_vertical > limit_right){
-                    limit_right = current_vertical;
-                }
-                if (current_horizontal > limit_up){
-                    limit_up = current_horizontal;
-                }
-                if (current_horizontal < limit_down){
-                    limit_down = current_horizontal;
-                }
-
-                // Calculate translate of the center, width and depth of the zone
-                var width = Math.abs(limit_left) + Math.abs(limit_right);
-                var depth = Math.abs(limit_down) + Math.abs(limit_up);
-
-                var translate_x = limit_left + width / 2 ;
-                var translate_z = limit_down  + depth / 2;
-                translate = { 
-                    x: translate_x,
-                    y: 0,
-                    z: translate_z,
-                };
-
-                width += increment;
-                depth += increment;
-            }
         }
-    
+
+        // Check and update last limits
+        if (max_down < limit_down){
+            limit_down = max_down;
+        }
+        if (max_left < limit_down){
+            limit_left = max_left;
+        }
+        if (max_up > limit_up){
+            limit_up = max_up;
+        }
+        if (max_right > limit_right){
+            limit_right = max_right;
+        }
+        
+        if (current_vertical < limit_left){
+            limit_left = current_vertical;
+        }
+        if (current_vertical > limit_right){
+            limit_right = current_vertical;
+        }
+        if (current_horizontal > limit_up){
+            limit_up = current_horizontal;
+        }
+        if (current_horizontal < limit_down){
+            limit_down = current_horizontal;
+        }
+
+        // Calculate translate of the center, width and depth of the zone
+        var width = Math.abs(limit_left) + Math.abs(limit_right);
+        var depth = Math.abs(limit_down) + Math.abs(limit_up);
+
+        var translate_x = limit_left + width / 2 ;
+        var translate_z = limit_down  + depth / 2;
+        translate = { 
+            x: translate_x,
+            y: 0,
+            z: translate_z,
+        };
+
+        width += increment;
+        depth += increment;
+
         return [width, depth, translate, figures];      
     },
 
     drawElements: function (element, figures, translate){
-        console.log(figures);
         console.log('Drawing elements....')
         for (let i in figures){
-            // create entity
-            let entity = document.createElement('a-entity')
-            entity.id = figures[i].id;
-            entity.setAttribute('class', 'babiaxraycasterclass');
-
-            // Get info 
-            let width = figures[i].width;
+            
             let height = figures[i].height;
-            let depth = figures[i].depth;
             let x = figures[i].posX;
             let y = figures[i].posY;
- 
-            // set color
-            if (figures[i].children){
-                color = "#98e690";
-            } else {
-                color = "#E6B9A1";
-            }
-            // create box
-            let geometry = new THREE.BoxBufferGeometry( width, height, depth ); 
-            let material = new THREE.MeshPhongMaterial({color: color});
-            let cube = new THREE.Mesh( geometry, material );
-    
-            // add into scene
-            entity.setObject3D('mesh', cube);
-            entity.setAttribute('position', {
+            let position = {
                 x: x - translate.x,
                 y: (height /2 + translate.y / 2), 
                 z: -y + translate.z
-            });
+            }
 
+            let entity = this.createElement(figures[i], position);
+            //console.log(entity);
+    
             if (figures[i].children){
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
@@ -438,6 +432,192 @@ AFRAME.registerComponent('babiaxr-island', {
     
         return [current_vertical, posX, posY, max_up];
     },
+
+    Animation: function (element, figures, figures_old, delta, translate){
+        let new_time = Date.now();
+        let entity;
+        for (let i in figures){
+            if (document.getElementById(figures[i].id)){
+                entity = document.getElementById(figures[i].id);
+                if (figures[i].inserted){
+                    //Increment opacity
+                    let opa_inc = delta / this.duration;
+                    let opacity = parseFloat(entity.getAttribute('material').opacity);
+                    if ( opacity + opa_inc < 1){
+                        opacity += opa_inc;
+                    } else {
+                        opacity = 1.0;
+                    }
+                    entity.setAttribute('material', 'opacity', opacity);
+
+                } else {
+                    // TRASLATE
+                    this.traslate(entity, new_time, delta, figures[i], figures_old[i]);
+                    // RESIZE
+                    this.resize(entity, new_time, delta, figures[i], figures_old[i]);
+                    if (figures[i].children){
+                        this.Animation(entity, figures[i].children, figures_old[i].children, delta, figures[i].translate_matrix);
+                    }
+                }
+            } else {
+
+                position = {
+                    x: figures[i].posX - translate.x ,
+                    y: (figures[i].height / 2 + translate.y / 2),
+                    z: -figures[i].posY + translate.z
+                }
+                
+                let new_entity = this.createElement(figures[i], position);
+
+                let legend = generateLegend(new_entity.id, figures[i].height, new_entity.getAttribute('position'));
+                new_entity.appendChild(legend);
+    
+                new_entity.addEventListener('mouseenter', function(){
+                    legend.setAttribute('visible', true);
+                });
+                new_entity.addEventListener('mouseleave', function(){
+                    legend.setAttribute('visible', false);
+                });
+
+                //Opacity 0
+                new_entity.setAttribute('material', 'opacity', 0);
+                element.appendChild(new_entity);
+                figures[i].inserted = true;
+
+            }
+        }
+
+        if ((new_time - this.start_time) > this.duration){
+            this.animation = false;
+            this.figures_old = this.figures;
+        }
+    },
+
+    resize: function (entity, new_time, delta, figure, figure_old){
+        if (((new_time - this.start_time) < this.duration) && 
+            ((figure.width != figure_old.width) ||
+            (figure.height != figure_old.height) ||
+            (figure.depth != figure_old.depth))){
+        
+            // Calulate increment
+            let diff_width = Math.abs(figure.width - figure_old.width);
+            
+            //let diff_height = Math.abs(this.figures[i].height - this.figures_old[i].height);
+            let diff_depth = Math.abs(figure.depth - figure_old.depth);
+            let inc_width = (delta * diff_width) / this.duration;
+            //let inc_height = (delta * diff_height) / this.duration;
+        
+            let inc_depth = (delta * diff_depth) / this.duration;
+            let last_width = parseFloat(entity.getAttribute('width'));
+            //let last_height = entity.getAttribute('height');
+            let last_depth = parseFloat(entity.getAttribute('depth'));
+        
+            let new_width;
+            if (figure.width - figure_old.width < 0){
+                new_width = last_width - inc_width;
+            } else {
+                new_width = last_width + inc_width;
+            }
+        
+            /*let new_height;
+            if (this.figures[i].height - this.figures_old[i].height < 0){
+                new_height = last_height - inc_height;
+            } else {
+                new_height = last_height + inc_height;
+            }*/
+            
+            let new_depth;
+            if (figure.depth - figure_old.depth < 0){
+                new_depth = last_depth - inc_depth;
+            } else {
+                new_depth = last_depth + inc_depth;
+            }
+        
+            // Update size
+            entity.setAttribute('width', new_width);
+            //entity.setAttribute('height', new_height);
+            entity.setAttribute('depth', new_depth);
+        
+        } else if (((new_time - this.start_time) > this.duration) && 
+            ((figure.width != figure_old.width) ||
+            (figure.height != figure_old.height) ||
+            (figure.depth != figure_old.depth))) {
+        
+            entity.setAttribute('width', figure.width);
+            //entity.setAttribute('height', this.figures[i].height);
+            entity.setAttribute('depth', figure.depth);
+        }
+    },
+
+    traslate: function (entity, new_time, delta, figure, figure_old){
+        let last_y = entity.getAttribute('position').y;
+        if (((new_time - this.start_time) < this.duration) && 
+            (figure.posY != figure_old.posY) ||
+            (figure.posX != figure_old.posX)){
+            // Calculate increment positions
+            let dist_x = figure_old.posX - figure.posX;
+            let inc_x = (delta * dist_x) / this.duration;
+            let last_x = entity.getAttribute('position').x;
+            let new_x = last_x - inc_x;
+
+            let dist_y = figure_old.posY - figure.posY;
+            let inc_y = (delta * dist_y) / this.duration;
+            let last_z = entity.getAttribute('position').z;
+            let new_z = last_z + inc_y;
+
+            // Update entity
+            entity.setAttribute('position', {
+                x : new_x,
+                y : last_y,
+                z : new_z
+            });
+
+        } else if (((new_time - this.start_time) > this.duration) && 
+            ((figure.posY != figure_old.posY) || 
+            (figure.posX != figure_old.posX))) {
+
+            entity.setAttribute('position', {
+                x : figure.posX,
+                y : last_y,
+                z : - figure.posY
+            }); 
+        }
+    },
+
+    createElement: function(figure, position){
+        // create entity
+        //let entity = document.createElement('a-entity')
+        let entity = document.createElement('a-box');
+        entity.id = figure.id;
+        entity.setAttribute('class', 'babiaxraycasterclass');
+
+        // Get info 
+        let width = figure.width;
+        let height = figure.height;
+        let depth = figure.depth;
+
+        // set color
+        if (figure.children){
+            color = "#98e690";
+        } else {
+            color = "#E6B9A1";
+        }
+
+        // create box
+        entity.setAttribute('color', color);
+        entity.setAttribute('width', width);
+        entity.setAttribute('height', height);
+        entity.setAttribute('depth', depth);
+
+        // add into scene
+        entity.setAttribute('position', {
+            x: position.x,
+            y: position.y, 
+            z: position.z
+        });
+
+        return entity;
+    }
 })
 
 let generateLegend = (text, heightItem, boxPosition) => {
@@ -465,3 +645,4 @@ let generateLegend = (text, heightItem, boxPosition) => {
 
     return entity;
 }
+
