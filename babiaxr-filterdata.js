@@ -7,10 +7,12 @@ if (typeof AFRAME === 'undefined') {
 * A-Charts component for A-Frame.
 */
 AFRAME.registerComponent('babiaxr-filterdata', {
-  dependencies: ['babiaxr-querier', 'babiaxr-vismapper'],
+  dependencies: ['babiaxr-querier'],
   schema: {
     from: { type: 'string' },
-    filter: { type: 'string' }
+    filter: { type: 'string' },
+    // data, for debugging, highest priority
+    data: { type: 'string' }
   },
 
   /**
@@ -24,23 +26,47 @@ AFRAME.registerComponent('babiaxr-filterdata', {
   init: function () {
     let data = this.data;
     let el = this.el;
+    let self = this;
 
-    console.log("FILTERDATA:" + data.filter)
-    filter = data.filter.split('=')
-    console.log(filter)
-    let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('babiaData')) {
-      let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
-      console.log(dataFromQuerier)
-      // Get if key or filter
-      saveEntityData(data, el, dataFromQuerier, filter[0], filter[1])
+    // Highest priority to data
+    if (data.data) {
+      let rawData = parseEmbeddedJSONData(data.data)
+
+      // Filtering, save the references
+      let dataFiltered = filterData(data, rawData)
+      self.babiaData = dataFiltered
+      self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+      }
+
+      // Dispatch interested events
+      self.dataReadyToSend("babiaData", self)
     } else {
-      // Get if key or filter
-      document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        saveEntityData(data, el, e.detail, filter[0], filter[1])
-        el.setAttribute("babiaxr-filterdata", "dataRetrieved", data.dataRetrieved)
-      })
+
+      // Find the querier
+      findQuerier(data, el, self)
+
+      // Attach to the event of the querier
+      el.addEventListener('babiaQuerierDataReady', function (e) {
+        // Get the data from the info of the event (propertyName)
+        self.querierDataPropertyName = e.detail
+        let rawData = self.querierComponent[self.querierDataPropertyName]
+
+        // Filtering, save the references
+        let dataFiltered = filterData(data, rawData)
+        self.babiaData = dataFiltered
+        self.babiaMetadata = {
+          id: self.babiaMetadata.id++
+        }
+
+        // Dispatch interested events
+        self.dataReadyToSend("babiaData", self)
+      });
+
+      // Register to the querier
+      self.querierComponent.register(el)
     }
+
   },
 
   /**
@@ -51,23 +77,47 @@ AFRAME.registerComponent('babiaxr-filterdata', {
   update: function (oldData) {
     let data = this.data;
     let el = this.el;
+    let self = this;
 
-    // If entry it means that the data changed
-    if (data.dataRetrieved !== oldData.dataRetrieved) {
-      el.setAttribute("babiaxr-vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
+    // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+      let rawData = parseEmbeddedJSONData(data.data)
+
+      // Filtering, save the references
+      let dataFiltered = filterData(data, rawData)
+      self.babiaData = dataFiltered
+      self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+      }
+
+      // Dispatch interested events
+      self.dataReadyToSend("babiaData", self)
+    } else {
+
+      if(data.from !== oldData.from){
+        // Unregister for old querier
+        self.querierComponent.unregister(el)
+
+        // Register for the new one
+        findQuerier(data, el, self)
+        self.querierComponent.register(el)
+      }
+
+      if(data.filter !== oldData.filter){
+        // Get again the raw data from the querier
+        let rawData = self.querierComponent[self.querierDataPropertyName]
+
+        // Filtering, save the new references
+        let dataFiltered = filterData(data, rawData)
+        self.babiaData = dataFiltered
+        self.babiaMetadata = {
+          id: self.babiaMetadata.id++
+        }
+
+        // Dispatch interested events
+        self.dataReadyToSend("babiaData", self)
+      }
     }
-
-    if (data.from !== oldData.from) {
-      console.log("Change event because from has changed")
-      // Remove the event of the old querier
-      document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
-      // Listen the event when querier ready
-      document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        saveEntityData(data, el, e.detail, filter[0], filter[1])
-        el.setAttribute("babiaxr-vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
-      });
-    }
-
   },
   /**
   * Called when a component is removed (e.g., via removeAttribute).
@@ -92,22 +142,120 @@ AFRAME.registerComponent('babiaxr-filterdata', {
   */
   play: function () { },
 
+  /**
+   * Querier component target
+   */
+  querierComponent: undefined,
+
+  /**
+   * Property of the querier where the data is saved
+   */
+  querierDataPropertyName: "babiaData",
+
+  /**
+   * Where the data is gonna be stored
+   */
+  babiaData: undefined,
+
+  /**
+   * Where the metaddata is gonna be stored
+   */
+  babiaMetadata: {
+    id: 0
+  },
+
+  /**
+   * Register function
+   */
+  register: function (interestedElem) {
+    let el = this.el
+    this.interestedElements.push(interestedElem)
+
+    // Send the latest version of the data
+    if (this.babiaData) {
+      dispatchEventOnElement(interestedElem, "babiaData")
+    }
+  },
+
+  /**
+   * Unregister function
+   */
+  unregister: function (interestedElem) {
+    const index = this.interestedElements.indexOf(interestedElem)
+
+    // Remove from the interested elements if still there
+    if (index > -1) {
+      this.interestedElements.splice(index, 1);
+    }
+  },
+
+  /**
+   * Interested elements
+   */
+  interestedElements: [],
 })
 
-let filter
 
-let saveEntityData = (data, el, dataToSave, filter_field, filter_value) => {
-  if (filter_field && !filter_value) {
-    data.dataRetrieved = dataToSave[filter_field]
-    el.setAttribute("babiaData", JSON.stringify(dataToSave[filter_field]))
-  } else if (filter_field && filter_value) {
-    let dataToFilter = Object.values(dataToSave)
-    let dataFiltered = dataToFilter.filter((key) => key[filter_field] == filter_value )
-    dataFiltered = Object.assign({}, dataFiltered); 
-    data.dataRetrieved = dataFiltered
-    el.setAttribute('babiaData', JSON.stringify(dataFiltered))
+let filterData = (data, rawData) => {
+  let filter = data.filter.split('=')
+  if (filter[0] && filter[1]) {
+    let dataFiltered = rawData.filter((key) => key[filter[0]] == filter[1])
+    return dataFiltered
   } else {
-    data.dataRetrieved = dataToSave
-    el.setAttribute("babiaData", JSON.stringify(dataToSave))
+    console.error("Error on filter, please use key=value syntax")
+    return []
   }
+}
+
+let findQuerier = (data, el, self) => {
+  if (data.from) {
+    // Save the reference to the querier
+    let querierElement = document.getElementById(data.from)
+    if (querierElement.components['babiaxr-querier_json']) {
+      self.querierComponent = querierElement.components['babiaxr-querier_json']
+    } else if (querierElement.components['babiaxr-querier_es']) {
+      self.querierComponent = querierElement.components['babiaxr-querier_es']
+    } else if (querierElement.components['babiaxr-querier_github']) {
+      self.querierComponent = querierElement.components['babiaxr-querier_github']
+    } else {
+      console.error("Problem registering to the querier")
+      return
+    }
+  } else {
+    // Look for a querier in the same element and register
+    if (el.components['babiaxr-querier_json']) {
+      self.querierComponent = el.components['babiaxr-querier_json']
+    } else if (el.components['babiaxr-querier_es']) {
+      self.querierComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babiaxr-querier_github']) {
+      self.querierComponent = el.components['babiaxr-querier_github']
+    } else {
+      // Look for a querier in the scene
+      if(document.querySelectorAll("[babiaxr-querier_json]").length > 0){
+        self.querierComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+      }else if(document.querySelectorAll("[babiaxr-querier_json]").length > 0){
+        self.querierComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+      }else if(document.querySelectorAll("[babiaxr-querier_github]").length > 0){
+        self.querierComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+      }else{
+        console.error("Error, querier not found")
+        return
+      }
+    }
+  }
+}
+
+let parseEmbeddedJSONData = (embedded) => {
+  let dataRetrieved = JSON.parse(embedded)
+  return dataRetrieved
+}
+
+let dataReadyToSend = (propertyName, self) => {
+  self.interestedElements.forEach(element => {
+    dispatchEventOnElement(element, propertyName)
+  });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+  element.emit("babiaFilterDataReady", propertyName)
 }
