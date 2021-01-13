@@ -10,9 +10,9 @@
         "children": [
             {
                 "id": "/barrio/002",
-                "width": "4",
+                "width": "3",
                 "height": "1",
-                "depth": "4"
+                "depth": "3"
             },
             {
                 "id": "/barrio/003",
@@ -28,20 +28,8 @@
                         "width": "3",
                         "height": "1",
                         "depth": "3"
-                    },
-                    {
-                        "id": "barrio/003/block3",
-                        "width": "1",
-                        "height": "1",
-                        "depth": "1"
                     }
                 ]
-            },
-            {
-                "id": "/barrio/004",
-                "width": "3",
-                "height": "1",
-                "depth": "3"
             }
         ]
     },
@@ -71,9 +59,9 @@
     },
     {
         "id": "007",
-        "width": "6",
+        "width": "5",
         "height": "1",
-        "depth": "6"
+        "depth": "5"
     },
     {
         "id": "008",
@@ -107,9 +95,9 @@
     },
     {
         "id": "013",
-        "width": "1",
+        "width": "5",
         "height": "1",
-        "depth": "1"
+        "depth": "5"
     },
     {
         "id": "014",
@@ -119,9 +107,9 @@
     },
     {
         "id": "015",
-        "width": "4",
+        "width": "5",
         "height": "1",
-        "depth": "4"
+        "depth": "5"
     },
     {
         "id": "016",
@@ -152,41 +140,5 @@
         "width": "3",
         "height": "1",
         "depth": "3"
-    },
-    {
-        "id": "021",
-        "width": "5",
-        "height": "1",
-        "depth": "5"
-    },
-    {
-        "id": "022",
-        "width": "7",
-        "height": "1",
-        "depth": "7"
-    },
-    {
-        "id": "023",
-        "width": "3",
-        "height": "1",
-        "depth": "3"
-    },
-    {
-        "id": "024",
-        "width": "6",
-        "height": "1",
-        "depth": "6"
-    },
-    {
-        "id": "025",
-        "width": "5",
-        "height": "1",
-        "depth": "5"
-    },
-    {
-        "id": "026",
-        "width": "2",
-        "height": "1",
-        "depth": "2"
     }
 ]
