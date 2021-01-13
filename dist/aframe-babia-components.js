@@ -4239,7 +4239,6 @@ AFRAME.registerComponent('babiaxr-island', {
         // Register all figures before drawing
         let t = {x: 0, y: 0, z: 0};
         [x, y, t, this.figures] = this.generateElements(elements, this.figures, t, increment);
-        console.log(this.figures);
 
         // Draw figures
         t.x = 0;
@@ -4256,39 +4255,36 @@ AFRAME.registerComponent('babiaxr-island', {
     },
     
     generateElements: function (elements, figures, translate, inc){
-        //if (this.first){
-            //console.log(elements);
-            var increment = inc;  // TEMPORAL increment = inc
-    
-            // Vertical Limits
-            var limit_up = 0;
-            var limit_down = 0;
-            // Horizontal Limits
-            var limit_right = 0;
-            var limit_left = 0; 
+        var increment = inc;  // TEMPORAL increment = inc
 
-            //Position Figure
-            var posX = 0; 
-            var posY = 0;
+        // Vertical Limits
+        var limit_up = 0;
+        var limit_down = 0;
+        // Horizontal Limits
+        var limit_right = 0;
+        var limit_left = 0; 
 
-            // Aux to update the limits
-            // Save max limit to update last limit in the next step
-            var max_right = 0;
-            var max_left = 0;
-            var max_down = 0;
-            var max_up = 0;
+        //Position Figure
+        var posX = 0; 
+        var posY = 0;
 
-            // control points
-            var current_vertical = 0;
-            var current_horizontal = 0;
+        // Aux to update the limits
+        // Save max limit to update last limit in the next step
+        var max_right = 0;
+        var max_left = 0;
+        var max_down = 0;
+        var max_up = 0;
 
-            // Controllers
-            var up = false;
-            var down = false;
-            var left = false;
-            var right = true;
-            
-        //}
+        // control points
+        var current_vertical = 0;
+        var current_horizontal = 0;
+
+        // Controllers
+        var up = false;
+        var down = false;
+        var left = false;
+        var right = true;
+
         /**
          * Get each element and set its position respectly
          * Then save all data in figures array
@@ -4398,7 +4394,6 @@ AFRAME.registerComponent('babiaxr-island', {
                         height : elements[i][this.data.height],
                         depth : Math.sqrt(elements[i][this.data.area])
                     }
-                    //console.log(figure.width);
                 } else {
                     figure = {
                         id : elements[i].id,
@@ -4411,7 +4406,6 @@ AFRAME.registerComponent('babiaxr-island', {
                 }   
             }
             figures.push(figure);
-            //console.log(figure);
         }
 
         // Check and update last limits
@@ -4473,12 +4467,11 @@ AFRAME.registerComponent('babiaxr-island', {
             }
 
             let entity = this.createElement(figures[i], position);
-            //console.log(entity);
     
             if (figures[i].children){
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
-                let legend = generateLegend(entity.id, height, entity.getAttribute('position'));
+                let legend = generateLegend(entity.id, height, entity.getAttribute('position'), this.el);
                 entity.appendChild(legend);
     
                 entity.addEventListener('mouseenter', function(){
@@ -4605,7 +4598,7 @@ AFRAME.registerComponent('babiaxr-island', {
                     } else {
                         opacity = 1.0;
                     }
-                    entity.setAttribute('material', 'opacity', opacity);
+                    setOpacity(entity, opacity);
 
                 } else {
                     // TRASLATE
@@ -4625,8 +4618,12 @@ AFRAME.registerComponent('babiaxr-island', {
                 }
                 
                 let new_entity = this.createElement(figures[i], position);
+                if (figures[i].children){
+                    this.drawElements(new_entity, figures[i].children, figures[i].translate_matrix);
+                }
+                
 
-                let legend = generateLegend(new_entity.id, figures[i].height, new_entity.getAttribute('position'));
+                let legend = generateLegend(new_entity.id, figures[i].height, new_entity.getAttribute('position'),this.el);
                 new_entity.appendChild(legend);
     
                 new_entity.addEventListener('mouseenter', function(){
@@ -4637,7 +4634,8 @@ AFRAME.registerComponent('babiaxr-island', {
                 });
 
                 //Opacity 0
-                new_entity.setAttribute('material', 'opacity', 0);
+                setOpacity(new_entity, 0);
+
                 element.appendChild(new_entity);
                 figures[i].inserted = true;
 
@@ -4777,7 +4775,7 @@ AFRAME.registerComponent('babiaxr-island', {
     }
 })
 
-let generateLegend = (text, heightItem, boxPosition) => {
+let generateLegend = (text, heightItem, boxPosition, rootEntity) => {
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
@@ -4785,6 +4783,7 @@ let generateLegend = (text, heightItem, boxPosition) => {
     let height = heightItem
 
     let entity = document.createElement('a-plane');
+    entity.setAttribute('look-at', "[camera]");
 
     entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
@@ -4800,9 +4799,23 @@ let generateLegend = (text, heightItem, boxPosition) => {
     });
     entity.setAttribute('visible', false);
 
+    //Set Scale
+    let scaleParent = rootEntity.getAttribute("scale")
+    if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
+        entity.setAttribute('scale', { x: 1 / scaleParent.x, y: 1 / scaleParent.y, z: 1 / scaleParent.z });
+    }
+
     return entity;
 }
 
+function setOpacity (entity, opacity){
+    entity.setAttribute('material', 'opacity', opacity);
+    if (entity.childNodes){
+        for(let i = 0; i < entity.childNodes.length; i++){
+            setOpacity(entity.childNodes[i], opacity);
+        }
+    }
+}
 
 
 /***/ }),
