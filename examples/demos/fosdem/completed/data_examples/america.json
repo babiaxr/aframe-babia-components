@@ -1,0 +1,184 @@
+{
+    "24": {
+        "date": "04/05/2020", 
+        "country": "Uruguay", 
+        "cases": 3, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "25": {
+        "date": "04/05/2020", 
+        "country": "Venezuela", 
+        "cases": 12, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "20": {
+        "date": "04/05/2020", 
+        "country": "Puerto_Rico", 
+        "cases": 51, 
+        "fatality": "0.0392156862745", 
+        "deaths": 2
+    }, 
+    "21": {
+        "date": "04/05/2020", 
+        "country": "Saint_Lucia", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "22": {
+        "date": "04/05/2020", 
+        "country": "Saint_Vincent_and_the_Grenadines", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "23": {
+        "date": "04/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 24972, 
+        "fatality": "0.0519381707512", 
+        "deaths": 1297
+    }, 
+    "1": {
+        "date": "04/05/2020", 
+        "country": "Barbados", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "0": {
+        "date": "04/05/2020", 
+        "country": "Argentina", 
+        "cases": 102, 
+        "fatality": "0.0882352941176", 
+        "deaths": 9
+    }, 
+    "3": {
+        "date": "04/05/2020", 
+        "country": "Bolivia", 
+        "cases": 124, 
+        "fatality": "0.0403225806452", 
+        "deaths": 5
+    }, 
+    "2": {
+        "date": "04/05/2020", 
+        "country": "Bermuda", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "5": {
+        "date": "04/05/2020", 
+        "country": "Canada", 
+        "cases": 2760, 
+        "fatality": "0.0420289855072", 
+        "deaths": 116
+    }, 
+    "4": {
+        "date": "04/05/2020", 
+        "country": "Brazil", 
+        "cases": 4588, 
+        "fatality": "0.0599389712293", 
+        "deaths": 275
+    }, 
+    "7": {
+        "date": "04/05/2020", 
+        "country": "Colombia", 
+        "cases": 383, 
+        "fatality": "0.0417754569191", 
+        "deaths": 16
+    }, 
+    "6": {
+        "date": "04/05/2020", 
+        "country": "Chile", 
+        "cases": 1228, 
+        "fatality": "0.0105863192182", 
+        "deaths": 13
+    }, 
+    "9": {
+        "date": "04/05/2020", 
+        "country": "Cuba", 
+        "cases": 38, 
+        "fatality": "0.0263157894737", 
+        "deaths": 1
+    }, 
+    "8": {
+        "date": "04/05/2020", 
+        "country": "Costa_Rica", 
+        "cases": 6, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "11": {
+        "date": "04/05/2020", 
+        "country": "Ecuador", 
+        "cases": 2074, 
+        "fatality": "0.0930568948891", 
+        "deaths": 193
+    }, 
+    "10": {
+        "date": "04/05/2020", 
+        "country": "Dominican_Republic", 
+        "cases": 376, 
+        "fatality": "0.0186170212766", 
+        "deaths": 7
+    }, 
+    "13": {
+        "date": "04/05/2020", 
+        "country": "Guatemala", 
+        "cases": 15, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    "12": {
+        "date": "04/05/2020", 
+        "country": "El_Salvador", 
+        "cases": 109, 
+        "fatality": "0.00917431192661", 
+        "deaths": 1
+    }, 
+    "15": {
+        "date": "04/05/2020", 
+        "country": "Jamaica", 
+        "cases": 6, 
+        "fatality": "0.166666666667", 
+        "deaths": 1
+    }, 
+    "14": {
+        "date": "04/05/2020", 
+        "country": "Honduras", 
+        "cases": 45, 
+        "fatality": "0.133333333333", 
+        "deaths": 6
+    }, 
+    "17": {
+        "date": "04/05/2020", 
+        "country": "Panama", 
+        "cases": 107, 
+        "fatality": "0.0280373831776", 
+        "deaths": 3
+    }, 
+    "16": {
+        "date": "04/05/2020", 
+        "country": "Mexico", 
+        "cases": 1383, 
+        "fatality": "0.0672451193059", 
+        "deaths": 93
+    }, 
+    "19": {
+        "date": "04/05/2020", 
+        "country": "Peru", 
+        "cases": 3394, 
+        "fatality": "0.0253388332351", 
+        "deaths": 86
+    }, 
+    "18": {
+        "date": "04/05/2020", 
+        "country": "Paraguay", 
+        "cases": 26, 
+        "fatality": "0", 
+        "deaths": 0
+    }
+}
