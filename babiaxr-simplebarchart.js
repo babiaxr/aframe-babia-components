@@ -9,6 +9,8 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-simplebarchart', {
     schema: {
         data: { type: 'string' },
+        height: { type: 'string' },
+        x_axis: { type: 'string' },
         legend: { type: 'boolean', default: false },
         axis: { type: 'boolean', default: true },
         animation: {type: 'boolean', default: false},
@@ -45,6 +47,8 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     */
 
     update: function (oldData) {
+        const self = this;
+        const widthBars = 1;
         let data = this.data;
         let el = this.el; 
 
@@ -58,7 +62,7 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
             while (this.el.firstChild)
                 this.el.firstChild.remove();
             console.log("Generating barchart...")
-            this.chart = generateBarChart(data, el, this.animation, this.chart, this.bar_array)   
+            this.chart = generateBarChart(self, data, el, this.animation, this.chart, this.bar_array, this.widthBars)   
             console.log(this.chart)       
         } 
     },
@@ -72,6 +76,8 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     * Called on each scene tick.
     */
     tick: function (t, delta) {
+        const time_wait = 2000;
+        const self = this;
         let new_time = Date.now();
         if (this.animation && !this.anime_finished && this.chart){
             let elements = this.chart.children;
@@ -82,7 +88,7 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
                     let height_max = this.bar_array[bar].height_max;
                     let pos_x = this.bar_array[bar].position_x;
                     if (prev_height < height_max){
-                        let new_height = ((diff_time - time_wait) * height_max) / total_duration;
+                        let new_height = ((diff_time - time_wait) * height_max) / self.total_duration;
                         elements[bar].setAttribute('height', new_height);
                         elements[bar].setAttribute('position', {x: pos_x, y: new_height/2 , z: 0});
                     } else {
@@ -95,6 +101,21 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
             }
         }
     },
+
+    /**
+     * Duration of the animation if activated
+     */
+    total_duration: 3000,
+
+    /**
+     * Proportion of the bars
+     */
+    proportion,
+
+    /**
+     * Value max
+     */
+    valueMax,
 
     /**
     * Called when entity pauses.
@@ -111,11 +132,7 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
 })
 
 
-
-const time_wait = 2000;
-const total_duration = 3000;
-
-let generateBarChart = (data, element, animation, chart, list) => {
+let generateBarChart = (self, data, element, animation, chart, list, widthBars) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -138,8 +155,8 @@ let generateBarChart = (data, element, animation, chart, list) => {
         if (scale) {
             maxY = maxY / scale
         } else if (heightMax){
-            valueMax = maxY
-            proportion = heightMax / maxY
+            self.valueMax = maxY
+            self.proportion = heightMax / maxY
             maxY = heightMax
         }
 
@@ -151,12 +168,12 @@ let generateBarChart = (data, element, animation, chart, list) => {
 
         for (let bar of dataToPrint) {
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation, scale, list);
+            let barEntity = generateBar(self, bar['size'], widthBars, colorid, stepX, palette, animation, scale, list);
             barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar, element)
+                showLegend(barEntity, bar, element, widthBars)
             }
 
             //Axis dict
@@ -177,8 +194,8 @@ let generateBarChart = (data, element, animation, chart, list) => {
 
         //Print axis
         if (data.axis) {
-            showXAxis(element, stepX, axis_dict, palette)
-            showYAxis(element, maxY, scale)
+            showXAxis(self.widthBars, element, stepX, axis_dict, palette)
+            showYAxis(self.proportion, self.valueMax, self.widthBars, element, maxY, scale)
         }
         
         chart = element.children[1]
@@ -186,17 +203,14 @@ let generateBarChart = (data, element, animation, chart, list) => {
     }
 }
 
-const widthBars = 1
-let proportion
-let valueMax
 
-function generateBar(size, width, colorid, position, palette, animation, scale, bar_array) {
+function generateBar(self, size, width, colorid, position, palette, animation, scale, bar_array) {
     let color = getColor(colorid, palette)
     console.log("Generating bar...")
     if (scale) {
         size = size / scale
-    } else if (proportion){
-        size = proportion * size
+    } else if (self.proportion){
+        size = self.proportion * size
     }
     let entity = document.createElement('a-box');
     entity.setAttribute('color', color);
@@ -204,7 +218,7 @@ function generateBar(size, width, colorid, position, palette, animation, scale, 
     entity.setAttribute('depth', width);
     // Add animation
     if (animation){
-        var increment = size / total_duration
+        var increment = size / self.total_duration
         var height_max = size
         bar_array.push({
             increment: increment,
@@ -231,7 +245,7 @@ function getColor(colorid, palette){
     return color
 }
 
-function generateLegend(bar, barEntity) {
+function generateLegend(bar, barEntity, widthBars) {
     let text = bar['key'] + ': ' + bar['size'];
     let width = 2;
     if (text.length > 16)
@@ -254,7 +268,7 @@ function generateLegend(bar, barEntity) {
     return entity;
 }
 
-function showXAxis(parent, xEnd, bars_printed, palette) {
+function showXAxis(widthBars, parent, xEnd, bars_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -285,7 +299,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
     parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(proportion, valueMax, widthBars, parent, yEnd, scale) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
     //Print line
@@ -328,10 +342,10 @@ function showYAxis(parent, yEnd, scale) {
     parent.appendChild(axis)
 }
 
-function showLegend(barEntity, bar, element) {
+function showLegend(barEntity, bar, element, widthBars) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar, barEntity);
+        legend = generateLegend(bar, barEntity, widthBars);
         element.appendChild(legend);
     });
 
