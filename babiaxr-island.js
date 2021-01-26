@@ -14,7 +14,9 @@ AFRAME.registerComponent('babiaxr-island', {
         depth: {type: 'string', default: 'depth'},
         area: {type: 'string'},
         height: {type: 'string', default: 'height'},
-        building_separation: {type: 'number', default: 0.25}
+        building_separation: {type: 'number', default: 0.25},
+        extra: {type: 'number', default : 1.0 },
+        levels: {type: 'number'}
     },
 
     /**
@@ -56,7 +58,7 @@ AFRAME.registerComponent('babiaxr-island', {
     tick: function (t, delta) {
         if (this.animation){
             let t = {x: 0, y: 0, z: 0};
-            this.Animation(this.el, this.figures, this.figures_old, delta, t);
+            this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
         }
     },
 
@@ -77,8 +79,17 @@ AFRAME.registerComponent('babiaxr-island', {
 
         var el = this.el;
         let elements = JSON.parse(file);
-        let increment = this.data.border;
 
+        // Calculate Increment
+        let increment;
+        if (this.data.levels){
+            increment = this.data.border * this.data.extra * this.data.levels;
+        } else {
+            // Find last level
+            let levels = this.getLevels(elements, 1);
+            increment = this.data.border * this.data.extra * (levels + 1);
+        }
+        
         // Register all figures before drawing
         let t = {x: 0, y: 0, z: 0};
         [x, y, t, this.figures] = this.generateElements(elements, this.figures, t, increment);
@@ -93,12 +104,10 @@ AFRAME.registerComponent('babiaxr-island', {
             this.animation = true;
             this.start_time = Date.now();
         } 
-        
-
     },
     
     generateElements: function (elements, figures, translate, inc){
-        var increment = inc;  // TEMPORAL increment = inc
+        var increment = inc; 
 
         // Vertical Limits
         var limit_up = 0;
@@ -140,8 +149,10 @@ AFRAME.registerComponent('babiaxr-island', {
                 var translate_matrix;
                 // Save Zone's parameters
                 elements[i][this.data.height] = 0.3;
-                [elements[i][this.data.width], elements[i][this.data.depth], translate_matrix ,children] = this.generateElements(elements[i].children, children, translate_matrix, increment+inc);
+                increment -= this.data.border * this.data.extra;
+                [elements[i][this.data.width], elements[i][this.data.depth], translate_matrix ,children] = this.generateElements(elements[i].children, children, translate_matrix, increment);
                 translate_matrix.y = elements[i][this.data.height];
+                increment = inc;
                 //console.log("====> CHILDREN:");
                 //console.log(children);
                 //console.log("EXIT to the quarter... ")
@@ -159,11 +170,12 @@ AFRAME.registerComponent('babiaxr-island', {
                     limit_left -= elements[i][this.data.width] / 2; 
                 }
                 //console.log("==== RIGHT SIDE ====");
-                current_horizontal = limit_up;
+                current_horizontal = limit_up + this.data.building_separation / 2;
             } else {
                 if (up){
                     [current_vertical, posX, posY, max_up] = this.UpSide(elements[i], limit_up, current_vertical, max_up);
                     if (current_vertical > limit_right){
+                        current_vertical += this.data.building_separation / 2;
                         max_right = current_vertical;
                         up = false;
                         right = true;
@@ -171,12 +183,13 @@ AFRAME.registerComponent('babiaxr-island', {
                         if (max_left < limit_left){
                             limit_left = max_left;
                         }
-                        current_horizontal = limit_up;
+                        current_horizontal = limit_up + this.data.building_separation / 2;
                     }
                 } else if (right){
                     [current_horizontal, posX, posY, max_right] = this.RightSide(elements[i], limit_right, current_horizontal, max_right);
                     // To pass next step
                     if ( current_horizontal < limit_down){
+                        current_horizontal += this.data.building_separation / 2;
                         max_down = current_horizontal;
                         right = false;
                         down = true;
@@ -184,11 +197,12 @@ AFRAME.registerComponent('babiaxr-island', {
                         if (max_up > limit_up){
                             limit_up = max_up;
                         }
-                        current_vertical = limit_right;
+                        current_vertical = limit_right + this.data.building_separation / 2;
                     }
                 } else if (down){ 
                     [current_vertical, posX, posY, max_down] = this.DownSide(elements[i], limit_down, current_vertical, max_down);
                     if (current_vertical < limit_left){
+                        current_vertical -= this.data.building_separation / 2;
                         max_left = current_vertical;
                         down = false;
                         left = true;
@@ -196,11 +210,12 @@ AFRAME.registerComponent('babiaxr-island', {
                         if (max_right > limit_right){
                             limit_right = max_right;
                         }
-                        current_horizontal = limit_down;
+                        current_horizontal = limit_down - this.data.building_separation / 2;
                     }
                 } else if (left){
                     [current_horizontal, posX, posY, max_left] = this.LeftSide(elements[i], limit_left, current_horizontal, max_left);
                     if (current_horizontal > limit_up){
+                        current_horizontal -= this.data.building_separation / 2;
                         max_up = current_horizontal;
                         left = false;
                         up = true;
@@ -208,7 +223,7 @@ AFRAME.registerComponent('babiaxr-island', {
                         if (max_down < limit_down){
                             limit_down = max_down;
                         }
-                        current_vertical = limit_left;
+                        current_vertical = limit_left - this.data.building_separation / 2;
                     }
                 }
             }
@@ -266,32 +281,32 @@ AFRAME.registerComponent('babiaxr-island', {
         }
         
         if (current_vertical < limit_left){
-            limit_left = current_vertical;
+            limit_left = current_vertical + this.data.building_separation / 2;
         }
         if (current_vertical > limit_right){
-            limit_right = current_vertical;
+            limit_right = current_vertical - this.data.building_separation / 2;;
         }
         if (current_horizontal > limit_up){
-            limit_up = current_horizontal;
+            limit_up = current_horizontal - this.data.building_separation / 2;;
         }
         if (current_horizontal < limit_down){
-            limit_down = current_horizontal;
+            limit_down = current_horizontal + this.data.building_separation / 2;;
         }
 
         // Calculate translate of the center, width and depth of the zone
         var width = Math.abs(limit_left) + Math.abs(limit_right);
         var depth = Math.abs(limit_down) + Math.abs(limit_up);
 
-        var translate_x = limit_left + width / 2 ;
-        var translate_z = limit_down  + depth / 2;
+        width += increment;
+        depth += increment;
+
+        var translate_x = limit_left + width / 2 - increment / 2;
+        var translate_z = limit_down  + depth / 2 - increment / 2;
         translate = { 
             x: translate_x,
             y: 0,
             z: translate_z,
         };
-
-        width += increment;
-        depth += increment;
 
         return [width, depth, translate, figures];      
     },
@@ -335,22 +350,22 @@ AFRAME.registerComponent('babiaxr-island', {
         let width, depth;
         if (this.data.area && !element.children){
             width = Math.sqrt(element[this.data.area]);
-            depth = Math.sqrt(element[this.data.area]);
+            depth = Math.sqrt(element[this.data.area]) + separation;
         } else {
             width = parseFloat(element[this.data.width]);
-            depth = parseFloat(element[this.data.depth]);
+            depth = parseFloat(element[this.data.depth]) + separation;
         }
         // Calculate position
-        let posX = limit_right + ((width + separation) / 2);
-        let posY = current_horizontal - ((depth + separation ) / 2);
+        let posX = limit_right + (width / 2)  + separation;
+        let posY = current_horizontal - (depth/ 2);
     
         // Calculate states
-        current_horizontal -= depth + (separation / 2) ; 
-        let total_x = limit_right + width + (separation / 2);
+        current_horizontal -= depth; 
+        let total_x = limit_right + width + separation;
         if ( total_x > max_right){
             max_right = total_x;
         }
-            
+        
         return [current_horizontal, posX, posY, max_right];
     },
     
@@ -358,19 +373,19 @@ AFRAME.registerComponent('babiaxr-island', {
         let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children){
-            width = Math.sqrt(element[this.data.area]);
+            width = Math.sqrt(element[this.data.area]) + separation;
             depth = Math.sqrt(element[this.data.area]);
         } else {
-            width = parseFloat(element[this.data.width]);
+            width = parseFloat(element[this.data.width]) + separation;
             depth = parseFloat(element[this.data.depth]);
         }
         // Calculate position
-        let posX = current_vertical - ((width + separation) / 2);
-        let posY = limit_down - ((depth + separation) / 2);
+        let posX = current_vertical - (width / 2);
+        let posY = limit_down - (depth / 2) - separation;
     
         // Calculate state
-        current_vertical -= depth + (separation / 2); 
-        let total_y = limit_down - depth - (separation / 2);
+        current_vertical -= depth + separation; 
+        let total_y = limit_down - depth - separation;
         if (total_y < max_down){
             max_down = total_y;
         }      
@@ -383,18 +398,18 @@ AFRAME.registerComponent('babiaxr-island', {
         let width, depth;
         if (this.data.area && !element.children){
             width = Math.sqrt(element[this.data.area]);
-            depth = Math.sqrt(element[this.data.area]);
+            depth = Math.sqrt(element[this.data.area]) + separation;
         } else {
             width = parseFloat(element[this.data.width]);
-            depth = parseFloat(element[this.data.depth]);
+            depth = parseFloat(element[this.data.depth]) + separation;
         }
         // Calculate position
-        let posX = limit_left - ((width + separation) / 2);
-        let posY = current_horizontal + ((depth + separation) / 2);
+        let posX = limit_left - (width / 2) - separation;
+        let posY = current_horizontal + (depth / 2);
     
         // Calculate state
-        current_horizontal += depth + separation / 2;   
-        let total_x = limit_left - width - (separation / 2) ;
+        current_horizontal += depth;   
+        let total_x = limit_left - width - separation;
         if ( total_x < max_left){
             max_left = total_x;
         }    
@@ -406,19 +421,19 @@ AFRAME.registerComponent('babiaxr-island', {
         let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children){
-            width = Math.sqrt(element[this.data.area]);
+            width = Math.sqrt(element[this.data.area]) + separation;
             depth = Math.sqrt(element[this.data.area]);
         } else {
-            width = parseFloat(element[this.data.width]);
+            width = parseFloat(element[this.data.width]) + separation;
             depth = parseFloat(element[this.data.depth]);
         }
         // Calculate position
-        let posX = current_vertical + ((width+ separation) / 2);
-        let posY = limit_up + ((depth + separation) / 2);
+        let posX = current_vertical + (width / 2);
+        let posY = limit_up + (depth / 2) + separation;
     
         // Calculate state
-        current_vertical += depth + (separation / 2);
-        let total_y = limit_up + depth + (separation / 2);
+        current_vertical += depth + separation;
+        let total_y = limit_up + depth + separation;
         if ( total_y > max_up ){
             max_up = total_y;
         } 
@@ -426,7 +441,7 @@ AFRAME.registerComponent('babiaxr-island', {
         return [current_vertical, posX, posY, max_up];
     },
 
-    Animation: function (element, figures, figures_old, delta, translate){
+    Animation: function (element, figures, figures_old, delta, translate, translate_old){
         let new_time = Date.now();
         let entity;
         for (let i in figures){
@@ -445,15 +460,17 @@ AFRAME.registerComponent('babiaxr-island', {
 
                 } else {
                     // TRASLATE
-                    this.traslate(entity, new_time, delta, figures[i], figures_old[i]);
+                    this.traslate(entity, new_time, delta, figures[i], figures_old[i], translate, translate_old);
                     // RESIZE
                     this.resize(entity, new_time, delta, figures[i], figures_old[i]);
                     if (figures[i].children){
-                        this.Animation(entity, figures[i].children, figures_old[i].children, delta, figures[i].translate_matrix);
+                        
+                        this.Animation(entity, figures[i].children, figures_old[i].children, delta, figures[i].translate_matrix, figures_old[i].translate_matrix);
                     }
                 }
             } else {
 
+                
                 position = {
                     x: figures[i].posX - translate.x ,
                     y: (figures[i].height / 2 + translate.y / 2),
@@ -547,38 +564,36 @@ AFRAME.registerComponent('babiaxr-island', {
         }
     },
 
-    traslate: function (entity, new_time, delta, figure, figure_old){
+    traslate: function (entity, new_time, delta, figure, figure_old, translate, translate_old){
         let last_y = entity.getAttribute('position').y;
-        if (((new_time - this.start_time) < this.duration) && 
-            (figure.posY != figure_old.posY) ||
-            (figure.posX != figure_old.posX)){
-            // Calculate increment positions
-            let dist_x = figure_old.posX - figure.posX;
-            let inc_x = (delta * dist_x) / this.duration;
-            let last_x = entity.getAttribute('position').x;
-            let new_x = last_x - inc_x;
+        let dist_x = (figure_old.posX - translate_old.x) - (figure.posX - translate.x);
+        let dist_y = (figure_old.posY - translate_old.z) - (figure.posY - translate.z);
 
-            let dist_y = figure_old.posY - figure.posY;
-            let inc_y = (delta * dist_y) / this.duration;
-            let last_z = entity.getAttribute('position').z;
-            let new_z = last_z + inc_y;
-
-            // Update entity
-            entity.setAttribute('position', {
-                x : new_x,
-                y : last_y,
-                z : new_z
-            });
-
-        } else if (((new_time - this.start_time) > this.duration) && 
-            ((figure.posY != figure_old.posY) || 
-            (figure.posX != figure_old.posX))) {
-
-            entity.setAttribute('position', {
-                x : figure.posX,
-                y : last_y,
-                z : - figure.posY
-            }); 
+        if (dist_x != 0 || dist_y != 0){
+            if ((new_time - this.start_time) < this.duration){
+                // Calculate increment positions
+                let inc_x = (delta * dist_x) / this.duration;
+                let last_x = entity.getAttribute('position').x;
+                let new_x = last_x - inc_x;
+    
+                let inc_y = (delta * dist_y) / this.duration;
+                let last_z = entity.getAttribute('position').z;
+                let new_z = last_z + inc_y ;
+    
+                // Update entity
+                entity.setAttribute('position', {
+                    x : new_x, 
+                    y : last_y,
+                    z : new_z
+                });
+    
+            } else if ((new_time - this.start_time) > this.duration) {
+                entity.setAttribute('position', {
+                    x : figure.posX - translate.x,
+                    y : last_y,
+                    z : - figure.posY + translate.z
+                }); 
+            }
         }
     },
 
@@ -615,6 +630,20 @@ AFRAME.registerComponent('babiaxr-island', {
         });
 
         return entity;
+    },
+
+    getLevels: function(elements, levels){
+        for (let i in elements){
+            let level = 1
+            if (elements[i].children){
+                level ++;
+                let new_level = this.getLevels(elements[i], level);
+                if (new_level > levels){
+                    levels = new_level;
+                }
+            }
+        }
+        return levels;
     }
 })
 
