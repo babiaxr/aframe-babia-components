@@ -259,8 +259,8 @@ let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion
     let zaxis_dict = []
     let animation = data.animation
 
-    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
-    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
+    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
     if (scale) {
       maxY = maxY / scale
       maxRadius = maxRadius / scale

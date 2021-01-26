@@ -1,135 +1,135 @@
-{
-  "0": {
+[
+  {
     "name": "David",
-    "age": "2019",
+    "age": "2017",
     "size": 9,
     "metric2": 1
   },
-  "1": {
+  {
     "name": "David",
     "age": "2018",
     "size": 8,
     "metric2": 2
   },
-  "2": {
-    "name": "David",
+  {
+    "name": "Daniel",
     "age": "2017",
     "size": 7,
     "metric2": 3
   },
-  "3": {
+  {
     "name": "David",
     "age": "2016",
     "size": 6,
     "metric2": 7
   },
-  "01": {
+  {
     "name": "Jesus",
     "age": "2016",
     "size": 9,
     "metric2": 9
   },
-  "11a": {
+  {
     "name": "Jesus",
     "age": "2011",
     "size": 8,
     "metric2": 3
   },
-  "4": {
+  {
     "name": "David",
     "age": "2015",
     "size": 5,
     "metric2": 10
   },
-  "21a": {
+  {
     "name": "Jesus",
     "age": "2014",
     "size": 7,
     "metric2": 12
   },
-  "31a": {
+  {
     "name": "Jesus",
     "age": "2000",
     "size": 6,
     "metric2": 6
   },
-  "41a": {
+  {
     "name": "Jesus",
     "age": "2015",
     "size": 5,
     "metric2": 1
   },
-  "01a": {
+  {
     "name": "Jesus",
     "age": "2008",
     "size": 9,
     "metric2": 5
   },
-  "11": {
+  {
     "name": "Pete",
     "age": "2011",
     "size": 8,
     "metric2": 7
   },
-  "21": {
+  {
     "name": "Pete",
     "age": "2014",
     "size": 7,
     "metric2": 3
   },
-  "31": {
+  {
     "name": "Josh",
     "age": "2016",
     "size": 6,
     "metric2": 8
   },
-  "41": {
+  {
     "name": "Josh",
     "age": "2015",
     "size": 5,
     "metric2": 11
   },
-  "0b1a": {
+  {
     "name": "Steve",
     "age": "2016",
     "size": 9,
     "metric2": 6
   },
-  "1b1": {
+  {
     "name": "Steve",
     "age": "2017",
     "size": 8,
     "metric2": 8
   },
-  "2b1": {
+  {
     "name": "Steve",
     "age": "2014",
     "size": 7,
     "metric2": 0
   },
-  "31b": {
+  {
     "name": "Steve",
     "age": "2013",
     "size": 6,
     "metric2": 3
   },
-  "41b": {
+  {
     "name": "Moreno",
     "age": "2015",
     "size": 5,
     "metric2": 2
   },
-  "41bc": {
+  {
     "name": "Jesus",
-    "age": "2019",
+    "age": "2017",
     "size": 10,
     "metric2": 9
   },
-  "41bcs": {
+  {
     "name": "Pete",
-    "age": "2019",
+    "age": "2017",
     "size": 10,
     "metric2": 12
   }
   
-}
+]

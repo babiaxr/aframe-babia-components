@@ -9,6 +9,11 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-bubbleschart', {
     schema: {
         data: { type: 'string' },
+        height: { type: 'string', default: 'height' },
+        radius: { type: 'string', default: 'radius' },
+        x_axis: { type: 'string', default: 'x_axis' },
+        z_axis: { type: 'string', default: 'z_axis' },
+        from: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
         animation: { type: 'boolean', default: false },
@@ -30,11 +35,7 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let el = this.el;
-        let metrics = ['height', 'radius', 'x_axis', 'z_axis'];
-        el.setAttribute('babiaToRepresent', metrics);
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -49,14 +50,49 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            //remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating geobubbleschart...")
-            generateBubblesChart(self.data, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+        // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+        while (self.el.firstChild)
+          self.el.firstChild.remove();
+        console.log("Generating 3Dcylynderchart from data...")
+        self.chart = generateBubblesChart(self.data, JSON.parse(self.data.data), self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+  
+      } else {
+  
+        // If changed from, need to re-register to the new data component
+        if (data.from !== oldData.from) {
+          // Unregister for old querier
+          if (self.dataComponent) { self.dataComponent.unregister(el) }
+  
+          // Find the component and get if querier or filterdata by the event               
+          let eventName = findDataComponent(data, el, self)
+          // If changed to filterdata or to querier
+          if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+            el.removeEventListener(self.dataComponentEventName, _listener, true)
+          }
+          // Assign new eventName
+          self.dataComponentEventName = eventName
+  
+          // Attach to the events of the data component
+          el.addEventListener(self.dataComponentEventName, function _listener(e) {
+            attachNewDataEventCallback(self, e)
+          });
+  
+          // Register for the new one
+          self.dataComponent.register(el)
+          return
         }
+  
+        // If changed whatever, re-print with the current data
+        if (data !== oldData && self.babiaData) {
+          while (self.el.firstChild)
+            self.el.firstChild.remove();
+          console.log("Generating Cylinder...")
+          self.chart = generateBubblesChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+        }
+      }
     },
+
     /**
     * Called when a component is removed (e.g., via removeAttribute).
     * Generally undoes all modifications to the entity.
@@ -100,12 +136,105 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
      */
     radius_scale: undefined,
 
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
 })
 
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+      // Save the reference to the querier or filterdata
+      let dataElement = document.getElementById(data.from)
+      if (dataElement.components['babiaxr-filterdata']) {
+        self.dataComponent = dataElement.components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (dataElement.components['babiaxr-querier_json']) {
+        self.dataComponent = dataElement.components['babiaxr-querier_json']
+      } else if (dataElement.components['babiaxr-querier_es']) {
+        self.dataComponent = dataElement.components['babiaxr-querier_es']
+      } else if (dataElement.components['babiaxr-querier_github']) {
+        self.dataComponent = dataElement.components['babiaxr-querier_github']
+      } else {
+        console.error("Problem registering to the querier")
+        return
+      }
+    } else {
+      // Look for a querier or filterdata in the same element and register
+      if (el.components['babiaxr-filterdata']) {
+        self.dataComponent = el.components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (el.components['babiaxr-querier_json']) {
+        self.dataComponent = el.components['babiaxr-querier_json']
+      } else if (el.components['babiaxr-querier_es']) {
+        self.dataComponent = el.components['babiaxr-querier_es']
+      } else if (el.components['babiaxr-querier_github']) {
+        self.dataComponent = el.components['babiaxr-querier_github']
+      } else {
+        // Look for a querier or filterdata in the scene
+        if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+          eventName = "babiaFilterDataReady"
+        } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+        } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+        } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+        } else {
+          console.error("Error, querier not found")
+          return
+        }
+      }
+    }
+    return eventName
+  }
+  
+  let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+  
+    self.babiaData = rawData
+    self.babiaMetadata = {
+      id: self.babiaMetadata.id++
+    }
+  
+    //remove previous chart
+    while (self.el.firstChild)
+      self.el.firstChild.remove();
+    console.log("Generating Bubbles...")
+    generateBubblesChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+  }
 
-let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, radius_scale) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+
+let generateBubblesChart = (data, dataRetrieved, element, proportion, valueMax, widthBubbles, radius_scale) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
@@ -128,8 +257,8 @@ let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, r
         let zaxis_dict = []
         let animation = data.animation
 
-        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
-        widthBubbles = Math.max.apply(Math, Object.keys(dataToPrint).map(function (o) { return dataToPrint[o].radius; }))
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+        widthBubbles = Math.max.apply(Math, Object.keys(dataToPrint).map(function (o) { return dataToPrint[o][data.radius]; }))
         if (scale) {
             maxY = maxY / scale
             widthBubbles = widthBubbles / scale
@@ -153,14 +282,14 @@ let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, r
 
         for (let bubble of dataToPrint) {
             // Check if used in order to put the bubble in the parent row
-            if (keys_used[bubble['key']]) {
-                stepX = keys_used[bubble['key']].posX
-                colorid = keys_used[bubble['key']].colorid
+            if (keys_used[bubble[data.x_axis]]) {
+                stepX = keys_used[bubble[data.x_axis]].posX
+                colorid = keys_used[bubble[data.x_axis]].colorid
             } else {
                 stepX = maxX
                 colorid = maxColorId
                 //Save in used
-                keys_used[bubble['key']] = {
+                keys_used[bubble[data.x_axis]] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
@@ -169,7 +298,7 @@ let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, r
                 let bubble_printed = {
                     colorid: colorid,
                     posX: stepX,
-                    key: bubble['key']
+                    key: bubble[data.x_axis]
                 }
                 xaxis_dict.push(bubble_printed)
 
@@ -178,12 +307,12 @@ let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, r
             }
 
             // Get Z val
-            if (z_axis[bubble['key2']]) {
-                stepZ = z_axis[bubble['key2']].posZ
+            if (z_axis[bubble[data.z_axis]]) {
+                stepZ = z_axis[bubble[data.z_axis]].posZ
             } else {
                 stepZ = maxZ
                 //Save in used
-                z_axis[bubble['key2']] = {
+                z_axis[bubble[data.z_axis]] = {
                     "posZ": maxZ
                 }
 
@@ -191,19 +320,19 @@ let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, r
                 let bubble_printed = {
                     colorid: colorid,
                     posZ: stepZ,
-                    key: bubble['key2']
+                    key: bubble[data.z_axis]
                 }
                 zaxis_dict.push(bubble_printed)
 
                 maxZ += 2 * widthBubbles
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
+            let bubbleEntity = generateBubble(bubble[data.radius], bubble[data.height], widthBubbles, colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
             bubbleEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(bubbleEntity, bubble, element)
+                showLegend(data, bubbleEntity, bubble, element)
             }
 
             chart_entity.appendChild(bubbleEntity);
@@ -268,8 +397,8 @@ function getColor(colorid, palette) {
     return color
 }
 
-function generateLegend(bubble, bubbleEntity) {
-    let text = bubble['key'] + ': \n Radius:' + bubble['radius'] + '\nHeight:' + bubble['height'];
+function generateLegend(data, bubble, bubbleEntity) {
+    let text = bubble[data.x_axis] + ': \n Radius:' + bubble[data.radius] + '\nHeight:' + bubble[data.height];
 
     let width = 2;
     if (text.length > 16)
@@ -296,10 +425,10 @@ function generateLegend(bubble, bubbleEntity) {
     return entity;
 }
 
-function showLegend(bubbleEntity, bubble, element) {
+function showLegend(data, bubbleEntity, bubble, element) {
     bubbleEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bubble, bubbleEntity);
+        legend = generateLegend(data, bubble, bubbleEntity);
         element.appendChild(legend);
     });
 
