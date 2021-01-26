@@ -50,7 +50,7 @@ AFRAME.registerComponent('babiaxr-piechart', {
                 self.el.firstChild.remove();
             console.log("Generating 3Dcylynderchart from data...")
             self.chart = generatePie(self.data, JSON.parse(self.data.data), self.el, self.slice_array, self.total_duration)
-
+            self.loaded = true
         } else {
 
             // If changed from, need to re-register to the new data component
@@ -83,6 +83,7 @@ AFRAME.registerComponent('babiaxr-piechart', {
                     self.el.firstChild.remove();
                 console.log("Generating Cylinder...")
                 self.chart = generatePie(self.data, self.babiaData, self.el, self.slice_array, self.total_duration)
+                self.loaded = true
             }
         }
 
@@ -236,6 +237,7 @@ let attachNewDataEventCallback = (self, e) => {
         self.el.firstChild.remove();
     console.log("Generating Cylinder...")
     self.chart = generatePie(self.data, rawData, self.el, self.slice_array, self.total_duration)
+    self.loaded = true
 }
 
 

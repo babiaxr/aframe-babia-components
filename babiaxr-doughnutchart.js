@@ -10,12 +10,12 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        animation: {type: 'boolean', default: false},
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        animation: { type: 'boolean', default: false },
     },
 
     /**
@@ -38,6 +38,7 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     */
 
     update: function (oldData) {
+        let self = this;
         let data = this.data;
         let el = this.el;
 
@@ -46,11 +47,11 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
          */
         if (data.data !== oldData.data) {
             //remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
             console.log("Generating pie...")
-            generateDoughnut(data, el)
-            loaded = true
+            generateDoughnut(self.data, self.el, self.total_duration, self.slice_array)
+            self.loaded = true
         }
     },
     /**
@@ -62,16 +63,17 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     /**
     * Called on each scene tick.
     */
-   tick: function (t, delta) {
-        if (animation && loaded ){
+    tick: function (t, delta) {
+        let self = this;
+        if (self.data.animation && self.loaded) {
             let elements = document.getElementsByClassName('babiaxrChart')[0].children
-            for (let slice in slice_array){
-                let delay = slice_array[slice].delay
-                let max_arc = slice_array[slice].arc
+            for (let slice in self.slice_array) {
+                let delay = self.slice_array[slice].delay
+                let max_arc = self.slice_array[slice].arc
                 let arc = parseFloat(elements[slice].getAttribute('arc'))
-                if ((t >= delay) && ( arc < max_arc )){
-                    arc += 360 * delta / total_durtation
-                    if (arc > max_arc){
+                if ((t >= delay) && (arc < max_arc)) {
+                    arc += 360 * delta / self.total_duration
+                    if (arc > max_arc) {
                         arc = max_arc
                     }
                     elements[slice].setAttribute('arc', arc)
@@ -92,14 +94,24 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     */
     play: function () { },
 
+    /**
+     * Loaded, for animation
+     */
+    loaded: false,
+
+    /**
+     * Slice array
+     */
+    slice_array: [],
+
+    /**
+     * Duration of the animation
+     */
+    total_duration: 4000,
+
 })
 
-let animation
-let slice_array = []
-let loaded = false
-let total_durtation = 4000
-
-let generateDoughnut = (data, element) => {
+let generateDoughnut = (data, element, total_duration, slice_array) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -107,7 +119,7 @@ let generateDoughnut = (data, element) => {
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
-        animation = data.animation
+        let animation = data.animation
 
         // Change size to degrees
         let totalSize = 0
@@ -122,7 +134,7 @@ let generateDoughnut = (data, element) => {
 
         let chart_entity = document.createElement('a-entity');
         chart_entity.classList.add('babiaxrChart')
-        chart_entity.setAttribute('rotation', {y: 90})
+        chart_entity.setAttribute('rotation', { y: 90 })
 
         element.appendChild(chart_entity)
 
@@ -132,12 +144,12 @@ let generateDoughnut = (data, element) => {
             degreeEnd = 360 * slice['size'] / totalSize;
 
             let sliceEntity
-            if (animation){
-                let duration_slice = total_durtation * degreeEnd / 360
+            if (animation) {
+                let duration_slice = total_duration * degreeEnd / 360
                 slice_array.push({
-                    arc : degreeEnd,
+                    arc: degreeEnd,
                     duration: duration_slice,
-                    delay : prev_delay
+                    delay: prev_delay
                 })
                 prev_delay += duration_slice;
                 sliceEntity = generateDoughnutSlice(degreeStart, 0.01, 1, colorid, palette);
@@ -169,19 +181,19 @@ function generateDoughnutSlice(position_start, arc, radius, colorid, palette) {
     console.log("Generating slice...")
     let entity = document.createElement('a-torus');
     entity.setAttribute('color', color);
-    entity.setAttribute('rotation', {x: 90, y: 0, z: position_start})
+    entity.setAttribute('rotation', { x: 90, y: 0, z: position_start })
     entity.setAttribute('arc', arc);
     entity.setAttribute('side', 'double');
     entity.setAttribute('radius', radius);
-    entity.setAttribute('radius-tubular', radius/4);
+    entity.setAttribute('radius-tubular', radius / 4);
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
@@ -223,36 +235,36 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: -90, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
