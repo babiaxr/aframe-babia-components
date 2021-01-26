@@ -11,6 +11,7 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
         data: { type: 'string' },
         height: { type: 'string', default: 'height' },
         x_axis: { type: 'string', default: 'x_axis' },
+        from: { type: 'string' },
         legend: { type: 'boolean', default: false },
         axis: { type: 'boolean', default: true },
         animation: { type: 'boolean', default: false },
@@ -32,13 +33,8 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
-
         this.time = Date.now();
         this.anime_finished = false
-
-        let el = this.el;
-        let metrics = ['height', 'x_axis'];
-        el.setAttribute('babiaToRepresent', metrics);
     },
 
     /**
@@ -48,7 +44,6 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
 
     update: function (oldData) {
         const self = this;
-        const widthBars = 1;
         let data = this.data;
         let el = this.el;
 
@@ -58,12 +53,48 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating barchart...")
-            this.chart = generateBarChart(self, data, el, this.animation, this.chart, this.bar_array, widthBars)
-            console.log(this.chart)
+
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            console.log("Generating barchart from data...")
+            self.chart = generateBarChart(self, self.data, JSON.parse(data.data), el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating barchart...")
+                self.chart = generateBarChart(self, self.data, self.babiaData, el, self.animation, self.chart, self.bar_array, self.widthBars)
+            }
+
         }
     },
     /**
@@ -103,6 +134,39 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     },
 
     /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Duration of the animation if activated
+     */
+    widthBars: 1,
+
+    /**
      * Duration of the animation if activated
      */
     total_duration: 3000,
@@ -131,10 +195,76 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
 
 })
 
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
 
-let generateBarChart = (self, data, element, animation, chart, list, widthBars) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Generate chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating barchart...")
+    self.chart = generateBarChart(self, self.data, rawData, self.el, self.animation, self.chart, self.bar_array, self.widthBars)
+}
+
+
+let generateBarChart = (self, data, dataRetrieved, element, animation, chart, list, widthBars) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
