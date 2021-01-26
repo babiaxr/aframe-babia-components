@@ -11,14 +11,14 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
-        animation: {type: 'boolean', default: false},
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        scale: {type: 'number'},
-        heightMax: {type: 'number'}
+        animation: { type: 'boolean', default: false },
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        scale: { type: 'number' },
+        heightMax: { type: 'number' }
     },
 
     /**
@@ -41,6 +41,7 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
     */
 
     update: function (oldData) {
+        const self = this;
         let data = this.data;
         let el = this.el;
 
@@ -52,7 +53,7 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
             while (this.el.firstChild)
                 this.el.firstChild.remove();
             console.log("Generating barchart...")
-            generateBarChart(data, el)
+            generateBarChart(data, el, self.widthBars, self.proportion, self.valueMax)
         }
     },
     /**
@@ -78,9 +79,24 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
     */
     play: function () { },
 
+    /**
+     * Duration of the animation if activated
+     */
+    widthBars: 1,
+
+    /**
+     * Proportion of the bars
+     */
+    proportion: undefined,
+
+    /**
+     * Value max
+     */
+    valueMax: undefined,
+
 })
 
-let generateBarChart = (data, element) => {
+let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -106,7 +122,7 @@ let generateBarChart = (data, element) => {
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
         if (scale) {
             maxY = maxY / scale
-        } else if (heightMax){
+        } else if (heightMax) {
             valueMax = maxY
             proportion = heightMax / maxY
             maxY = heightMax
@@ -164,12 +180,12 @@ let generateBarChart = (data, element) => {
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation, scale);
+            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation, scale, proportion);
             barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar, element)
+                showLegend(barEntity, bar, element, widthBars)
             }
 
             chart_entity.appendChild(barEntity);
@@ -182,23 +198,20 @@ let generateBarChart = (data, element) => {
 
         // Axis
         if (data.axis) {
-            showXAxis(element, maxX, xaxis_dict, palette)
-            showZAxis(element, maxZ, zaxis_dict, palette)
-            showYAxis(element, maxY, scale)
+            showXAxis(element, maxX, xaxis_dict, palette, widthBars)
+            showZAxis(element, maxZ, zaxis_dict, palette, widthBars)
+            showYAxis(element, maxY, scale, widthBars, proportion, valueMax)
         }
     }
 }
 
-let widthBars = 1
-let proportion
-let valueMax
 
-function generateBar(size, width, colorid, positionX, positionZ, palette, animation, scale) {
+function generateBar(size, width, colorid, positionX, positionZ, palette, animation, scale, proportion) {
     let color = getColor(colorid, palette)
     console.log("Generating bar...")
     if (scale) {
         size = size / scale
-    } else if (proportion){
+    } else if (proportion) {
         size = proportion * size
     }
 
@@ -207,9 +220,9 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     // Add animation
-    if (animation){
+    if (animation) {
         var duration = 4000
-        var increment = 10 * size / duration 
+        var increment = 10 * size / duration
         var height = 0
         var id = setInterval(animation, 10);
         function animation() {
@@ -218,8 +231,8 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
             } else {
                 height += increment;
                 entity.setAttribute('height', height);
-                entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ }); 
-            }  
+                entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ });
+            }
         }
     } else {
         entity.setAttribute('height', size);
@@ -228,17 +241,17 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
 }
 
-function generateLegend(bar, barEntity) {
+function generateLegend(bar, barEntity, widthBars) {
     let text = bar['key'] + ': ' + bar['size'];
 
     let width = 2;
@@ -262,10 +275,10 @@ function generateLegend(bar, barEntity) {
     return entity;
 }
 
-function showLegend(barEntity, bar, element) {
+function showLegend(barEntity, bar, element, widthBars) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar, barEntity);
+        legend = generateLegend(bar, barEntity, widthBars);
         element.appendChild(legend);
     });
 
@@ -276,7 +289,7 @@ function showLegend(barEntity, bar, element) {
 }
 
 
-function showXAxis(parent, xEnd, bars_printed, palette) {
+function showXAxis(parent, xEnd, bars_printed, palette, widthBars) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -298,7 +311,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBars-5 })
+        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBars - 5 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
         axis.appendChild(key)
     });
@@ -307,7 +320,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
     parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, bars_printed, palette) {
+function showZAxis(parent, zEnd, bars_printed, palette, widthBars) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -329,7 +342,7 @@ function showZAxis(parent, zEnd, bars_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: -widthBars-5.2, y: 0, z: e.posZ })
+        key.setAttribute('position', { x: -widthBars - 5.2, y: 0, z: e.posZ })
         key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
         axis.appendChild(key)
     });
@@ -339,7 +352,7 @@ function showZAxis(parent, zEnd, bars_printed, palette) {
 }
 
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, widthBars, proportion, valueMax) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
     //Print line
@@ -352,27 +365,27 @@ function showYAxis(parent, yEnd, scale) {
     axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBars / 2 + widthBars / 4) });
     axis.appendChild(axis_line)
 
-    if (proportion){
+    if (proportion) {
         yLimit = yLimit / proportion
         var mod = Math.floor(Math.log10(valueMax))
-    }   
-    for (let i = 0; i<=yLimit; i++){
+    }
+    for (let i = 0; i <= yLimit; i++) {
         let key = document.createElement('a-entity');
         let value = i
-        let pow = Math.pow(10, mod-1)
-        if (!proportion || (proportion && i%pow === 0)){  
+        let pow = Math.pow(10, mod - 1)
+        if (!proportion || (proportion && i % pow === 0)) {
             key.setAttribute('text', {
                 'value': value,
                 'align': 'right',
                 'width': 10,
                 'color': 'white '
             });
-            if (scale){
-                key.setAttribute('text', {'value': value * scale})
-                key.setAttribute('position', { x: -widthBars-5.2, y: value, z: -(widthBars / 2 + widthBars / 4) })
+            if (scale) {
+                key.setAttribute('text', { 'value': value * scale })
+                key.setAttribute('position', { x: -widthBars - 5.2, y: value, z: -(widthBars / 2 + widthBars / 4) })
             } else {
-                key.setAttribute('position', { x: -widthBars-5.2, y: i * proportion, z: -(widthBars / 2 + widthBars / 4) })
-            }     
+                key.setAttribute('position', { x: -widthBars - 5.2, y: i * proportion, z: -(widthBars / 2 + widthBars / 4) })
+            }
         }
         axis.appendChild(key)
     }
@@ -381,36 +394,36 @@ function showYAxis(parent, yEnd, scale) {
     parent.appendChild(axis)
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
