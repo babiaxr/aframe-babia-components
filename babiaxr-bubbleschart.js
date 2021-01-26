@@ -11,15 +11,15 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
         data: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
-        animation: {type: 'boolean', default: false},
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        scale: {type: 'number'},
-        heightMax: {type: 'number'},
-        radiusMax: {type: 'number'},
+        animation: { type: 'boolean', default: false },
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        scale: { type: 'number' },
+        heightMax: { type: 'number' },
+        radiusMax: { type: 'number' },
     },
 
     /**
@@ -42,6 +42,7 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     */
 
     update: function (oldData) {
+        const self = this;
         let data = this.data;
         let el = this.el;
 
@@ -53,7 +54,7 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
             while (this.el.firstChild)
                 this.el.firstChild.remove();
             console.log("Generating geobubbleschart...")
-            generateBubblesChart(data, el)
+            generateBubblesChart(self.data, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
         }
     },
     /**
@@ -79,9 +80,30 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     */
     play: function () { },
 
+    /**
+    * Proportion of the bars
+    */
+    proportion: undefined,
+
+    /**
+     * Value max
+     */
+    valueMax: undefined,
+
+    /**
+     * Width of the bubbles
+     */
+    widthBubbles: 0,
+
+    /**
+     * Max radius
+     */
+    radius_scale: undefined,
+
 })
 
-let generateBubblesChart = (data, element) => {
+
+let generateBubblesChart = (data, element, proportion, valueMax, widthBubbles, radius_scale) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -93,6 +115,7 @@ let generateBubblesChart = (data, element) => {
         const heightMax = data.heightMax
         const radiusMax = data.radiusMax
 
+        let stepMax
         let colorid = 0
         let maxColorId = 0
         let stepX = 0
@@ -106,20 +129,20 @@ let generateBubblesChart = (data, element) => {
         let animation = data.animation
 
         let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
-        widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
+        widthBubbles = Math.max.apply(Math, Object.keys(dataToPrint).map(function (o) { return dataToPrint[o].radius; }))
         if (scale) {
             maxY = maxY / scale
             widthBubbles = widthBubbles / scale
-        } else if (heightMax || radiusMax){
-            if (heightMax){
-              valueMax = maxY
-              proportion = heightMax / maxY
-              maxY = heightMax
+        } else if (heightMax || radiusMax) {
+            if (heightMax) {
+                valueMax = maxY
+                proportion = heightMax / maxY
+                maxY = heightMax
             }
-            if (radiusMax){
-              stepMax = widthBubbles
-              radius_scale = radiusMax / widthBubbles
-              widthBubbles = radiusMax
+            if (radiusMax) {
+                stepMax = widthBubbles
+                radius_scale = radiusMax / widthBubbles
+                widthBubbles = radiusMax
             }
         }
 
@@ -175,7 +198,7 @@ let generateBubblesChart = (data, element) => {
                 maxZ += 2 * widthBubbles
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale);
+            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
             bubbleEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
@@ -189,9 +212,9 @@ let generateBubblesChart = (data, element) => {
 
         // Axis
         if (data.axis) {
-            showXAxis(element, maxX, xaxis_dict)
-            showZAxis(element, maxZ, zaxis_dict)
-            showYAxis(element, maxY, scale)
+            showXAxis(element, maxX, xaxis_dict, palette, widthBubbles)
+            showZAxis(element, maxZ, zaxis_dict, palette, widthBubbles)
+            showYAxis(element, maxY, scale, proportion, valueMax, widthBubbles)
         }
 
         //Print Title
@@ -200,51 +223,46 @@ let generateBubblesChart = (data, element) => {
     }
 }
 
-let widthBubbles = 0
-let proportion
-let valueMax
-let radius_scale
-let stepMax
 
-function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation, scale) {
+function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {
     let color = getColor(colorid, palette)
     console.log("Generating bubble...")
     if (scale) {
         height = height / scale
         radius = radius / scale
-    } else if (proportion || radius_scale){
-        if (proportion){
-          height = proportion * height
+    } else if (proportion || radius_scale) {
+        if (proportion) {
+            height = proportion * height
         }
-        if (radius_scale){
-          radius = radius_scale * radius
+        if (radius_scale) {
+            radius = radius_scale * radius
         }
     }
     let entity = document.createElement('a-sphere');
     entity.setAttribute('color', color);
     entity.setAttribute('radius', radius);
     // Add Animation
-  if (animation) {
-    let from = positionX.toString() + " " + radius.toString() + " " + positionZ.toString()
-    let to = positionX.toString() + " " + (radius + height).toString() + " " + positionZ.toString()
-    entity.setAttribute('animation__position',{
-      'property': 'position',
-      'from': from,
-      'to': to,
-      'dur': '3000',
-      'easing': 'linear',
-    })
-  } else {
-    entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
-  }
+    if (animation) {
+        let from = positionX.toString() + " " + radius.toString() + " " + positionZ.toString()
+        let to = positionX.toString() + " " + (radius + height).toString() + " " + positionZ.toString()
+        entity.setAttribute('animation__position', {
+            'property': 'position',
+            'from': from,
+            'to': to,
+            'dur': '3000',
+            'easing': 'linear',
+        })
+    } else {
+        entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
+    }
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
@@ -260,8 +278,10 @@ function generateLegend(bubble, bubbleEntity) {
     let bubblePosition = bubbleEntity.getAttribute('position')
     let bubbleRadius = parseFloat(bubbleEntity.getAttribute('radius'))
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: bubblePosition.x, y: bubblePosition.y + bubbleRadius + 1,
-                                      z: bubblePosition.z + 0.1 });
+    entity.setAttribute('position', {
+        x: bubblePosition.x, y: bubblePosition.y + bubbleRadius + 1,
+        z: bubblePosition.z + 0.1
+    });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -290,7 +310,7 @@ function showLegend(bubbleEntity, bubble, element) {
 }
 
 
-function showXAxis(parent, xEnd, bubbles_printed, palette) {
+function showXAxis(parent, xEnd, bubbles_printed, palette, widthBubbles) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -312,7 +332,7 @@ function showXAxis(parent, xEnd, bubbles_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBubbles-3.2 })
+        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBubbles - 3.2 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
         axis.appendChild(key)
     });
@@ -321,7 +341,7 @@ function showXAxis(parent, xEnd, bubbles_printed, palette) {
     parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, bubbles_printed, palette) {
+function showZAxis(parent, zEnd, bubbles_printed, palette, widthBubbles) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -343,7 +363,7 @@ function showZAxis(parent, zEnd, bubbles_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: -widthBubbles-5.2, y: 0, z: e.posZ })
+        key.setAttribute('position', { x: -widthBubbles - 5.2, y: 0, z: e.posZ })
         key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
         axis.appendChild(key)
     });
@@ -353,7 +373,7 @@ function showZAxis(parent, zEnd, bubbles_printed, palette) {
 }
 
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, proportion, valueMax, widthBubbles) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
     //Print line
@@ -366,29 +386,29 @@ function showYAxis(parent, yEnd, scale) {
     axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBubbles / 2 + widthBubbles / 4) });
     axis.appendChild(axis_line)
 
-    if (proportion){
+    if (proportion) {
         yLimit = yLimit / proportion
         var mod = Math.floor(Math.log10(valueMax))
-    } 
-    for (let i = 0; i<=yLimit; i++){
+    }
+    for (let i = 0; i <= yLimit; i++) {
         let key = document.createElement('a-entity');
         let value = i
-        let pow = Math.pow(10, mod-1)
-        if (!proportion || (proportion && i%pow === 0)){  
+        let pow = Math.pow(10, mod - 1)
+        if (!proportion || (proportion && i % pow === 0)) {
             key.setAttribute('text', {
                 'value': value,
                 'align': 'right',
                 'width': 10,
                 'color': 'white '
             });
-            if (scale){
-                key.setAttribute('text', {'value': value * scale})
-                key.setAttribute('position', { x: -widthBubbles-5.2, y: value, z: -(widthBubbles / 2 + widthBubbles / 4) })
-            } else if (proportion){
-                key.setAttribute('position', { x: -widthBubbles-5.2, y: i * proportion, z: -(widthBubbles / 2 + widthBubbles / 4)})
+            if (scale) {
+                key.setAttribute('text', { 'value': value * scale })
+                key.setAttribute('position', { x: -widthBubbles - 5.2, y: value, z: -(widthBubbles / 2 + widthBubbles / 4) })
+            } else if (proportion) {
+                key.setAttribute('position', { x: -widthBubbles - 5.2, y: i * proportion, z: -(widthBubbles / 2 + widthBubbles / 4) })
             } else {
-                key.setAttribute('position', { x: -widthBubbles-5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4)})
-            }     
+                key.setAttribute('position', { x: -widthBubbles - 5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4) })
+            }
         }
         axis.appendChild(key)
     }
@@ -397,36 +417,36 @@ function showYAxis(parent, yEnd, scale) {
     parent.appendChild(axis)
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
