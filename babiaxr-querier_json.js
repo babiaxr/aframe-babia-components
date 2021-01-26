@@ -22,22 +22,7 @@ AFRAME.registerComponent('babiaxr-querier_json', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-        let self = this;
-
-        // Highest priority to data
-        if (data.data) {
-            parseEmbeddedJSONData(data.data, el, self)
-        } else {
-            if (data.url) {
-                requestJSONDataFromURL(data, el, self)
-            } else if (data.embedded) {
-                parseEmbeddedJSONData(data.embedded, el, self)
-            }
-        }
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.

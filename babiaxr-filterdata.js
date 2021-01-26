@@ -23,51 +23,7 @@ AFRAME.registerComponent('babiaxr-filterdata', {
   /**
   * Called once when component is attached. Generally for initial setup.
   */
-  init: function () {
-    let data = this.data;
-    let el = this.el;
-    let self = this;
-
-    // Highest priority to data
-    if (data.data) {
-      let rawData = parseEmbeddedJSONData(data.data)
-
-      // Filtering, save the references
-      let dataFiltered = filterData(data, rawData)
-      self.babiaData = dataFiltered
-      self.babiaMetadata = {
-        id: self.babiaMetadata.id++
-      }
-
-      // Dispatch interested events
-      self.dataReadyToSend("babiaData", self)
-    } else {
-
-      // Find the querier
-      findQuerier(data, el, self)
-
-      // Attach to the event of the querier
-      el.addEventListener('babiaQuerierDataReady', function (e) {
-        // Get the data from the info of the event (propertyName)
-        self.querierDataPropertyName = e.detail
-        let rawData = self.querierComponent[self.querierDataPropertyName]
-
-        // Filtering, save the references
-        let dataFiltered = filterData(data, rawData)
-        self.babiaData = dataFiltered
-        self.babiaMetadata = {
-          id: self.babiaMetadata.id++
-        }
-
-        // Dispatch interested events
-        self.dataReadyToSend("babiaData", self)
-      });
-
-      // Register to the querier
-      self.querierComponent.register(el)
-    }
-
-  },
+  init: function () { },
 
   /**
   * Called when component is attached and when component data changes.
@@ -91,19 +47,40 @@ AFRAME.registerComponent('babiaxr-filterdata', {
       }
 
       // Dispatch interested events
-      self.dataReadyToSend("babiaData", self)
+      dataReadyToSend("babiaData", self)
     } else {
 
-      if(data.from !== oldData.from){
+      if (data.from !== oldData.from) {
         // Unregister for old querier
-        self.querierComponent.unregister(el)
+        if(self.querierComponent) { self.querierComponent.unregister(el) }
+        
 
         // Register for the new one
         findQuerier(data, el, self)
+
+        // Attach to the event of the querier
+        el.addEventListener('babiaQuerierDataReady', function (e) {
+          // Get the data from the info of the event (propertyName)
+          self.querierDataPropertyName = e.detail
+          let rawData = self.querierComponent[self.querierDataPropertyName]
+
+          // Filtering, save the references
+          let dataFiltered = filterData(data, rawData)
+          self.babiaData = dataFiltered
+          self.babiaMetadata = {
+            id: self.babiaMetadata.id++
+          }
+
+          // Dispatch interested events
+          dataReadyToSend("babiaData", self)
+        });
+
+        // Register to the querier
         self.querierComponent.register(el)
       }
 
-      if(data.filter !== oldData.filter){
+      // If changed filter (is mandatory, so it has been defined, first time is undefined)
+      if (oldData.filter && data.filter !== oldData.filter) {
         // Get again the raw data from the querier
         let rawData = self.querierComponent[self.querierDataPropertyName]
 
@@ -115,7 +92,7 @@ AFRAME.registerComponent('babiaxr-filterdata', {
         }
 
         // Dispatch interested events
-        self.dataReadyToSend("babiaData", self)
+        dataReadyToSend("babiaData", self)
       }
     }
   },
@@ -231,13 +208,13 @@ let findQuerier = (data, el, self) => {
       self.querierComponent = el.components['babiaxr-querier_github']
     } else {
       // Look for a querier in the scene
-      if(document.querySelectorAll("[babiaxr-querier_json]").length > 0){
+      if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
-      }else if(document.querySelectorAll("[babiaxr-querier_json]").length > 0){
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
-      }else if(document.querySelectorAll("[babiaxr-querier_github]").length > 0){
+      } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
-      }else{
+      } else {
         console.error("Error, querier not found")
         return
       }

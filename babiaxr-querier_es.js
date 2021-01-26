@@ -26,23 +26,7 @@ AFRAME.registerComponent('babiaxr-querier_es', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-        let self = this;
-
-        // Highest priority to data
-        if (data.data) {
-            parseEmbeddedJSONData(data.data, el, self)
-        } else {
-            if (data.elasticsearch_url && data.index) {
-                requestJSONDataFromES(data, el, self)
-            } else {
-                console.error("elasicsearch_url, index and body must be defined")
-            }
-        }
-
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -62,7 +46,12 @@ AFRAME.registerComponent('babiaxr-querier_es', {
                 data.index !== oldData.index ||
                 data.query !== oldData.query ||
                 data.size !== oldData.size) {
-                requestJSONDataFromES(data, el, self)
+                if (data.elasticsearch_url && data.index) {
+                    requestJSONDataFromES(data, el, self)
+                } else {
+                    console.error("elasicsearch_url and index must be defined")
+                    return
+                }
             }
         }
     },
