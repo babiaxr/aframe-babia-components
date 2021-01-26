@@ -9,6 +9,11 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-3dcylinderchart', {
   schema: {
     data: { type: 'string' },
+    height: { type: 'string', default: 'height' },
+    radius: { type: 'string', default: 'radius' },
+    x_axis: { type: 'string', default: 'x_axis' },
+    z_axis: { type: 'string', default: 'z_axis' },
+    from: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
     animation: { type: 'boolean', default: false },
@@ -30,11 +35,7 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
   /**
 * Called once when component is attached. Generally for initial setup.
 */
-  init: function () {
-    let el = this.el;
-    let metrics = ['height', 'radius', 'x_axis', 'z_axis'];
-    el.setAttribute('babiaToRepresent', metrics);
-  },
+  init: function () { },
 
   /**
   * Called when component is attached and when component data changes.
@@ -45,17 +46,53 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
     let el = this.el;
     let data = this.data;
 
-
     /**
      * Update or create chart component
-     */
-    if (data.data !== oldData.data) {
-      //remove previous chart
-      while (this.el.firstChild)
-        this.el.firstChild.remove();
-      console.log("Generating Cylinder...")
-      generateCylinderChart(data, el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+    */
+
+    // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+      while (self.el.firstChild)
+        self.el.firstChild.remove();
+      console.log("Generating 3Dcylynderchart from data...")
+      self.chart = generateCylinderChart(self.data, JSON.parse(data.data), self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+
+    } else {
+
+      // If changed from, need to re-register to the new data component
+      if (data.from !== oldData.from) {
+        // Unregister for old querier
+        if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        let eventName = findDataComponent(data, el, self)
+        // If changed to filterdata or to querier
+        if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+          el.removeEventListener(self.dataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.dataComponentEventName = eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.dataComponentEventName, function _listener(e) {
+          attachNewDataEventCallback(self, e)
+        });
+
+        // Register for the new one
+        self.dataComponent.register(el)
+        return
+      }
+
+      // If changed whatever, re-print with the current data
+      if (data !== oldData && self.babiaData) {
+        while (self.el.firstChild)
+          self.el.firstChild.remove();
+        console.log("Generating Cylinder...")
+        self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+      }
+
     }
+
   },
 
   /**
@@ -82,6 +119,34 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
   play: function () { },
 
   /**
+  * Querier component target
+  */
+  dataComponent: undefined,
+
+  /**
+   * Property of the querier where the data is saved
+   */
+  dataComponentDataPropertyName: "babiaData",
+
+  /**
+   * Event name to difference between querier and filterdata
+   */
+  dataComponentEventName: undefined,
+
+
+  /**
+   * Where the data is gonna be stored
+   */
+  babiaData: undefined,
+
+  /**
+   * Where the metaddata is gonna be stored
+   */
+  babiaMetadata: {
+    id: 0
+  },
+
+  /**
    * Proportion of the bars
    */
   proportion: undefined,
@@ -103,10 +168,76 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
 
 })
 
-let generateCylinderChart = (data, element, maxRadius, proportion, valueMax, radius_scale) => {
+let findDataComponent = (data, el, self) => {
+  let eventName = "babiaQuerierDataReady"
+  if (data.from) {
+    // Save the reference to the querier or filterdata
+    let dataElement = document.getElementById(data.from)
+    if (dataElement.components['babiaxr-filterdata']) {
+      self.dataComponent = dataElement.components['babiaxr-filterdata']
+      eventName = "babiaFilterDataReady"
+    } else if (dataElement.components['babiaxr-querier_json']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_json']
+    } else if (dataElement.components['babiaxr-querier_es']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_es']
+    } else if (dataElement.components['babiaxr-querier_github']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_github']
+    } else {
+      console.error("Problem registering to the querier")
+      return
+    }
+  } else {
+    // Look for a querier or filterdata in the same element and register
+    if (el.components['babiaxr-filterdata']) {
+      self.dataComponent = el.components['babiaxr-filterdata']
+      eventName = "babiaFilterDataReady"
+    } else if (el.components['babiaxr-querier_json']) {
+      self.dataComponent = el.components['babiaxr-querier_json']
+    } else if (el.components['babiaxr-querier_es']) {
+      self.dataComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babiaxr-querier_github']) {
+      self.dataComponent = el.components['babiaxr-querier_github']
+    } else {
+      // Look for a querier or filterdata in the scene
+      if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+      } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+      } else {
+        console.error("Error, querier not found")
+        return
+      }
+    }
+  }
+  return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+  // Get the data from the info of the event (propertyName)
+  self.dataComponentDataPropertyName = e.detail
+  let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+  self.babiaData = rawData
+  self.babiaMetadata = {
+    id: self.babiaMetadata.id++
+  }
+
+  //remove previous chart
+  while (self.el.firstChild)
+    self.el.firstChild.remove();
+  console.log("Generating Cylinder...")
+  generateCylinderChart(self.data, rawData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+}
+
+let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion, valueMax, radius_scale) => {
   let stepMax
-  if (data.data) {
-    const dataToPrint = JSON.parse(data.data)
+  if (dataRetrieved) {
+    const dataToPrint = dataRetrieved
     const palette = data.palette
     const title = data.title
     const font = data.titleFont
@@ -153,14 +284,14 @@ let generateCylinderChart = (data, element, maxRadius, proportion, valueMax, rad
 
     for (let cylinder of dataToPrint) {
       // Check if used in order to put the cylinder in the parent row
-      if (keys_used[cylinder['key']]) {
-        stepX = keys_used[cylinder['key']].posX
-        colorid = keys_used[cylinder['key']].colorid
+      if (keys_used[cylinder[data.x_axis]]) {
+        stepX = keys_used[cylinder[data.x_axis]].posX
+        colorid = keys_used[cylinder[data.x_axis]].colorid
       } else {
         stepX = maxX
         colorid = maxColorId
         //Save in used
-        keys_used[cylinder['key']] = {
+        keys_used[cylinder[data.x_axis]] = {
           "posX": maxX,
           "colorid": maxColorId
         }
@@ -169,7 +300,7 @@ let generateCylinderChart = (data, element, maxRadius, proportion, valueMax, rad
         let cylinder_printed = {
           colorid: colorid,
           posX: stepX,
-          key: cylinder['key']
+          key: cylinder[data.x_axis]
         }
         xaxis_dict.push(cylinder_printed)
 
@@ -178,12 +309,12 @@ let generateCylinderChart = (data, element, maxRadius, proportion, valueMax, rad
       }
 
       // Get Z val
-      if (z_axis[cylinder['key2']]) {
-        stepZ = z_axis[cylinder['key2']].posZ
+      if (z_axis[cylinder[data.z_axis]]) {
+        stepZ = z_axis[cylinder[data.z_axis]].posZ
       } else {
         stepZ = maxZ
         //Save in used
-        z_axis[cylinder['key2']] = {
+        z_axis[cylinder[data.z_axis]] = {
           "posZ": maxZ
         }
 
@@ -191,19 +322,19 @@ let generateCylinderChart = (data, element, maxRadius, proportion, valueMax, rad
         let cylinder_printed = {
           colorid: colorid,
           posZ: stepZ,
-          key: cylinder['key2']
+          key: cylinder[data.z_axis]
         }
         zaxis_dict.push(cylinder_printed)
 
         maxZ += 2 * maxRadius + 1
       }
 
-      let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
+      let cylinderEntity = generateCylinder(cylinder[data.height], cylinder[data.radius], colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
       cylinderEntity.classList.add("babiaxraycasterclass")
 
       //Prepare legend
       if (data.legend) {
-        showLegend(cylinderEntity, cylinder, element)
+        showLegend(data, cylinderEntity, cylinder, element)
       }
 
       chart_entity.appendChild(cylinderEntity, element)
@@ -380,10 +511,10 @@ function showZAxis(parent, zEnd, cylinder_printed, maxRadius) {
 }
 
 
-function showLegend(cylinderEntity, cylinder, element) {
+function showLegend(data, cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
     this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-    legend = generateLegend(cylinder, cylinderEntity);
+    legend = generateLegend(data, cylinder, cylinderEntity);
     element.appendChild(legend);
   });
 
@@ -393,12 +524,12 @@ function showLegend(cylinderEntity, cylinder, element) {
   });
 }
 
-function generateLegend(cylinder, cylinderEntity) {
+function generateLegend(data, cylinder, cylinderEntity) {
   let text = ''
   let lines = []
-  lines.push(cylinder['key'] + ' ' + cylinder['key2'] + '\n');
-  lines.push('Height: ' + cylinder['height'] + '\n');
-  lines.push('Radius: ' + cylinder['radius'])
+  lines.push(cylinder[data.x_axis] + ' ' + cylinder[data.z_axis] + '\n');
+  lines.push('Height: ' + cylinder[data.height] + '\n');
+  lines.push('Radius: ' + cylinder[data.radius])
   let width = 5;
   for (let line of lines) {
     if ((line.length > 10) && (width < line.length / 2)) {
@@ -411,7 +542,7 @@ function generateLegend(cylinder, cylinderEntity) {
   let entity = document.createElement('a-plane');
   entity.setAttribute('position', {
     x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3,
-    z: cylinderPosition.z + cylinder['radius'] / 2
+    z: cylinderPosition.z + cylinder[data.radius] / 2
   });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '4');
