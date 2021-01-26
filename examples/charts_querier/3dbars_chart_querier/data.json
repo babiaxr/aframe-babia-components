@@ -1,113 +1,112 @@
-{
-  "0": {
-    "name": "David",
-    "age": "2019",
-    "size": 9
+[
+  {
+    "x_axis": "David",
+    "z_axis": "2019",
+    "height": 9
   },
-  "1": {
-    "name": "David",
-    "age": "2018",
-    "size": 8
+  {
+    "x_axis": "David",
+    "z_axis": "2018",
+    "height": 8
   },
-  "2": {
-    "name": "David",
-    "age": "2017",
-    "size": 7
+  {
+    "x_axis": "David",
+    "z_axis": "2017",
+    "height": 7
   },
-  "3": {
-    "name": "David",
-    "age": "2016",
-    "size": 6
+  {
+    "x_axis": "David",
+    "z_axis": "2016",
+    "height": 6
   },
-  "01": {
-    "name": "Jesus",
-    "age": "2016",
-    "size": 9
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2016",
+    "height": 9
   },
-  "11a": {
-    "name": "Jesus",
-    "age": "2011",
-    "size": 8
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2011",
+    "height": 8
   },
-  "4": {
-    "name": "David",
-    "age": "2015",
-    "size": 5
+  {
+    "x_axis": "David",
+    "z_axis": "2015",
+    "height": 5
   },
-  "21a": {
-    "name": "Jesus",
-    "age": "2014",
-    "size": 7
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2014",
+    "height": 7
   },
-  "31a": {
-    "name": "Jesus",
-    "age": "2016",
-    "size": 6
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2016",
+    "height": 6
   },
-  "41a": {
-    "name": "Jesus",
-    "age": "2015",
-    "size": 5
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2015",
+    "height": 5
   },
-  "01a": {
-    "name": "Jesus",
-    "age": "2016",
-    "size": 9
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2016",
+    "height": 9
   },
-  "11": {
-    "name": "Pete",
-    "age": "2011",
-    "size": 8
+  {
+    "x_axis": "Pete",
+    "z_axis": "2011",
+    "height": 8
   },
-  "21": {
-    "name": "Pete",
-    "age": "2014",
-    "size": 7
+  {
+    "x_axis": "Pete",
+    "z_axis": "2014",
+    "height": 7
   },
-  "31": {
-    "name": "Josh",
-    "age": "2016",
-    "size": 6
+  {
+    "x_axis": "Josh",
+    "z_axis": "2016",
+    "height": 6
   },
-  "41": {
-    "name": "Josh",
-    "age": "2015",
-    "size": 5
+  {
+    "x_axis": "Josh",
+    "z_axis": "2015",
+    "height": 5
   },
-  "0b1a": {
-    "name": "Steve",
-    "age": "2016",
-    "size": 9
+  {
+    "x_axis": "Steve",
+    "z_axis": "2016",
+    "height": 9
   },
-  "1b1": {
-    "name": "Steve",
-    "age": "2017",
-    "size": 8
+  {
+    "x_axis": "Steve",
+    "z_axis": "2017",
+    "height": 8
   },
-  "2b1": {
-    "name": "Steve",
-    "age": "2014",
-    "size": 7
+  {
+    "x_axis": "Steve",
+    "z_axis": "2014",
+    "height": 7
   },
-  "31b": {
-    "name": "Steve",
-    "age": "2013",
-    "size": 6
+  {
+    "x_axis": "Steve",
+    "z_axis": "2013",
+    "height": 6
   },
-  "41b": {
-    "name": "Moreno",
-    "age": "2015",
-    "size": 5
+  {
+    "x_axis": "Moreno",
+    "z_axis": "2015",
+    "height": 5
   },
-  "41bc": {
-    "name": "Jesus",
-    "age": "2019",
-    "size": 10
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2019",
+    "height": 10
   },
-  "41bcs": {
-    "name": "Pete",
-    "age": "2019",
-    "size": 10
+  {
+    "x_axis": "Pete",
+    "z_axis": "2019",
+    "height": 10
   }
-  
-}
+]

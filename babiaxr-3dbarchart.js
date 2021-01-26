@@ -9,6 +9,10 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-3dbarchart', {
     schema: {
         data: { type: 'string' },
+        height: { type: 'string', default: 'height' },
+        x_axis: { type: 'string', default: 'x_axis' },
+        z_axis: { type: 'string', default: 'z_axis' },
+        from: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
         animation: { type: 'boolean', default: false },
@@ -29,11 +33,7 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let el = this.el;
-        let metrics = ['height', 'x_axis', 'z_axis'];
-        el.setAttribute('babiaToRepresent', metrics);
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -48,12 +48,47 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            //remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating barchart...")
-            generateBarChart(data, el, self.widthBars, self.proportion, self.valueMax)
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            console.log("Generating barchart from data...")
+            self.chart = generateBarChart(self.data, JSON.parse(self.data.data), self.el, self.widthBars, self.proportion, self.valueMax)
+
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating barchart...")
+                self.chart = generateBarChart(self.data, self.babiaData, self.el, self.widthBars, self.proportion, self.valueMax)
+            }
+
         }
     },
     /**
@@ -80,6 +115,34 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
     play: function () { },
 
     /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
      * Duration of the animation if activated
      */
     widthBars: 1,
@@ -96,9 +159,75 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
 
 })
 
-let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Generate chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating barchart...")
+    generateBarChart(self.data, rawData, self.el, self.widthBars, self.proportion, self.valueMax)
+}
+
+let generateBarChart = (data, dataRetrieved, element, widthBars, proportion, valueMax) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
@@ -119,7 +248,7 @@ let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
         let zaxis_dict = []
         let animation = data.animation
 
-        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
         if (scale) {
             maxY = maxY / scale
         } else if (heightMax) {
@@ -135,14 +264,14 @@ let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
 
         for (let bar of dataToPrint) {
             // Check if used in order to put the bar in the parent row
-            if (keys_used[bar['key']]) {
-                stepX = keys_used[bar['key']].posX
-                colorid = keys_used[bar['key']].colorid
+            if (keys_used[bar[data.x_axis]]) {
+                stepX = keys_used[bar[data.x_axis]].posX
+                colorid = keys_used[bar[data.x_axis]].colorid
             } else {
                 stepX = maxX
                 colorid = maxColorId
                 //Save in used
-                keys_used[bar['key']] = {
+                keys_used[bar[data.x_axis]] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
@@ -151,7 +280,7 @@ let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
                 let bar_printed = {
                     colorid: colorid,
                     posX: stepX,
-                    key: bar['key']
+                    key: bar[data.x_axis]
                 }
                 xaxis_dict.push(bar_printed)
 
@@ -160,12 +289,12 @@ let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
             }
 
             // Get Z val
-            if (z_axis[bar['key2']]) {
-                stepZ = z_axis[bar['key2']].posZ
+            if (z_axis[bar[data.z_axis]]) {
+                stepZ = z_axis[bar[data.z_axis]].posZ
             } else {
                 stepZ = maxZ
                 //Save in used
-                z_axis[bar['key2']] = {
+                z_axis[bar[data.z_axis]] = {
                     "posZ": maxZ
                 }
 
@@ -173,19 +302,19 @@ let generateBarChart = (data, element, widthBars, proportion, valueMax) => {
                 let bar_printed = {
                     colorid: colorid,
                     posZ: stepZ,
-                    key: bar['key2']
+                    key: bar[data.z_axis]
                 }
                 zaxis_dict.push(bar_printed)
 
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation, scale, proportion);
+            let barEntity = generateBar(bar[data.height], widthBars, colorid, stepX, stepZ, palette, animation, scale, proportion);
             barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar, element, widthBars)
+                showLegend(data, barEntity, bar, element, widthBars)
             }
 
             chart_entity.appendChild(barEntity);
@@ -251,8 +380,8 @@ function getColor(colorid, palette) {
     return color
 }
 
-function generateLegend(bar, barEntity, widthBars) {
-    let text = bar['key'] + ': ' + bar['size'];
+function generateLegend(data, bar, barEntity, widthBars) {
+    let text = bar[data.x_axis] + ': ' + bar[data.height];
 
     let width = 2;
     if (text.length > 16)
@@ -275,10 +404,10 @@ function generateLegend(bar, barEntity, widthBars) {
     return entity;
 }
 
-function showLegend(barEntity, bar, element, widthBars) {
+function showLegend(data, barEntity, bar, element, widthBars) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar, barEntity, widthBars);
+        legend = generateLegend(data, bar, barEntity, widthBars);
         element.appendChild(legend);
     });
 

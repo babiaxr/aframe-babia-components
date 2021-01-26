@@ -20,7 +20,7 @@
 
         <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>
 
-        <a-entity babiaxr-3dbarchart='legend: true' babiaxr-filterdata="from: queriertest" babiaxr-vismapper="x_axis: name; z_axis: age; height: size" position="0 0 0" rotation="0 0 0"></a-entity>
+        <a-entity babiaxr-filterdata="from: queriertest; filter: z_axis=2015" babiaxr-3dbarchart='legend: true; from: queriertest' position="0 0 0" rotation="0 0 0"></a-entity>
 
 
         <a-entity movement-controls="fly: true" position="-3 5 20">
