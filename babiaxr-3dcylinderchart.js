@@ -41,6 +41,7 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
     * Generally modifies the entity based on the data.
     */
   update: function (oldData) {
+    const self = this
     let el = this.el;
     let data = this.data;
 
@@ -53,7 +54,7 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
       while (this.el.firstChild)
         this.el.firstChild.remove();
       console.log("Generating Cylinder...")
-      generateCylinderChart(data, el)
+      generateCylinderChart(data, el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
     }
   },
 
@@ -80,9 +81,30 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
    */
    play: function () { },
 
+    /**
+     * Proportion of the bars
+     */
+    proportion: undefined,
+
+    /**
+     * Value max
+     */
+    valueMax: undefined,
+
+    /**
+     * Max radius
+     */
+    maxRadius: undefined,
+
+    /**
+     * Max radius
+     */
+    radius_scale: undefined,
+
 })
 
-let generateCylinderChart = (data, element) => {
+let generateCylinderChart = (data, element, maxRadius, proportion, valueMax, radius_scale) => {
+  let stepMax
   if (data.data) {
     const dataToPrint = JSON.parse(data.data)
     const palette = data.palette
@@ -176,7 +198,7 @@ let generateCylinderChart = (data, element) => {
             maxZ += 2 * maxRadius + 1
         }
 
-        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale);
+        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
         cylinderEntity.classList.add("babiaxraycasterclass")
         
         //Prepare legend
@@ -193,20 +215,16 @@ let generateCylinderChart = (data, element) => {
 
     // Axis
     if (data.axis) {
-        showXAxis(element, maxX, xaxis_dict, palette)
-        showZAxis(element, maxZ, zaxis_dict)
-        showYAxis(element, maxY, scale)
+        showXAxis(element, maxX, xaxis_dict, palette, maxRadius)
+        showZAxis(element, maxZ, zaxis_dict, maxRadius)
+        showYAxis(element, maxY, scale, maxRadius, proportion, valueMax)
     }
   }
 }
 
-let maxRadius
-let proportion
-let valueMax
-let radius_scale
-let stepMax
 
-function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale) {
+
+function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   if (scale) {
@@ -255,7 +273,7 @@ function getColor(colorid, palette){
   return color
 }
 
-function showXAxis(parent, xEnd, cylinder_printed, palette) {
+function showXAxis(parent, xEnd, cylinder_printed, palette, maxRadius) {
   let axis = document.createElement('a-entity');
 
   //Print line
@@ -287,7 +305,7 @@ function showXAxis(parent, xEnd, cylinder_printed, palette) {
   parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, maxRadius, proportion, valueMax) {
   let axis = document.createElement('a-entity');
   let yLimit = yEnd
   //Print line
@@ -331,7 +349,7 @@ function showYAxis(parent, yEnd, scale) {
   parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, cylinder_printed) {
+function showZAxis(parent, zEnd, cylinder_printed, maxRadius) {
   let axis = document.createElement('a-entity');
   //Print line
   let axis_line = document.createElement('a-entity');
