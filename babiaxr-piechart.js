@@ -10,12 +10,12 @@ AFRAME.registerComponent('babiaxr-piechart', {
     schema: {
         data: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        animation: {type: 'boolean', default: false},
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        animation: { type: 'boolean', default: false },
     },
 
     /**
@@ -38,6 +38,7 @@ AFRAME.registerComponent('babiaxr-piechart', {
     */
 
     update: function (oldData) {
+        let self = this;
         let data = this.data;
         let el = this.el;
 
@@ -45,11 +46,11 @@ AFRAME.registerComponent('babiaxr-piechart', {
          * Update or create chart component
          */
         if (data.data !== oldData.data) {
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
             console.log("Generating pie...")
-            generatePie(data, el)
-            loaded = true
+            generatePie(self.data, self.el, self.slice_array, self.total_duration)
+            self.loaded = true
         }
     },
     /**
@@ -62,22 +63,23 @@ AFRAME.registerComponent('babiaxr-piechart', {
     * Called on each scene tick.
     */
     tick: function (t, delta) {
-        if (animation && loaded ){
+        let self = this;
+        if (self.data.animation && self.loaded) {
             let elements = document.getElementsByClassName('babiaxrChart')[0].children
-            for (let slice in slice_array){
-                let delay = slice_array[slice].delay
-                let max_length = slice_array[slice].degreeLenght
+            for (let slice in self.slice_array) {
+                let delay = self.slice_array[slice].delay
+                let max_length = self.slice_array[slice].degreeLenght
                 let theta_length = parseFloat(elements[slice].getAttribute('theta-length'))
-                if ((t >= delay) && ( theta_length < max_length )){
-                    theta_length += 360 * delta / total_durtation
-                    if (theta_length > max_length){
+                if ((t >= delay) && (theta_length < max_length)) {
+                    theta_length += 360 * delta / self.total_duration
+                    if (theta_length > max_length) {
                         theta_length = max_length
                     }
                     elements[slice].setAttribute('theta-length', theta_length)
                 }
             }
         }
-     },
+    },
 
     /**
     * Called when entity pauses.
@@ -91,14 +93,25 @@ AFRAME.registerComponent('babiaxr-piechart', {
     */
     play: function () { },
 
+    /**
+     * Loaded, for animation
+     */
+    loaded: false,
+
+    /**
+     * Slice array
+     */
+    slice_array: [],
+
+    /**
+     * Duration of the animation
+     */
+    total_duration: 4000,
+
 })
 
-let animation
-let slice_array = []
-let loaded = false
-let total_durtation = 4000
 
-let generatePie = (data, element) => {
+let generatePie = (data, element, slice_array, total_duration) => {
     if (data.data) {
         const dataToPrint = JSON.parse(data.data)
         const palette = data.palette
@@ -106,7 +119,7 @@ let generatePie = (data, element) => {
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
-        animation = data.animation
+        let animation = data.animation
 
         // Change size to degrees
         let totalSize = 0
@@ -130,12 +143,12 @@ let generatePie = (data, element) => {
             degreeEnd = 360 * slice['size'] / totalSize;
 
             let sliceEntity
-            if (animation){
-                let duration_slice = total_durtation * degreeEnd / 360
+            if (animation) {
+                let duration_slice = total_duration * degreeEnd / 360
                 slice_array.push({
-                    degreeLenght : degreeEnd,
+                    degreeLenght: degreeEnd,
                     duration: duration_slice,
-                    delay : prev_delay
+                    delay: prev_delay
                 })
                 prev_delay += duration_slice;
                 sliceEntity = generateSlice(degreeStart, 0.01, 1, colorid, palette);
@@ -173,11 +186,11 @@ function generateSlice(theta_start, theta_length, radius, colorid, palette) {
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
@@ -219,40 +232,39 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: -90, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 
 
-   
