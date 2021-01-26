@@ -9,6 +9,9 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-doughnutchart', {
     schema: {
         data: { type: 'string' },
+        size: { type: 'string', default: 'size' },
+        key: { type: 'string', default: 'key' },
+        from: { type: 'string' },
         legend: { type: 'boolean' },
         palette: { type: 'string', default: 'ubuntu' },
         title: { type: 'string' },
@@ -26,11 +29,7 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let el = this.el;
-        let metrics = ['slice'];
-        el.setAttribute('babiaToRepresent', metrics);
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -45,13 +44,47 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            //remove previous chart
+
+        if (data.data && oldData.data !== data.data) {
             while (self.el.firstChild)
                 self.el.firstChild.remove();
-            console.log("Generating pie...")
-            generateDoughnut(self.data, self.el, self.total_duration, self.slice_array)
+            console.log("Generating 3Dcylynderchart from data...")
+            self.chart = generateDoughnut(self.data, JSON.parse(self.data.data), self.el, self.total_duration, self.slice_array)
             self.loaded = true
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating Cylinder...")
+                self.chart = generateDoughnut(self.data, self.babiaData, self.el, self.total_duration, self.slice_array)
+                self.loaded = true
+            }
         }
     },
     /**
@@ -109,11 +142,106 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
      */
     total_duration: 4000,
 
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
 })
 
-let generateDoughnut = (data, element, total_duration, slice_array) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    //remove previous chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating Cylinder...")
+    self.chart = generateDoughnut(self.data, rawData, self.el, self.total_duration, self.slice_array)
+    self.loaded = true
+}
+
+let generateDoughnut = (data, dataRetrieved, element, total_duration, slice_array) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
@@ -124,7 +252,7 @@ let generateDoughnut = (data, element, total_duration, slice_array) => {
         // Change size to degrees
         let totalSize = 0
         for (let slice of dataToPrint) {
-            totalSize += slice['size'];
+            totalSize += slice[data.size];
         }
 
         let degreeStart = 0;
@@ -141,7 +269,7 @@ let generateDoughnut = (data, element, total_duration, slice_array) => {
         let prev_delay = 0
         for (let slice of dataToPrint) {
             //Calculate degrees
-            degreeEnd = 360 * slice['size'] / totalSize;
+            degreeEnd = 360 * slice[data.size] / totalSize;
 
             let sliceEntity
             if (animation) {
@@ -163,7 +291,7 @@ let generateDoughnut = (data, element, total_duration, slice_array) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(sliceEntity, slice, element)
+                showLegend(data, sliceEntity, slice, element)
             }
 
             chart_entity.appendChild(sliceEntity);
@@ -199,8 +327,8 @@ function getColor(colorid, palette) {
     return color
 }
 
-function generateLegend(slice) {
-    let text = slice['key'] + ': ' + slice['size'];
+function generateLegend(data, slice) {
+    let text = slice[data.key] + ': ' + slice[data.size];
 
     let width = 2;
     if (text.length > 16)
@@ -213,7 +341,7 @@ function generateLegend(slice) {
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
     entity.setAttribute('text', {
-        'value': slice['key'] + ': ' + slice['size'],
+        'value': slice[data.key] + ': ' + slice[data.size],
         'align': 'center',
         'width': 6,
         'color': 'black'
@@ -222,10 +350,10 @@ function generateLegend(slice) {
     return entity;
 }
 
-function showLegend(sliceEntity, slice, element) {
+function showLegend(data, sliceEntity, slice, element) {
     sliceEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(slice);
+        legend = generateLegend(data, slice);
         element.appendChild(legend);
     });
 
