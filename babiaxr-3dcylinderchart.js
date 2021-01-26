@@ -231,7 +231,7 @@ let attachNewDataEventCallback = (self, e) => {
   while (self.el.firstChild)
     self.el.firstChild.remove();
   console.log("Generating Cylinder...")
-  generateCylinderChart(self.data, rawData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+  self.chart = generateCylinderChart(self.data, rawData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
 }
 
 let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion, valueMax, radius_scale) => {

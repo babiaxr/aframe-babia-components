@@ -222,7 +222,7 @@ let attachNewDataEventCallback = (self, e) => {
     while (self.el.firstChild)
         self.el.firstChild.remove();
     console.log("Generating barchart...")
-    generateBarChart(self.data, rawData, self.el, self.widthBars, self.proportion, self.valueMax)
+    self.chart = generateBarChart(self.data, rawData, self.el, self.widthBars, self.proportion, self.valueMax)
 }
 
 let generateBarChart = (data, dataRetrieved, element, widthBars, proportion, valueMax) => {

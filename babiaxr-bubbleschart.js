@@ -228,7 +228,7 @@ let findDataComponent = (data, el, self) => {
     while (self.el.firstChild)
       self.el.firstChild.remove();
     console.log("Generating Bubbles...")
-    generateBubblesChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+    self.chart = generateBubblesChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
   }
 
 
