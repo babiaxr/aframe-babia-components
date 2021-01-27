@@ -19,16 +19,16 @@
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
         <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>
+        <a-entity id="filtertest" babiaxr-filterdata="from: queriertest; filter: age=2019"></a-entity>
 
-        <a-entity scale="0.1 0.1 0.1" babiaxr-bubbleschart='legend: true' babiaxr-filterdata="from: queriertest"
-        babiaxr-vismapper="x_axis: name; z_axis: age; height: metric2; radius: size" position="4 0 0" rotation="0 0 0">
+        <a-entity scale="0.1 0.1 0.1"
+            babiaxr-bubbleschart='animation: true; x_axis: name; z_axis: age; height: metric2; radius: size; legend: true; from: queriertest'
+            position="4 0 0" rotation="0 0 0">
         </a-entity>
-        <a-entity babiaxr-3dbarchart='legend: true' babiaxr-filterdata="from: queriertest"
-        babiaxr-vismapper="x_axis: name; z_axis: age; height: size" position="-10 0 0" rotation="0 0 0"></a-entity>
-        <a-entity babiaxr-piechart='legend: true' babiaxr-filterdata="from: queriertest" babiaxr-vismapper="slice: name; height: size"
-            position="-12 5 10" rotation="90 15 0"></a-entity>
-        <a-entity babiaxr-simplebarchart='legend: true; axis: true' babiaxr-filterdata="from: queriertest" babiaxr-vismapper="x_axis: name; height: size"
-            position="25 0 0" rotation="0 -15 0"></a-entity>
+        <a-entity babiaxr-3dbarchart='animation: true; x_axis: name; z_axis: age; height: size; legend: true; from: queriertest'
+            position="-10 0 0" rotation="0 0 0"></a-entity>
+        <a-entity babiaxr-piechart="legend: true; from: filtertest; key: name; size: size" position="-12 5 10" rotation="90 15 0"></a-entity>
+        <a-entity babiaxr-simplebarchart="legend: true; axis: true; from: filtertest; x_axis: name; height: size" position="25 0 0" rotation="0 -15 0"></a-entity>
 
 
         <a-entity movement-controls="fly: true" position="5 5 30">
