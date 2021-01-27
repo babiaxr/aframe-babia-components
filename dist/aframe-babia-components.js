@@ -4185,7 +4185,7 @@ AFRAME.registerComponent('babiaxr-island', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
-        console.log("WELCOME TO BABIAXR ISLAND")
+        console.log("WELCOME TO BABIAXR ISLAND.")
         //Load de json file
         this.loader = new THREE.FileLoader();
         this.duration = 2000;
@@ -4197,7 +4197,6 @@ AFRAME.registerComponent('babiaxr-island', {
     */
 
     update: function (oldData) {
-        console.log("Updating data...");
         this.figures = [];
         if (this.data != oldData){
             this.loader.load(this.data.data, this.onDataLoaded.bind(this));
@@ -4232,7 +4231,7 @@ AFRAME.registerComponent('babiaxr-island', {
     play: function () { },
 
     onDataLoaded: function (file) { 
-        console.log('Data Loaded');
+        console.log('Data Loaded.');
 
         var el = this.el;
         let elements = JSON.parse(file);
@@ -4243,7 +4242,8 @@ AFRAME.registerComponent('babiaxr-island', {
             increment = this.data.border * this.data.extra * this.data.levels;
         } else {
             // Find last level
-            let levels = this.getLevels(elements, 1);
+            let levels = getLevels(elements, 0);
+            console.log("Levels:" + levels);
             increment = this.data.border * this.data.extra * (levels + 1);
         }
         
@@ -4258,6 +4258,7 @@ AFRAME.registerComponent('babiaxr-island', {
             this.drawElements(el, this.figures, t);
             this.figures_old = this.figures;
         } else {
+            console.log("Updating elements...");
             this.animation = true;
             this.start_time = Date.now();
         } 
@@ -4522,7 +4523,7 @@ AFRAME.registerComponent('babiaxr-island', {
         if ( total_x > max_right){
             max_right = total_x;
         }
-        
+
         return [current_horizontal, posX, posY, max_right];
     },
     
@@ -4616,18 +4617,17 @@ AFRAME.registerComponent('babiaxr-island', {
                     setOpacity(entity, opacity);
 
                 } else {
-                    // TRASLATE
-                    this.traslate(entity, new_time, delta, figures[i], figures_old[i], translate, translate_old);
                     // RESIZE
                     this.resize(entity, new_time, delta, figures[i], figures_old[i]);
-                    if (figures[i].children){
-                        
+                    // TRASLATE
+                    this.traslate(entity, new_time, delta, figures[i], figures_old[i], translate, translate_old);
+
+                    if (figures[i].children){   
                         this.Animation(entity, figures[i].children, figures_old[i].children, delta, figures[i].translate_matrix, figures_old[i].translate_matrix);
                     }
                 }
             } else {
-
-                
+   
                 position = {
                     x: figures[i].posX - translate.x ,
                     y: (figures[i].height / 2 + translate.y / 2),
@@ -4638,7 +4638,6 @@ AFRAME.registerComponent('babiaxr-island', {
                 if (figures[i].children){
                     this.drawElements(new_entity, figures[i].children, figures[i].translate_matrix);
                 }
-                
 
                 let legend = generateLegend(new_entity.id, figures[i].height, new_entity.getAttribute('position'),this.el);
                 new_entity.appendChild(legend);
@@ -4673,15 +4672,15 @@ AFRAME.registerComponent('babiaxr-island', {
         
             // Calulate increment
             let diff_width = Math.abs(figure.width - figure_old.width);
-            
-            //let diff_height = Math.abs(this.figures[i].height - this.figures_old[i].height);
+            let diff_height = Math.abs(figure.height - figure_old.height);
             let diff_depth = Math.abs(figure.depth - figure_old.depth);
+
             let inc_width = (delta * diff_width) / this.duration;
-            //let inc_height = (delta * diff_height) / this.duration;
-        
+            let inc_height = (delta * diff_height) / this.duration;
             let inc_depth = (delta * diff_depth) / this.duration;
+
             let last_width = parseFloat(entity.getAttribute('width'));
-            //let last_height = entity.getAttribute('height');
+            let last_height = parseFloat(entity.getAttribute('height'));
             let last_depth = parseFloat(entity.getAttribute('depth'));
         
             let new_width;
@@ -4691,12 +4690,12 @@ AFRAME.registerComponent('babiaxr-island', {
                 new_width = last_width + inc_width;
             }
         
-            /*let new_height;
-            if (this.figures[i].height - this.figures_old[i].height < 0){
+            let new_height;
+            if (figure.height - figure_old.height < 0){
                 new_height = last_height - inc_height;
             } else {
                 new_height = last_height + inc_height;
-            }*/
+            }
             
             let new_depth;
             if (figure.depth - figure_old.depth < 0){
@@ -4707,7 +4706,7 @@ AFRAME.registerComponent('babiaxr-island', {
         
             // Update size
             entity.setAttribute('width', new_width);
-            //entity.setAttribute('height', new_height);
+            entity.setAttribute('height', new_height);
             entity.setAttribute('depth', new_depth);
         
         } else if (((new_time - this.start_time) > this.duration) && 
@@ -4716,13 +4715,12 @@ AFRAME.registerComponent('babiaxr-island', {
             (figure.depth != figure_old.depth))) {
         
             entity.setAttribute('width', figure.width);
-            //entity.setAttribute('height', this.figures[i].height);
+            entity.setAttribute('height', figure.height);
             entity.setAttribute('depth', figure.depth);
         }
     },
 
     traslate: function (entity, new_time, delta, figure, figure_old, translate, translate_old){
-        let last_y = entity.getAttribute('position').y;
         let dist_x = (figure_old.posX - translate_old.x) - (figure.posX - translate.x);
         let dist_y = (figure_old.posY - translate_old.z) - (figure.posY - translate.z);
 
@@ -4730,24 +4728,27 @@ AFRAME.registerComponent('babiaxr-island', {
             if ((new_time - this.start_time) < this.duration){
                 // Calculate increment positions
                 let inc_x = (delta * dist_x) / this.duration;
+                let inc_z = (delta * dist_y) / this.duration;
+
                 let last_x = entity.getAttribute('position').x;
-                let new_x = last_x - inc_x;
-    
-                let inc_y = (delta * dist_y) / this.duration;
                 let last_z = entity.getAttribute('position').z;
-                let new_z = last_z + inc_y ;
+
+                let new_x = last_x - inc_x;
+                let new_z = last_z + inc_z;
+
+                let new_height = entity.getAttribute('height');
     
                 // Update entity
                 entity.setAttribute('position', {
                     x : new_x, 
-                    y : last_y,
+                    y : new_height / 2,
                     z : new_z
                 });
     
             } else if ((new_time - this.start_time) > this.duration) {
                 entity.setAttribute('position', {
                     x : figure.posX - translate.x,
-                    y : last_y,
+                    y : figure.height / 2,
                     z : - figure.posY + translate.z
                 }); 
             }
@@ -4787,20 +4788,6 @@ AFRAME.registerComponent('babiaxr-island', {
         });
 
         return entity;
-    },
-
-    getLevels: function(elements, levels){
-        for (let i in elements){
-            let level = 1
-            if (elements[i].children){
-                level ++;
-                let new_level = this.getLevels(elements[i], level);
-                if (new_level > levels){
-                    levels = new_level;
-                }
-            }
-        }
-        return levels;
     }
 })
 
@@ -4844,6 +4831,17 @@ function setOpacity (entity, opacity){
             setOpacity(entity.childNodes[i], opacity);
         }
     }
+}
+
+let getLevels = (elements, levels) => { 
+    let level = levels;
+    for (let i in elements){
+        if (elements[i].children){
+            level ++;
+            levels = getLevels(elements[i].children, level);       
+        }
+    }
+    return levels;
 }
 
 
