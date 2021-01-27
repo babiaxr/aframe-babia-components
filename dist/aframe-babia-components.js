@@ -4329,7 +4329,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 }
                 //console.log("==== RIGHT SIDE ====");
                 current_horizontal = limit_up + this.data.building_separation / 2;
-            } else {
+            } else if (elements[i][this.data.height] > 0) {
                 if (up){
                     [current_vertical, posX, posY, max_up] = this.UpSide(elements[i], limit_up, current_vertical, max_up);
                     if (current_vertical > limit_right){
@@ -4428,7 +4428,7 @@ AFRAME.registerComponent('babiaxr-island', {
         if (max_down < limit_down){
             limit_down = max_down;
         }
-        if (max_left < limit_down){
+        if (max_left < limit_left){
             limit_left = max_left;
         }
         if (max_up > limit_up){
@@ -4437,7 +4437,7 @@ AFRAME.registerComponent('babiaxr-island', {
         if (max_right > limit_right){
             limit_right = max_right;
         }
-        
+
         if (current_vertical < limit_left){
             limit_left = current_vertical + this.data.building_separation / 2;
         }
@@ -4455,11 +4455,11 @@ AFRAME.registerComponent('babiaxr-island', {
         var width = Math.abs(limit_left) + Math.abs(limit_right);
         var depth = Math.abs(limit_down) + Math.abs(limit_up);
 
-        width += increment;
-        depth += increment;
+        width += 2*increment;
+        depth += 2*increment;
 
-        var translate_x = limit_left + width / 2 - increment / 2;
-        var translate_z = limit_down  + depth / 2 - increment / 2;
+        var translate_x = limit_left + width / 2 - increment;
+        var translate_z = limit_down  + depth / 2 - increment;
         translate = { 
             x: translate_x,
             y: 0,
