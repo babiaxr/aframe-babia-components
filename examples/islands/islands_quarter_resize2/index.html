@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A-Frame Island Component - Basic</title>
+    <meta name="description" content="Basic example for Island component."></meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v6.0.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+  </head>
+  <body>
+    <a-scene environment="preset: yavapai" renderer="antialias: true">
+
+        <a-assets> 
+            <a-asset-item id="data" src="data1.json"></a-asset-item> 
+            <a-asset-item id="data2" src="data2.json"></a-asset-item> 
+        </a-assets>
+
+
+        <a-entity id="island" babiaxr-island="data: #data; border: 0.5; building_separation: 0.25" position="0 1 0"></a-entity>  
+
+        <a-entity movement-controls="fly: true" position="5 20 0" rotation="-90 0 0">
+            <a-entity camera look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+    </a-scene>
+
+    <script>
+          setTimeout(updateData, 2000);
+
+          function updateData () {
+            document.getElementById('island').setAttribute('babiaxr-island', 'data', '#data2');
+          }
+    </script>
+  </body>
+ </html>

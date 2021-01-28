@@ -20,7 +20,7 @@
                     {
                         "id": "barrio/003/block1",
                         "width": "5",
-                        "height": "2",
+                        "height": "10",
                         "depth": "5"
                     },
                     {
@@ -54,7 +54,7 @@
     {
         "id": "006",
         "width": "3",
-        "height": "1",
+        "height": "10",
         "depth": "3"
     },
     {
@@ -102,7 +102,7 @@
     {
         "id": "014",
         "width": "3",
-        "height": "1",
+        "height": "8",
         "depth": "3"
     },
     {

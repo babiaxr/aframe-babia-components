@@ -13,7 +13,7 @@ describe('Islands examples (screenshot)', () => {
         });
     });
 
-    ['islands_new_element', 'islands_new_quarter', 'islands_resize', 'islands_quarter_resize', 'islands_temporal'].forEach((example) => {
+    ['islands_new_element', 'islands_new_quarter', 'islands_resize', 'islands_quarter_resize', 'islands_quarter_resize2', 'islands_temporal'].forEach((example) => {
         it(`Screenshot Performance ${example} Example`, () => {
             cy.visit('/examples/islands/' + example + '/index.html');
             cy.wait(3000);
