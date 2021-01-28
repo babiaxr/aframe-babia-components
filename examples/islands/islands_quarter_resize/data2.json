@@ -1,0 +1,126 @@
+[ 
+    {
+        "id": "001",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "/barrio",
+        "children": [
+            {
+                "id": "/barrio/002",
+                "width": "4",
+                "height": "1",
+                "depth": "4"
+            },
+            {
+                "id": "/barrio/003",
+                "children": [
+                    {
+                        "id": "barrio/003/block1",
+                        "width": "5",
+                        "height": "10",
+                        "depth": "5"
+                    },
+                    {
+                        "id": "barrio/003/block2",
+                        "width": "3",
+                        "height": "1",
+                        "depth": "3"
+                    },
+                    {
+                        "id": "barrio/003/block3",
+                        "width": "5",
+                        "height": "1",
+                        "depth": "5"
+                    }
+                ]
+            },
+            {
+                "id": "/barrio/004",
+                "width": "3",
+                "height": "1",
+                "depth": "3"
+            }
+        ]
+    },
+    {
+        "id": "003",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "004",
+        "width": "2",
+        "height": "1",
+        "depth": "2"
+    },
+    {
+        "id": "005",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "006",
+        "width": "1",
+        "height": "1",
+        "depth": "1"
+    },
+    {
+        "id": "007",
+        "width": "6",
+        "height": "1",
+        "depth": "6"
+    },
+    {
+        "id": "008",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "009",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "010",
+        "width": "2",
+        "height": "1",
+        "depth": "2"
+    },
+    {
+        "id": "011",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "012",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "013",
+        "width": "5",
+        "height": "1",
+        "depth": "5"
+    },
+    {
+        "id": "014",
+        "width": "3",
+        "height": "1",
+        "depth": "3"
+    },
+    {
+        "id": "015",
+        "width": "4",
+        "height": "1",
+        "depth": "4"
+    }
+]

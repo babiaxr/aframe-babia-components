@@ -66,12 +66,6 @@
                           "height": 0.4309821536967342
                         },
                         {
-                          "id": "perceval/backends/core/gmane.py",
-                          "area": 1.020138888888889,
-                          "max_area": 4.625,
-                          "height": -0.2
-                        },
-                        {
                           "id": "perceval/backends/core/jira.py",
                           "area": 5.833333333333334,
                           "max_area": 5.833333333333334,
@@ -204,18 +198,6 @@
                           "height": 0.27273886123588686
                         },
                         {
-                          "id": "perceval/backends/core/kitsune.py",
-                          "area": 1.020138888888889,
-                          "max_area": 4.826388888888889,
-                          "height": -0.2
-                        },
-                        {
-                          "id": "perceval/backends/core/remo2.py",
-                          "area": 1.020138888888889,
-                          "max_area": 4.222222222222222,
-                          "height": -0.2
-                        },
-                        {
                           "id": "perceval/backends/core/__init__.py",
                           "area": 1,
                           "max_area": 1,
@@ -234,12 +216,6 @@
                           "height": 0.3911193395653757
                         },
                         {
-                          "id": "perceval/backends/core/remo.py",
-                          "area": 1.020138888888889,
-                          "max_area": 4.222222222222222,
-                          "height": -0.2
-                        },
-                        {
                           "id": "perceval/backends/core/githubql.py",
                           "area": 3.2152777777777777,
                           "max_area": 3.2152777777777777,
@@ -253,148 +229,10 @@
                   "id": "/perceval/backends/.",
                   "children": [
                     {
-                      "id": "perceval/backends/mediawiki.py",
-                      "area": 1.020138888888889,
-                      "max_area": 6.4375,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/remo2.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.222222222222222,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/github.py",
-                      "area": 1.020138888888889,
-                      "max_area": 5.833333333333334,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/jira.py",
-                      "area": 1.020138888888889,
-                      "max_area": 5.430555555555555,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/remo.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.222222222222222,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/gerrit.py",
-                      "area": 1.020138888888889,
-                      "max_area": 5.027777777777778,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/kitsune.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.826388888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/phabricator.py",
-                      "area": 1.020138888888889,
-                      "max_area": 7.243055555555555,
-                      "height": -0.2
-                    },
-                    {
                       "id": "perceval/backends/__init__.py",
                       "area": 1,
                       "max_area": 1.8055555555555556,
                       "height": 0.10120796406458663
-                    },
-                    {
-                      "id": "perceval/backends/telegram.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.625,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/confluence.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.826388888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/bugzillarest.py",
-                      "area": 1.020138888888889,
-                      "max_area": 6.4375,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/mbox.py",
-                      "area": 1.020138888888889,
-                      "max_area": 6.034722222222222,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/git.py",
-                      "area": 1.020138888888889,
-                      "max_area": 7.645833333333334,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/discourse.py",
-                      "area": 1.020138888888889,
-                      "max_area": 5.027777777777778,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/bugzilla.py",
-                      "area": 1.020138888888889,
-                      "max_area": 7.444444444444445,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/stackexchange.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.423611111111111,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/pipermail.py",
-                      "area": 1.020138888888889,
-                      "max_area": 3.618055555555556,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/redmine.py",
-                      "area": 1.020138888888889,
-                      "max_area": 6.236111111111112,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/supybot.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.826388888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/meetup.py",
-                      "area": 1.020138888888889,
-                      "max_area": 5.229166666666667,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/gmane.py",
-                      "area": 1.020138888888889,
-                      "max_area": 4.625,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/jenkins.py",
-                      "area": 1.020138888888889,
-                      "max_area": 3.8194444444444446,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "perceval/backends/askbot.py",
-                      "area": 1.020138888888889,
-                      "max_area": 6.034722222222222,
-                      "height": -0.2
                     }
                   ]
                 }
@@ -426,12 +264,6 @@
                   "area": 1,
                   "max_area": 1,
                   "height": 0.10120796406458663
-                },
-                {
-                  "id": "perceval/cache.py",
-                  "area": 1.020138888888889,
-                  "max_area": 2.4097222222222223,
-                  "height": -0.2
                 },
                 {
                   "id": "perceval/client.py",
@@ -934,22 +766,10 @@
                           "height": 0.1
                         },
                         {
-                          "id": "tests/data/github/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/github/github_issue_comments_2",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.1
-                        },
-                        {
-                          "id": "tests/data/github/github_issue_expected_2",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         },
                         {
                           "id": "tests/data/github/github_orgs",
@@ -994,12 +814,6 @@
                           "height": 0.1
                         },
                         {
-                          "id": "tests/data/github/github_request_expected_zero_reactions",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/github/github_request_requested_reviewers",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -1010,12 +824,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.1
-                        },
-                        {
-                          "id": "tests/data/github/github_request_expected",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         },
                         {
                           "id": "tests/data/github/github_issue_comment_2_reactions",
@@ -1072,12 +880,6 @@
                           "height": 0.1
                         },
                         {
-                          "id": "tests/data/github/github_issue_expected_1",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/github/github_request",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -1106,22 +908,10 @@
                       "id": "/tests/data/gitlab/.",
                       "children": [
                         {
-                          "id": "tests/data/gitlab/gitlab_issue_1",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/gitlab/issue_2",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.1
-                        },
-                        {
-                          "id": "tests/data/gitlab/issue_3_notes",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         },
                         {
                           "id": "tests/data/gitlab/issue_4",
@@ -1190,12 +980,6 @@
                           "height": 0.1
                         },
                         {
-                          "id": "tests/data/gitlab/issue_1_notes",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/gitlab/notes_1",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -1224,18 +1008,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.1
-                        },
-                        {
-                          "id": "tests/data/gitlab/issue_4_notes",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
-                          "id": "tests/data/gitlab/issue_2_notes",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         },
                         {
                           "id": "tests/data/gitlab/issue_3",
@@ -1320,46 +1092,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.1
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "/tests/data/gmane",
-                  "children": [
-                    {
-                      "id": "/tests/data/gmane/.",
-                      "children": [
-                        {
-                          "id": "tests/data/gmane/gmane_messages_2000.mbox",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
-                          "id": "tests/data/gmane/gmane_messages_4000.mbox",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
-                          "id": "tests/data/gmane/gmane_messages_empty.mbox",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
-                          "id": "tests/data/gmane/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
-                          "id": "tests/data/gmane/gmane_messages.mbox",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         }
                       ]
                     }
@@ -1652,12 +1384,6 @@
                       "id": "/tests/data/launchpad/.",
                       "children": [
                         {
-                          "id": "tests/data/launchpad/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/launchpad/launchpad_empty_issue_activities",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -1866,12 +1592,6 @@
                           "height": 0.1
                         },
                         {
-                          "id": "tests/data/mbox/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/mbox/mbox_unknown_encoding.mbox",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -1940,12 +1660,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.10724778438751974
-                        },
-                        {
-                          "id": "tests/data/bugzilla/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         },
                         {
                           "id": "tests/data/bugzilla/bugzilla_bugs_details_next.xml",
@@ -2124,12 +1838,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.21838047832948887
-                        },
-                        {
-                          "id": "tests/data/discourse/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         }
                       ]
                     }
@@ -2182,12 +1890,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.10120796406458663
-                        },
-                        {
-                          "id": "tests/data/jenkins/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         },
                         {
                           "id": "tests/data/jenkins/jenkins_job_builds_empty.json",
@@ -2260,12 +1962,6 @@
                           "height": 0.11691149690421271
                         },
                         {
-                          "id": "tests/data/mediawiki/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/mediawiki/mediawiki_pages_recent_changes.json",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -2298,12 +1994,6 @@
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
                           "height": 0.12657520942090567
-                        },
-                        {
-                          "id": "tests/data/rss/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
                         }
                       ]
                     }
@@ -2361,12 +2051,6 @@
                     {
                       "id": "/tests/data/supybot/.",
                       "children": [
-                        {
-                          "id": "tests/data/supybot/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
                         {
                           "id": "tests/data/supybot/supybot_invalid_date.log",
                           "area": 1.020138888888889,
@@ -2752,12 +2436,6 @@
                           "height": 0.17126987981061065
                         },
                         {
-                          "id": "tests/data/telegram/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/telegram/telegram_messages.json",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -2804,12 +2482,6 @@
                           "height": 0.4261502974383877
                         },
                         {
-                          "id": "tests/data/utils/__init__.py",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        },
-                        {
                           "id": "tests/data/utils/mbox_single.mbox",
                           "area": 1.020138888888889,
                           "max_area": 1.020138888888889,
@@ -2822,851 +2494,6 @@
                           "height": 0.11570353283962609
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "id": "/tests/data/.",
-                  "children": [
-                    {
-                      "id": "tests/data/remo_activities_page_1_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_activities_page_2_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_users_page_1_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_users_page_2_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_activities.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events_page_2_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events_1_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_reps.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/stackexchange_question_backoff_page",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/supybot_valid.log",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/kitsune_question_answers.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_page_476583_revisions.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_pages_all_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_pages_allrevisions.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/telegram_messages_next.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/telegram_messages_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_content_1_v2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_content_att_v1.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_contents_next.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bug_attachments.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_comments_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/supybot_2012_10_17.log",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mbox_complex.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/gittest.tar.gz",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_request_from_2016_03_01",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/pipermail_2016_april.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/pipermail_index.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_posts.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_posts_chunk.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topic.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topic_1149.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bug_comments.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_log_incompleted.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/jenkins_job_builds.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_empty_request",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_login",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_request_expected",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_expected_2",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_log_empty.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_bad_cr.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_version.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_content_1_v1.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_contents.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/gittestempty.tar.gz",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_log_trailers.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_bad_encoding.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_log.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/pipermail_2015_november.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/email_multipart_no_encoding.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/email_multipart_encoding.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/kitsune_question_answers_empy.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/kitsune_questions_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_activities_page_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_1",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_2",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_comments_1",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_comment_1_reactions",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bug_activity_not_valid.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bugs_details.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bugs_invalid_chars.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_no_version.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_history_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topic_1150.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topics_pinned.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/gmane_messages.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/stackexchange_question_parse",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_pages_recent_changes.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/telegram_messages.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_content_2_v1.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events_2_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/kitsune_questions_1_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/kitsune_answers_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/kitsune_questions_2_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_attachments_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/gmane_messages_4000.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/supybot_invalid_date.log",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/supybot_invalid_msg.log",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_page_592384_revisions.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/stackexchange_question",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_post_raw.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bug_activity_empty_alt.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mbox_multipart.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mbox_unknown_encoding.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/jenkins_job_builds_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/jenkins_build.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bug_activity.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bugs_details_not_valid.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bug_activity_empty.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_comment_2_reactions",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_request",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topics_last_posted_at_null.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_expected_1",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_comments_2",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/pipermail_2016_march.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/jenkins_jobs.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events_page_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_users_page_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_users.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/remo_events_page_1_2.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_namespaces.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/rss_entries.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/stackexchange_question_page_2",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_buglist_next.csv",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bugs_details_next.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topic_1148.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topics.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_pages_all.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_pages_allrevisions_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_siteinfo_1.23.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/pipermail_apache_index.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_comments.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/gmane_messages_2000.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/gmane_messages_empty.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/supybot_2012_10_18.log",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/pipermail_index_empty.html",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/stackexchange_question_page",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_post.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/discourse_topics_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bug_history.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/jenkins_jobs_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_orgs",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mbox_no_fields.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_buglist.csv",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/xml_invalid.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mbox_unixfrom_encoding.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/confluence_contents_empty.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/email_single.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_bug.xml",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_next.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_error.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_attachments.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/bugzilla_rest_bugs_history.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mediawiki_siteinfo_1.28.json",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mbox_single.mbox",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/git_log_merge.txt",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/github_issue_2_reactions",
-                      "area": 1.020138888888889,
-                      "max_area": 1.020138888888889,
-                      "height": -0.2
                     }
                   ]
                 }
@@ -3750,12 +2577,6 @@
                   "height": 0.7474687386184289
                 },
                 {
-                  "id": "tests/test_remo.py",
-                  "area": 1.020138888888889,
-                  "max_area": 4.826388888888889,
-                  "height": -0.2
-                },
-                {
                   "id": "tests/test_telegram.py",
                   "area": 5.631944444444445,
                   "max_area": 5.631944444444445,
@@ -3784,12 +2605,6 @@
                   "area": 6.4375,
                   "max_area": 6.4375,
                   "height": 0.6991501760349641
-                },
-                {
-                  "id": "tests/test_gmane.py",
-                  "area": 1.020138888888889,
-                  "max_area": 6.236111111111112,
-                  "height": -0.2
                 },
                 {
                   "id": "tests/test_supybot.py",
@@ -3900,12 +2715,6 @@
                   "height": 0.5288272429282506
                 },
                 {
-                  "id": "tests/test_cache.py",
-                  "area": 1.020138888888889,
-                  "max_area": 3.618055555555556,
-                  "height": -0.2
-                },
-                {
                   "id": "tests/test_client.py",
                   "area": 4.826388888888889,
                   "max_area": 4.826388888888889,
@@ -3960,12 +2769,6 @@
                   "height": 0.10966371251669298
                 },
                 {
-                  "id": "tests/test_kitsune.py",
-                  "area": 1.020138888888889,
-                  "max_area": 5.229166666666667,
-                  "height": -0.2
-                },
-                {
                   "id": "tests/test_archive.py",
                   "area": 5.833333333333334,
                   "max_area": 5.833333333333334,
@@ -3982,12 +2785,6 @@
                   "area": 6.236111111111112,
                   "max_area": 6.236111111111112,
                   "height": 0.7233094573266965
-                },
-                {
-                  "id": "tests/test_remo2.py",
-                  "area": 1.020138888888889,
-                  "max_area": 6.840277777777778,
-                  "height": -0.2
                 },
                 {
                   "id": "tests/test_githubql.py",
@@ -4073,38 +2870,6 @@
             {
               "id": "/docker/images",
               "children": [
-                {
-                  "id": "/docker/images/perceval",
-                  "children": [
-                    {
-                      "id": "/docker/images/perceval/master",
-                      "children": [
-                        {
-                          "id": "/docker/images/perceval/master/.",
-                          "children": [
-                            {
-                              "id": "docker/images/perceval/master/Dockerfile",
-                              "area": 1.020138888888889,
-                              "max_area": 1.020138888888889,
-                              "height": -0.2
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "/docker/images/perceval/.",
-                      "children": [
-                        {
-                          "id": "docker/images/perceval/README.md",
-                          "area": 1.020138888888889,
-                          "max_area": 1.020138888888889,
-                          "height": -0.2
-                        }
-                      ]
-                    }
-                  ]
-                },
                 {
                   "id": "/docker/images/master",
                   "children": [
