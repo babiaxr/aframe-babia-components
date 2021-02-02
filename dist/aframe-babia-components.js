@@ -1383,8 +1383,6 @@ if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
-let rootCodecityEntity
-
 /**
  * CodeCity component for A-Frame.
  */
@@ -1538,7 +1536,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
         let data = this.data;
         let el = this.el;
         currentColor = data.building_color;
-        rootCodecityEntity = el;
+        let rootCodecityEntity = el;
 
         if (typeof data.data == 'string') {
             if (data.data.endsWith('json')) {
@@ -1585,7 +1583,7 @@ AFRAME.registerComponent('babiaxr-codecity', {
             wireframe: data.wireframe,
             building_color: data.building_color, base_color: data.base_color,
             model: data.building_model, visible: visible,
-            titles: data.titles
+            titles: data.titles, rootCodecityEntity: rootCodecityEntity
         });
         el.appendChild(base);
 
@@ -1735,7 +1733,7 @@ let Zone = class {
         level = 0, elevation = 0, relative = true,
         base_thick = .2, wireframe = false,
         building_color = "red", base_color = "green", model = null,
-        visible = true, titles = true }) {
+        visible = true, titles = true, rootCodecityEntity }) {
         if (level === 0) {
             this.el = el;
         };
@@ -1797,7 +1795,7 @@ let Zone = class {
                     building_color: building_color, base_color: base_color,
                     model: model,
                     base_thick: base_thick, wireframe: wireframe,
-                    visible: visible, titles: titles
+                    visible: visible, titles: titles, rootCodecityEntity: rootCodecityEntity
                 });
             };
         } else {
