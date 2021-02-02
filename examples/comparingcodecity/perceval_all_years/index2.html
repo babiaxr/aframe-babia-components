@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>A-Frame Island Component - Basic</title>
+  <meta name="description" content="Codecity Data in Island component.">
+  </meta>
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v6.1.1/dist/aframe-extras.min.js"></script>
+  <script
+    src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+  <script src="../../../dist/aframe-babia-components.min.js"></script>
+</head>
+
+<body>
+  <a-scene environment="preset: forest; playArea: 1; grid: 1x1" renderer="antialias: true">
+
+    <a-entity id="2020">
+      <a-entity text-geometry="value: Perceval 6/15/2020; size: 0.15" material="color: black" position="-1 2 -0.5"></a-entity>
+      <a-box position="-1.5 0.4 0" depth="0.6" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity scale="0.02 0.1 0.02" babiaxr-island="data: ../perceval_2020/data2.json; area: area;
+				building_separation: 0.2; border: 0.07" position="-1.5 0.8 0"></a-entity>
+
+      <a-box position="1.5 0.4 0" depth="1.5" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity position="1.5 0.8 0" id="codecity" scale="0.1 0.1 0.1" babiaxr-codecity='width: 20; depth: 20; streets: true;
+				  color: green;
+				  extra: 1.3; base_thick: 0.3;
+				  split: pivot; titles: true;
+				  data: ../perceval_2020/data-codecity.json'>
+      </a-entity>
+    </a-entity>
+
+    <a-entity id="2019" position="4 0 4" rotation="0 -90 0">
+      <a-entity text-geometry="value: Perceval 6/15/2019; size: 0.15" material="color: black" position="-1 2 -0.5"></a-entity>
+      <a-box position="-1.5 0.4 0" depth="0.6" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity scale="0.02 0.1 0.02" babiaxr-island="data: ../perceval_2019/data2.json; area: area;
+				building_separation: 0.2; border: 0.07" position="-1.5 0.8 0"></a-entity>
+
+      <a-box position="1.5 0.4 0" depth="1.5" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity position="1.5 0.8 0" id="codecity" scale="0.1 0.1 0.1" babiaxr-codecity='width: 20; depth: 20; streets: true;
+				  color: green;
+				  extra: 1.3; base_thick: 0.3;
+				  split: pivot; titles: true;
+				  data: ../perceval_2019/data-codecity.json'>
+      </a-entity>
+    </a-entity>
+
+    <a-entity id="2017" position="0 0 8" rotation="0 180 0">
+      <a-entity text-geometry="value: Perceval 6/15/2017; size: 0.15" material="color: black" position="-1 2 -0.5"></a-entity>
+      <a-box position="-1.5 0.4 0" depth="0.6" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity scale="0.02 0.1 0.02" babiaxr-island="data: ../perceval_2017/data2.json; area: area;
+				building_separation: 0.2; border: 0.07" position="-1.5 0.8 0"></a-entity>
+
+      <a-box position="1.5 0.4 0" depth="1.5" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity position="1.5 0.8 0" id="codecity" scale="0.1 0.1 0.1" babiaxr-codecity='width: 20; depth: 20; streets: true;
+				  color: green;
+				  extra: 1.3; base_thick: 0.3;
+				  split: pivot; titles: true;
+				  data: ../perceval_2017/data-codecity.json'>
+      </a-entity>
+    </a-entity>
+
+    <a-entity id="2019" position="-4 0 4" rotation="0 90 0">
+      <a-entity text-geometry="value: Perceval 6/15/2016; size: 0.15" material="color: black" position="-1 2 -0.5"></a-entity>
+      <a-box position="-1.5 0.4 0" depth="0.6" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity scale="0.02 0.1 0.02" babiaxr-island="data: ../perceval_2016/data2.json; area: area;
+				building_separation: 0.2; border: 0.07" position="-1.5 0.8 0"></a-entity>
+
+      <a-box position="1.5 0.4 0" depth="1.5" height="0.8" width="1.5" color="yellow"></a-box>
+
+      <a-entity position="1.5 0.8 0" id="codecity" scale="0.1 0.1 0.1" babiaxr-codecity='width: 20; depth: 20; streets: true;
+				  color: green;
+				  extra: 1.3; base_thick: 0.3;
+				  split: pivot; titles: true;
+				  data: ../perceval_2016/data-codecity.json'>
+      </a-entity>
+    </a-entity>
+
+    <a-entity movement-controls="fly: true" position="0 0 2.5" rotation="0 0 0">
+      <a-entity camera position="0 1.6 0" look-controls></a-entity>
+      <a-entity laser-controls raycaster="objects: .babiaxraycasterclass">
+      </a-entity>
+      <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass">
+      </a-entity>
+    </a-entity>
+  </a-scene>
+</body>
+
+</html>

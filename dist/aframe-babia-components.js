@@ -4791,6 +4791,12 @@ AFRAME.registerComponent('babiaxr-island', {
     }
 })
 
+// TODO: legend scale fix
+let countDecimals = function (value) {
+    if(Math.floor(value) === value) return 0;
+    return value.toString().split(".")[1].length || 0; 
+}
+
 let generateLegend = (text, heightItem, boxPosition, rootEntity) => {
     let width = 2;
     if (text.length > 16)
@@ -4818,7 +4824,9 @@ let generateLegend = (text, heightItem, boxPosition, rootEntity) => {
     //Set Scale
     let scaleParent = rootEntity.getAttribute("scale")
     if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
-        entity.setAttribute('scale', { x: 1 / scaleParent.x, y: 1 / scaleParent.y, z: 1 / scaleParent.z });
+        let scalefixes = Math.max(...[countDecimals(scaleParent.x), countDecimals(scaleParent.y), countDecimals(scaleParent.z)]) - 1
+        let multiplyer = Math.pow(10, scalefixes)
+        entity.setAttribute('scale', { x: (1 / scaleParent.x)/multiplyer, y: (1 / scaleParent.y)/multiplyer, z: (1 / scaleParent.z)/multiplyer });
     }
 
     return entity;
