@@ -20,6 +20,11 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
         titlePosition: { type: 'string', default: "0 0 0" },
         animation: { type: 'boolean', default: false },
     },
+        
+    /**
+     * List of visualization properties
+     */
+    visProperties: ['size', 'key'],
 
     /**
     * Set if component needs multiple instancing.
@@ -46,11 +51,21 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
          */
 
         if (data.data && oldData.data !== data.data) {
+            // From data embedded, save it anyway
+            self.babiaData = self.data
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
             while (self.el.firstChild)
                 self.el.firstChild.remove();
             console.log("Generating 3Dcylynderchart from data...")
             self.chart = generateDoughnut(self.data, JSON.parse(self.data.data), self.el, self.total_duration, self.slice_array)
             self.loaded = true
+
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
+
         } else {
 
             // If changed from, need to re-register to the new data component
@@ -86,6 +101,9 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
                 self.slice_array = []
                 self.chart = generateDoughnut(self.data, self.babiaData, self.el, self.total_duration, self.slice_array)
                 self.loaded = true
+
+                // Dispatch interested events because I updated my visualization
+                dataReadyToSend("babiaData", self)
             }
         }
     },
@@ -128,6 +146,36 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
+
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
 
     /**
      * Loaded, for animation
@@ -239,6 +287,9 @@ let attachNewDataEventCallback = (self, e) => {
     console.log("Generating Cylinder...")
     self.chart = generateDoughnut(self.data, rawData, self.el, self.total_duration, self.slice_array)
     self.loaded = true
+
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)
 }
 
 let generateDoughnut = (data, dataRetrieved, element, total_duration, slice_array) => {
@@ -398,3 +449,13 @@ let colors = [
     { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
+
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
