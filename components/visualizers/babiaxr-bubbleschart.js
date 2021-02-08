@@ -26,6 +26,11 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
         heightMax: { type: 'number' },
         radiusMax: { type: 'number' },
     },
+        
+    /**
+     * List of visualization properties
+     */
+    visProperties: ['height', 'radius', 'x_axis', 'z_axis'],
 
     /**
     * Set if component needs multiple instancing.
@@ -52,11 +57,20 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
          */
         // Highest priority to data
     if (data.data && oldData.data !== data.data) {
+        // From data embedded, save it anyway
+        self.babiaData = self.data
+        self.babiaMetadata = {
+            id: self.babiaMetadata.id++
+        }
+
         while (self.el.firstChild)
           self.el.firstChild.remove();
         console.log("Generating 3Dcylynderchart from data...")
         self.chart = generateBubblesChart(self.data, JSON.parse(self.data.data), self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
   
+        // Dispatch interested events because I updated my visualization
+        dataReadyToSend("babiaData", self)
+
       } else {
   
         // If changed from, need to re-register to the new data component
@@ -86,9 +100,12 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
         // If changed whatever, re-print with the current data
         if (data !== oldData && self.babiaData) {
           while (self.el.firstChild)
-            self.el.firstChild.remove();
-          console.log("Generating Cylinder...")
-          self.chart = generateBubblesChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+                self.el.firstChild.remove();
+            console.log("Generating Cylinder...")
+            self.chart = generateBubblesChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+        
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
         }
       }
     },
@@ -115,6 +132,36 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
+
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
 
     /**
     * Proportion of the bars
@@ -229,7 +276,10 @@ let findDataComponent = (data, el, self) => {
       self.el.firstChild.remove();
     console.log("Generating Bubbles...")
     self.chart = generateBubblesChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
-  }
+    
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)  
+}
 
 
 let generateBubblesChart = (data, dataRetrieved, element, proportion, valueMax, widthBubbles, radius_scale) => {
@@ -579,3 +629,13 @@ let colors = [
     { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
+
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}

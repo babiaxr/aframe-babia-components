@@ -2781,6 +2781,11 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
         scale: { type: 'number' },
         heightMax: { type: 'number' }
     },
+    
+    /**
+     * List of visualization properties
+     */
+    visProperties: ['height', 'x_axis', 'z_axis'],
 
     /**
     * Set if component needs multiple instancing.
@@ -2807,10 +2812,19 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
          */
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
+            // From data embedded, save it anyway
+            self.babiaData = self.data
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
             while (self.el.firstChild)
                 self.el.firstChild.remove();
             console.log("Generating barchart from data...")
             self.chart = generateBarChart(self.data, JSON.parse(self.data.data), self.el, self.widthBars, self.proportion, self.valueMax)
+
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
 
         } else {
 
@@ -2844,6 +2858,9 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
                     self.el.firstChild.remove();
                 console.log("Generating barchart...")
                 self.chart = generateBarChart(self.data, self.babiaData, self.el, self.widthBars, self.proportion, self.valueMax)
+                            
+                // Dispatch interested events because I updated my visualization
+                dataReadyToSend("babiaData", self)
             }
 
         }
@@ -2870,6 +2887,36 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
+
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
 
     /**
     * Querier component target
@@ -2980,6 +3027,9 @@ let attachNewDataEventCallback = (self, e) => {
         self.el.firstChild.remove();
     console.log("Generating barchart...")
     self.chart = generateBarChart(self.data, rawData, self.el, self.widthBars, self.proportion, self.valueMax)
+
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)
 }
 
 let generateBarChart = (data, dataRetrieved, element, widthBars, proportion, valueMax) => {
@@ -3314,6 +3364,15 @@ let colors = [
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
 
 /***/ }),
 /* 12 */
@@ -3347,15 +3406,20 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
     heightMax: { type: 'number' },
     radiusMax: { type: 'number' },
   },
+    
+  /**
+  * List of visualization properties
+  */
+  visProperties: ['height', 'radius', 'x_axis', 'z_axis'],
 
   /**
-* Set if component needs multiple instancing.
-*/
+  * Set if component needs multiple instancing.
+  */
   multiple: false,
 
   /**
-* Called once when component is attached. Generally for initial setup.
-*/
+  * Called once when component is attached. Generally for initial setup.
+  */
   init: function () { },
 
   /**
@@ -3373,10 +3437,19 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
 
     // Highest priority to data
     if (data.data && oldData.data !== data.data) {
+      // From data embedded, save it anyway
+      self.babiaData = self.data
+      self.babiaMetadata = {
+          id: self.babiaMetadata.id++
+      }
+
       while (self.el.firstChild)
         self.el.firstChild.remove();
       console.log("Generating 3Dcylynderchart from data...")
       self.chart = generateCylinderChart(self.data, JSON.parse(data.data), self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+
+      // Dispatch interested events because I updated my visualization
+      dataReadyToSend("babiaData", self)
 
     } else {
 
@@ -3407,9 +3480,12 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
       // If changed whatever, re-print with the current data
       if (data !== oldData && self.babiaData) {
         while (self.el.firstChild)
-          self.el.firstChild.remove();
-        console.log("Generating Cylinder...")
-        self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+              self.el.firstChild.remove();
+          console.log("Generating Cylinder...")
+          self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+          
+          // Dispatch interested events because I updated my visualization
+          dataReadyToSend("babiaData", self)
       }
 
     }
@@ -3438,6 +3514,36 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
   * Use to continue or add any dynamic or background behavior such as events.
   */
   play: function () { },
+
+  /**
+  * Register function when I'm updated
+  */
+  register: function (interestedElem) {
+      let el = this.el
+      this.interestedElements.push(interestedElem)
+
+      // Send the latest version of the data
+      if (this.babiaData) {
+          dispatchEventOnElement(interestedElem, "babiaData")
+      }
+  },
+
+  /**
+   * Unregister function when I'm updated
+   */
+  unregister: function (interestedElem) {
+      const index = this.interestedElements.indexOf(interestedElem)
+
+      // Remove from the interested elements if still there
+      if (index > -1) {
+          this.interestedElements.splice(index, 1);
+      }
+  },
+
+  /**
+   * Interested elements when I'm updated
+   */
+  interestedElements: [],
 
   /**
   * Querier component target
@@ -3553,6 +3659,9 @@ let attachNewDataEventCallback = (self, e) => {
     self.el.firstChild.remove();
   console.log("Generating Cylinder...")
   self.chart = generateCylinderChart(self.data, rawData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+
+  // Dispatch interested events because I updated my visualization
+  dataReadyToSend("babiaData", self)
 }
 
 let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion, valueMax, radius_scale) => {
@@ -3913,6 +4022,16 @@ let colors = [
   { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+  self.interestedElements.forEach(element => {
+      dispatchEventOnElement(element, propertyName)
+  });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+  element.emit("babiaVisualizerUpdated", propertyName)
+}
+
 /***/ }),
 /* 13 */
 /***/ (function(module, exports) {
@@ -3945,6 +4064,11 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
         heightMax: { type: 'number' },
         radiusMax: { type: 'number' },
     },
+        
+    /**
+     * List of visualization properties
+     */
+    visProperties: ['height', 'radius', 'x_axis', 'z_axis'],
 
     /**
     * Set if component needs multiple instancing.
@@ -3971,11 +4095,20 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
          */
         // Highest priority to data
     if (data.data && oldData.data !== data.data) {
+        // From data embedded, save it anyway
+        self.babiaData = self.data
+        self.babiaMetadata = {
+            id: self.babiaMetadata.id++
+        }
+
         while (self.el.firstChild)
           self.el.firstChild.remove();
         console.log("Generating 3Dcylynderchart from data...")
         self.chart = generateBubblesChart(self.data, JSON.parse(self.data.data), self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
   
+        // Dispatch interested events because I updated my visualization
+        dataReadyToSend("babiaData", self)
+
       } else {
   
         // If changed from, need to re-register to the new data component
@@ -4005,9 +4138,12 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
         // If changed whatever, re-print with the current data
         if (data !== oldData && self.babiaData) {
           while (self.el.firstChild)
-            self.el.firstChild.remove();
-          console.log("Generating Cylinder...")
-          self.chart = generateBubblesChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+                self.el.firstChild.remove();
+            console.log("Generating Cylinder...")
+            self.chart = generateBubblesChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+        
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
         }
       }
     },
@@ -4034,6 +4170,36 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
+
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
 
     /**
     * Proportion of the bars
@@ -4148,7 +4314,10 @@ let findDataComponent = (data, el, self) => {
       self.el.firstChild.remove();
     console.log("Generating Bubbles...")
     self.chart = generateBubblesChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
-  }
+    
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)  
+}
 
 
 let generateBubblesChart = (data, dataRetrieved, element, proportion, valueMax, widthBubbles, radius_scale) => {
@@ -4499,6 +4668,15 @@ let colors = [
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
 
 /***/ }),
 /* 14 */
@@ -6069,15 +6247,20 @@ AFRAME.registerComponent('babiaxr-cylinderchart', {
     heightMax: { type: 'number' },
     radiusMax: { type: 'number' },
   },
+      
+  /**
+   * List of visualization properties
+   */
+  visProperties: ['height', 'radius', 'x_axis'],
 
   /**
-* Set if component needs multiple instancing.
-*/
+  * Set if component needs multiple instancing.
+  */
   multiple: false,
 
   /**
-* Called once when component is attached. Generally for initial setup.
-*/
+  * Called once when component is attached. Generally for initial setup.
+  */
   init: function () { },
 
   /**
@@ -6096,10 +6279,19 @@ AFRAME.registerComponent('babiaxr-cylinderchart', {
 
     // Highest priority to data
     if (data.data && oldData.data !== data.data) {
+      // From data embedded, save it anyway
+      self.babiaData = self.data
+      self.babiaMetadata = {
+          id: self.babiaMetadata.id++
+      }
+
       while (self.el.firstChild)
         self.el.firstChild.remove();
       console.log("Generating 3Dcylynderchart from data...")
       self.chart = generateCylinderChart(self.data, JSON.parse(self.data.data), self.el, self.proportion, self.valueMax, self.maxRadius, self.radius_scale, self.firstradius)
+
+      // Dispatch interested events because I updated my visualization
+      dataReadyToSend("babiaData", self)
 
     } else {
 
@@ -6133,6 +6325,9 @@ AFRAME.registerComponent('babiaxr-cylinderchart', {
           self.el.firstChild.remove();
         console.log("Generating Cylinder...")
         self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.maxRadius, self.radius_scale, self.firstradius)
+
+        // Dispatch interested events because I updated my visualization
+        dataReadyToSend("babiaData", self)
       }
     }
   },
@@ -6159,6 +6354,36 @@ AFRAME.registerComponent('babiaxr-cylinderchart', {
   * Use to continue or add any dynamic or background behavior such as events.
   */
   play: function () { },
+
+  /**
+  * Register function when I'm updated
+  */
+  register: function (interestedElem) {
+    let el = this.el
+    this.interestedElements.push(interestedElem)
+
+    // Send the latest version of the data
+    if (this.babiaData) {
+        dispatchEventOnElement(interestedElem, "babiaData")
+    }
+  },
+
+  /**
+   * Unregister function when I'm updated
+   */
+  unregister: function (interestedElem) {
+    const index = this.interestedElements.indexOf(interestedElem)
+
+    // Remove from the interested elements if still there
+    if (index > -1) {
+        this.interestedElements.splice(index, 1);
+    }
+  },
+
+  /**
+   * Interested elements when I'm updated
+   */
+  interestedElements: [],
 
   /**
   * Querier component target
@@ -6278,6 +6503,9 @@ let attachNewDataEventCallback = (self, e) => {
     self.el.firstChild.remove();
   console.log("Generating Cylinder...")
   self.chart = generateCylinderChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.maxRadius, self.radius_scale, self.firstradius)
+
+  // Dispatch interested events because I updated my visualization
+  dataReadyToSend("babiaData", self)
 }
 
 let generateCylinderChart = (data, dataRetrieved, element, proportion, valueMax, maxRadius, radius_scale, firstradius) => {
@@ -6590,6 +6818,16 @@ let colors = [
   { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+  self.interestedElements.forEach(element => {
+      dispatchEventOnElement(element, propertyName)
+  });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+  element.emit("babiaVisualizerUpdated", propertyName)
+}
+
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
@@ -6616,6 +6854,11 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
         titlePosition: { type: 'string', default: "0 0 0" },
         animation: { type: 'boolean', default: false },
     },
+        
+    /**
+     * List of visualization properties
+     */
+    visProperties: ['size', 'key'],
 
     /**
     * Set if component needs multiple instancing.
@@ -6642,11 +6885,21 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
          */
 
         if (data.data && oldData.data !== data.data) {
+            // From data embedded, save it anyway
+            self.babiaData = self.data
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
             while (self.el.firstChild)
                 self.el.firstChild.remove();
             console.log("Generating 3Dcylynderchart from data...")
             self.chart = generateDoughnut(self.data, JSON.parse(self.data.data), self.el, self.total_duration, self.slice_array)
             self.loaded = true
+
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
+
         } else {
 
             // If changed from, need to re-register to the new data component
@@ -6682,6 +6935,9 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
                 self.slice_array = []
                 self.chart = generateDoughnut(self.data, self.babiaData, self.el, self.total_duration, self.slice_array)
                 self.loaded = true
+
+                // Dispatch interested events because I updated my visualization
+                dataReadyToSend("babiaData", self)
             }
         }
     },
@@ -6724,6 +6980,36 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
+
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
 
     /**
      * Loaded, for animation
@@ -6835,6 +7121,9 @@ let attachNewDataEventCallback = (self, e) => {
     console.log("Generating Cylinder...")
     self.chart = generateDoughnut(self.data, rawData, self.el, self.total_duration, self.slice_array)
     self.loaded = true
+
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)
 }
 
 let generateDoughnut = (data, dataRetrieved, element, total_duration, slice_array) => {
@@ -6995,6 +7284,15 @@ let colors = [
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
 
 /***/ }),
 /* 17 */
@@ -7497,6 +7795,11 @@ AFRAME.registerComponent('babiaxr-piechart', {
     },
 
     /**
+     * List of visualization properties
+     */
+    visProperties: ['size', 'key'],
+
+    /**
     * Set if component needs multiple instancing.
     */
     multiple: false,
@@ -7521,11 +7824,21 @@ AFRAME.registerComponent('babiaxr-piechart', {
          */
 
         if (data.data && oldData.data !== data.data) {
+            // From data embedded, save it anyway
+            self.babiaData = self.data
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
             while (self.el.firstChild)
                 self.el.firstChild.remove();
             console.log("Generating 3Dcylynderchart from data...")
             self.chart = generatePie(self.data, JSON.parse(self.data.data), self.el, self.slice_array, self.total_duration)
             self.loaded = true
+
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
+
         } else {
 
             // If changed from, need to re-register to the new data component
@@ -7561,6 +7874,9 @@ AFRAME.registerComponent('babiaxr-piechart', {
                 self.slice_array = []
                 self.chart = generatePie(self.data, self.babiaData, self.el, self.slice_array, self.total_duration)
                 self.loaded = true
+
+                // Dispatch interested events because I updated my visualization
+                dataReadyToSend("babiaData", self)
             }
         }
 
@@ -7604,6 +7920,36 @@ AFRAME.registerComponent('babiaxr-piechart', {
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
+
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
 
     /**
      * Loaded, for animation
@@ -7715,6 +8061,9 @@ let attachNewDataEventCallback = (self, e) => {
     console.log("Generating Cylinder...")
     self.chart = generatePie(self.data, rawData, self.el, self.slice_array, self.total_duration)
     self.loaded = true
+
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)
 }
 
 
@@ -7873,9 +8222,15 @@ let colors = [
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
 
-
-
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
 
 /***/ }),
 /* 19 */
