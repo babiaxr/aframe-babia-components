@@ -72,25 +72,258 @@
 
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
+  throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-filterdata', {
+  dependencies: ['babiaxr-querier'],
+  schema: {
+    from: { type: 'string' },
+    filter: { type: 'string' },
+    // data, for debugging, highest priority
+    data: { type: 'string' }
+  },
+
+  /**
+  * Set if component needs multiple instancing.
+  */
+  multiple: false,
+
+  /**
+  * Called once when component is attached. Generally for initial setup.
+  */
+  init: function () { },
+
+  /**
+  * Called when component is attached and when component data changes.
+  * Generally modifies the entity based on the data.
+  */
+
+  update: function (oldData) {
+    let data = this.data;
+    let el = this.el;
+    let self = this;
+
+    // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+      let rawData = parseEmbeddedJSONData(data.data)
+
+      // Filtering, save the references
+      let dataFiltered = filterData(data, rawData)
+      self.babiaData = dataFiltered
+      self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+      }
+
+      // Dispatch interested events
+      dataReadyToSend("babiaData", self)
+    } else {
+
+      if (data.from !== oldData.from) {
+        // Unregister for old querier
+        if(self.querierComponent) { self.querierComponent.unregister(el) }
+        
+
+        // Register for the new one
+        findQuerier(data, el, self)
+
+        // Attach to the event of the querier
+        el.addEventListener('babiaQuerierDataReady', function (e) {
+          // Get the data from the info of the event (propertyName)
+          self.querierDataPropertyName = e.detail
+          let rawData = self.querierComponent[self.querierDataPropertyName]
+
+          // Filtering, save the references
+          let dataFiltered = filterData(data, rawData)
+          self.babiaData = dataFiltered
+          self.babiaMetadata = {
+            id: self.babiaMetadata.id++
+          }
+
+          // Dispatch interested events
+          dataReadyToSend("babiaData", self)
+        });
+
+        // Register to the querier
+        self.querierComponent.register(el)
+      }
+
+      // If changed filter (is mandatory, so it has been defined, first time is undefined)
+      if (oldData.filter && data.filter !== oldData.filter) {
+        // Get again the raw data from the querier
+        let rawData = self.querierComponent[self.querierDataPropertyName]
+
+        // Filtering, save the new references
+        let dataFiltered = filterData(data, rawData)
+        self.babiaData = dataFiltered
+        self.babiaMetadata = {
+          id: self.babiaMetadata.id++
+        }
+
+        // Dispatch interested events
+        dataReadyToSend("babiaData", self)
+      }
+    }
+  },
+  /**
+  * Called when a component is removed (e.g., via removeAttribute).
+  * Generally undoes all modifications to the entity.
+  */
+  remove: function () { },
+
+  /**
+  * Called on each scene tick.
+  */
+  // tick: function (t) { },
+
+  /**
+  * Called when entity pauses.
+  * Use to stop or remove any dynamic or background behavior such as events.
+  */
+  pause: function () { },
+
+  /**
+  * Called when entity resumes.
+  * Use to continue or add any dynamic or background behavior such as events.
+  */
+  play: function () { },
+
+  /**
+   * Querier component target
+   */
+  querierComponent: undefined,
+
+  /**
+   * Property of the querier where the data is saved
+   */
+  querierDataPropertyName: "babiaData",
+
+  /**
+   * Where the data is gonna be stored
+   */
+  babiaData: undefined,
+
+  /**
+   * Where the metaddata is gonna be stored
+   */
+  babiaMetadata: {
+    id: 0
+  },
+
+  /**
+   * Register function
+   */
+  register: function (interestedElem) {
+    let el = this.el
+    this.interestedElements.push(interestedElem)
+
+    // Send the latest version of the data
+    if (this.babiaData) {
+      dispatchEventOnElement(interestedElem, "babiaData")
+    }
+  },
+
+  /**
+   * Unregister function
+   */
+  unregister: function (interestedElem) {
+    const index = this.interestedElements.indexOf(interestedElem)
+
+    // Remove from the interested elements if still there
+    if (index > -1) {
+      this.interestedElements.splice(index, 1);
+    }
+  },
+
+  /**
+   * Interested elements
+   */
+  interestedElements: [],
+})
+
+
+let filterData = (data, rawData) => {
+  let filter = data.filter.split('=')
+  if (filter[0] && filter[1]) {
+    let dataFiltered = rawData.filter((key) => key[filter[0]] == filter[1])
+    return dataFiltered
+  } else {
+    console.error("Error on filter, please use key=value syntax")
+    return []
+  }
+}
+
+let findQuerier = (data, el, self) => {
+  if (data.from) {
+    // Save the reference to the querier
+    let querierElement = document.getElementById(data.from)
+    if (querierElement.components['babiaxr-querier_json']) {
+      self.querierComponent = querierElement.components['babiaxr-querier_json']
+    } else if (querierElement.components['babiaxr-querier_es']) {
+      self.querierComponent = querierElement.components['babiaxr-querier_es']
+    } else if (querierElement.components['babiaxr-querier_github']) {
+      self.querierComponent = querierElement.components['babiaxr-querier_github']
+    } else {
+      console.error("Problem registering to the querier")
+      return
+    }
+  } else {
+    // Look for a querier in the same element and register
+    if (el.components['babiaxr-querier_json']) {
+      self.querierComponent = el.components['babiaxr-querier_json']
+    } else if (el.components['babiaxr-querier_es']) {
+      self.querierComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babiaxr-querier_github']) {
+      self.querierComponent = el.components['babiaxr-querier_github']
+    } else {
+      // Look for a querier in the scene
+      if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.querierComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.querierComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+      } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+        self.querierComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+      } else {
+        console.error("Error, querier not found")
+        return
+      }
+    }
+  }
+}
+
+let parseEmbeddedJSONData = (embedded) => {
+  let dataRetrieved = JSON.parse(embedded)
+  return dataRetrieved
+}
+
+let dataReadyToSend = (propertyName, self) => {
+  self.interestedElements.forEach(element => {
+    dispatchEventOnElement(element, propertyName)
+  });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+  element.emit("babiaFilterDataReady", propertyName)
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-3dbarchart', {
+AFRAME.registerComponent('babiaxr-debug-data', {
     schema: {
-        data: { type: 'string' },
-        legend: { type: 'boolean' },
-        axis: { type: 'boolean', default: true },
-        animation: {type: 'boolean', default: false},
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        scale: {type: 'number'},
-        heightMax: {type: 'number'}
+        inputEvent: { type: 'string' }
     },
 
     /**
@@ -102,9 +335,12 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
+        let data = this.data;
         let el = this.el;
-        let metrics = ['height', 'x_axis', 'z_axis'];
-        el.setAttribute('babiaToRepresent', metrics);
+
+        if (data.input && data.output) {
+            listenEvent(data, el);
+        }
     },
 
     /**
@@ -117,14 +353,16 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
         let el = this.el;
 
         /**
-         * Update or create chart component
+         * Update geometry component
          */
-        if (data.data !== oldData.data) {
-            //remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating barchart...")
-            generateBarChart(data, el)
+        if (data !== oldData) {
+            if (data.inputEvent !== oldData.inputEvent) {
+                console.log("Change event because from has changed")
+                // Remove the event of the old interaction
+                el.removeEventListener(data.inputEvent, function (e) { })
+                // Listen and map the new event
+                listenEvent(data, el);
+            }
         }
     },
     /**
@@ -152,9 +390,2601 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
 
 })
 
-let generateBarChart = (data, element) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let listenEvent = (data, el) => {
+    el.addEventListener(data.inputEvent, function (e) {
+        // Dispatch/Trigger/Fire the event
+        showDebugPlane(data, el)
+    });
+}
+
+let showDebugPlane = (data, el) => {
+    if (!el.querySelector('.debug-data')) {
+        // Get data from the attribute of the entity
+        let debugPanel = generateDebugPanel(data, el, el.getAttribute('babiaData'));
+        el.appendChild(debugPanel)
+    }
+}
+
+function generateDebugPanel(data, el, dataToShow) {
+    const HEIGHT_PLANE_DEBUG = 10
+    const WIDTH_PLANE_DEBUG = 10
+    let entity = document.createElement('a-plane');
+    entity.setAttribute('color', 'white');
+    entity.setAttribute('class', 'debug_data');
+    entity.setAttribute('width', HEIGHT_PLANE_DEBUG);
+    entity.setAttribute('height', WIDTH_PLANE_DEBUG);
+    let parentPos = el.getAttribute("position")
+    let parentWidth = 0;
+    let parentHeight = 0;
+    if (el.getAttribute("geometry")) {
+        if (el.components.geometry.data.primitive === "box") {
+            parentWidth = el.getAttribute("geometry").width/2
+            parentHeight = el.getAttribute("geometry").height/2
+        } else if (el.components.geometry.data.primitive === "sphere") {
+            parentWidth = el.getAttribute("geometry").radius
+        } else {
+            parentWidth = 0
+            parentHeight = 0
+        }
+        
+    }
+    entity.setAttribute('position', { x: parentPos.x + parentWidth + WIDTH_PLANE_DEBUG / 2, y: 0 - parentHeight + HEIGHT_PLANE_DEBUG / 2, z: parentPos.z });
+
+    let textEntity = document.createElement('a-text');
+    textEntity.setAttribute('value', JSON.stringify(dataToShow));
+    textEntity.setAttribute('width', HEIGHT_PLANE_DEBUG);
+    textEntity.setAttribute('height', WIDTH_PLANE_DEBUG);
+    textEntity.setAttribute('color', 'black');
+    textEntity.setAttribute('position', { x: 0 - entity.getAttribute('width') / 2, y: 0 - el.getAttribute("height") / 2, z: 0 });
+
+    entity.appendChild(textEntity)
+    return entity;
+}
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* Component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-event-controller', {
+    schema: {
+        navigation : {type : 'string'},
+        targets : { type: 'string' },
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {},
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        el = this.el
+        let data = this.data
+        
+        navigation = data.navigation
+        charts = JSON.parse(data.targets)
+
+        time_evol(navigation)      
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+let el
+let navigation
+let charts
+var data_array
+var data_array_reverse = [] 
+let current
+let last
+let reverse = false
+let first_time = true
+let firts_point = 0
+
+function time_evol(navigation){ 
+    let commits = document.getElementById(navigation).getAttribute('babiaxr-navigation-bar').commits
+    if (commits && first_time){
+        data_array = JSON.parse(commits)
+        for ( let i in data_array){
+            data_array_reverse.push(data_array[i]) 
+        }
+        data_array_reverse.reverse() 
+        
+        // First current
+        if (reverse){
+            let position = (data_array.length - 1) - firts_point
+            current = data_array_reverse[firts_point]
+            last = position
+        } else {
+            current = data_array[firts_point]
+            last = firts_point
+        }
+        first_time = false
+        controls()
+    }
+}
+
+function play(array){
+    let i = 0
+    for (let x in array){
+        if (array[x] == current){
+            i = parseInt(x) + 1
+        }
+    }
+
+    let loop = setInterval( function() {
+        if (i < array.length){
+            current = array[i]
+
+            if (reverse){
+               let x = (array.length - 1) - i
+               showDate(x)
+               last = x
+            } else {
+                showDate(i)
+                last = i
+            }
+            
+            changeChart()
+            i++
+
+            document.addEventListener('babiaxrStop', function () {
+                clearInterval(loop)
+            })
+            if ( i == array.length){
+                let pause_button = document.getElementsByClassName('babiaxrPause')[0]
+                pause_button.emit('click')
+            }
+        } else {
+            el.emit('babiaxrStop')
+        }
+    }, 3000)
+}
+
+function skip(destination){
+    for ( let x in data_array ) {
+        if (data_array[x] == current){
+            if ((destination == 'next') && (x < data_array.length - 1)){
+                x++
+            } else if ((destination == 'prev') && (x >= 1)){
+                x--
+            }
+            current = data_array[x]
+            showDate(x)
+            last = x
+            break
+        }
+    }
+    changeChart()
+}
+
+function changePoint(point){
+    for (let x in data_array ) {
+        if (data_array[x].commit == point.commit){
+            current = data_array[x]
+            showDate(x)
+            last = x
+            break
+        }
+    }
+    changeChart()
+}
+
+function changeChart(){
+    let data= document.getElementById(current.commit).getAttribute('babiadata')
+    for (let i in charts){
+        let entity = document.getElementById(charts[i].id)
+        if (entity){
+            entity.setAttribute('babiaxr-vismapper', 'dataToShow', data)
+        }
+    }
+}
+
+function controls(){
+    if (reverse){
+        play(data_array_reverse)
+    } else {
+        play(data_array)
+    }
+    
+    document.addEventListener('babiaxrShow', function (event) {
+        changePoint(event.detail.data)
+        el.emit('babiaxrStop')
+    })
+
+    document.addEventListener('babiaxrContinue', function () {
+        console.log('PLAY')
+        if (reverse){
+            play(data_array_reverse)
+        } else {
+            play(data_array)
+        }
+    })
+
+    document.addEventListener('babiaxrToPresent', function () {
+        console.log('TO PRESENT')
+        reverse = false
+        el.emit('babiaxrStop')
+        play(data_array)
+    })
+
+    document.addEventListener('babiaxrToPast', function () {
+        console.log('TO PAST')
+        reverse = true
+        el.emit('babiaxrStop')
+        play(data_array_reverse)
+    })
+
+    document.addEventListener('babiaxrSkipNext', function () {
+        console.log('SKIP NEXT')
+        el.emit('babiaxrStop')
+        skip('next')
+    })
+
+    document.addEventListener('babiaxrSkipPrev', function () {
+        console.log('SKIP PREV')
+        el.emit('babiaxrStop')
+        skip('prev')
+    })
+}
+
+function showDate(i){
+    let entities = document.getElementsByClassName('babiaxrTimeBar')[0].children
+    if (last || last == 0 ){
+        let pointToHide = entities[last]
+        pointToHide.emit('removeinfo')
+    }
+    let pointToShow = entities[i]
+    pointToShow.emit('showinfo')
+}
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-interaction-mapper', {
+    schema: {
+        input: { type: 'string' },
+        output: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+
+        if (data.input && data.output) {
+            mapEvents(data, el);
+        }
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+
+        /**
+         * Update geometry component
+         */
+        // If entry it means that the properties changed
+        if (data !== oldData) {
+            if (data.input !== oldData.input || data.output !== oldData.output) {
+                console.log("Change event because from has changed")
+                // Remove the event of the old interaction
+                el.removeEventListener(oldData.input, function (e) { })
+                // Listen and map the new event
+                mapEvents(data, el);
+            }
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+let mapEvents = (data, el) => {
+    el.addEventListener(data.input, function (e) {
+        // Dispatch/Trigger/Fire the event
+        el.emit(data.output, e, false);
+    });
+}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+
+var debug = AFRAME.utils.debug;
+var coordinates = AFRAME.utils.coordinates;
+
+var warn = debug('components:look-at:warn');
+var isCoordinates = coordinates.isCoordinates || coordinates.isCoordinate;
+
+delete AFRAME.components['look-at'];
+
+/**
+ * Look-at component.
+ *
+ * Modifies rotation to either track another entity OR do a one-time turn towards a position
+ * vector.
+ *
+ * If tracking an object via setting the component value via a selector, look-at will register
+ * a behavior to the scene to update rotation on every tick.
+ */
+AFRAME.registerComponent('look-at', {
+  schema: {
+    default: '0 0 0',
+
+    parse: function (value) {
+      // A static position to look at.
+      if (isCoordinates(value) || typeof value === 'object') {
+        return coordinates.parse(value);
+      }
+      // A selector to a target entity.
+      return value;
+    },
+
+    stringify: function (data) {
+      if (typeof data === 'object') {
+        return coordinates.stringify(data);
+      }
+      return data;
+    }
+  },
+
+  init: function () {
+    this.target3D = null;
+    this.vector = new THREE.Vector3();
+    this.cameraListener = AFRAME.utils.bind(this.cameraListener, this);
+    this.el.addEventListener('componentinitialized', this.cameraListener);
+    this.el.addEventListener('componentremoved', this.cameraListener);
+  },
+
+  /**
+   * If tracking an object, this will be called on every tick.
+   * If looking at a position vector, this will only be called once (until further updates).
+   */
+  update: function () {
+    var self = this;
+    var target = self.data;
+    var targetEl;
+
+    // No longer looking at anything (i.e., look-at="").
+    if (!target || (typeof target === 'object' && !Object.keys(target).length)) {
+      return self.remove();
+    }
+
+    // Look at a position.
+    if (typeof target === 'object') {
+      return this.lookAt(new THREE.Vector3(target.x, target.y, target.z));
+    }
+
+    // Assume target is a string.
+    // Query for the element, grab its object3D, then register a behavior on the scene to
+    // track the target on every tick.
+    targetEl = self.el.sceneEl.querySelector(target);
+    if (!targetEl) {
+      warn('"' + target + '" does not point to a valid entity to look-at');
+      return;
+    }
+    if (!targetEl.hasLoaded) {
+      return targetEl.addEventListener('loaded', function () {
+        self.beginTracking(targetEl);
+      });
+    }
+    return self.beginTracking(targetEl);
+  },
+
+  tick: (function () {
+    var vec3 = new THREE.Vector3();
+
+    return function (t) {
+      // Track target object position. Depends on parent object keeping global transforms up
+      // to state with updateMatrixWorld(). In practice, this is handled by the renderer.
+      var target3D = this.target3D;
+      if (target3D) {
+        target3D.getWorldPosition(vec3);
+        this.lookAt(vec3);
+      }
+    }
+  })(),
+
+  remove: function () {
+    this.el.removeEventListener('componentinitialized', this.cameraListener);
+    this.el.removeEventListener('componentremoved', this.cameraListener);
+  },
+
+  beginTracking: function (targetEl) {
+    this.target3D = targetEl.object3D;
+  },
+
+  cameraListener: function (e) {
+    if (e.detail && e.detail.name === 'camera') {
+      this.update();
+    }
+  },
+
+  lookAt: function (position) {
+    var vector = this.vector;
+    var object3D = this.el.object3D;
+
+    if (this.el.getObject3D('camera')) {
+      // Flip the vector to -z, looking away from target for camera entities. When using
+      // lookat from THREE camera objects, this is applied for you, but since the camera is
+      // nested into a Object3D, we need to apply this manually.
+      vector.subVectors(object3D.position, position).add(object3D.position);
+    } else {
+      vector.copy(position);
+    }
+
+    object3D.lookAt(vector);
+  }
+});
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+let points
+let size
+let play_button
+let pause_button
+let player
+let el
+let last_color
+let point_color
+let to
+let start
+let max_points
+
+AFRAME.registerComponent('babiaxr-navigation-bar', {
+    schema: {
+        commits: { type: 'string' },
+        size: { type: 'number', default: '5'},
+        points_by_line: {type: 'number', default: '5'},
+        to: {type: 'string', default: 'left'},
+        start_point: {type: 'number', default: '0'},
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+   multiple: false,
+   
+    /**
+     * Initial creation and setting of the mesh.
+     */
+    init: function () {
+        let data = this.data
+        el = this.el
+        points = JSON.parse(data.commits)
+        size = data.size
+        to = data.to
+        start = data.start_point 
+        max_points = data.points_by_line
+        let time_bar = createTimeBar(points, size, max_points)
+        this.el.appendChild(time_bar)
+        player = createPlayer()
+        this.el.appendChild(player)
+        setStart()
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+   update: function (oldData) {
+   },
+
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+   remove: function () {},
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+   pause: function () {},
+
+   /**
+   * Called when entity resumes.
+   * Use to continue or add any dynamic or background behavior such as events.
+   */
+   play: function () {},
+
+})
+
+
+function createTimeBar(elements, size, maxpoints){
+    let timebar_entity = document.createElement('a-entity')
+    timebar_entity.classList.add('babiaxrTimeBar')
+
+    let posX = 0
+    let posY = (Math.ceil((elements.length / maxpoints)) / 5) - 0.2
+    let stepX = size / (maxpoints - 1)
+    let last_posX = 0
+    let lines = 1
+
+    for (let i in elements){
+        
+        let point = createTimePoint(elements[i])
+        point.classList.add('babiaxraycasterclass');
+        point.setAttribute('position', {x: posX, y: posY, z: 0});
+        timebar_entity.appendChild(point)
+
+        let x = i % maxpoints
+        if ((x == maxpoints-1) && (i != elements.length - 1)) {
+            lines++
+            posY -= 0.2
+            posX = 0
+        } else if (i != elements.length - 1){
+            posX += stepX
+        }
+        last_posX = posX
+    };
+
+    // Add Line 
+    for (let i = 0; i < lines; i++){
+        let bar_line = document.createElement('a-entity')      
+        if ((last_posX != 0 && i == 0) || (max_points == 1) ){  
+            bar_line.setAttribute('line',{
+                start : '0 ' + posY + ' 0',
+                end : last_posX + ' ' + posY + ' 0',
+                color : '#FF0000',
+            })  
+        } else if ((last_posX == 0 && i == 0)){
+            bar_line.setAttribute('line',{
+                start : '0 ' + posY + ' 0',
+                end : last_posX + ' ' + posY + ' 0',
+                color : '#FF0000',
+            })    
+        } else {
+            bar_line.setAttribute('line',{
+                start : '0 ' + posY + ' 0',
+                end : size + ' ' + posY + ' 0',
+                color : '#FF0000',
+            }) 
+        }
+        posY += 0.2
+        timebar_entity.appendChild(bar_line)  
+    } 
+
+    return timebar_entity
+}
+
+function createTimePoint(point){
+    let entity = document.createElement('a-sphere')
+    entity.setAttribute('radius', 0.05)
+    entity.setAttribute('material', {color: '#FF0000'})
+    showInfo(entity, point)
+    setPoint(entity, point)
+    return entity
+}
+
+function setStart(){
+    let points = document.getElementsByClassName('babiaxrTimeBar')[0].children
+    for (let i in points){
+        if ((i == start)){
+            points[i].emit('showinfo')
+        }
+    }
+}
+
+function setPoint(element, data){
+    element.addEventListener('click', function(){
+        this.setAttribute('material', {color : '#00AA00'})
+        point_color = this.getAttribute('material').color
+        el.emit('babiaxrShow', {data: data})
+        if (document.getElementsByClassName('babiaxrPause')[0]){
+            player.removeChild(pause_button)
+            player.appendChild(play_button)
+        }
+    });
+}
+
+function showInfo(element, data){
+    let legend
+    let legend2
+    element.addEventListener('mouseenter', function () {
+        point_color = this.getAttribute('material').color
+        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 })
+        this.setAttribute('material', {color : '#AAAA00'})
+        legend2 = generateLegend(data)
+        this.appendChild(legend2)
+    });
+
+    element.addEventListener('showinfo', function () {
+        legend = generateLegend(data)
+        this.setAttribute('material', {color : '#00AA00'})
+        this.appendChild(legend)
+    });
+
+    element.addEventListener('mouseleave', function () {
+        this.setAttribute('scale', { x: 1, y: 1, z: 1 })
+        this.setAttribute('material', {color: point_color})
+        this.removeChild(legend2)
+    });
+
+    element.addEventListener('removeinfo', function () {
+        if(legend){
+            this.removeChild(legend)
+            this.setAttribute('material', {color: '#FF0000'})
+        }
+    });
+}
+
+function generateLegend (data) {
+    let text = ''
+    let lines = []
+    lines.push('Date: ' + data['date'] + '\n');
+    lines.push('commit: ' + data['commit'] + '\n');
+    let width = 1;
+    for (let line of lines){
+      if ((line.length > 10) && (width < line.length / 2)){
+        width = line.length / 7;
+      }
+      text += line
+    }
+
+    let entity = document.createElement('a-plane');
+    entity.setAttribute('position', { x: 0, y: 0.4, z: 0.1 })
+    entity.setAttribute('scale', { x: 0.5, y: 0.5, z: 1 })
+    entity.setAttribute('height', '1');
+    entity.setAttribute('width', width);
+    entity.setAttribute('color', 'white');
+    entity.setAttribute('text', {
+        'value': text,
+        'align': 'center',
+        'width': 6,
+        'color': 'black'
+    });
+    entity.setAttribute('material', { opacity: 0.6 })
+    return entity;
+}
+
+function createPlayer(){
+
+    let player_entity = document.createElement('a-entity')
+    player_entity.classList.add('babiaxrPlayer')
+    player_entity.setAttribute('position', {x: (size - 5)/2, y: 0, z: 0})
+    player_entity.classList.add('babiaxraycasterclass');
+
+    play_button = playButton(player_entity)
+    play_button.setAttribute('position', {x: 2.35, y: -0.65, z: 0})
+    play_button.classList.add('babiaxraycasterclass');
+
+    pause_button = pauseButton()
+    pause_button.setAttribute('position', {x: 2.35, y: -0.65 , z: 0})
+    pause_button.classList.add('babiaxraycasterclass');
+    player_entity.appendChild(pause_button)
+
+    let rewind_button = rewindButton()
+    rewind_button.setAttribute('position', {x: 1.25, y: -0.65 , z: 0})
+    rewind_button.classList.add('babiaxraycasterclass');
+    player_entity.appendChild(rewind_button)
+
+    let forward_button = forwardButton()
+    forward_button.setAttribute('position', {x: 3.7, y: -0.65 , z: 0})
+    forward_button.classList.add('babiaxraycasterclass');
+    player_entity.appendChild(forward_button)
+
+    let skip_prev_button = skipPreviousButton()
+    skip_prev_button.setAttribute('position', {x: 1.95, y: -0.65 , z: 0})
+    skip_prev_button.classList.add('babiaxraycasterclass');
+    player_entity.appendChild(skip_prev_button)
+
+    let skip_next_button = skipNextButton()
+    skip_next_button.setAttribute('position', {x: 3, y: -0.65 , z: 0})
+    skip_next_button.classList.add('babiaxraycasterclass');
+    player_entity.appendChild(skip_next_button)
+
+    return player_entity
+}
+
+function playButton(player){
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrPlay')
+    let vertices = [[0, 0, 0], [0, 3, 0], [2.5, 1.5, 0], [0, 0, 0]];
+    let button = load_model(vertices);
+    entity.setObject3D('mesh', button);
+
+    // Events
+    emitEvents(entity, 'babiaxrContinue')
+    mouseOver(entity)
+
+    return entity
+}
+
+function rewindButton(){
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrRewind')
+    let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
+                    [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
+    let button = load_model(vertices);
+    entity.setObject3D('mesh', button);
+    entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
+    if (to == 'left'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
+
+    // Events
+    emitEvents(entity, 'babiaxrToPast')
+    mouseOver(entity)
+
+    return entity
+}
+
+function forwardButton(){
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrForward')
+    let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
+                    [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
+    let button = load_model(vertices);
+    entity.setObject3D('mesh', button);
+    if (to == 'right'){
+        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
+    }
+
+    // Events
+    emitEvents(entity, 'babiaxrToPresent')
+    mouseOver(entity)
+
+    return entity
+}
+
+function skipPreviousButton(){
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrSkipPrev')
+    let vertices = [[0, 0, 0], [0, 3, 0], [1, 1.5, 0], [1, 3, 0], [2, 1.5, 0], [2, 3, 0], [2.5, 3, 0],
+                    [2.5, 0, 0], [2, 0, 0], [2, 1.5, 0], [1, 0, 0], [1, 1.5, 0], [0, 0, 0]];
+    let button = load_model(vertices);
+    entity.setObject3D('mesh', button);
+    entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
+
+    // Events
+    emitEvents(entity, 'babiaxrSkipPrev')
+    mouseOver(entity)
+
+    return entity
+}
+
+function skipNextButton(){
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrSkipNext')
+    let vertices = [[0, 0, 0], [0, 3, 0], [1, 1.5, 0], [1, 3, 0], [2, 1.5, 0], [2, 3, 0], [2.5, 3, 0],
+                    [2.5, 0, 0], [2, 0, 0], [2, 1.5, 0], [1, 0, 0], [1, 1.5, 0], [0, 0, 0]];
+    let button = load_model(vertices);
+    entity.setObject3D('mesh', button);
+
+    // Events
+    emitEvents(entity, 'babiaxrSkipNext')
+    mouseOver(entity)
+
+    return entity
+}
+
+function pauseButton(){
+    let entity = document.createElement('a-entity')
+    entity.classList.add('babiaxrPause')
+    let vertices_1 = [[0, 0, 0], [0, 3, 0], [1, 3, 0], [1, 0, 0], [0, 0, 0]];
+    let vertices_2 = [[1.5, 0, 0],[1.5, 3, 0], [2.5, 3, 0], [2.5, 0, 0], [1.5, 0, 0]];
+    let button = merge_model(vertices_1, vertices_2);
+    entity.setObject3D('mesh', button);
+
+    // Events
+    emitEvents(entity, 'babiaxrStop')
+    mouseOver(entity)
+
+    return entity
+}
+
+function load_model(vertices){
+    let vertices_len = vertices.length;
+
+    let array_extrude = []
+    const scale = 0.11
+    for ( i = 0; i < vertices_len; i++ ) {
+        let x = scale * vertices[i][0];
+        let y = scale * vertices[i][1];
+        let z = scale * vertices[i][2];
+        let vector = new THREE.Vector3(x, y, z); // Create vertor
+        array_extrude.push(vector);
+    }
+
+    let fig_form = new  THREE.Shape(array_extrude)
+    let extrude_data = {
+        depth : 0.05,
+        bevelEnabled : false,
+        bevelSegments : 1,
+        steps : 1,
+        bevelThickness: 1,
+    };
+
+    // Material
+    let material = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, wireframe: false } );
+
+    let geometry_extrude = new THREE.ExtrudeGeometry(fig_form, extrude_data);
+    let mesh_extrude = new THREE.Mesh(geometry_extrude, material)
+
+    return mesh_extrude
+}
+
+function merge_model(vertices1, vertices2){
+    let vertices1_len = vertices1.length;
+    let vertices2_len = vertices2.length;
+
+    let array_extrude1 = []
+    let array_extrude2 = []
+    const scale = 0.11
+    for ( i = 0; i < vertices1_len; i++ ) {
+        let x = scale * vertices1[i][0];
+        let y = scale * vertices1[i][1];
+        let z = scale * vertices1[i][2];
+        let vector = new THREE.Vector3(x, y, z); // Create vertor
+        array_extrude1.push(vector);
+    }
+    for ( i = 0; i < vertices2_len; i++ ) {
+        let x = scale * vertices2[i][0];
+        let y = scale * vertices2[i][1];
+        let z = scale * vertices2[i][2];
+        let vector = new THREE.Vector3(x, y, z); // Create vertor
+        array_extrude2.push(vector);
+    }
+
+    // Figura
+    let fig_form1 = new  THREE.Shape(array_extrude1)
+    let fig_form2 = new  THREE.Shape(array_extrude2)
+
+    let extrude_data = {
+        depth : 0.05,
+        bevelEnabled : false,
+        bevelSegments : 1,
+        steps : 1,
+        bevelThickness: 1,
+    };
+
+    // Material
+    let material = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, wireframe: false } );
+
+    // Hacer un merge de dos figuras
+    let geometry_extrude1 = new THREE.ExtrudeGeometry(fig_form1, extrude_data);
+    let geometry_extrude2 = new THREE.ExtrudeGeometry(fig_form2, extrude_data);
+    let mesh_extrude1 = new THREE.Mesh(geometry_extrude1, material);
+    mesh_extrude1.updateMatrix();
+    geometry_extrude2.merge(mesh_extrude1.geometry, mesh_extrude1.matrix);
+    let mesh_extrude2 = new THREE.Mesh(geometry_extrude2, material);
+
+    return mesh_extrude2;
+}
+
+function mouseOver(element){
+    element.addEventListener('mouseenter', function(){
+        last_color = Object.assign({}, this.object3DMap.mesh.material.color)
+        this.object3DMap.mesh.material.color = {r: 170/255, g: 170/255, b: 170/255}
+    })
+
+    element.addEventListener('mouseleave', function(){
+        this.object3DMap.mesh.material.color = last_color
+    })
+}
+
+function emitEvents(element, event_name){
+    element.addEventListener('click', function () {
+        if (element.classList.contains('babiaxrPlay')){
+            player.removeChild(element)
+            player.appendChild(pause_button)
+        } else if (element.classList.contains('babiaxrPause')){
+            player.removeChild(pause_button)
+            player.appendChild(play_button)
+        } else if ((element.classList.contains('babiaxrSkipNext')) || (element.classList.contains('babiaxrSkipPrev'))){
+            if (document.getElementsByClassName('babiaxrPause')[0]){
+                player.removeChild(pause_button)
+                player.appendChild(play_button)
+            }
+        } else if (element.classList.contains('babiaxrForward')){
+            last_color = { r: 85/255, g: 85/255, b: 85/255 }
+            let button = document.getElementsByClassName('babiaxrRewind')[0]
+            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
+        } else if (element.classList.contains('babiaxrRewind')){
+            last_color = { r: 85/255, g: 85/255, b: 85/255 }
+            let button = document.getElementsByClassName('babiaxrForward')[0]
+            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
+        }
+        console.log('Emit..... ' + event_name)
+        el.emit(event_name)
+    });
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-totem', {
+    schema: {
+        charts_id: { type: 'string' },
+        data_list: { type: 'string' },
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+        my_id = el.id
+        if (data) {
+            charts_id.push({
+                id: el.id,
+                charts_id: JSON.parse(data.charts_id)
+            })
+            if (data.data_list) {
+                dataToPrint_list = JSON.parse(data.data_list)
+                loadFiles(dataToPrint_list)
+            }
+        }
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        el = this.el;
+        /**
+         * Update or create chart component
+         */
+        if (data !== oldData) {
+            //Remove previous chart
+            while (this.el.firstChild)
+                this.el.firstChild.remove();
+            console.log("Generating totemchart...")
+            generateTotemChart(el)
+        }
+
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+let data_files = []
+let charts_id = []
+let my_id
+let dataToPrint_list
+let el
+
+let generateTotemChart = (element) => {
+    if (data_files) {
+        // Totem Data
+        generateTotemData(element, dataToPrint_list)
+    }
+}
+
+
+function loadFiles(list) {
+    let loader = new THREE.FileLoader();
+    // Load Data
+    for (let item of list) {
+        if (item.from_querier) {
+            let querierElement = document.getElementById(item.from_querier)
+            if (querierElement.getAttribute('babiaData')) {
+                let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
+                data_files.push({
+                    file: dataFromQuerier,
+                    path: item.from_querier
+                })
+            } else {
+                // Get if key or filter
+                querierElement.addEventListener('dataReady' + item.from_querier, function (e) {
+                    data_files.push({
+                        file: e.detail,
+                        path: item.from_querier
+                    })
+                })
+            }
+
+        } else if (item.path) {
+            let file = item.path
+            loader.load(file,
+                // onLoad callback
+                function (data) {
+                    data_files.push({
+                        file: data,
+                        path: file
+                    })
+                },
+                // onProgress callback
+                function (xhr) {
+                    console.log(file.toString() + ': ' + (xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+
+                // onError callback
+                function (err) {
+                    console.error('An error happened');
+                }
+            );
+        }
+    }
+
+}
+
+function generateTotemData(element, list) {
+    console.log('Generating Totem...')
+    let position_y = 7.5
+    // Change List's height 
+    if (list.length % 2 == 1) {
+        let increment = Math.trunc(list.length / 2)
+        position_y += increment
+    }
+
+    let position_x = -3
+    let position_z = 6
+    let rotation_y = 0
+
+    //Get Width
+    let width = getWidthTotem(list)
+
+    // Generate Title
+
+    let entity = document.createElement
+    generateTotemTitle(element, position_x, position_y, position_z, rotation_y, width, 'Select Data')
+    position_y -= 1
+
+    // Generate List of Charts
+    generateTotem(element, position_x, position_y, position_z, rotation_y, width, list)
+}
+
+function generateTotemTitle(element, x, y, z, rotation_y, width, title) {
+
+    let entity = document.createElement('a-plane')
+    entity.setAttribute('class', 'title')
+    entity.setAttribute('position', { x: x, y: y, z: z })
+    entity.setAttribute('rotation', { x: 0, y: rotation_y, z: 0 })
+    entity.setAttribute('height', 1)
+    entity.setAttribute('width', width)
+    entity.setAttribute('color', 'blue')
+    entity.setAttribute('text', {
+        'value': title,
+        'align': 'center',
+        'width': '10',
+        'color': 'white'
+    })
+    element.appendChild(entity)
+}
+
+function generateTotem(element, x, y, z, rotation, width, list, list_used) {
+    // Generate List of Items
+    for (let item of list) {
+        // For data
+        if (item.data) {
+            item = item.data
+        }
+        let entity = document.createElement('a-plane')
+        entity.setAttribute('position', { x: x, y: y, z: z })
+        entity.setAttribute('rotation', { x: 0, y: rotation, z: 0 })
+        entity.setAttribute('height', 1)
+        entity.setAttribute('width', width)
+        entity.setAttribute('text', {
+            'value': item,
+            'align': 'center',
+            'width': '10',
+        })
+        entity.setAttribute('color', 'white')
+        entity.setAttribute('text', {
+            'color': 'black'
+        })
+
+        element.appendChild(entity)
+        y -= 1
+
+        entity.classList.add("babiaxraycasterclass")
+        entity.addEventListener('click', function () {
+            let id_totem = entity.parentElement.id
+            let children = entity.parentElement.children
+            list_used = item
+            for (let i of list) {
+                if ((i.path || i.from_querier) && (list_used == i.data)) {
+                    updateEntity(i.path || i.from_querier, id_totem)
+                }
+            }
+            for (let child in children) {
+                if (children[child] === entity) {
+                    entity.setAttribute('color', 'black')
+                    entity.setAttribute('text', {
+                        'color': 'white'
+                    })
+                } else if (!children[child].id) {
+                    if (children[child].className !== "title") {
+                        children[child].setAttribute('color', 'white')
+                        children[child].setAttribute('text', {
+                            'color': 'black'
+                        })
+                    }
+                }
+            }
+        })
+    }
+}
+
+function getWidthTotem(list) {
+    let width = 5
+    for (let line of list) {
+        if (line.data) {
+            line = line.data
+        }
+        if ((line.length > 10) && (width < line.length / 4)) {
+            width = line.length / 4
+        }
+    }
+    return width;
+}
+
+function updateEntity(data, id_totem) {
+    let entity = getEntity(id_totem)
+    for (let totem in charts_id) {
+        if (id_totem == charts_id[totem].id) {
+            let charts = charts_id[totem].charts_id
+            for (obj in charts) {
+                let type = charts[obj].type
+                let id = charts[obj].id
+                let new_data
+                for (let file in data_files) {
+                    if (data_files[file].path == data) {
+                        new_data = data_files[file].file
+                        //entity.setAttribute('geototemchart', { 'data' : data_files[file].file })
+
+                        if (type === "babiaxr-vismapper") {
+                            document.getElementById(id).setAttribute(type, "dataToShow", JSON.stringify(new_data))
+                        } else {
+                            document.getElementById(id).setAttribute(type, "data", new_data)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function getEntity(id) {
+    let entity = document.getElementById(id)
+    return entity
+}
+
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+let MAX_SIZE_BAR = 10
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-vismapper', {
+    schema: {
+        ui: {type: 'boolean', default: false},
+        // Data
+        dataToShow: { type: 'string' },
+        // Geo and charts
+        width: { type: 'string' },
+        depth: { type: 'string' },
+        height: { type: 'string' },
+        radius: { type: 'string' },
+        // Only for charts
+        slice: { type: 'string' },
+        x_axis: { type: 'string' },
+        z_axis: { type: 'string' },
+        // Codecity
+        fmaxarea: { type: 'string' },
+        farea: { type: 'string'},
+        fheight: { type: 'string'}
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let data = this.data;
+        let el = this.el;
+        let controller;
+        let selector;
+        let dataJSON;
+        let metrics;
+        let selector_panel
+
+        document.addEventListener('babiaxr-dataLoaded', function loadMenu(event){
+            console.log('VISMAPPER: Data Loaded')
+            dataJSON = event.detail.data
+            if (dataJSON){
+                if (data.ui){
+                    if (event.detail.codecity){
+                        selector = getSelectorCodecity(dataJSON)
+                        metrics = ['fmaxarea', 'farea', 'fheight']
+                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, true)
+                    } else {
+                        selector = getSelectors(dataJSON)
+                        metrics = el.getAttribute('babiaToRepresent').split(',');
+                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, false)
+                    }
+                    
+                    selector_panel.id = "Panel-scene"
+                    document.getElementsByTagName('a-scene')[0].appendChild(selector_panel)
+                    this.removeEventListener('babiaxr-dataLoaded', loadMenu)
+                }
+            }
+        });
+        document.addEventListener('controllerconnected', (event) => {
+            // event.detail.name ----> which VR controller
+            controller = event.detail.name;
+            let hand = event.target.getAttribute(controller).hand
+            if (hand === 'left'){
+                let entity_id = event.target.id
+                let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
+                selector_panel.setAttribute('position', {x:-0.16, y:0.08, z: -0.2});
+                selector_panel.id = "panel-mano"
+                selector_panel.setAttribute('scale', {x: 0.05, y:0.05, z:0.05});
+                selector_panel.setAttribute('rotation', {x:-45})
+                let background = document.createElement('a-plane');
+                background.setAttribute('color', "#AAAAAA")
+                background.setAttribute('position', {x:3.25, y: -0.5, z: -0.15})
+                background.setAttribute('width', 10);
+                background.setAttribute('height', 2.5)
+                background.setAttribute('material', 'opacity', 0.6)
+                selector_panel.appendChild(background)
+                document.getElementById(entity_id).appendChild(selector_panel);
+                document.getElementById('Panel-scene').setAttribute('visible', false);
+                openCloseMenu(event.detail.component.el.id, selector_panel)
+            }
+            
+        });
+
+        
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+
+        /**
+         * Update geometry component
+         */
+        if (data.dataToShow) {
+            let dataJSON = JSON.parse(data.dataToShow)
+            el.emit('babiaxr-dataLoaded', {data: dataJSON})
+            updateComponent(el, data, dataJSON)
+        } else if (el.components["babiaxr-codecity"]){
+            updateComponent(el, data)
+        }
+
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+const number_parameters = ['height', 'radius', 'width', 'slice', 'depth', 'fmaxarea', 'farea', 'fheight']
+const string_parameters = ['x_axis', 'z_axis']
+
+function updateComponent(el, data, dataJSON){
+    if (el.components.geometry) {
+        if (el.components.geometry.data.primitive === "box") {
+            el.setAttribute("geometry", "height", (dataJSON[data.height] / 100))
+            el.setAttribute("geometry", "width", dataJSON[data.width] || 2)
+            el.setAttribute("geometry", "depth", dataJSON[data.depth] || 2)
+            let oldPos = el.getAttribute("position")
+            el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height] / 200, z: oldPos.z })
+        } else if (el.components.geometry.data.primitive === "sphere") {
+            el.setAttribute("geometry", "radius", (dataJSON[data.radius] / 10000) || 2)
+            let oldPos = el.getAttribute("position")
+            el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
+        }
+    } else if (el.components['babiaxr-simplebarchart']) {
+        let list = generate2Dlist(data, dataJSON, "x_axis")
+        el.setAttribute("babiaxr-simplebarchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-cylinderchart']) {
+        let list = generate2Dlist(data, dataJSON, "x_axis", "cylinder")
+        el.setAttribute("babiaxr-cylinderchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-piechart']) {
+        let list = generate2Dlist(data, dataJSON, "slice")
+        el.setAttribute("babiaxr-piechart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-doughnutchart']) {
+        let list = generate2Dlist(data, dataJSON, "slice")
+        el.setAttribute("babiaxr-doughnutchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-3dbarchart']) {
+        let list = generate3Dlist(data, dataJSON, "3dbars")
+        el.setAttribute("babiaxr-3dbarchart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-bubbleschart']) {
+        let list = generate3Dlist(data, dataJSON, "bubbles")
+        el.setAttribute("babiaxr-bubbleschart", "data", JSON.stringify(list))
+    } else if (el.components['babiaxr-3dcylinderchart']) {
+        let list = generate3Dlist(data, dataJSON, "3dcylinder")
+        el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
+    } else if (el.components["babiaxr-codecity"]) {
+        if (data.fmaxarea){
+            el.setAttribute("babiaxr-codecity", "fmaxarea", data.fmaxarea);
+        }
+        if (data.farea){
+            el.setAttribute("babiaxr-codecity", "farea", data.farea);
+        }
+        if (data.fheight){
+            el.setAttribute("babiaxr-codecity", "fheight", data.fheight);
+        }
+    }
+}
+
+let generate2Dlist = (data, dataToProcess, key_type, chart_type) => {
+    let list = []
+    if (Array.isArray(dataToProcess)) {
+        list = dataToProcess
+    } else {
+        if (chart_type === "cylinder") {
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data[key_type]],
+                    "height": value[data.height],
+                    "radius": value[data.radius]
+                }
+                list.push(item)
+            });
+        } else {
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data[key_type]],
+                    "size": value[data.height]
+                }
+                list.push(item)
+            });
+        }
+    }
+    return list
+}
+
+let generate3Dlist = (data, dataToProcess, chart_type) => {
+    let list = []
+    if (Array.isArray(dataToProcess)) {
+        list = dataToProcess
+    } else {
+        if (chart_type === "3dbars") {
+
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data.x_axis],
+                    "key2": value[data.z_axis],
+                    "size": value[data.height]
+                }
+                list.push(item)
+            });
+        } else if (chart_type === "bubbles" || chart_type === "3dcylinder") {
+            Object.values(dataToProcess).forEach(value => {
+                let item = {
+                    "key": value[data.x_axis],
+                    "key2": value[data.z_axis],
+                    "height": value[data.height],
+                    "radius": value[data.radius]
+                }
+                list.push(item)
+            });
+        }
+    }
+    return list
+}
+
+function normalize(val, min, max) { return (val - min) / (max - min); }
+
+let getSelectors = (data) => {
+    let selector = []
+    for (let element in Object.values(data)){
+        Object.keys(Object.values(data)[element]).forEach (function(key){
+            if ( !selector.includes(key)){
+                selector.push(key)
+            }
+        })
+    }
+    return selector
+}
+
+let getSelectorCodecity = (data) => {
+    let selector = []
+    let last_node = findLast(data.children[0])
+    for (let key in Object.keys(last_node)){
+        if (Object.keys(last_node)[key] != 'id'){
+            selector.push(Object.keys(last_node)[key])
+        }  
+    }
+    return selector
+}
+
+let findLast = (e) => {
+    if ('children' in e){
+        return findLast(e.children[0])
+    } else {
+        return e
+    }
+
+}
+
+let generateSelectorPanel = (items, metrics, data, element, codecity) => {
+    let structure = parameterStructure(metrics, items, data, codecity)
+    let panel = document.createElement('a-entity')
+    panel.setAttribute('class', 'selector')
+
+    let posY = 0
+    let posX = 0
+
+    for (let i in structure) {
+        let button = createButtonMetric(structure[i].name, posX, posY)
+        panel.appendChild(button)
+        for (let x in structure[i].options){
+            posX += 3.25
+            let button = createButton(structure[i].name, structure[i].options[x], posX, posY, element)
+            button.classList.add("babiaxraycasterclass")
+            panel.appendChild(button)
+        }
+        --posY
+        posX = 0   
+    }
+
+    panel.setAttribute('position', { x: -12, y: 10, z: 10})
+    return panel
+}
+
+let parameterStructure = (metrics, items, data, codecity) => {
+    let structure = []
+    let number_items = []
+    let string_items = []
+
+    // Sort data by type
+    if (codecity){
+        let last_node = findLast(data)
+        for (let i in items){
+            if (last_node[items[i]]){
+                if (typeof last_node[items[i]] == 'number'){
+                    if (!number_items.includes(items[i])){
+                        number_items.push(items[i]);
+                    }   
+                } else if (typeof last_node[items[i]] == 'string'){
+                    if (!string_items.includes(items[i])){
+                        string_items.push(items[i]);
+                    } 
+                }
+            }
+        }
+    } else {
+        for (let x in data){
+            for (let i in items){
+                if (data[x][items[i]]){
+                    if (typeof data[x][items[i]] == 'number'){
+                        if (!number_items.includes(items[i])){
+                            number_items.push(items[i]);
+                        }   
+                    } else if (typeof data[x][items[i]] == 'string'){
+                        if (!string_items.includes(items[i])){
+                            string_items.push(items[i]);
+                        } 
+                    }
+                }
+            }
+        }
+    }
+
+    // Create structure
+    for (let i in metrics){
+        if (number_parameters.includes(metrics[i])){
+            structure.push({
+                name: metrics[i],
+                type: 'number',
+                options: number_items
+            });
+        } else if (string_parameters.includes(metrics[i])){
+            structure.push({
+                name: metrics[i],
+                type: 'string',
+                options: string_items
+            }); 
+        }
+    }
+    return structure
+}
+
+let createButton = (name, item, positionX, positionY, element) =>{
+    let entity = document.createElement('a-box')
+    entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
+    entity.setAttribute('height', 0.8)
+    entity.setAttribute('width', 3)
+    entity.setAttribute('depth', 0.01)
+
+    let text = document.createElement('a-entity')
+    text.setAttribute('text', {
+        'value': item,
+        'align': 'center',
+        'width': '10',
+        'color': 'black'
+    })
+    text.setAttribute('position', "0 0 0.01")
+    entity.appendChild(text)
+
+    entity.setAttribute('name', name)
+    entity.setAttribute('color', '#FFFFFF')
+    selection_events(entity, element)
+
+    return entity
+}
+
+function selection_events(entity, element){
+    entity.addEventListener('mouseenter', function(){
+        entity.children[0].setAttribute('text', {color: '#FFFFFF'})
+        entity.setAttribute('color', '#333333')
+    });
+
+    entity.addEventListener('mouseleave', function(){
+        entity.children[0].setAttribute('text', {color: 'black'})
+        entity.setAttribute('color', '#FFFFFF')
+    });
+
+    entity.addEventListener('click', function(){
+        let name = entity.getAttribute('name')
+        let metric = entity.children[0].getAttribute('text').value
+        element.setAttribute('babiaxr-vismapper', name, metric)
+    });
+}
+
+let createButtonMetric = (item, positionX, positionY) =>{
+    let entity = document.createElement('a-plane')
+    entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
+    entity.setAttribute('height', 0.8)
+    entity.setAttribute('width', 3)
+    entity.setAttribute('text', {
+        'value': item,
+        'align': 'center',
+        'width': '10',
+        'color': '#FFFFFF'
+    })
+    entity.setAttribute('color', 'black')
+    return entity
+}
+
+function openCloseMenu(hand_id, entity_menu) {
+    let menu_opened = true
+    let entity_hand = document.getElementById(hand_id)
+    entity_hand.addEventListener('gripdown', function(evt){
+        if (menu_opened){
+            menu_opened = false
+            entity_menu.setAttribute('visible', false)
+        } else {
+            menu_opened = true
+            entity_menu.setAttribute('visible', true)
+        }
+    })
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-querier_es', {
+    schema: {
+        elasticsearch_url: { type: 'string' },
+        index: { type: 'string' },
+        query: { type: 'string' },
+        size: { type: 'int', default: 10 },
+        user: { type: 'string' },
+        password: { type: 'string' },
+        // data, for debugging, highest priority
+        data: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () { },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+        let self = this;
+
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            parseEmbeddedJSONData(data.data, el, self)
+        } else {
+            if (data.elasticsearch_url !== oldData.elasticsearch_url ||
+                data.index !== oldData.index ||
+                data.query !== oldData.query ||
+                data.size !== oldData.size) {
+                if (data.elasticsearch_url && data.index) {
+                    requestJSONDataFromES(data, el, self)
+                } else {
+                    console.error("elasicsearch_url and index must be defined")
+                    return
+                }
+            }
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Register function
+     */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements
+     */
+    interestedElements: [],
+})
+
+
+let requestJSONDataFromES = (data, el, self) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            // Save data
+            if (typeof request.response === 'string' || request.response instanceof String) {
+                dataRaw = JSON.parse(request.response).hits.hits
+                let dataRetrieved = []
+                for (let i = 0; i < dataRaw.length; i++) {
+                    dataRetrieved[i] = dataRaw[i]._source
+                }
+            } else {
+                // Why this case
+                let dataRetrieved = []
+                console.error("Unexpected response", request.response)
+            }
+
+            // Save
+            self.babiaData = dataRetrieved
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
+            // Dispatch/Trigger/Fire the event
+            dataReadyToSend("babiaData", self)
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+            console.error("Error during requesting data", this.status, xhr.statusText)
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+        console.error("Error during requesting data", this.status, xhr.statusText)
+    };
+    request.send();
+}
+
+let parseEmbeddedJSONData = (embedded, el, self) => {
+    // Save data
+    let dataRetrieved = JSON.parse(embedded)
+    self.babiaData = dataRetrieved
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend("babiaData", self)
+}
+
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaQuerierDataReady", propertyName)
+}
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-querier_github', {
+    schema: {
+        user: { type: 'string' },
+        token: { type: 'string' },
+        repos: { type: 'array' },
+        // data, for debugging, highest priority
+        data: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () { },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+        let self = this;
+
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            parseEmbeddedJSONData(data.data, el, self)
+        } else {
+            if (oldData.user !== data.user || oldData.repos !== data.repos || oldData.token !== data.token) {
+                if (data.user && (data.repos.length === 0)) {
+                    requestAllReposFromUser(data, el, self)
+                } else if (data.repos.length > 0) {
+                    requestReposFromList(data, el, self)
+                }
+            }
+        }
+
+
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Register function
+     */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements
+     */
+    interestedElements: [],
+
+})
+
+let requestReposFromList = (data, el, self) => {
+    let dataOfRepos = []
+
+    data.repos.forEach((e, i) => {
+        // Create a new request object
+        let request = new XMLHttpRequest();
+
+        // Create url
+        let url = "https://api.github.com/repos/" + data.user + "/" + e + "?_=" + new Date().getTime();
+
+        // Initialize a request
+        request.open('get', url, false)
+        // Send it
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                console.log("data OK in request.response", el.id)
+
+                // Save data
+                let rawData = JSON.parse(request.response)
+                dataOfRepos.push(rawData);
+
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+                console.error("Error during requesting data", this.status, xhr.statusText)
+            }
+        };
+        request.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+            console.error("Error during requesting data", this.status, xhr.statusText)
+        };
+        request.send();
+    })
+
+    // Save data
+    self.babiaData = dataOfRepos
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend("babiaData", self)
+}
+
+
+let requestAllReposFromUser = (data, el, self) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Create url
+    let url = "https://api.github.com/users/" + data.user + "/repos?_=" + new Date().getTime();
+
+    // Initialize a request
+    request.open('get', url)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            console.log("data OK in request.response", el.id)
+
+            // Save data
+            self.babiaData = allReposParse(JSON.parse(request.response))
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
+            // Dispatch/Trigger/Fire the event
+            dataReadyToSend("babiaData", self)
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+            console.error("Error during requesting data", this.status, xhr.statusText)
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+        console.error("Error during requesting data", this.status, xhr.statusText)
+    };
+    request.send();
+}
+
+let allReposParse = (data) => {
+    let dataParsed = []
+    data.forEach((e, i) => {
+        dataParsed.push(e)
+    });
+    return dataParsed
+}
+
+let parseEmbeddedJSONData = (embedded, el, self) => {
+    // Save data
+    let dataRetrieved = JSON.parse(embedded)
+    self.babiaData = dataRetrieved
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend("babiaData", self)
+}
+
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaQuerierDataReady", propertyName)
+}
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-querier_json', {
+    schema: {
+        url: { type: 'string' },
+        embedded: { type: 'string' },
+        // data, for debugging, highest priority
+        data: { type: 'string' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () { },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+        let self = this;
+
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            parseEmbeddedJSONData(data.data, el, self)
+        } else {
+            if (oldData.url !== data.url) {
+                requestJSONDataFromURL(data, el, self)
+            } else if (oldData.embedded !== data.embedded) {
+                parseEmbeddedJSONData(data.embedded, el, self)
+            }
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Register function
+     */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements
+     */
+    interestedElements: [],
+})
+
+
+let requestJSONDataFromURL = (data, el, self) => {
+    // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', data.url)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            // Save data
+            let dataRetrieved
+            if (typeof request.response === 'string' || request.response instanceof String) {
+                dataRetrieved = JSON.parse(request.response)
+            } else {
+                dataRetrieved = request.response
+            }
+
+            // Check if a list
+            if (!Array.isArray(dataRetrieved)) {
+                console.error("Data must be an array")
+                return
+            }
+
+            // Save
+            self.babiaData = dataRetrieved
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
+            // Dispatch/Trigger/Fire the event
+            dataReadyToSend("babiaData", self)
+
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+            console.error("Error during requesting data", this.status, xhr.statusText)
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+        console.error("Error during requesting data", this.status, xhr.statusText)
+    };
+    request.send();
+}
+
+let parseEmbeddedJSONData = (embedded, el, self) => {
+    // Save data
+    let dataRetrieved = JSON.parse(embedded)
+    self.babiaData = dataRetrieved
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend("babiaData", self)
+}
+
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaQuerierDataReady", propertyName)
+}
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babiaxr-3dbarchart', {
+    schema: {
+        data: { type: 'string' },
+        height: { type: 'string', default: 'height' },
+        x_axis: { type: 'string', default: 'x_axis' },
+        z_axis: { type: 'string', default: 'z_axis' },
+        from: { type: 'string' },
+        legend: { type: 'boolean' },
+        axis: { type: 'boolean', default: true },
+        animation: { type: 'boolean', default: false },
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        scale: { type: 'number' },
+        heightMax: { type: 'number' }
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () { },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        const self = this;
+        let data = this.data;
+        let el = this.el;
+
+        /**
+         * Update or create chart component
+         */
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            console.log("Generating barchart from data...")
+            self.chart = generateBarChart(self.data, JSON.parse(self.data.data), self.el, self.widthBars, self.proportion, self.valueMax)
+
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating barchart...")
+                self.chart = generateBarChart(self.data, self.babiaData, self.el, self.widthBars, self.proportion, self.valueMax)
+            }
+
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called on each scene tick.
+    */
+    // tick: function (t) { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Duration of the animation if activated
+     */
+    widthBars: 1,
+
+    /**
+     * Proportion of the bars
+     */
+    proportion: undefined,
+
+    /**
+     * Value max
+     */
+    valueMax: undefined,
+
+})
+
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Generate chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating barchart...")
+    self.chart = generateBarChart(self.data, rawData, self.el, self.widthBars, self.proportion, self.valueMax)
+}
+
+let generateBarChart = (data, dataRetrieved, element, widthBars, proportion, valueMax) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
@@ -175,10 +3005,10 @@ let generateBarChart = (data, element) => {
         let zaxis_dict = []
         let animation = data.animation
 
-        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.size; }))
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
         if (scale) {
             maxY = maxY / scale
-        } else if (heightMax){
+        } else if (heightMax) {
             valueMax = maxY
             proportion = heightMax / maxY
             maxY = heightMax
@@ -191,14 +3021,14 @@ let generateBarChart = (data, element) => {
 
         for (let bar of dataToPrint) {
             // Check if used in order to put the bar in the parent row
-            if (keys_used[bar['key']]) {
-                stepX = keys_used[bar['key']].posX
-                colorid = keys_used[bar['key']].colorid
+            if (keys_used[bar[data.x_axis]]) {
+                stepX = keys_used[bar[data.x_axis]].posX
+                colorid = keys_used[bar[data.x_axis]].colorid
             } else {
                 stepX = maxX
                 colorid = maxColorId
                 //Save in used
-                keys_used[bar['key']] = {
+                keys_used[bar[data.x_axis]] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
@@ -207,7 +3037,7 @@ let generateBarChart = (data, element) => {
                 let bar_printed = {
                     colorid: colorid,
                     posX: stepX,
-                    key: bar['key']
+                    key: bar[data.x_axis]
                 }
                 xaxis_dict.push(bar_printed)
 
@@ -216,12 +3046,12 @@ let generateBarChart = (data, element) => {
             }
 
             // Get Z val
-            if (z_axis[bar['key2']]) {
-                stepZ = z_axis[bar['key2']].posZ
+            if (z_axis[bar[data.z_axis]]) {
+                stepZ = z_axis[bar[data.z_axis]].posZ
             } else {
                 stepZ = maxZ
                 //Save in used
-                z_axis[bar['key2']] = {
+                z_axis[bar[data.z_axis]] = {
                     "posZ": maxZ
                 }
 
@@ -229,19 +3059,19 @@ let generateBarChart = (data, element) => {
                 let bar_printed = {
                     colorid: colorid,
                     posZ: stepZ,
-                    key: bar['key2']
+                    key: bar[data.z_axis]
                 }
                 zaxis_dict.push(bar_printed)
 
                 maxZ += widthBars + widthBars / 4
             }
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, stepZ, palette, animation, scale);
+            let barEntity = generateBar(bar[data.height], widthBars, colorid, stepX, stepZ, palette, animation, scale, proportion);
             barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar, element)
+                showLegend(data, barEntity, bar, element, widthBars)
             }
 
             chart_entity.appendChild(barEntity);
@@ -254,23 +3084,20 @@ let generateBarChart = (data, element) => {
 
         // Axis
         if (data.axis) {
-            showXAxis(element, maxX, xaxis_dict, palette)
-            showZAxis(element, maxZ, zaxis_dict, palette)
-            showYAxis(element, maxY, scale)
+            showXAxis(element, maxX, xaxis_dict, palette, widthBars)
+            showZAxis(element, maxZ, zaxis_dict, palette, widthBars)
+            showYAxis(element, maxY, scale, widthBars, proportion, valueMax)
         }
     }
 }
 
-let widthBars = 1
-let proportion
-let valueMax
 
-function generateBar(size, width, colorid, positionX, positionZ, palette, animation, scale) {
+function generateBar(size, width, colorid, positionX, positionZ, palette, animation, scale, proportion) {
     let color = getColor(colorid, palette)
     console.log("Generating bar...")
     if (scale) {
         size = size / scale
-    } else if (proportion){
+    } else if (proportion) {
         size = proportion * size
     }
 
@@ -279,9 +3106,9 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     // Add animation
-    if (animation){
+    if (animation) {
         var duration = 4000
-        var increment = 10 * size / duration 
+        var increment = 10 * size / duration
         var height = 0
         var id = setInterval(animation, 10);
         function animation() {
@@ -290,8 +3117,8 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
             } else {
                 height += increment;
                 entity.setAttribute('height', height);
-                entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ }); 
-            }  
+                entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ });
+            }
         }
     } else {
         entity.setAttribute('height', size);
@@ -300,18 +3127,18 @@ function generateBar(size, width, colorid, positionX, positionZ, palette, animat
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
 }
 
-function generateLegend(bar, barEntity) {
-    let text = bar['key'] + ': ' + bar['size'];
+function generateLegend(data, bar, barEntity, widthBars) {
+    let text = bar[data.x_axis] + ': ' + bar[data.height];
 
     let width = 2;
     if (text.length > 16)
@@ -334,10 +3161,10 @@ function generateLegend(bar, barEntity) {
     return entity;
 }
 
-function showLegend(barEntity, bar, element) {
+function showLegend(data, barEntity, bar, element, widthBars) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar, barEntity);
+        legend = generateLegend(data, bar, barEntity, widthBars);
         element.appendChild(legend);
     });
 
@@ -348,7 +3175,7 @@ function showLegend(barEntity, bar, element) {
 }
 
 
-function showXAxis(parent, xEnd, bars_printed, palette) {
+function showXAxis(parent, xEnd, bars_printed, palette, widthBars) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -370,7 +3197,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBars-5 })
+        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBars - 5 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
         axis.appendChild(key)
     });
@@ -379,7 +3206,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
     parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, bars_printed, palette) {
+function showZAxis(parent, zEnd, bars_printed, palette, widthBars) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -401,7 +3228,7 @@ function showZAxis(parent, zEnd, bars_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: -widthBars-5.2, y: 0, z: e.posZ })
+        key.setAttribute('position', { x: -widthBars - 5.2, y: 0, z: e.posZ })
         key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
         axis.appendChild(key)
     });
@@ -411,7 +3238,7 @@ function showZAxis(parent, zEnd, bars_printed, palette) {
 }
 
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, widthBars, proportion, valueMax) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
     //Print line
@@ -424,27 +3251,27 @@ function showYAxis(parent, yEnd, scale) {
     axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBars / 2 + widthBars / 4) });
     axis.appendChild(axis_line)
 
-    if (proportion){
+    if (proportion) {
         yLimit = yLimit / proportion
         var mod = Math.floor(Math.log10(valueMax))
-    }   
-    for (let i = 0; i<=yLimit; i++){
+    }
+    for (let i = 0; i <= yLimit; i++) {
         let key = document.createElement('a-entity');
         let value = i
-        let pow = Math.pow(10, mod-1)
-        if (!proportion || (proportion && i%pow === 0)){  
+        let pow = Math.pow(10, mod - 1)
+        if (!proportion || (proportion && i % pow === 0)) {
             key.setAttribute('text', {
                 'value': value,
                 'align': 'right',
                 'width': 10,
                 'color': 'white '
             });
-            if (scale){
-                key.setAttribute('text', {'value': value * scale})
-                key.setAttribute('position', { x: -widthBars-5.2, y: value, z: -(widthBars / 2 + widthBars / 4) })
+            if (scale) {
+                key.setAttribute('text', { 'value': value * scale })
+                key.setAttribute('position', { x: -widthBars - 5.2, y: value, z: -(widthBars / 2 + widthBars / 4) })
             } else {
-                key.setAttribute('position', { x: -widthBars-5.2, y: i * proportion, z: -(widthBars / 2 + widthBars / 4) })
-            }     
+                key.setAttribute('position', { x: -widthBars - 5.2, y: i * proportion, z: -(widthBars / 2 + widthBars / 4) })
+            }
         }
         axis.appendChild(key)
     }
@@ -453,43 +3280,43 @@ function showYAxis(parent, yEnd, scale) {
     parent.appendChild(axis)
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 
 /***/ }),
-/* 1 */
+/* 12 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -503,82 +3330,235 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-3dcylinderchart', {
   schema: {
     data: { type: 'string' },
+    height: { type: 'string', default: 'height' },
+    radius: { type: 'string', default: 'radius' },
+    x_axis: { type: 'string', default: 'x_axis' },
+    z_axis: { type: 'string', default: 'z_axis' },
+    from: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
-    animation: { type: 'boolean', default: false},
-    palette: {type: 'string', default: 'ubuntu'},
-    title: {type: 'string'},
-    titleFont: {type: 'string'},
-    titleColor: {type: 'string'},
-    titlePosition: {type: 'string', default: "0 0 0"},
-    scale: {type: 'number'},
-    heightMax: {type: 'number'},
-    radiusMax: {type: 'number'},
+    animation: { type: 'boolean', default: false },
+    palette: { type: 'string', default: 'ubuntu' },
+    title: { type: 'string' },
+    titleFont: { type: 'string' },
+    titleColor: { type: 'string' },
+    titlePosition: { type: 'string', default: "0 0 0" },
+    scale: { type: 'number' },
+    heightMax: { type: 'number' },
+    radiusMax: { type: 'number' },
   },
 
-      /**
-    * Set if component needs multiple instancing.
-    */
-   multiple: false,
+  /**
+* Set if component needs multiple instancing.
+*/
+  multiple: false,
 
-      /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-  init: function () {
-    let el = this.el;
-    let metrics = ['height', 'radius', 'x_axis', 'z_axis'];
-    el.setAttribute('babiaToRepresent', metrics);
-  },
+  /**
+* Called once when component is attached. Generally for initial setup.
+*/
+  init: function () { },
 
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
+  /**
+  * Called when component is attached and when component data changes.
+  * Generally modifies the entity based on the data.
+  */
   update: function (oldData) {
+    const self = this
     let el = this.el;
     let data = this.data;
 
-
     /**
      * Update or create chart component
-     */
-    if (data.data !== oldData.data) {
-      //remove previous chart
-      while (this.el.firstChild)
-        this.el.firstChild.remove();
-      console.log("Generating Cylinder...")
-      generateCylinderChart(data, el)
+    */
+
+    // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+      while (self.el.firstChild)
+        self.el.firstChild.remove();
+      console.log("Generating 3Dcylynderchart from data...")
+      self.chart = generateCylinderChart(self.data, JSON.parse(data.data), self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+
+    } else {
+
+      // If changed from, need to re-register to the new data component
+      if (data.from !== oldData.from) {
+        // Unregister for old querier
+        if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        let eventName = findDataComponent(data, el, self)
+        // If changed to filterdata or to querier
+        if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+          el.removeEventListener(self.dataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.dataComponentEventName = eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.dataComponentEventName, function _listener(e) {
+          attachNewDataEventCallback(self, e)
+        });
+
+        // Register for the new one
+        self.dataComponent.register(el)
+        return
+      }
+
+      // If changed whatever, re-print with the current data
+      if (data !== oldData && self.babiaData) {
+        while (self.el.firstChild)
+          self.el.firstChild.remove();
+        console.log("Generating Cylinder...")
+        self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+      }
+
     }
+
   },
 
-      /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-   remove: function () { },
+  /**
+* Called when a component is removed (e.g., via removeAttribute).
+* Generally undoes all modifications to the entity.
+*/
+  remove: function () { },
 
-   /**
-   * Called on each scene tick.
-   */
-   // tick: function (t) { },
+  /**
+  * Called on each scene tick.
+  */
+  // tick: function (t) { },
 
-   /**
-   * Called when entity pauses.
-   * Use to stop or remove any dynamic or background behavior such as events.
-   */
-   pause: function () { },
+  /**
+  * Called when entity pauses.
+  * Use to stop or remove any dynamic or background behavior such as events.
+  */
+  pause: function () { },
 
-   /**
-   * Called when entity resumes.
-   * Use to continue or add any dynamic or background behavior such as events.
+  /**
+  * Called when entity resumes.
+  * Use to continue or add any dynamic or background behavior such as events.
+  */
+  play: function () { },
+
+  /**
+  * Querier component target
+  */
+  dataComponent: undefined,
+
+  /**
+   * Property of the querier where the data is saved
    */
-   play: function () { },
+  dataComponentDataPropertyName: "babiaData",
+
+  /**
+   * Event name to difference between querier and filterdata
+   */
+  dataComponentEventName: undefined,
+
+
+  /**
+   * Where the data is gonna be stored
+   */
+  babiaData: undefined,
+
+  /**
+   * Where the metaddata is gonna be stored
+   */
+  babiaMetadata: {
+    id: 0
+  },
+
+  /**
+   * Proportion of the bars
+   */
+  proportion: undefined,
+
+  /**
+   * Value max
+   */
+  valueMax: undefined,
+
+  /**
+   * Max radius
+   */
+  maxRadius: undefined,
+
+  /**
+   * Max radius
+   */
+  radius_scale: undefined,
 
 })
 
-let generateCylinderChart = (data, element) => {
-  if (data.data) {
-    const dataToPrint = JSON.parse(data.data)
+let findDataComponent = (data, el, self) => {
+  let eventName = "babiaQuerierDataReady"
+  if (data.from) {
+    // Save the reference to the querier or filterdata
+    let dataElement = document.getElementById(data.from)
+    if (dataElement.components['babiaxr-filterdata']) {
+      self.dataComponent = dataElement.components['babiaxr-filterdata']
+      eventName = "babiaFilterDataReady"
+    } else if (dataElement.components['babiaxr-querier_json']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_json']
+    } else if (dataElement.components['babiaxr-querier_es']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_es']
+    } else if (dataElement.components['babiaxr-querier_github']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_github']
+    } else {
+      console.error("Problem registering to the querier")
+      return
+    }
+  } else {
+    // Look for a querier or filterdata in the same element and register
+    if (el.components['babiaxr-filterdata']) {
+      self.dataComponent = el.components['babiaxr-filterdata']
+      eventName = "babiaFilterDataReady"
+    } else if (el.components['babiaxr-querier_json']) {
+      self.dataComponent = el.components['babiaxr-querier_json']
+    } else if (el.components['babiaxr-querier_es']) {
+      self.dataComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babiaxr-querier_github']) {
+      self.dataComponent = el.components['babiaxr-querier_github']
+    } else {
+      // Look for a querier or filterdata in the scene
+      if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+      } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+      } else {
+        console.error("Error, querier not found")
+        return
+      }
+    }
+  }
+  return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+  // Get the data from the info of the event (propertyName)
+  self.dataComponentDataPropertyName = e.detail
+  let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+  self.babiaData = rawData
+  self.babiaMetadata = {
+    id: self.babiaMetadata.id++
+  }
+
+  //remove previous chart
+  while (self.el.firstChild)
+    self.el.firstChild.remove();
+  console.log("Generating Cylinder...")
+  self.chart = generateCylinderChart(self.data, rawData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+}
+
+let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion, valueMax, radius_scale) => {
+  let stepMax
+  if (dataRetrieved) {
+    const dataToPrint = dataRetrieved
     const palette = data.palette
     const title = data.title
     const font = data.titleFont
@@ -600,22 +3580,22 @@ let generateCylinderChart = (data, element) => {
     let zaxis_dict = []
     let animation = data.animation
 
-    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
-    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
+    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
     if (scale) {
-        maxY = maxY / scale
-        maxRadius = maxRadius / scale
-    } else if (heightMax || radiusMax){
-        if (heightMax){
-          valueMax = maxY
-          proportion = heightMax / maxY
-          maxY = heightMax
-        }
-        if (radiusMax){
-          stepMax = maxRadius
-          radius_scale = radiusMax / maxRadius
-          maxRadius = radiusMax
-        }
+      maxY = maxY / scale
+      maxRadius = maxRadius / scale
+    } else if (heightMax || radiusMax) {
+      if (heightMax) {
+        valueMax = maxY
+        proportion = heightMax / maxY
+        maxY = heightMax
+      }
+      if (radiusMax) {
+        stepMax = maxRadius
+        radius_scale = radiusMax / maxRadius
+        maxRadius = radiusMax
+      }
     }
 
     let chart_entity = document.createElement('a-entity');
@@ -624,113 +3604,109 @@ let generateCylinderChart = (data, element) => {
     element.appendChild(chart_entity)
 
     for (let cylinder of dataToPrint) {
-        // Check if used in order to put the cylinder in the parent row
-        if (keys_used[cylinder['key']]) {
-            stepX = keys_used[cylinder['key']].posX
-            colorid = keys_used[cylinder['key']].colorid
-        } else {
-            stepX = maxX
-            colorid = maxColorId
-            //Save in used
-            keys_used[cylinder['key']] = {
-                "posX": maxX,
-                "colorid": maxColorId
-            }
-
-            //Axis dict
-            let cylinder_printed = {
-                colorid: colorid,
-                posX: stepX,
-                key: cylinder['key']
-            }
-            xaxis_dict.push(cylinder_printed)
-
-            maxX += 2 * maxRadius + 1
-            maxColorId++
+      // Check if used in order to put the cylinder in the parent row
+      if (keys_used[cylinder[data.x_axis]]) {
+        stepX = keys_used[cylinder[data.x_axis]].posX
+        colorid = keys_used[cylinder[data.x_axis]].colorid
+      } else {
+        stepX = maxX
+        colorid = maxColorId
+        //Save in used
+        keys_used[cylinder[data.x_axis]] = {
+          "posX": maxX,
+          "colorid": maxColorId
         }
 
-        // Get Z val
-        if (z_axis[cylinder['key2']]) {
-            stepZ = z_axis[cylinder['key2']].posZ
-        } else {
-            stepZ = maxZ
-            //Save in used
-            z_axis[cylinder['key2']] = {
-                "posZ": maxZ
-            }
+        //Axis dict
+        let cylinder_printed = {
+          colorid: colorid,
+          posX: stepX,
+          key: cylinder[data.x_axis]
+        }
+        xaxis_dict.push(cylinder_printed)
 
-            //Axis dict
-            let cylinder_printed = {
-                colorid: colorid,
-                posZ: stepZ,
-                key: cylinder['key2']
-            }
-            zaxis_dict.push(cylinder_printed)
+        maxX += 2 * maxRadius + 1
+        maxColorId++
+      }
 
-            maxZ += 2 * maxRadius + 1
+      // Get Z val
+      if (z_axis[cylinder[data.z_axis]]) {
+        stepZ = z_axis[cylinder[data.z_axis]].posZ
+      } else {
+        stepZ = maxZ
+        //Save in used
+        z_axis[cylinder[data.z_axis]] = {
+          "posZ": maxZ
         }
 
-        let cylinderEntity = generateCylinder(cylinder['height'], cylinder['radius'], colorid, palette, stepX, stepZ, animation, scale);
-        cylinderEntity.classList.add("babiaxraycasterclass")
-        
-        //Prepare legend
-        if (data.legend) {
-            showLegend(cylinderEntity, cylinder, element)
+        //Axis dict
+        let cylinder_printed = {
+          colorid: colorid,
+          posZ: stepZ,
+          key: cylinder[data.z_axis]
         }
+        zaxis_dict.push(cylinder_printed)
 
-        chart_entity.appendChild(cylinderEntity, element)
-        
-        //Print Title
-        let title_3d = showTitle(title, font, color, title_position);
-        element.appendChild(title_3d);
+        maxZ += 2 * maxRadius + 1
+      }
+
+      let cylinderEntity = generateCylinder(cylinder[data.height], cylinder[data.radius], colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
+      cylinderEntity.classList.add("babiaxraycasterclass")
+
+      //Prepare legend
+      if (data.legend) {
+        showLegend(data, cylinderEntity, cylinder, element)
+      }
+
+      chart_entity.appendChild(cylinderEntity, element)
+
+      //Print Title
+      let title_3d = showTitle(title, font, color, title_position);
+      element.appendChild(title_3d);
     }
 
     // Axis
     if (data.axis) {
-        showXAxis(element, maxX, xaxis_dict, palette)
-        showZAxis(element, maxZ, zaxis_dict)
-        showYAxis(element, maxY, scale)
+      showXAxis(element, maxX, xaxis_dict, palette, maxRadius)
+      showZAxis(element, maxZ, zaxis_dict, maxRadius)
+      showYAxis(element, maxY, scale, maxRadius, proportion, valueMax)
     }
   }
 }
 
-let maxRadius
-let proportion
-let valueMax
-let radius_scale
-let stepMax
 
-function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale) {
+
+function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   if (scale) {
-      height = height / scale
-      radius = radius / scale
-  } else if (proportion || radius_scale){
-      if (proportion){
-        height = proportion * height
-      }
-      if (radius_scale){
-        radius = radius_scale * radius
-      }
+    height = height / scale
+    radius = radius / scale
+  } else if (proportion || radius_scale) {
+    if (proportion) {
+      height = proportion * height
+    }
+    if (radius_scale) {
+      radius = radius_scale * radius
+    }
   }
   entity.setAttribute('color', color);
   entity.setAttribute('height', 0);
   entity.setAttribute('radius', radius);
   // Add animation
-  if (animation){
+  if (animation) {
     var duration = 4000
-    var increment = 20 * height / duration 
+    var increment = 20 * height / duration
     var size = 0
     var id = setInterval(animation, 1);
     function animation() {
-        if (size >= height) {
-            clearInterval(id);
-        } else {
-            size += increment;
-            entity.setAttribute('height', size);
-            entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ }); 
-        }  
+      if (size >= height) {
+        clearInterval(id);
+      } else {
+        size += increment;
+        entity.setAttribute('height', size);
+        entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
+      }
     }
   } else {
     entity.setAttribute('height', height);
@@ -739,116 +3715,116 @@ function generateCylinder(height, radius, colorid, palette, positionX, positionZ
   return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
   let color
-  for (let i in colors){
-      if(colors[i][palette]){
-          color = colors[i][palette][colorid%4]
-      }
+  for (let i in colors) {
+    if (colors[i][palette]) {
+      color = colors[i][palette][colorid % 4]
+    }
   }
   return color
 }
 
-function showXAxis(parent, xEnd, cylinder_printed, palette) {
+function showXAxis(parent, xEnd, cylinder_printed, palette, maxRadius) {
   let axis = document.createElement('a-entity');
 
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__xaxis', {
-      'start': { x: -maxRadius-1, y: 0, z: -maxRadius },
-      'end': { x: xEnd, y: 0, z: -maxRadius },
-      'color': '#ffffff'
+    'start': { x: -maxRadius - 1, y: 0, z: -maxRadius },
+    'end': { x: xEnd, y: 0, z: -maxRadius },
+    'color': '#ffffff'
   });
   axis_line.setAttribute('position', { x: 0, y: 0.1, z: - 1 });
   axis.appendChild(axis_line)
-  
+
   //Print keys
   cylinder_printed.forEach(e => {
-      let key = document.createElement('a-entity');
-      let color = getColor(e.colorid, palette)
-      key.setAttribute('text', {
-          'value': e.key,
-          'align': 'left',
-          'width': 30,
-          'color': color
-      });
-      key.setAttribute('position', { x: e.posX, y: 0.1, z: -maxRadius - 16.5 })
-      key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
-      axis.appendChild(key)
+    let key = document.createElement('a-entity');
+    let color = getColor(e.colorid, palette)
+    key.setAttribute('text', {
+      'value': e.key,
+      'align': 'left',
+      'width': 30,
+      'color': color
+    });
+    key.setAttribute('position', { x: e.posX, y: 0.1, z: -maxRadius - 16.5 })
+    key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+    axis.appendChild(key)
   });
 
   //axis completion
   parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, maxRadius, proportion, valueMax) {
   let axis = document.createElement('a-entity');
   let yLimit = yEnd
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__yaxis', {
-      'start': { x: -maxRadius, y: 0, z: 0 },
-      'end': { x: -maxRadius, y: yEnd, z: 0 },
-      'color': '#ffffff'
+    'start': { x: -maxRadius, y: 0, z: 0 },
+    'end': { x: -maxRadius, y: yEnd, z: 0 },
+    'color': '#ffffff'
   });
-  axis_line.setAttribute('position', { x: -1, y: 0, z: -maxRadius-1});
+  axis_line.setAttribute('position', { x: -1, y: 0, z: -maxRadius - 1 });
   axis.appendChild(axis_line)
 
-  if (proportion){
-      yLimit = yLimit / proportion
-      var mod = Math.floor(Math.log10(valueMax))
-  } 
-  for (let i = 0; i<=yLimit; i++){
-      let key = document.createElement('a-entity');
-      let value = i
-      let pow = Math.pow(10, mod-1)
-      if (!proportion || (proportion && i%pow === 0)){  
-          key.setAttribute('text', {
-              'value': value,
-              'align': 'right',
-              'width': 10,
-              'color': 'white '
-          });
-          if (scale){
-              key.setAttribute('text', {'value': value * scale})
-              key.setAttribute('position', { x: -maxRadius - 6.5, y: value, z: -maxRadius - 1 })
-          } else if (proportion){
-              key.setAttribute('position', { x: -maxRadius - 6.5, y: i * proportion, z: -maxRadius - 1 })
-          } else {
-              key.setAttribute('position', {x: -maxRadius - 6.5, y: i, z: -maxRadius - 1})
-          }     
+  if (proportion) {
+    yLimit = yLimit / proportion
+    var mod = Math.floor(Math.log10(valueMax))
+  }
+  for (let i = 0; i <= yLimit; i++) {
+    let key = document.createElement('a-entity');
+    let value = i
+    let pow = Math.pow(10, mod - 1)
+    if (!proportion || (proportion && i % pow === 0)) {
+      key.setAttribute('text', {
+        'value': value,
+        'align': 'right',
+        'width': 10,
+        'color': 'white '
+      });
+      if (scale) {
+        key.setAttribute('text', { 'value': value * scale })
+        key.setAttribute('position', { x: -maxRadius - 6.5, y: value, z: -maxRadius - 1 })
+      } else if (proportion) {
+        key.setAttribute('position', { x: -maxRadius - 6.5, y: i * proportion, z: -maxRadius - 1 })
+      } else {
+        key.setAttribute('position', { x: -maxRadius - 6.5, y: i, z: -maxRadius - 1 })
       }
-      axis.appendChild(key)
+    }
+    axis.appendChild(key)
   }
 
   //axis completion
   parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, cylinder_printed) {
+function showZAxis(parent, zEnd, cylinder_printed, maxRadius) {
   let axis = document.createElement('a-entity');
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__xaxis', {
-      'start': { x: -maxRadius, y: 0.1, z: 0 },
-      'end': { x: -maxRadius, y: 0.1, z: zEnd + maxRadius},
-      'color': '#ffffff'
+    'start': { x: -maxRadius, y: 0.1, z: 0 },
+    'end': { x: -maxRadius, y: 0.1, z: zEnd + maxRadius },
+    'color': '#ffffff'
   });
-  axis_line.setAttribute('position', { x: -1 , y: 0, z: -maxRadius - 1 });
+  axis_line.setAttribute('position', { x: -1, y: 0, z: -maxRadius - 1 });
   axis.appendChild(axis_line)
 
   //Print keys
   cylinder_printed.forEach(e => {
-      let key = document.createElement('a-entity');
-      key.setAttribute('text', {
-          'value': e.key,
-          'align': 'right',
-          'width': 30,
-          'color': '#ffffff'
-      });
-      key.setAttribute('position', { x: -maxRadius - 16.5, y: 0.1, z: e.posZ })
-      key.setAttribute('rotation', { x: -90, y: 0.1, z: 0 });
-      axis.appendChild(key)
+    let key = document.createElement('a-entity');
+    key.setAttribute('text', {
+      'value': e.key,
+      'align': 'right',
+      'width': 30,
+      'color': '#ffffff'
+    });
+    key.setAttribute('position', { x: -maxRadius - 16.5, y: 0.1, z: e.posZ })
+    key.setAttribute('rotation', { x: -90, y: 0.1, z: 0 });
+    axis.appendChild(key)
   });
 
   //axis completion
@@ -856,28 +3832,28 @@ function showZAxis(parent, zEnd, cylinder_printed) {
 }
 
 
-function showLegend(cylinderEntity, cylinder, element) {
+function showLegend(data, cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
-      this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-      legend = generateLegend(cylinder, cylinderEntity);
-      element.appendChild(legend);
+    this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
+    legend = generateLegend(data, cylinder, cylinderEntity);
+    element.appendChild(legend);
   });
 
   cylinderEntity.addEventListener('mouseleave', function () {
-      this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-      element.removeChild(legend);
+    this.setAttribute('scale', { x: 1, y: 1, z: 1 });
+    element.removeChild(legend);
   });
 }
 
-function generateLegend(cylinder, cylinderEntity) {
+function generateLegend(data, cylinder, cylinderEntity) {
   let text = ''
   let lines = []
-  lines.push(cylinder['key'] + ' ' + cylinder['key2'] + '\n');
-  lines.push('Height: ' + cylinder['height'] + '\n');
-  lines.push('Radius: ' + cylinder['radius'])
+  lines.push(cylinder[data.x_axis] + ' ' + cylinder[data.z_axis] + '\n');
+  lines.push('Height: ' + cylinder[data.height] + '\n');
+  lines.push('Radius: ' + cylinder[data.radius])
   let width = 5;
-  for (let line of lines){
-    if ((line.length > 10) && (width < line.length / 2)){
+  for (let line of lines) {
+    if ((line.length > 10) && (width < line.length / 2)) {
       width = line.length / 2;
     }
     text += line
@@ -885,58 +3861,60 @@ function generateLegend(cylinder, cylinderEntity) {
 
   let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3, 
-                                    z: cylinderPosition.z + cylinder['radius'] / 2});
+  entity.setAttribute('position', {
+    x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3,
+    z: cylinderPosition.z + cylinder[data.radius] / 2
+  });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '4');
-  entity.setAttribute('width', width );
+  entity.setAttribute('width', width);
   entity.setAttribute('color', 'white');
   entity.setAttribute('text', {
-      'value': text,
-      'align': 'center',
-      'width': 20,
-      'color': 'black'
+    'value': text,
+    'align': 'center',
+    'width': 20,
+    'color': 'black'
   });
   entity.classList.add("babiaxrLegend")
   return entity;
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
   let entity = document.createElement('a-entity');
-  entity.setAttribute('text-geometry',{
-      value : title,
+  entity.setAttribute('text-geometry', {
+    value: title,
   });
-  if (font){
-      entity.setAttribute('text-geometry', {
-          font: font,
-      })
+  if (font) {
+    entity.setAttribute('text-geometry', {
+      font: font,
+    })
   }
-  if (color){
-      entity.setAttribute('material' ,{
-          color : color
-      })
+  if (color) {
+    entity.setAttribute('material', {
+      color: color
+    })
   }
-  var position = position.split(" ") 
-  entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-  entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+  var position = position.split(" ")
+  entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
   entity.classList.add("babiaxrTitle")
   return entity;
 }
 
 let colors = [
-  {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-  {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-  {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-  {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-  {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-  {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-  {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-  {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-  {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+  { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+  { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+  { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+  { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+  { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+  { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+  { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+  { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+  { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 /***/ }),
-/* 2 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -950,17 +3928,22 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-bubbleschart', {
     schema: {
         data: { type: 'string' },
+        height: { type: 'string', default: 'height' },
+        radius: { type: 'string', default: 'radius' },
+        x_axis: { type: 'string', default: 'x_axis' },
+        z_axis: { type: 'string', default: 'z_axis' },
+        from: { type: 'string' },
         legend: { type: 'boolean' },
         axis: { type: 'boolean', default: true },
-        animation: {type: 'boolean', default: false},
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        scale: {type: 'number'},
-        heightMax: {type: 'number'},
-        radiusMax: {type: 'number'},
+        animation: { type: 'boolean', default: false },
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        scale: { type: 'number' },
+        heightMax: { type: 'number' },
+        radiusMax: { type: 'number' },
     },
 
     /**
@@ -971,11 +3954,7 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let el = this.el;
-        let metrics = ['height', 'radius', 'x_axis', 'z_axis'];
-        el.setAttribute('babiaToRepresent', metrics);
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -983,20 +3962,56 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     */
 
     update: function (oldData) {
+        const self = this;
         let data = this.data;
         let el = this.el;
 
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            //remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating geobubbleschart...")
-            generateBubblesChart(data, el)
+        // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+        while (self.el.firstChild)
+          self.el.firstChild.remove();
+        console.log("Generating 3Dcylynderchart from data...")
+        self.chart = generateBubblesChart(self.data, JSON.parse(self.data.data), self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+  
+      } else {
+  
+        // If changed from, need to re-register to the new data component
+        if (data.from !== oldData.from) {
+          // Unregister for old querier
+          if (self.dataComponent) { self.dataComponent.unregister(el) }
+  
+          // Find the component and get if querier or filterdata by the event               
+          let eventName = findDataComponent(data, el, self)
+          // If changed to filterdata or to querier
+          if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+            el.removeEventListener(self.dataComponentEventName, _listener, true)
+          }
+          // Assign new eventName
+          self.dataComponentEventName = eventName
+  
+          // Attach to the events of the data component
+          el.addEventListener(self.dataComponentEventName, function _listener(e) {
+            attachNewDataEventCallback(self, e)
+          });
+  
+          // Register for the new one
+          self.dataComponent.register(el)
+          return
         }
+  
+        // If changed whatever, re-print with the current data
+        if (data !== oldData && self.babiaData) {
+          while (self.el.firstChild)
+            self.el.firstChild.remove();
+          console.log("Generating Cylinder...")
+          self.chart = generateBubblesChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+        }
+      }
     },
+
     /**
     * Called when a component is removed (e.g., via removeAttribute).
     * Generally undoes all modifications to the entity.
@@ -1020,11 +4035,125 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
     */
     play: function () { },
 
+    /**
+    * Proportion of the bars
+    */
+    proportion: undefined,
+
+    /**
+     * Value max
+     */
+    valueMax: undefined,
+
+    /**
+     * Width of the bubbles
+     */
+    widthBubbles: 0,
+
+    /**
+     * Max radius
+     */
+    radius_scale: undefined,
+
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
 })
 
-let generateBubblesChart = (data, element) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+      // Save the reference to the querier or filterdata
+      let dataElement = document.getElementById(data.from)
+      if (dataElement.components['babiaxr-filterdata']) {
+        self.dataComponent = dataElement.components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (dataElement.components['babiaxr-querier_json']) {
+        self.dataComponent = dataElement.components['babiaxr-querier_json']
+      } else if (dataElement.components['babiaxr-querier_es']) {
+        self.dataComponent = dataElement.components['babiaxr-querier_es']
+      } else if (dataElement.components['babiaxr-querier_github']) {
+        self.dataComponent = dataElement.components['babiaxr-querier_github']
+      } else {
+        console.error("Problem registering to the querier")
+        return
+      }
+    } else {
+      // Look for a querier or filterdata in the same element and register
+      if (el.components['babiaxr-filterdata']) {
+        self.dataComponent = el.components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (el.components['babiaxr-querier_json']) {
+        self.dataComponent = el.components['babiaxr-querier_json']
+      } else if (el.components['babiaxr-querier_es']) {
+        self.dataComponent = el.components['babiaxr-querier_es']
+      } else if (el.components['babiaxr-querier_github']) {
+        self.dataComponent = el.components['babiaxr-querier_github']
+      } else {
+        // Look for a querier or filterdata in the scene
+        if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+          eventName = "babiaFilterDataReady"
+        } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+        } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+        } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+        } else {
+          console.error("Error, querier not found")
+          return
+        }
+      }
+    }
+    return eventName
+  }
+  
+  let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+  
+    self.babiaData = rawData
+    self.babiaMetadata = {
+      id: self.babiaMetadata.id++
+    }
+  
+    //remove previous chart
+    while (self.el.firstChild)
+      self.el.firstChild.remove();
+    console.log("Generating Bubbles...")
+    self.chart = generateBubblesChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.widthBubbles, self.radius_scale)
+  }
+
+
+let generateBubblesChart = (data, dataRetrieved, element, proportion, valueMax, widthBubbles, radius_scale) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
@@ -1034,6 +4163,7 @@ let generateBubblesChart = (data, element) => {
         const heightMax = data.heightMax
         const radiusMax = data.radiusMax
 
+        let stepMax
         let colorid = 0
         let maxColorId = 0
         let stepX = 0
@@ -1046,21 +4176,21 @@ let generateBubblesChart = (data, element) => {
         let zaxis_dict = []
         let animation = data.animation
 
-        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; }))
-        widthBubbles = Math.max.apply(Math, Object.keys( dataToPrint ).map(function (o) { return dataToPrint[o].radius; }))
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+        widthBubbles = Math.max.apply(Math, Object.keys(dataToPrint).map(function (o) { return dataToPrint[o][data.radius]; }))
         if (scale) {
             maxY = maxY / scale
             widthBubbles = widthBubbles / scale
-        } else if (heightMax || radiusMax){
-            if (heightMax){
-              valueMax = maxY
-              proportion = heightMax / maxY
-              maxY = heightMax
+        } else if (heightMax || radiusMax) {
+            if (heightMax) {
+                valueMax = maxY
+                proportion = heightMax / maxY
+                maxY = heightMax
             }
-            if (radiusMax){
-              stepMax = widthBubbles
-              radius_scale = radiusMax / widthBubbles
-              widthBubbles = radiusMax
+            if (radiusMax) {
+                stepMax = widthBubbles
+                radius_scale = radiusMax / widthBubbles
+                widthBubbles = radiusMax
             }
         }
 
@@ -1071,14 +4201,14 @@ let generateBubblesChart = (data, element) => {
 
         for (let bubble of dataToPrint) {
             // Check if used in order to put the bubble in the parent row
-            if (keys_used[bubble['key']]) {
-                stepX = keys_used[bubble['key']].posX
-                colorid = keys_used[bubble['key']].colorid
+            if (keys_used[bubble[data.x_axis]]) {
+                stepX = keys_used[bubble[data.x_axis]].posX
+                colorid = keys_used[bubble[data.x_axis]].colorid
             } else {
                 stepX = maxX
                 colorid = maxColorId
                 //Save in used
-                keys_used[bubble['key']] = {
+                keys_used[bubble[data.x_axis]] = {
                     "posX": maxX,
                     "colorid": maxColorId
                 }
@@ -1087,7 +4217,7 @@ let generateBubblesChart = (data, element) => {
                 let bubble_printed = {
                     colorid: colorid,
                     posX: stepX,
-                    key: bubble['key']
+                    key: bubble[data.x_axis]
                 }
                 xaxis_dict.push(bubble_printed)
 
@@ -1096,12 +4226,12 @@ let generateBubblesChart = (data, element) => {
             }
 
             // Get Z val
-            if (z_axis[bubble['key2']]) {
-                stepZ = z_axis[bubble['key2']].posZ
+            if (z_axis[bubble[data.z_axis]]) {
+                stepZ = z_axis[bubble[data.z_axis]].posZ
             } else {
                 stepZ = maxZ
                 //Save in used
-                z_axis[bubble['key2']] = {
+                z_axis[bubble[data.z_axis]] = {
                     "posZ": maxZ
                 }
 
@@ -1109,19 +4239,19 @@ let generateBubblesChart = (data, element) => {
                 let bubble_printed = {
                     colorid: colorid,
                     posZ: stepZ,
-                    key: bubble['key2']
+                    key: bubble[data.z_axis]
                 }
                 zaxis_dict.push(bubble_printed)
 
                 maxZ += 2 * widthBubbles
             }
 
-            let bubbleEntity = generateBubble(bubble['radius'], bubble['height'], widthBubbles, colorid, palette, stepX, stepZ, animation, scale);
+            let bubbleEntity = generateBubble(bubble[data.radius], bubble[data.height], widthBubbles, colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
             bubbleEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(bubbleEntity, bubble, element)
+                showLegend(data, bubbleEntity, bubble, element)
             }
 
             chart_entity.appendChild(bubbleEntity);
@@ -1130,9 +4260,9 @@ let generateBubblesChart = (data, element) => {
 
         // Axis
         if (data.axis) {
-            showXAxis(element, maxX, xaxis_dict)
-            showZAxis(element, maxZ, zaxis_dict)
-            showYAxis(element, maxY, scale)
+            showXAxis(element, maxX, xaxis_dict, palette, widthBubbles)
+            showZAxis(element, maxZ, zaxis_dict, palette, widthBubbles)
+            showYAxis(element, maxY, scale, proportion, valueMax, widthBubbles)
         }
 
         //Print Title
@@ -1141,58 +4271,53 @@ let generateBubblesChart = (data, element) => {
     }
 }
 
-let widthBubbles = 0
-let proportion
-let valueMax
-let radius_scale
-let stepMax
 
-function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation, scale) {
+function generateBubble(radius, height, width, colorid, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {
     let color = getColor(colorid, palette)
     console.log("Generating bubble...")
     if (scale) {
         height = height / scale
         radius = radius / scale
-    } else if (proportion || radius_scale){
-        if (proportion){
-          height = proportion * height
+    } else if (proportion || radius_scale) {
+        if (proportion) {
+            height = proportion * height
         }
-        if (radius_scale){
-          radius = radius_scale * radius
+        if (radius_scale) {
+            radius = radius_scale * radius
         }
     }
     let entity = document.createElement('a-sphere');
     entity.setAttribute('color', color);
     entity.setAttribute('radius', radius);
     // Add Animation
-  if (animation) {
-    let from = positionX.toString() + " " + radius.toString() + " " + positionZ.toString()
-    let to = positionX.toString() + " " + (radius + height).toString() + " " + positionZ.toString()
-    entity.setAttribute('animation__position',{
-      'property': 'position',
-      'from': from,
-      'to': to,
-      'dur': '3000',
-      'easing': 'linear',
-    })
-  } else {
-    entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
-  }
+    if (animation) {
+        let from = positionX.toString() + " " + radius.toString() + " " + positionZ.toString()
+        let to = positionX.toString() + " " + (radius + height).toString() + " " + positionZ.toString()
+        entity.setAttribute('animation__position', {
+            'property': 'position',
+            'from': from,
+            'to': to,
+            'dur': '3000',
+            'easing': 'linear',
+        })
+    } else {
+        entity.setAttribute('position', { x: positionX, y: radius + height, z: positionZ });
+    }
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
 }
 
-function generateLegend(bubble, bubbleEntity) {
-    let text = bubble['key'] + ': \n Radius:' + bubble['radius'] + '\nHeight:' + bubble['height'];
+function generateLegend(data, bubble, bubbleEntity) {
+    let text = bubble[data.x_axis] + ': \n Radius:' + bubble[data.radius] + '\nHeight:' + bubble[data.height];
 
     let width = 2;
     if (text.length > 16)
@@ -1201,8 +4326,10 @@ function generateLegend(bubble, bubbleEntity) {
     let bubblePosition = bubbleEntity.getAttribute('position')
     let bubbleRadius = parseFloat(bubbleEntity.getAttribute('radius'))
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: bubblePosition.x, y: bubblePosition.y + bubbleRadius + 1,
-                                      z: bubblePosition.z + 0.1 });
+    entity.setAttribute('position', {
+        x: bubblePosition.x, y: bubblePosition.y + bubbleRadius + 1,
+        z: bubblePosition.z + 0.1
+    });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -1217,10 +4344,10 @@ function generateLegend(bubble, bubbleEntity) {
     return entity;
 }
 
-function showLegend(bubbleEntity, bubble, element) {
+function showLegend(data, bubbleEntity, bubble, element) {
     bubbleEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bubble, bubbleEntity);
+        legend = generateLegend(data, bubble, bubbleEntity);
         element.appendChild(legend);
     });
 
@@ -1231,7 +4358,7 @@ function showLegend(bubbleEntity, bubble, element) {
 }
 
 
-function showXAxis(parent, xEnd, bubbles_printed, palette) {
+function showXAxis(parent, xEnd, bubbles_printed, palette, widthBubbles) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -1253,7 +4380,7 @@ function showXAxis(parent, xEnd, bubbles_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBubbles-3.2 })
+        key.setAttribute('position', { x: e.posX, y: 0, z: -widthBubbles - 3.2 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
         axis.appendChild(key)
     });
@@ -1262,7 +4389,7 @@ function showXAxis(parent, xEnd, bubbles_printed, palette) {
     parent.appendChild(axis)
 }
 
-function showZAxis(parent, zEnd, bubbles_printed, palette) {
+function showZAxis(parent, zEnd, bubbles_printed, palette, widthBubbles) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -1284,7 +4411,7 @@ function showZAxis(parent, zEnd, bubbles_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: -widthBubbles-5.2, y: 0, z: e.posZ })
+        key.setAttribute('position', { x: -widthBubbles - 5.2, y: 0, z: e.posZ })
         key.setAttribute('rotation', { x: -90, y: 0, z: 0 });
         axis.appendChild(key)
     });
@@ -1294,7 +4421,7 @@ function showZAxis(parent, zEnd, bubbles_printed, palette) {
 }
 
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, proportion, valueMax, widthBubbles) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
     //Print line
@@ -1307,29 +4434,29 @@ function showYAxis(parent, yEnd, scale) {
     axis_line.setAttribute('position', { x: 0, y: 0, z: -(widthBubbles / 2 + widthBubbles / 4) });
     axis.appendChild(axis_line)
 
-    if (proportion){
+    if (proportion) {
         yLimit = yLimit / proportion
         var mod = Math.floor(Math.log10(valueMax))
-    } 
-    for (let i = 0; i<=yLimit; i++){
+    }
+    for (let i = 0; i <= yLimit; i++) {
         let key = document.createElement('a-entity');
         let value = i
-        let pow = Math.pow(10, mod-1)
-        if (!proportion || (proportion && i%pow === 0)){  
+        let pow = Math.pow(10, mod - 1)
+        if (!proportion || (proportion && i % pow === 0)) {
             key.setAttribute('text', {
                 'value': value,
                 'align': 'right',
                 'width': 10,
                 'color': 'white '
             });
-            if (scale){
-                key.setAttribute('text', {'value': value * scale})
-                key.setAttribute('position', { x: -widthBubbles-5.2, y: value, z: -(widthBubbles / 2 + widthBubbles / 4) })
-            } else if (proportion){
-                key.setAttribute('position', { x: -widthBubbles-5.2, y: i * proportion, z: -(widthBubbles / 2 + widthBubbles / 4)})
+            if (scale) {
+                key.setAttribute('text', { 'value': value * scale })
+                key.setAttribute('position', { x: -widthBubbles - 5.2, y: value, z: -(widthBubbles / 2 + widthBubbles / 4) })
+            } else if (proportion) {
+                key.setAttribute('position', { x: -widthBubbles - 5.2, y: i * proportion, z: -(widthBubbles / 2 + widthBubbles / 4) })
             } else {
-                key.setAttribute('position', { x: -widthBubbles-5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4)})
-            }     
+                key.setAttribute('position', { x: -widthBubbles - 5.2, y: i, z: -(widthBubbles / 2 + widthBubbles / 4) })
+            }
         }
         axis.appendChild(key)
     }
@@ -1338,43 +4465,43 @@ function showYAxis(parent, yEnd, scale) {
     parent.appendChild(axis)
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 
 /***/ }),
-/* 3 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* global AFRAME */
@@ -2912,7 +6039,7 @@ function hslToRgb(h, s, l) {
 }
 
 /***/ }),
-/* 4 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -2926,38 +6053,39 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-cylinderchart', {
   schema: {
     data: { type: 'string' },
+    height: { type: 'string', default: 'height' },
+    radius: { type: 'string', default: 'radius' },
+    x_axis: { type: 'string', default: 'x_axis' },
+    from: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
-    animation: {type: 'boolean', default: false},
-    palette: {type: 'string', default: 'ubuntu'},
-    title: {type: 'string'},
-    titleFont: {type: 'string'},
-    titleColor: {type: 'string'},
-    titlePosition: {type: 'string', default: "0 0 0"},
-    scale: {type: 'number'},
-    heightMax: {type: 'number'},
-    radiusMax: {type: 'number'},
+    animation: { type: 'boolean', default: false },
+    palette: { type: 'string', default: 'ubuntu' },
+    title: { type: 'string' },
+    titleFont: { type: 'string' },
+    titleColor: { type: 'string' },
+    titlePosition: { type: 'string', default: "0 0 0" },
+    scale: { type: 'number' },
+    heightMax: { type: 'number' },
+    radiusMax: { type: 'number' },
   },
 
-      /**
-    * Set if component needs multiple instancing.
-    */
-   multiple: false,
+  /**
+* Set if component needs multiple instancing.
+*/
+  multiple: false,
 
-      /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-  init: function () {
-    let el = this.el;
-    let metrics = ['height', 'radius', 'x_axis'];
-    el.setAttribute('babiaToRepresent', metrics);
-  },
+  /**
+* Called once when component is attached. Generally for initial setup.
+*/
+  init: function () { },
 
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
+  /**
+  * Called when component is attached and when component data changes.
+  * Generally modifies the entity based on the data.
+  */
   update: function (oldData) {
+    const self = this;
     let el = this.el;
     let data = this.data;
 
@@ -2965,43 +6093,196 @@ AFRAME.registerComponent('babiaxr-cylinderchart', {
     /**
      * Update or create chart component
      */
-    if (data.data !== oldData.data) {
-      //remove previous chart
-      while (this.el.firstChild)
-        this.el.firstChild.remove();
-      console.log("Generating Cylinder...")
-      generateCylinderChart(data, el)
+
+    // Highest priority to data
+    if (data.data && oldData.data !== data.data) {
+      while (self.el.firstChild)
+        self.el.firstChild.remove();
+      console.log("Generating 3Dcylynderchart from data...")
+      self.chart = generateCylinderChart(self.data, JSON.parse(self.data.data), self.el, self.proportion, self.valueMax, self.maxRadius, self.radius_scale, self.firstradius)
+
+    } else {
+
+      // If changed from, need to re-register to the new data component
+      if (data.from !== oldData.from) {
+        // Unregister for old querier
+        if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        let eventName = findDataComponent(data, el, self)
+        // If changed to filterdata or to querier
+        if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+          el.removeEventListener(self.dataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.dataComponentEventName = eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.dataComponentEventName, function _listener(e) {
+          attachNewDataEventCallback(self, e)
+        });
+
+        // Register for the new one
+        self.dataComponent.register(el)
+        return
+      }
+
+      // If changed whatever, re-print with the current data
+      if (data !== oldData && self.babiaData) {
+        while (self.el.firstChild)
+          self.el.firstChild.remove();
+        console.log("Generating Cylinder...")
+        self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.proportion, self.valueMax, self.maxRadius, self.radius_scale, self.firstradius)
+      }
     }
   },
 
-      /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-   remove: function () { },
+  /**
+* Called when a component is removed (e.g., via removeAttribute).
+* Generally undoes all modifications to the entity.
+*/
+  remove: function () { },
 
-   /**
-   * Called on each scene tick.
+  /**
+  * Called on each scene tick.
+  */
+  // tick: function (t) { },
+
+  /**
+  * Called when entity pauses.
+  * Use to stop or remove any dynamic or background behavior such as events.
+  */
+  pause: function () { },
+
+  /**
+  * Called when entity resumes.
+  * Use to continue or add any dynamic or background behavior such as events.
+  */
+  play: function () { },
+
+  /**
+  * Querier component target
+  */
+  dataComponent: undefined,
+
+  /**
+   * Property of the querier where the data is saved
    */
-   // tick: function (t) { },
+  dataComponentDataPropertyName: "babiaData",
 
-   /**
-   * Called when entity pauses.
-   * Use to stop or remove any dynamic or background behavior such as events.
+  /**
+   * Event name to difference between querier and filterdata
    */
-   pause: function () { },
+  dataComponentEventName: undefined,
 
-   /**
-   * Called when entity resumes.
-   * Use to continue or add any dynamic or background behavior such as events.
+
+  /**
+   * Where the data is gonna be stored
    */
-   play: function () { },
+  babiaData: undefined,
 
+  /**
+   * Where the metaddata is gonna be stored
+   */
+  babiaMetadata: {
+    id: 0
+  },
+
+  /**
+   * Proportion of the bars
+   */
+  proportion: undefined,
+
+  /**
+   * Value max
+   */
+  valueMax: undefined,
+
+  /**
+   * Max radius
+   */
+  maxRadius: undefined,
+
+  /**
+   * Max radius
+   */
+  radius_scale: undefined,
+
+  /**
+   * First radius
+   */
+  firstradius: undefined,
 })
 
-let generateCylinderChart = (data, element) => {
-  if (data.data){
-    const dataToPrint = JSON.parse(data.data)
+let findDataComponent = (data, el, self) => {
+  let eventName = "babiaQuerierDataReady"
+  if (data.from) {
+    // Save the reference to the querier or filterdata
+    let dataElement = document.getElementById(data.from)
+    if (dataElement.components['babiaxr-filterdata']) {
+      self.dataComponent = dataElement.components['babiaxr-filterdata']
+      eventName = "babiaFilterDataReady"
+    } else if (dataElement.components['babiaxr-querier_json']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_json']
+    } else if (dataElement.components['babiaxr-querier_es']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_es']
+    } else if (dataElement.components['babiaxr-querier_github']) {
+      self.dataComponent = dataElement.components['babiaxr-querier_github']
+    } else {
+      console.error("Problem registering to the querier")
+      return
+    }
+  } else {
+    // Look for a querier or filterdata in the same element and register
+    if (el.components['babiaxr-filterdata']) {
+      self.dataComponent = el.components['babiaxr-filterdata']
+      eventName = "babiaFilterDataReady"
+    } else if (el.components['babiaxr-querier_json']) {
+      self.dataComponent = el.components['babiaxr-querier_json']
+    } else if (el.components['babiaxr-querier_es']) {
+      self.dataComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babiaxr-querier_github']) {
+      self.dataComponent = el.components['babiaxr-querier_github']
+    } else {
+      // Look for a querier or filterdata in the scene
+      if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+        eventName = "babiaFilterDataReady"
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+      } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+      } else {
+        console.error("Error, querier not found")
+        return
+      }
+    }
+  }
+  return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+  // Get the data from the info of the event (propertyName)
+  self.dataComponentDataPropertyName = e.detail
+  let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+  self.babiaData = rawData
+  self.babiaMetadata = {
+    id: self.babiaMetadata.id++
+  }
+
+  //remove previous chart
+  while (self.el.firstChild)
+    self.el.firstChild.remove();
+  console.log("Generating Cylinder...")
+  self.chart = generateCylinderChart(self.data, rawData, self.el, self.proportion, self.valueMax, self.maxRadius, self.radius_scale, self.firstradius)
+}
+
+let generateCylinderChart = (data, dataRetrieved, element, proportion, valueMax, maxRadius, radius_scale, firstradius) => {
+  if (dataRetrieved) {
+    const dataToPrint = dataRetrieved
     const palette = data.palette
     const title = data.title
     const font = data.titleFont
@@ -3011,28 +6292,29 @@ let generateCylinderChart = (data, element) => {
     const heightMax = data.heightMax
     const radiusMax = data.radiusMax
 
+    let stepMax
     let colorid = 0
     let stepX = 0
     let lastradius = 0
     let axis_dict = []
     let animation = data.animation
 
-    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o.height; })) 
-    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o.radius; }))
+    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
     if (scale) {
-        maxY = maxY / scale
-        maxRadius = maxRadius / scale
-    } else if (heightMax || radiusMax){
-        if (heightMax){
-          valueMax = maxY
-          proportion = heightMax / maxY
-          maxY = heightMax
-        }
-        if (radiusMax){
-          stepMax = maxRadius
-          radius_scale = radiusMax / maxRadius
-          maxRadius = radiusMax
-        }
+      maxY = maxY / scale
+      maxRadius = maxRadius / scale
+    } else if (heightMax || radiusMax) {
+      if (heightMax) {
+        valueMax = maxY
+        proportion = heightMax / maxY
+        maxY = heightMax
+      }
+      if (radiusMax) {
+        stepMax = maxRadius
+        radius_scale = radiusMax / maxRadius
+        maxRadius = radiusMax
+      }
     }
 
     let chart_entity = document.createElement('a-entity');
@@ -3041,8 +6323,8 @@ let generateCylinderChart = (data, element) => {
     element.appendChild(chart_entity)
 
     for (let cylinder of dataToPrint) {
-      let radius = cylinder['radius']
-      let height = cylinder['height']
+      let radius = cylinder[data.radius]
+      let height = cylinder[data.height]
 
       if (cylinder !== dataToPrint[0]) {
         //Calculate stepX
@@ -3051,11 +6333,11 @@ let generateCylinderChart = (data, element) => {
         } else if (radiusMax) {
           stepX += lastradius + radius * radius_scale + 1
         } else {
-          stepX += lastradius + radius + 1  
+          stepX += lastradius + radius + 1
         }
-        
+
       } else {
-        if (scale){
+        if (scale) {
           firstradius = radius / scale
         } else if (radiusMax) {
           firstradius = radius * radius_scale
@@ -3064,42 +6346,42 @@ let generateCylinderChart = (data, element) => {
         }
       }
 
-      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation, scale)
+      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, animation, scale, proportion, radius_scale)
       chart_entity.appendChild(cylinderEntity);
       cylinderEntity.classList.add("babiaxraycasterclass")
 
       //Prepare legend
       if (data.legend) {
-        showLegend(cylinderEntity, cylinder, element)
+        showLegend(data, cylinderEntity, cylinder, element, maxRadius)
       }
 
       //Axis dict
       let cylinder_printed = {
         colorid: colorid,
         posX: stepX,
-        key: cylinder['key']
+        key: cylinder[data.x_axis]
       }
       axis_dict.push(cylinder_printed)
 
       // update lastradius
-      if (!scale && !radius_scale){
+      if (!scale && !radius_scale) {
         lastradius = radius
       } else {
-        if (scale){
+        if (scale) {
           lastradius = radius / scale
         } else {
           lastradius = radius_scale * radius
         }
       }
-      
+
       //Increase color id
       colorid++
     }
 
     //Print axis
     if (data.axis) {
-      showXAxis(element, stepX + lastradius, axis_dict, palette)
-      showYAxis(element, maxY, scale)
+      showXAxis(element, stepX + lastradius, axis_dict, palette, maxRadius, firstradius)
+      showYAxis(element, maxY, scale, proportion, valueMax, maxRadius, firstradius)
     }
 
     //Print Title
@@ -3109,24 +6391,18 @@ let generateCylinderChart = (data, element) => {
   }
 }
 
-let firstradius
-let maxRadius
-let proportion
-let valueMax
-let radius_scale
-let stepMax
 
-function generateCylinder(height, radius, colorid, palette, position, animation, scale) {
+function generateCylinder(height, radius, colorid, palette, position, animation, scale, proportion, radius_scale) {
   let color = getColor(colorid, palette)
   let entity = document.createElement('a-cylinder');
   if (scale) {
-      height = height / scale
-      radius = radius / scale
-  } else if (proportion || radius_scale){
-    if (proportion){
+    height = height / scale
+    radius = radius / scale
+  } else if (proportion || radius_scale) {
+    if (proportion) {
       height = proportion * height
     }
-    if (radius_scale){
+    if (radius_scale) {
       radius = radius_scale * radius
     }
   }
@@ -3134,19 +6410,19 @@ function generateCylinder(height, radius, colorid, palette, position, animation,
   entity.setAttribute('height', 0);
   entity.setAttribute('radius', radius);
   // Add animation
-  if (animation){
+  if (animation) {
     var duration = 4000
-    var increment = 20 * height / duration 
+    var increment = 20 * height / duration
     var size = 0
     var id = setInterval(animation, 1);
     function animation() {
-        if (size >= height) {
-            clearInterval(id);
-        } else {
-            size += increment;
-            entity.setAttribute('height', size);
-            entity.setAttribute('position', { x: position, y: size / 2, z: 0 }); 
-        }  
+      if (size >= height) {
+        clearInterval(id);
+      } else {
+        size += increment;
+        entity.setAttribute('height', size);
+        entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
+      }
     }
   } else {
     entity.setAttribute('height', height);
@@ -3155,297 +6431,167 @@ function generateCylinder(height, radius, colorid, palette, position, animation,
   return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
   let color
-  for (let i in colors){
-      if(colors[i][palette]){
-          color = colors[i][palette][colorid%4]
-      }
+  for (let i in colors) {
+    if (colors[i][palette]) {
+      color = colors[i][palette][colorid % 4]
+    }
   }
   return color
 }
 
-function showXAxis(parent, xEnd, cylinder_printed, palette) {
+function showXAxis(parent, xEnd, cylinder_printed, palette, maxRadius, firstradius) {
   let axis = document.createElement('a-entity');
 
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__xaxis', {
-      'start': { x: -firstradius, y: 0, z: 0 },
-      'end': { x: xEnd, y: 0, z: 0 },
-      'color': '#ffffff'
+    'start': { x: -firstradius, y: 0, z: 0 },
+    'end': { x: xEnd, y: 0, z: 0 },
+    'color': '#ffffff'
   });
   axis_line.setAttribute('position', { x: 0, y: 0, z: maxRadius + 1 });
   axis.appendChild(axis_line)
-  
+
   //Print keys
   cylinder_printed.forEach(e => {
-      let key = document.createElement('a-entity');
-      let color = getColor(e.colorid, palette)
-      key.setAttribute('text', {
-          'value': e.key,
-          'align': 'right',
-          'width': 20,
-          'color': color
-      });
-      key.setAttribute('position', { x: e.posX, y: 0.1, z: maxRadius + 11.5 })
-      key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
-      axis.appendChild(key)
+    let key = document.createElement('a-entity');
+    let color = getColor(e.colorid, palette)
+    key.setAttribute('text', {
+      'value': e.key,
+      'align': 'right',
+      'width': 20,
+      'color': color
+    });
+    key.setAttribute('position', { x: e.posX, y: 0.1, z: maxRadius + 11.5 })
+    key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+    axis.appendChild(key)
   });
 
   //axis completion
   parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(parent, yEnd, scale, proportion, valueMax, maxRadius, firstradius) {
   let axis = document.createElement('a-entity');
   let yLimit = yEnd
   //Print line
   let axis_line = document.createElement('a-entity');
   axis_line.setAttribute('line__yaxis', {
-      'start': { x: -firstradius, y: 0, z: 0 },
-      'end': { x: -firstradius, y: yEnd, z: 0 },
-      'color': '#ffffff'
+    'start': { x: -firstradius, y: 0, z: 0 },
+    'end': { x: -firstradius, y: yEnd, z: 0 },
+    'color': '#ffffff'
   });
-  axis_line.setAttribute('position', { x: 0, y: 0, z: maxRadius + 1});
+  axis_line.setAttribute('position', { x: 0, y: 0, z: maxRadius + 1 });
   axis.appendChild(axis_line)
 
-  if (proportion){
+  if (proportion) {
     yLimit = yLimit / proportion
     var mod = Math.floor(Math.log10(valueMax))
-  }   
-  for (let i = 0; i<=yLimit; i++){
-      let key = document.createElement('a-entity');
-      let value = i
-      let pow = Math.pow(10, mod-1)
-      if (!proportion || (proportion && i%pow === 0)){  
-        key.setAttribute('text', {
-            'value': value,
-            'align': 'right',
-            'width': 10,
-            'color': 'white '
-        });
-        if (scale){
-            key.setAttribute('text', {'value': value * scale})
-            key.setAttribute('position', { x: -maxRadius-5.2, y: value, z: maxRadius + 1})
-        } else if (proportion){
-            key.setAttribute('position', {x: -maxRadius-5.2, y: i * proportion, z: maxRadius + 1})
-        } else {
-            key.setAttribute('position', {x: -maxRadius-5.2, y: i, z: maxRadius + 1})
-        }      
+  }
+  for (let i = 0; i <= yLimit; i++) {
+    let key = document.createElement('a-entity');
+    let value = i
+    let pow = Math.pow(10, mod - 1)
+    if (!proportion || (proportion && i % pow === 0)) {
+      key.setAttribute('text', {
+        'value': value,
+        'align': 'right',
+        'width': 10,
+        'color': 'white '
+      });
+      if (scale) {
+        key.setAttribute('text', { 'value': value * scale })
+        key.setAttribute('position', { x: -maxRadius - 5.2, y: value, z: maxRadius + 1 })
+      } else if (proportion) {
+        key.setAttribute('position', { x: -maxRadius - 5.2, y: i * proportion, z: maxRadius + 1 })
+      } else {
+        key.setAttribute('position', { x: -maxRadius - 5.2, y: i, z: maxRadius + 1 })
+      }
     }
-      axis.appendChild(key)
+    axis.appendChild(key)
   }
 
   //axis completion
   parent.appendChild(axis)
 }
 
-function showLegend(cylinderEntity, cylinder, element) {
+function showLegend(data, cylinderEntity, cylinder, element, maxRadius) {
   cylinderEntity.addEventListener('mouseenter', function () {
-      this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-      legend = generateLegend(cylinder, cylinderEntity);
-      element.appendChild(legend);
+    this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
+    legend = generateLegend(data, cylinder, cylinderEntity, maxRadius);
+    element.appendChild(legend);
   });
 
   cylinderEntity.addEventListener('mouseleave', function () {
-      this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-      element.removeChild(legend);
+    this.setAttribute('scale', { x: 1, y: 1, z: 1 });
+    element.removeChild(legend);
   });
 }
 
-function generateLegend(cylinder, cylinderEntity) {
-  let text = cylinder['key'] + ': ' + cylinder['height'];
+function generateLegend(data, cylinder, cylinderEntity, maxRadius) {
+  let text = cylinder[data.x_axis] + ': ' + cylinder[data.height];
   let width = 5;
   if (text.length > 16)
-      width = text.length / 2;
+    width = text.length / 2;
 
   let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', { x: cylinderPosition.x, y: 2 * cylinderPosition.y + 2,
-                                    z: cylinderPosition.z + maxRadius + 0.5 });
+  entity.setAttribute('position', {
+    x: cylinderPosition.x, y: 2 * cylinderPosition.y + 2,
+    z: cylinderPosition.z + maxRadius + 0.5
+  });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '1.5');
   entity.setAttribute('width', width);
   entity.setAttribute('color', 'white');
   entity.setAttribute('text', {
-      'value': cylinder['key'] + ': ' + cylinder['height'],
-      'align': 'center',
-      'width': 20,
-      'color': 'black'
+    'value': cylinder[data.x_axis] + ': ' + cylinder[data.height],
+    'align': 'center',
+    'width': 20,
+    'color': 'black'
   });
   entity.classList.add("babiaxrLegend")
   return entity;
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
   let entity = document.createElement('a-entity');
-  entity.setAttribute('text-geometry',{
-      value : title,
+  entity.setAttribute('text-geometry', {
+    value: title,
   });
-  if (font){
-      entity.setAttribute('text-geometry', {
-          font: font,
-      })
+  if (font) {
+    entity.setAttribute('text-geometry', {
+      font: font,
+    })
   }
-  if (color){
-      entity.setAttribute('material' ,{
-          color : color
-      })
+  if (color) {
+    entity.setAttribute('material', {
+      color: color
+    })
   }
-  var position = position.split(" ") 
-  entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-  entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+  var position = position.split(" ")
+  entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
   entity.classList.add("babiaxrTitle")
   return entity;
 }
 
 let colors = [
-  {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-  {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-  {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-  {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-  {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-  {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-  {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-  {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-  {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+  { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+  { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+  { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+  { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+  { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+  { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+  { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+  { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+  { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-debug-data', {
-    schema: {
-        inputEvent: { type: 'string' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.input && data.output) {
-            listenEvent(data, el);
-        }
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        /**
-         * Update geometry component
-         */
-        if (data !== oldData) {
-            if (data.inputEvent !== oldData.inputEvent) {
-                console.log("Change event because from has changed")
-                // Remove the event of the old interaction
-                el.removeEventListener(data.inputEvent, function (e) { })
-                // Listen and map the new event
-                listenEvent(data, el);
-            }
-        }
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let listenEvent = (data, el) => {
-    el.addEventListener(data.inputEvent, function (e) {
-        // Dispatch/Trigger/Fire the event
-        showDebugPlane(data, el)
-    });
-}
-
-let showDebugPlane = (data, el) => {
-    if (!el.querySelector('.debug-data')) {
-        // Get data from the attribute of the entity
-        let debugPanel = generateDebugPanel(data, el, el.getAttribute('babiaData'));
-        el.appendChild(debugPanel)
-    }
-}
-
-function generateDebugPanel(data, el, dataToShow) {
-    const HEIGHT_PLANE_DEBUG = 10
-    const WIDTH_PLANE_DEBUG = 10
-    let entity = document.createElement('a-plane');
-    entity.setAttribute('color', 'white');
-    entity.setAttribute('class', 'debug_data');
-    entity.setAttribute('width', HEIGHT_PLANE_DEBUG);
-    entity.setAttribute('height', WIDTH_PLANE_DEBUG);
-    let parentPos = el.getAttribute("position")
-    let parentWidth = 0;
-    let parentHeight = 0;
-    if (el.getAttribute("geometry")) {
-        if (el.components.geometry.data.primitive === "box") {
-            parentWidth = el.getAttribute("geometry").width/2
-            parentHeight = el.getAttribute("geometry").height/2
-        } else if (el.components.geometry.data.primitive === "sphere") {
-            parentWidth = el.getAttribute("geometry").radius
-        } else {
-            parentWidth = 0
-            parentHeight = 0
-        }
-        
-    }
-    entity.setAttribute('position', { x: parentPos.x + parentWidth + WIDTH_PLANE_DEBUG / 2, y: 0 - parentHeight + HEIGHT_PLANE_DEBUG / 2, z: parentPos.z });
-
-    let textEntity = document.createElement('a-text');
-    textEntity.setAttribute('value', JSON.stringify(dataToShow));
-    textEntity.setAttribute('width', HEIGHT_PLANE_DEBUG);
-    textEntity.setAttribute('height', WIDTH_PLANE_DEBUG);
-    textEntity.setAttribute('color', 'black');
-    textEntity.setAttribute('position', { x: 0 - entity.getAttribute('width') / 2, y: 0 - el.getAttribute("height") / 2, z: 0 });
-
-    entity.appendChild(textEntity)
-    return entity;
-}
-
-/***/ }),
-/* 6 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -3459,13 +6605,16 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-doughnutchart', {
     schema: {
         data: { type: 'string' },
+        size: { type: 'string', default: 'size' },
+        key: { type: 'string', default: 'key' },
+        from: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        animation: {type: 'boolean', default: false},
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        animation: { type: 'boolean', default: false },
     },
 
     /**
@@ -3476,11 +6625,7 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let el = this.el;
-        let metrics = ['slice'];
-        el.setAttribute('babiaToRepresent', metrics);
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -3488,19 +6633,56 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     */
 
     update: function (oldData) {
+        let self = this;
         let data = this.data;
         let el = this.el;
 
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            //remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating pie...")
-            generateDoughnut(data, el)
-            loaded = true
+
+        if (data.data && oldData.data !== data.data) {
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            console.log("Generating 3Dcylynderchart from data...")
+            self.chart = generateDoughnut(self.data, JSON.parse(self.data.data), self.el, self.total_duration, self.slice_array)
+            self.loaded = true
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    self.slice_array = []
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating Cylinder...")
+                self.slice_array = []
+                self.chart = generateDoughnut(self.data, self.babiaData, self.el, self.total_duration, self.slice_array)
+                self.loaded = true
+            }
         }
     },
     /**
@@ -3512,16 +6694,17 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     /**
     * Called on each scene tick.
     */
-   tick: function (t, delta) {
-        if (animation && loaded ){
+    tick: function (t, delta) {
+        let self = this;
+        if (self.data.animation && self.loaded) {
             let elements = document.getElementsByClassName('babiaxrChart')[0].children
-            for (let slice in slice_array){
-                let delay = slice_array[slice].delay
-                let max_arc = slice_array[slice].arc
+            for (let slice in self.slice_array) {
+                let delay = self.slice_array[slice].delay
+                let max_arc = self.slice_array[slice].arc
                 let arc = parseFloat(elements[slice].getAttribute('arc'))
-                if ((t >= delay) && ( arc < max_arc )){
-                    arc += 360 * delta / total_durtation
-                    if (arc > max_arc){
+                if ((t >= delay) && (arc < max_arc)) {
+                    arc += 360 * delta / self.total_duration
+                    if (arc > max_arc) {
                         arc = max_arc
                     }
                     elements[slice].setAttribute('arc', arc)
@@ -3542,27 +6725,132 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
     */
     play: function () { },
 
+    /**
+     * Loaded, for animation
+     */
+    loaded: false,
+
+    /**
+     * Slice array
+     */
+    slice_array: [],
+
+    /**
+     * Duration of the animation
+     */
+    total_duration: 4000,
+
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
 })
 
-let animation
-let slice_array = []
-let loaded = false
-let total_durtation = 4000
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
 
-let generateDoughnut = (data, element) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    //remove previous chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating Cylinder...")
+    self.chart = generateDoughnut(self.data, rawData, self.el, self.total_duration, self.slice_array)
+    self.loaded = true
+}
+
+let generateDoughnut = (data, dataRetrieved, element, total_duration, slice_array) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
-        animation = data.animation
+        let animation = data.animation
 
         // Change size to degrees
         let totalSize = 0
         for (let slice of dataToPrint) {
-            totalSize += slice['size'];
+            totalSize += slice[data.size];
         }
 
         let degreeStart = 0;
@@ -3572,22 +6860,22 @@ let generateDoughnut = (data, element) => {
 
         let chart_entity = document.createElement('a-entity');
         chart_entity.classList.add('babiaxrChart')
-        chart_entity.setAttribute('rotation', {y: 90})
+        chart_entity.setAttribute('rotation', { y: 90 })
 
         element.appendChild(chart_entity)
 
         let prev_delay = 0
         for (let slice of dataToPrint) {
             //Calculate degrees
-            degreeEnd = 360 * slice['size'] / totalSize;
+            degreeEnd = 360 * slice[data.size] / totalSize;
 
             let sliceEntity
-            if (animation){
-                let duration_slice = total_durtation * degreeEnd / 360
+            if (animation) {
+                let duration_slice = total_duration * degreeEnd / 360
                 slice_array.push({
-                    arc : degreeEnd,
+                    arc: degreeEnd,
                     duration: duration_slice,
-                    delay : prev_delay
+                    delay: prev_delay
                 })
                 prev_delay += duration_slice;
                 sliceEntity = generateDoughnutSlice(degreeStart, 0.01, 1, colorid, palette);
@@ -3601,7 +6889,7 @@ let generateDoughnut = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(sliceEntity, slice, element)
+                showLegend(data, sliceEntity, slice, element)
             }
 
             chart_entity.appendChild(sliceEntity);
@@ -3619,26 +6907,26 @@ function generateDoughnutSlice(position_start, arc, radius, colorid, palette) {
     console.log("Generating slice...")
     let entity = document.createElement('a-torus');
     entity.setAttribute('color', color);
-    entity.setAttribute('rotation', {x: 90, y: 0, z: position_start})
+    entity.setAttribute('rotation', { x: 90, y: 0, z: position_start })
     entity.setAttribute('arc', arc);
     entity.setAttribute('side', 'double');
     entity.setAttribute('radius', radius);
-    entity.setAttribute('radius-tubular', radius/4);
+    entity.setAttribute('radius-tubular', radius / 4);
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
 }
 
-function generateLegend(slice) {
-    let text = slice['key'] + ': ' + slice['size'];
+function generateLegend(data, slice) {
+    let text = slice[data.key] + ': ' + slice[data.size];
 
     let width = 2;
     if (text.length > 16)
@@ -3651,7 +6939,7 @@ function generateLegend(slice) {
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
     entity.setAttribute('text', {
-        'value': slice['key'] + ': ' + slice['size'],
+        'value': slice[data.key] + ': ' + slice[data.size],
         'align': 'center',
         'width': 6,
         'color': 'black'
@@ -3660,10 +6948,10 @@ function generateLegend(slice) {
     return entity;
 }
 
-function showLegend(sliceEntity, slice, element) {
+function showLegend(data, sliceEntity, slice, element) {
     sliceEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(slice);
+        legend = generateLegend(data, slice);
         element.appendChild(legend);
     });
 
@@ -3673,486 +6961,43 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: -90, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* Component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-event-controller', {
-    schema: {
-        navigation : {type : 'string'},
-        targets : { type: 'string' },
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {},
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        el = this.el
-        let data = this.data
-        
-        navigation = data.navigation
-        charts = JSON.parse(data.targets)
-
-        time_evol(navigation)      
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let el
-let navigation
-let charts
-var data_array
-var data_array_reverse = [] 
-let current
-let last
-let reverse = false
-let first_time = true
-let firts_point = 0
-
-function time_evol(navigation){ 
-    let commits = document.getElementById(navigation).getAttribute('babiaxr-navigation-bar').commits
-    if (commits && first_time){
-        data_array = JSON.parse(commits)
-        for ( let i in data_array){
-            data_array_reverse.push(data_array[i]) 
-        }
-        data_array_reverse.reverse() 
-        
-        // First current
-        if (reverse){
-            let position = (data_array.length - 1) - firts_point
-            current = data_array_reverse[firts_point]
-            last = position
-        } else {
-            current = data_array[firts_point]
-            last = firts_point
-        }
-        first_time = false
-        controls()
-    }
-}
-
-function play(array){
-    let i = 0
-    for (let x in array){
-        if (array[x] == current){
-            i = parseInt(x) + 1
-        }
-    }
-
-    let loop = setInterval( function() {
-        if (i < array.length){
-            current = array[i]
-
-            if (reverse){
-               let x = (array.length - 1) - i
-               showDate(x)
-               last = x
-            } else {
-                showDate(i)
-                last = i
-            }
-            
-            changeChart()
-            i++
-
-            document.addEventListener('babiaxrStop', function () {
-                clearInterval(loop)
-            })
-            if ( i == array.length){
-                let pause_button = document.getElementsByClassName('babiaxrPause')[0]
-                pause_button.emit('click')
-            }
-        } else {
-            el.emit('babiaxrStop')
-        }
-    }, 3000)
-}
-
-function skip(destination){
-    for ( let x in data_array ) {
-        if (data_array[x] == current){
-            if ((destination == 'next') && (x < data_array.length - 1)){
-                x++
-            } else if ((destination == 'prev') && (x >= 1)){
-                x--
-            }
-            current = data_array[x]
-            showDate(x)
-            last = x
-            break
-        }
-    }
-    changeChart()
-}
-
-function changePoint(point){
-    for (let x in data_array ) {
-        if (data_array[x].commit == point.commit){
-            current = data_array[x]
-            showDate(x)
-            last = x
-            break
-        }
-    }
-    changeChart()
-}
-
-function changeChart(){
-    let data= document.getElementById(current.commit).getAttribute('babiadata')
-    for (let i in charts){
-        let entity = document.getElementById(charts[i].id)
-        if (entity){
-            entity.setAttribute('babiaxr-vismapper', 'dataToShow', data)
-        }
-    }
-}
-
-function controls(){
-    if (reverse){
-        play(data_array_reverse)
-    } else {
-        play(data_array)
-    }
-    
-    document.addEventListener('babiaxrShow', function (event) {
-        changePoint(event.detail.data)
-        el.emit('babiaxrStop')
-    })
-
-    document.addEventListener('babiaxrContinue', function () {
-        console.log('PLAY')
-        if (reverse){
-            play(data_array_reverse)
-        } else {
-            play(data_array)
-        }
-    })
-
-    document.addEventListener('babiaxrToPresent', function () {
-        console.log('TO PRESENT')
-        reverse = false
-        el.emit('babiaxrStop')
-        play(data_array)
-    })
-
-    document.addEventListener('babiaxrToPast', function () {
-        console.log('TO PAST')
-        reverse = true
-        el.emit('babiaxrStop')
-        play(data_array_reverse)
-    })
-
-    document.addEventListener('babiaxrSkipNext', function () {
-        console.log('SKIP NEXT')
-        el.emit('babiaxrStop')
-        skip('next')
-    })
-
-    document.addEventListener('babiaxrSkipPrev', function () {
-        console.log('SKIP PREV')
-        el.emit('babiaxrStop')
-        skip('prev')
-    })
-}
-
-function showDate(i){
-    let entities = document.getElementsByClassName('babiaxrTimeBar')[0].children
-    if (last || last == 0 ){
-        let pointToHide = entities[last]
-        pointToHide.emit('removeinfo')
-    }
-    let pointToShow = entities[i]
-    pointToShow.emit('showinfo')
-}
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-  throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-filterdata', {
-  dependencies: ['babiaxr-querier', 'babiaxr-vismapper'],
-  schema: {
-    from: { type: 'string' },
-    filter: { type: 'string' }
-  },
-
-  /**
-  * Set if component needs multiple instancing.
-  */
-  multiple: false,
-
-  /**
-  * Called once when component is attached. Generally for initial setup.
-  */
-  init: function () {
-    let data = this.data;
-    let el = this.el;
-
-    console.log("FILTERDATA:" + data.filter)
-    filter = data.filter.split('=')
-    console.log(filter)
-    let querierElement = document.getElementById(data.from)
-    if (querierElement.getAttribute('babiaData')) {
-      let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
-      console.log(dataFromQuerier)
-      // Get if key or filter
-      saveEntityData(data, el, dataFromQuerier, filter[0], filter[1])
-    } else {
-      // Get if key or filter
-      document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        saveEntityData(data, el, e.detail, filter[0], filter[1])
-        el.setAttribute("babiaxr-filterdata", "dataRetrieved", data.dataRetrieved)
-      })
-    }
-  },
-
-  /**
-  * Called when component is attached and when component data changes.
-  * Generally modifies the entity based on the data.
-  */
-
-  update: function (oldData) {
-    let data = this.data;
-    let el = this.el;
-
-    // If entry it means that the data changed
-    if (data.dataRetrieved !== oldData.dataRetrieved) {
-      el.setAttribute("babiaxr-vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
-    }
-
-    if (data.from !== oldData.from) {
-      console.log("Change event because from has changed")
-      // Remove the event of the old querier
-      document.getElementById(data.from).removeEventListener('dataReady' + oldData.from, function (e) { })
-      // Listen the event when querier ready
-      document.getElementById(data.from).addEventListener('dataReady' + data.from, function (e) {
-        saveEntityData(data, el, e.detail, filter[0], filter[1])
-        el.setAttribute("babiaxr-vismapper", "dataToShow", JSON.stringify(data.dataRetrieved))
-      });
-    }
-
-  },
-  /**
-  * Called when a component is removed (e.g., via removeAttribute).
-  * Generally undoes all modifications to the entity.
-  */
-  remove: function () { },
-
-  /**
-  * Called on each scene tick.
-  */
-  // tick: function (t) { },
-
-  /**
-  * Called when entity pauses.
-  * Use to stop or remove any dynamic or background behavior such as events.
-  */
-  pause: function () { },
-
-  /**
-  * Called when entity resumes.
-  * Use to continue or add any dynamic or background behavior such as events.
-  */
-  play: function () { },
-
-})
-
-let filter
-
-let saveEntityData = (data, el, dataToSave, filter_field, filter_value) => {
-  if (filter_field && !filter_value) {
-    data.dataRetrieved = dataToSave[filter_field]
-    el.setAttribute("babiaData", JSON.stringify(dataToSave[filter_field]))
-  } else if (filter_field && filter_value) {
-    let dataToFilter = Object.values(dataToSave)
-    let dataFiltered = dataToFilter.filter((key) => key[filter_field] == filter_value )
-    dataFiltered = Object.assign({}, dataFiltered); 
-    data.dataRetrieved = dataFiltered
-    el.setAttribute('babiaData', JSON.stringify(dataFiltered))
-  } else {
-    data.dataRetrieved = dataToSave
-    el.setAttribute("babiaData", JSON.stringify(dataToSave))
-  }
-}
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-interaction-mapper', {
-    schema: {
-        input: { type: 'string' },
-        output: { type: 'string' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.input && data.output) {
-            mapEvents(data, el);
-        }
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        /**
-         * Update geometry component
-         */
-        // If entry it means that the properties changed
-        if (data !== oldData) {
-            if (data.input !== oldData.input || data.output !== oldData.output) {
-                console.log("Change event because from has changed")
-                // Remove the event of the old interaction
-                el.removeEventListener(oldData.input, function (e) { })
-                // Listen and map the new event
-                mapEvents(data, el);
-            }
-        }
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let mapEvents = (data, el) => {
-    el.addEventListener(data.input, function (e) {
-        // Dispatch/Trigger/Fire the event
-        el.emit(data.output, e, false);
-    });
-}
-
-/***/ }),
-/* 10 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -4625,622 +7470,7 @@ let generateLegend = (text, heightItem, boxPosition) => {
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-
-var debug = AFRAME.utils.debug;
-var coordinates = AFRAME.utils.coordinates;
-
-var warn = debug('components:look-at:warn');
-var isCoordinates = coordinates.isCoordinates || coordinates.isCoordinate;
-
-delete AFRAME.components['look-at'];
-
-/**
- * Look-at component.
- *
- * Modifies rotation to either track another entity OR do a one-time turn towards a position
- * vector.
- *
- * If tracking an object via setting the component value via a selector, look-at will register
- * a behavior to the scene to update rotation on every tick.
- */
-AFRAME.registerComponent('look-at', {
-  schema: {
-    default: '0 0 0',
-
-    parse: function (value) {
-      // A static position to look at.
-      if (isCoordinates(value) || typeof value === 'object') {
-        return coordinates.parse(value);
-      }
-      // A selector to a target entity.
-      return value;
-    },
-
-    stringify: function (data) {
-      if (typeof data === 'object') {
-        return coordinates.stringify(data);
-      }
-      return data;
-    }
-  },
-
-  init: function () {
-    this.target3D = null;
-    this.vector = new THREE.Vector3();
-    this.cameraListener = AFRAME.utils.bind(this.cameraListener, this);
-    this.el.addEventListener('componentinitialized', this.cameraListener);
-    this.el.addEventListener('componentremoved', this.cameraListener);
-  },
-
-  /**
-   * If tracking an object, this will be called on every tick.
-   * If looking at a position vector, this will only be called once (until further updates).
-   */
-  update: function () {
-    var self = this;
-    var target = self.data;
-    var targetEl;
-
-    // No longer looking at anything (i.e., look-at="").
-    if (!target || (typeof target === 'object' && !Object.keys(target).length)) {
-      return self.remove();
-    }
-
-    // Look at a position.
-    if (typeof target === 'object') {
-      return this.lookAt(new THREE.Vector3(target.x, target.y, target.z));
-    }
-
-    // Assume target is a string.
-    // Query for the element, grab its object3D, then register a behavior on the scene to
-    // track the target on every tick.
-    targetEl = self.el.sceneEl.querySelector(target);
-    if (!targetEl) {
-      warn('"' + target + '" does not point to a valid entity to look-at');
-      return;
-    }
-    if (!targetEl.hasLoaded) {
-      return targetEl.addEventListener('loaded', function () {
-        self.beginTracking(targetEl);
-      });
-    }
-    return self.beginTracking(targetEl);
-  },
-
-  tick: (function () {
-    var vec3 = new THREE.Vector3();
-
-    return function (t) {
-      // Track target object position. Depends on parent object keeping global transforms up
-      // to state with updateMatrixWorld(). In practice, this is handled by the renderer.
-      var target3D = this.target3D;
-      if (target3D) {
-        target3D.getWorldPosition(vec3);
-        this.lookAt(vec3);
-      }
-    }
-  })(),
-
-  remove: function () {
-    this.el.removeEventListener('componentinitialized', this.cameraListener);
-    this.el.removeEventListener('componentremoved', this.cameraListener);
-  },
-
-  beginTracking: function (targetEl) {
-    this.target3D = targetEl.object3D;
-  },
-
-  cameraListener: function (e) {
-    if (e.detail && e.detail.name === 'camera') {
-      this.update();
-    }
-  },
-
-  lookAt: function (position) {
-    var vector = this.vector;
-    var object3D = this.el.object3D;
-
-    if (this.el.getObject3D('camera')) {
-      // Flip the vector to -z, looking away from target for camera entities. When using
-      // lookat from THREE camera objects, this is applied for you, but since the camera is
-      // nested into a Object3D, we need to apply this manually.
-      vector.subVectors(object3D.position, position).add(object3D.position);
-    } else {
-      vector.copy(position);
-    }
-
-    object3D.lookAt(vector);
-  }
-});
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-let points
-let size
-let play_button
-let pause_button
-let player
-let el
-let last_color
-let point_color
-let to
-let start
-let max_points
-
-AFRAME.registerComponent('babiaxr-navigation-bar', {
-    schema: {
-        commits: { type: 'string' },
-        size: { type: 'number', default: '5'},
-        points_by_line: {type: 'number', default: '5'},
-        to: {type: 'string', default: 'left'},
-        start_point: {type: 'number', default: '0'},
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-   multiple: false,
-   
-    /**
-     * Initial creation and setting of the mesh.
-     */
-    init: function () {
-        let data = this.data
-        el = this.el
-        points = JSON.parse(data.commits)
-        size = data.size
-        to = data.to
-        start = data.start_point 
-        max_points = data.points_by_line
-        let time_bar = createTimeBar(points, size, max_points)
-        this.el.appendChild(time_bar)
-        player = createPlayer()
-        this.el.appendChild(player)
-        setStart()
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-   update: function (oldData) {
-   },
-
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-   remove: function () {},
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-   pause: function () {},
-
-   /**
-   * Called when entity resumes.
-   * Use to continue or add any dynamic or background behavior such as events.
-   */
-   play: function () {},
-
-})
-
-
-function createTimeBar(elements, size, maxpoints){
-    let timebar_entity = document.createElement('a-entity')
-    timebar_entity.classList.add('babiaxrTimeBar')
-
-    let posX = 0
-    let posY = (Math.ceil((elements.length / maxpoints)) / 5) - 0.2
-    let stepX = size / (maxpoints - 1)
-    let last_posX = 0
-    let lines = 1
-
-    for (let i in elements){
-        
-        let point = createTimePoint(elements[i])
-        point.classList.add('babiaxraycasterclass');
-        point.setAttribute('position', {x: posX, y: posY, z: 0});
-        timebar_entity.appendChild(point)
-
-        let x = i % maxpoints
-        if ((x == maxpoints-1) && (i != elements.length - 1)) {
-            lines++
-            posY -= 0.2
-            posX = 0
-        } else if (i != elements.length - 1){
-            posX += stepX
-        }
-        last_posX = posX
-    };
-
-    // Add Line 
-    for (let i = 0; i < lines; i++){
-        let bar_line = document.createElement('a-entity')      
-        if ((last_posX != 0 && i == 0) || (max_points == 1) ){  
-            bar_line.setAttribute('line',{
-                start : '0 ' + posY + ' 0',
-                end : last_posX + ' ' + posY + ' 0',
-                color : '#FF0000',
-            })  
-        } else if ((last_posX == 0 && i == 0)){
-            bar_line.setAttribute('line',{
-                start : '0 ' + posY + ' 0',
-                end : last_posX + ' ' + posY + ' 0',
-                color : '#FF0000',
-            })    
-        } else {
-            bar_line.setAttribute('line',{
-                start : '0 ' + posY + ' 0',
-                end : size + ' ' + posY + ' 0',
-                color : '#FF0000',
-            }) 
-        }
-        posY += 0.2
-        timebar_entity.appendChild(bar_line)  
-    } 
-
-    return timebar_entity
-}
-
-function createTimePoint(point){
-    let entity = document.createElement('a-sphere')
-    entity.setAttribute('radius', 0.05)
-    entity.setAttribute('material', {color: '#FF0000'})
-    showInfo(entity, point)
-    setPoint(entity, point)
-    return entity
-}
-
-function setStart(){
-    let points = document.getElementsByClassName('babiaxrTimeBar')[0].children
-    for (let i in points){
-        if ((i == start)){
-            points[i].emit('showinfo')
-        }
-    }
-}
-
-function setPoint(element, data){
-    element.addEventListener('click', function(){
-        this.setAttribute('material', {color : '#00AA00'})
-        point_color = this.getAttribute('material').color
-        el.emit('babiaxrShow', {data: data})
-        if (document.getElementsByClassName('babiaxrPause')[0]){
-            player.removeChild(pause_button)
-            player.appendChild(play_button)
-        }
-    });
-}
-
-function showInfo(element, data){
-    let legend
-    let legend2
-    element.addEventListener('mouseenter', function () {
-        point_color = this.getAttribute('material').color
-        this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 })
-        this.setAttribute('material', {color : '#AAAA00'})
-        legend2 = generateLegend(data)
-        this.appendChild(legend2)
-    });
-
-    element.addEventListener('showinfo', function () {
-        legend = generateLegend(data)
-        this.setAttribute('material', {color : '#00AA00'})
-        this.appendChild(legend)
-    });
-
-    element.addEventListener('mouseleave', function () {
-        this.setAttribute('scale', { x: 1, y: 1, z: 1 })
-        this.setAttribute('material', {color: point_color})
-        this.removeChild(legend2)
-    });
-
-    element.addEventListener('removeinfo', function () {
-        if(legend){
-            this.removeChild(legend)
-            this.setAttribute('material', {color: '#FF0000'})
-        }
-    });
-}
-
-function generateLegend (data) {
-    let text = ''
-    let lines = []
-    lines.push('Date: ' + data['date'] + '\n');
-    lines.push('commit: ' + data['commit'] + '\n');
-    let width = 1;
-    for (let line of lines){
-      if ((line.length > 10) && (width < line.length / 2)){
-        width = line.length / 7;
-      }
-      text += line
-    }
-
-    let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: 0, y: 0.4, z: 0.1 })
-    entity.setAttribute('scale', { x: 0.5, y: 0.5, z: 1 })
-    entity.setAttribute('height', '1');
-    entity.setAttribute('width', width);
-    entity.setAttribute('color', 'white');
-    entity.setAttribute('text', {
-        'value': text,
-        'align': 'center',
-        'width': 6,
-        'color': 'black'
-    });
-    entity.setAttribute('material', { opacity: 0.6 })
-    return entity;
-}
-
-function createPlayer(){
-
-    let player_entity = document.createElement('a-entity')
-    player_entity.classList.add('babiaxrPlayer')
-    player_entity.setAttribute('position', {x: (size - 5)/2, y: 0, z: 0})
-    player_entity.classList.add('babiaxraycasterclass');
-
-    play_button = playButton(player_entity)
-    play_button.setAttribute('position', {x: 2.35, y: -0.65, z: 0})
-    play_button.classList.add('babiaxraycasterclass');
-
-    pause_button = pauseButton()
-    pause_button.setAttribute('position', {x: 2.35, y: -0.65 , z: 0})
-    pause_button.classList.add('babiaxraycasterclass');
-    player_entity.appendChild(pause_button)
-
-    let rewind_button = rewindButton()
-    rewind_button.setAttribute('position', {x: 1.25, y: -0.65 , z: 0})
-    rewind_button.classList.add('babiaxraycasterclass');
-    player_entity.appendChild(rewind_button)
-
-    let forward_button = forwardButton()
-    forward_button.setAttribute('position', {x: 3.7, y: -0.65 , z: 0})
-    forward_button.classList.add('babiaxraycasterclass');
-    player_entity.appendChild(forward_button)
-
-    let skip_prev_button = skipPreviousButton()
-    skip_prev_button.setAttribute('position', {x: 1.95, y: -0.65 , z: 0})
-    skip_prev_button.classList.add('babiaxraycasterclass');
-    player_entity.appendChild(skip_prev_button)
-
-    let skip_next_button = skipNextButton()
-    skip_next_button.setAttribute('position', {x: 3, y: -0.65 , z: 0})
-    skip_next_button.classList.add('babiaxraycasterclass');
-    player_entity.appendChild(skip_next_button)
-
-    return player_entity
-}
-
-function playButton(player){
-    let entity = document.createElement('a-entity')
-    entity.classList.add('babiaxrPlay')
-    let vertices = [[0, 0, 0], [0, 3, 0], [2.5, 1.5, 0], [0, 0, 0]];
-    let button = load_model(vertices);
-    entity.setObject3D('mesh', button);
-
-    // Events
-    emitEvents(entity, 'babiaxrContinue')
-    mouseOver(entity)
-
-    return entity
-}
-
-function rewindButton(){
-    let entity = document.createElement('a-entity')
-    entity.classList.add('babiaxrRewind')
-    let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
-                    [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
-    let button = load_model(vertices);
-    entity.setObject3D('mesh', button);
-    entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
-    if (to == 'left'){
-        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
-    }
-
-    // Events
-    emitEvents(entity, 'babiaxrToPast')
-    mouseOver(entity)
-
-    return entity
-}
-
-function forwardButton(){
-    let entity = document.createElement('a-entity')
-    entity.classList.add('babiaxrForward')
-    let vertices = [[0, 0, 0], [0, 3, 0], [1.25, 1.5, 0], [1.25, 3, 0], [2.5, 1.5, 0],
-                    [1.25, 0, 0], [1.25, 1.5, 0], [0, 0, 0]];
-    let button = load_model(vertices);
-    entity.setObject3D('mesh', button);
-    if (to == 'right'){
-        entity.object3DMap.mesh.material.color = { r: 85/255, g: 85/255, b: 85/255 }
-    }
-
-    // Events
-    emitEvents(entity, 'babiaxrToPresent')
-    mouseOver(entity)
-
-    return entity
-}
-
-function skipPreviousButton(){
-    let entity = document.createElement('a-entity')
-    entity.classList.add('babiaxrSkipPrev')
-    let vertices = [[0, 0, 0], [0, 3, 0], [1, 1.5, 0], [1, 3, 0], [2, 1.5, 0], [2, 3, 0], [2.5, 3, 0],
-                    [2.5, 0, 0], [2, 0, 0], [2, 1.5, 0], [1, 0, 0], [1, 1.5, 0], [0, 0, 0]];
-    let button = load_model(vertices);
-    entity.setObject3D('mesh', button);
-    entity.setAttribute('rotation', {x: 0, y: 180, z: 0})
-
-    // Events
-    emitEvents(entity, 'babiaxrSkipPrev')
-    mouseOver(entity)
-
-    return entity
-}
-
-function skipNextButton(){
-    let entity = document.createElement('a-entity')
-    entity.classList.add('babiaxrSkipNext')
-    let vertices = [[0, 0, 0], [0, 3, 0], [1, 1.5, 0], [1, 3, 0], [2, 1.5, 0], [2, 3, 0], [2.5, 3, 0],
-                    [2.5, 0, 0], [2, 0, 0], [2, 1.5, 0], [1, 0, 0], [1, 1.5, 0], [0, 0, 0]];
-    let button = load_model(vertices);
-    entity.setObject3D('mesh', button);
-
-    // Events
-    emitEvents(entity, 'babiaxrSkipNext')
-    mouseOver(entity)
-
-    return entity
-}
-
-function pauseButton(){
-    let entity = document.createElement('a-entity')
-    entity.classList.add('babiaxrPause')
-    let vertices_1 = [[0, 0, 0], [0, 3, 0], [1, 3, 0], [1, 0, 0], [0, 0, 0]];
-    let vertices_2 = [[1.5, 0, 0],[1.5, 3, 0], [2.5, 3, 0], [2.5, 0, 0], [1.5, 0, 0]];
-    let button = merge_model(vertices_1, vertices_2);
-    entity.setObject3D('mesh', button);
-
-    // Events
-    emitEvents(entity, 'babiaxrStop')
-    mouseOver(entity)
-
-    return entity
-}
-
-function load_model(vertices){
-    let vertices_len = vertices.length;
-
-    let array_extrude = []
-    const scale = 0.11
-    for ( i = 0; i < vertices_len; i++ ) {
-        let x = scale * vertices[i][0];
-        let y = scale * vertices[i][1];
-        let z = scale * vertices[i][2];
-        let vector = new THREE.Vector3(x, y, z); // Create vertor
-        array_extrude.push(vector);
-    }
-
-    let fig_form = new  THREE.Shape(array_extrude)
-    let extrude_data = {
-        depth : 0.05,
-        bevelEnabled : false,
-        bevelSegments : 1,
-        steps : 1,
-        bevelThickness: 1,
-    };
-
-    // Material
-    let material = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, wireframe: false } );
-
-    let geometry_extrude = new THREE.ExtrudeGeometry(fig_form, extrude_data);
-    let mesh_extrude = new THREE.Mesh(geometry_extrude, material)
-
-    return mesh_extrude
-}
-
-function merge_model(vertices1, vertices2){
-    let vertices1_len = vertices1.length;
-    let vertices2_len = vertices2.length;
-
-    let array_extrude1 = []
-    let array_extrude2 = []
-    const scale = 0.11
-    for ( i = 0; i < vertices1_len; i++ ) {
-        let x = scale * vertices1[i][0];
-        let y = scale * vertices1[i][1];
-        let z = scale * vertices1[i][2];
-        let vector = new THREE.Vector3(x, y, z); // Create vertor
-        array_extrude1.push(vector);
-    }
-    for ( i = 0; i < vertices2_len; i++ ) {
-        let x = scale * vertices2[i][0];
-        let y = scale * vertices2[i][1];
-        let z = scale * vertices2[i][2];
-        let vector = new THREE.Vector3(x, y, z); // Create vertor
-        array_extrude2.push(vector);
-    }
-
-    // Figura
-    let fig_form1 = new  THREE.Shape(array_extrude1)
-    let fig_form2 = new  THREE.Shape(array_extrude2)
-
-    let extrude_data = {
-        depth : 0.05,
-        bevelEnabled : false,
-        bevelSegments : 1,
-        steps : 1,
-        bevelThickness: 1,
-    };
-
-    // Material
-    let material = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide, wireframe: false } );
-
-    // Hacer un merge de dos figuras
-    let geometry_extrude1 = new THREE.ExtrudeGeometry(fig_form1, extrude_data);
-    let geometry_extrude2 = new THREE.ExtrudeGeometry(fig_form2, extrude_data);
-    let mesh_extrude1 = new THREE.Mesh(geometry_extrude1, material);
-    mesh_extrude1.updateMatrix();
-    geometry_extrude2.merge(mesh_extrude1.geometry, mesh_extrude1.matrix);
-    let mesh_extrude2 = new THREE.Mesh(geometry_extrude2, material);
-
-    return mesh_extrude2;
-}
-
-function mouseOver(element){
-    element.addEventListener('mouseenter', function(){
-        last_color = Object.assign({}, this.object3DMap.mesh.material.color)
-        this.object3DMap.mesh.material.color = {r: 170/255, g: 170/255, b: 170/255}
-    })
-
-    element.addEventListener('mouseleave', function(){
-        this.object3DMap.mesh.material.color = last_color
-    })
-}
-
-function emitEvents(element, event_name){
-    element.addEventListener('click', function () {
-        if (element.classList.contains('babiaxrPlay')){
-            player.removeChild(element)
-            player.appendChild(pause_button)
-        } else if (element.classList.contains('babiaxrPause')){
-            player.removeChild(pause_button)
-            player.appendChild(play_button)
-        } else if ((element.classList.contains('babiaxrSkipNext')) || (element.classList.contains('babiaxrSkipPrev'))){
-            if (document.getElementsByClassName('babiaxrPause')[0]){
-                player.removeChild(pause_button)
-                player.appendChild(play_button)
-            }
-        } else if (element.classList.contains('babiaxrForward')){
-            last_color = { r: 85/255, g: 85/255, b: 85/255 }
-            let button = document.getElementsByClassName('babiaxrRewind')[0]
-            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
-        } else if (element.classList.contains('babiaxrRewind')){
-            last_color = { r: 85/255, g: 85/255, b: 85/255 }
-            let button = document.getElementsByClassName('babiaxrForward')[0]
-            button.object3DMap.mesh.material.color = { r: 255/255, g: 255/255, b: 255/255 }
-        }
-        console.log('Emit..... ' + event_name)
-        el.emit(event_name)
-    });
-}
-
-
-/***/ }),
-/* 13 */
+/* 18 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -5254,13 +7484,16 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-piechart', {
     schema: {
         data: { type: 'string' },
+        size: { type: 'string', default: 'size' },
+        key: { type: 'string', default: 'key' },
+        from: { type: 'string' },
         legend: { type: 'boolean' },
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        animation: {type: 'boolean', default: false},
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        animation: { type: 'boolean', default: false },
     },
 
     /**
@@ -5271,11 +7504,7 @@ AFRAME.registerComponent('babiaxr-piechart', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () {
-        let el = this.el;
-        let metrics = ['slice'];
-        el.setAttribute('babiaToRepresent', metrics);
-    },
+    init: function () { },
 
     /**
     * Called when component is attached and when component data changes.
@@ -5283,19 +7512,58 @@ AFRAME.registerComponent('babiaxr-piechart', {
     */
 
     update: function (oldData) {
+        let self = this;
         let data = this.data;
         let el = this.el;
 
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating pie...")
-            generatePie(data, el)
-            loaded = true
+
+        if (data.data && oldData.data !== data.data) {
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            console.log("Generating 3Dcylynderchart from data...")
+            self.chart = generatePie(self.data, JSON.parse(self.data.data), self.el, self.slice_array, self.total_duration)
+            self.loaded = true
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    self.slice_array = []
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating Cylinder...")
+                self.slice_array = []
+                self.chart = generatePie(self.data, self.babiaData, self.el, self.slice_array, self.total_duration)
+                self.loaded = true
+            }
         }
+
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -5307,22 +7575,23 @@ AFRAME.registerComponent('babiaxr-piechart', {
     * Called on each scene tick.
     */
     tick: function (t, delta) {
-        if (animation && loaded ){
+        let self = this;
+        if (self.data.animation && self.loaded) {
             let elements = document.getElementsByClassName('babiaxrChart')[0].children
-            for (let slice in slice_array){
-                let delay = slice_array[slice].delay
-                let max_length = slice_array[slice].degreeLenght
+            for (let slice in self.slice_array) {
+                let delay = self.slice_array[slice].delay
+                let max_length = self.slice_array[slice].degreeLenght
                 let theta_length = parseFloat(elements[slice].getAttribute('theta-length'))
-                if ((t >= delay) && ( theta_length < max_length )){
-                    theta_length += 360 * delta / total_durtation
-                    if (theta_length > max_length){
+                if ((t >= delay) && (theta_length < max_length)) {
+                    theta_length += 360 * delta / self.total_duration
+                    if (theta_length > max_length) {
                         theta_length = max_length
                     }
                     elements[slice].setAttribute('theta-length', theta_length)
                 }
             }
         }
-     },
+    },
 
     /**
     * Called when entity pauses.
@@ -5336,27 +7605,133 @@ AFRAME.registerComponent('babiaxr-piechart', {
     */
     play: function () { },
 
+    /**
+     * Loaded, for animation
+     */
+    loaded: false,
+
+    /**
+     * Slice array
+     */
+    slice_array: [],
+
+    /**
+     * Duration of the animation
+     */
+    total_duration: 4000,
+
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
 })
 
-let animation
-let slice_array = []
-let loaded = false
-let total_durtation = 4000
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
 
-let generatePie = (data, element) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    //remove previous chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating Cylinder...")
+    self.chart = generatePie(self.data, rawData, self.el, self.slice_array, self.total_duration)
+    self.loaded = true
+}
+
+
+let generatePie = (data, dataRetrieved, element, slice_array, total_duration) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
         const color = data.titleColor
         const title_position = data.titlePosition
-        animation = data.animation
+        let animation = data.animation
 
         // Change size to degrees
         let totalSize = 0
         for (let slice of dataToPrint) {
-            totalSize += slice['size'];
+            totalSize += slice[data.size];
         }
 
         let degreeStart = 0;
@@ -5372,15 +7747,15 @@ let generatePie = (data, element) => {
         let prev_delay = 0
         for (let slice of dataToPrint) {
             //Calculate degrees        
-            degreeEnd = 360 * slice['size'] / totalSize;
+            degreeEnd = 360 * slice[data.size] / totalSize;
 
             let sliceEntity
-            if (animation){
-                let duration_slice = total_durtation * degreeEnd / 360
+            if (animation) {
+                let duration_slice = total_duration * degreeEnd / 360
                 slice_array.push({
-                    degreeLenght : degreeEnd,
+                    degreeLenght: degreeEnd,
                     duration: duration_slice,
-                    delay : prev_delay
+                    delay: prev_delay
                 })
                 prev_delay += duration_slice;
                 sliceEntity = generateSlice(degreeStart, 0.01, 1, colorid, palette);
@@ -5394,7 +7769,7 @@ let generatePie = (data, element) => {
 
             //Prepare legend
             if (data.legend) {
-                showLegend(sliceEntity, slice, element)
+                showLegend(data, sliceEntity, slice, element)
             }
 
             chart_entity.appendChild(sliceEntity);
@@ -5418,18 +7793,18 @@ function generateSlice(theta_start, theta_length, radius, colorid, palette) {
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
 }
 
-function generateLegend(slice) {
-    let text = slice['key'] + ': ' + slice['size'];
+function generateLegend(data, slice) {
+    let text = slice[data.key] + ': ' + slice[data.size];
 
     let width = 2;
     if (text.length > 16)
@@ -5442,7 +7817,7 @@ function generateLegend(slice) {
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
     entity.setAttribute('text', {
-        'value': slice['key'] + ': ' + slice['size'],
+        'value': slice[data.key] + ': ' + slice[data.size],
         'align': 'center',
         'width': 6,
         'color': 'black'
@@ -5451,10 +7826,10 @@ function generateLegend(slice) {
     return entity;
 }
 
-function showLegend(sliceEntity, slice, element) {
+function showLegend(data, sliceEntity, slice, element) {
     sliceEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(slice);
+        legend = generateLegend(data, slice);
         element.appendChild(legend);
     });
 
@@ -5464,456 +7839,46 @@ function showLegend(sliceEntity, slice, element) {
     });
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: -90, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: -90, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
 
 
-   
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-querier_es', {
-    schema: {
-        elasticsearch_url: { type: 'string' },
-        index: { type: 'string' },
-        query: { type: 'string' },
-        size: { type: 'int', default: 10 },
-        user: { type: 'string' },
-        password: { type: 'string' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.elasticsearch_url && data.index) {
-            requestJSONDataFromES(data, el)
-        } else {
-            console.error("elasicsearch_url, index and body must be defined")
-        }
-
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.elasticsearch_url !== oldData.elasticsearch_url || 
-            data.index !== oldData.index || 
-            data.query !== oldData.query ||
-            data.size !== oldData.size) {
-            requestJSONDataFromES(data, el)
-        }
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-
-let requestJSONDataFromES = (data, el) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Initialize a request
-    request.open('get', `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            // Save data
-            if (typeof request.response === 'string' || request.response instanceof String) {
-                dataRaw = JSON.parse(request.response).hits.hits
-                data.dataRetrieved = {}
-                for (let i = 0; i < dataRaw.length; i++) {
-                    data.dataRetrieved[i] = dataRaw[i]._source
-                }
-            } else {
-                data.dataRetrieved = request.response
-            }
-            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
-
-            // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-    };
-    request.send();
-}
 
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-querier_github', {
-    schema: {
-        user: { type: 'string' },
-        token: { type: 'string' },
-        repos: { type: 'array' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-
-        if (data.user && (data.repos.length === 0)) {
-            requestAllReposFromUser(data, el)
-        } else if (data.repos.length > 0) {
-            requestReposFromList(data, el)
-        }
-
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let requestReposFromList = (data, el) => {
-    let dataOfRepos = {}
-
-    data.repos.forEach((e, i) => {
-        // Create a new request object
-        let request = new XMLHttpRequest();
-
-        // Create url
-        let url = "https://api.github.com/repos/" + data.user + "/" + e + "?_=" + new Date().getTime();
-
-        // Initialize a request
-        request.open('get', url, false)
-        // Send it
-        request.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                console.log("data OK in request.response", el.id)
-
-                // Save data
-                let rawData = JSON.parse(request.response)
-                dataOfRepos[rawData.name] = rawData;
-
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
-                });
-            }
-        };
-        request.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        };
-        request.send();
-    })
-
-    // Save data
-    data.dataRetrieved = dataOfRepos
-    el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
-
-    // Dispatch/Trigger/Fire the event
-    el.emit("dataReady" + el.id, data.dataRetrieved)
-}
-
-
-let requestAllReposFromUser = (data, el) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Create url
-    let url = "https://api.github.com/users/" + data.user + "/repos?_=" + new Date().getTime();
-
-    // Initialize a request
-    request.open('get', url)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            console.log("data OK in request.response", el.id)
-
-            // Save data
-            data.dataRetrieved = allReposParse(JSON.parse(request.response))
-            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
-
-            // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-    };
-    request.send();
-}
-
-let allReposParse = (data) => {
-    let dataParsed = {}
-    data.forEach((e, i) => {
-        dataParsed[e.name] = e
-    });
-    return dataParsed
-}
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-querier_json', {
-    schema: {
-        url: { type: 'string' },
-        embedded: { type: 'string' }
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-        if (data.url) {
-            requestJSONDataFromURL(data, el)
-        } else if (data.embedded) {
-            parseEmbeddedJSONData(data, el)
-        }
-
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-
-let requestJSONDataFromURL = (data, el) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Initialize a request
-    request.open('get', data.url)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            //console.log("data OK in request.response", request.response)
-
-            // Save data
-            if (typeof request.response === 'string' || request.response instanceof String) {
-                data.dataRetrieved = JSON.parse(request.response)
-            } else {
-                data.dataRetrieved = request.response
-            }
-            el.setAttribute("babiaData", JSON.stringify(data.dataRetrieved))
-
-            // Dispatch/Trigger/Fire the event
-            el.emit("dataReady" + el.id, data.dataRetrieved)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-    };
-    request.send();
-}
-
-let parseEmbeddedJSONData = (data, el) => {
-    // Save data
-    data.dataRetrieved = JSON.parse(data.embedded)
-    el.setAttribute("babiaData", data.embedded)
-
-    // Dispatch/Trigger/Fire the event
-    el.emit("dataReady" + el.id, data.embedded)
-}
-
-/***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -5927,17 +7892,25 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('babiaxr-simplebarchart', {
     schema: {
         data: { type: 'string' },
+        height: { type: 'string', default: 'height' },
+        x_axis: { type: 'string', default: 'x_axis' },
+        from: { type: 'string' },
         legend: { type: 'boolean', default: false },
         axis: { type: 'boolean', default: true },
-        animation: {type: 'boolean', default: false},
-        palette: {type: 'string', default: 'ubuntu'},
-        title: {type: 'string'},
-        titleFont: {type: 'string'},
-        titleColor: {type: 'string'},
-        titlePosition: {type: 'string', default: "0 0 0"},
-        scale: {type: 'number'},
-        heightMax: {type: 'number'},
+        animation: { type: 'boolean', default: false },
+        palette: { type: 'string', default: 'ubuntu' },
+        title: { type: 'string' },
+        titleFont: { type: 'string' },
+        titleColor: { type: 'string' },
+        titlePosition: { type: 'string', default: "0 0 0" },
+        scale: { type: 'number' },
+        heightMax: { type: 'number' },
     },
+
+    /**
+     * List of visualization properties
+     */
+    visProperties: ['height', 'x_axis'],
 
     /**
     * Set if component needs multiple instancing.
@@ -5948,13 +7921,8 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
-
         this.time = Date.now();
         this.anime_finished = false
-
-        let el = this.el;
-        let metrics = ['height', 'x_axis'];
-        el.setAttribute('babiaToRepresent', metrics);
     },
 
     /**
@@ -5963,8 +7931,9 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     */
 
     update: function (oldData) {
+        const self = this;
         let data = this.data;
-        let el = this.el; 
+        let el = this.el;
 
         this.chart
         this.animation = data.animation
@@ -5972,13 +7941,61 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
         /**
          * Update or create chart component
          */
-        if (data.data !== oldData.data) {
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating barchart...")
-            this.chart = generateBarChart(data, el, this.animation, this.chart, this.bar_array)   
-            console.log(this.chart)       
-        } 
+
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            // From data embedded, save it anyway
+            self.babiaData = self.data
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            console.log("Generating barchart from data...")
+            self.chart = generateBarChart(self, self.data, JSON.parse(data.data), el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
+
+        } else {
+
+            // If changed from, need to re-register to the new data component
+            if (data.from !== oldData.from) {
+                // Unregister for old querier
+                if (self.dataComponent) { self.dataComponent.unregister(el) }
+
+                // Find the component and get if querier or filterdata by the event               
+                let eventName = findDataComponent(data, el, self)
+                // If changed to filterdata or to querier
+                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+                    el.removeEventListener(self.dataComponentEventName, _listener, true)
+                }
+                // Assign new eventName
+                self.dataComponentEventName = eventName
+
+                // Attach to the events of the data component
+                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                    attachNewDataEventCallback(self, e)
+                });
+
+                // Register for the new one
+                self.dataComponent.register(el)
+                return
+            }
+
+            // If changed whatever, re-print with the current data
+            if (data !== oldData && self.babiaData) {
+                while (self.el.firstChild)
+                    self.el.firstChild.remove();
+                console.log("Generating barchart...")
+                self.chart = generateBarChart(self, self.data, self.babiaData, el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+                // Dispatch interested events because I updated my visualization
+                dataReadyToSend("babiaData", self)
+            }
+
+        }
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -5990,29 +8007,79 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     * Called on each scene tick.
     */
     tick: function (t, delta) {
+        const time_wait = 2000;
+        const self = this;
         let new_time = Date.now();
-        if (this.animation && !this.anime_finished && this.chart){
+        if (this.animation && !this.anime_finished && this.chart) {
             let elements = this.chart.children;
             let diff_time = new_time - this.time;
-            if (diff_time >= time_wait){
-                for (let bar in this.bar_array){  
+            if (diff_time >= time_wait) {
+                for (let bar in this.bar_array) {
                     let prev_height = parseFloat(elements[bar].getAttribute('height'));
                     let height_max = this.bar_array[bar].height_max;
                     let pos_x = this.bar_array[bar].position_x;
-                    if (prev_height < height_max){
-                        let new_height = ((diff_time - time_wait) * height_max) / total_duration;
+                    if (prev_height < height_max) {
+                        let new_height = ((diff_time - time_wait) * height_max) / self.total_duration;
                         elements[bar].setAttribute('height', new_height);
-                        elements[bar].setAttribute('position', {x: pos_x, y: new_height/2 , z: 0});
+                        elements[bar].setAttribute('position', { x: pos_x, y: new_height / 2, z: 0 });
                     } else {
                         this.anime_finished = true;
                         elements[bar].setAttribute('height', height_max);
-                        elements[bar].setAttribute('position', {x: pos_x, y: height_max/2 , z: 0});
+                        elements[bar].setAttribute('position', { x: pos_x, y: height_max / 2, z: 0 });
                         console.log('Total time (wait + animation): ' + diff_time + 'ms')
                     }
                 }
             }
         }
     },
+
+    /**
+    * Querier component target
+    */
+    dataComponent: undefined,
+
+    /**
+     * Property of the querier where the data is saved
+     */
+    dataComponentDataPropertyName: "babiaData",
+
+    /**
+     * Event name to difference between querier and filterdata
+     */
+    dataComponentEventName: undefined,
+
+
+    /**
+     * Where the data is gonna be stored
+     */
+    babiaData: undefined,
+
+    /**
+     * Where the metaddata is gonna be stored
+     */
+    babiaMetadata: {
+        id: 0
+    },
+
+    /**
+     * Duration of the animation if activated
+     */
+    widthBars: 1,
+
+    /**
+     * Duration of the animation if activated
+     */
+    total_duration: 3000,
+
+    /**
+     * Proportion of the bars
+     */
+    proportion: undefined,
+
+    /**
+     * Value max
+     */
+    valueMax: undefined,
 
     /**
     * Called when entity pauses.
@@ -6026,16 +8093,111 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     */
     play: function () { },
 
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
+
 })
 
+let findDataComponent = (data, el, self) => {
+    let eventName = "babiaQuerierDataReady"
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babiaxr-filterdata']) {
+            self.dataComponent = dataElement.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babiaxr-querier_json']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babiaxr-querier_es']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babiaxr-querier_github']) {
+            self.dataComponent = dataElement.components['babiaxr-querier_github']
+        } else {
+            console.error("Problem registering to the querier")
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babiaxr-filterdata']) {
+            self.dataComponent = el.components['babiaxr-filterdata']
+            eventName = "babiaFilterDataReady"
+        } else if (el.components['babiaxr-querier_json']) {
+            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babiaxr-querier_es']) {
+            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babiaxr-querier_github']) {
+            self.dataComponent = el.components['babiaxr-querier_github']
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+                eventName = "babiaFilterDataReady"
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
+            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+            } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+            } else {
+                console.error("Error, querier not found")
+                return
+            }
+        }
+    }
+    return eventName
+}
+
+let attachNewDataEventCallback = (self, e) => {
+    // Get the data from the info of the event (propertyName)
+    self.dataComponentDataPropertyName = e.detail
+    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+
+    self.babiaData = rawData
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+
+    // Generate chart
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
+    console.log("Generating barchart...")
+    self.chart = generateBarChart(self, self.data, rawData, self.el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)
+}
 
 
-const time_wait = 2000;
-const total_duration = 3000;
-
-let generateBarChart = (data, element, animation, chart, list) => {
-    if (data.data) {
-        const dataToPrint = JSON.parse(data.data)
+let generateBarChart = (self, data, dataRetrieved, element, animation, chart, list, widthBars) => {
+    if (dataRetrieved) {
+        const dataToPrint = dataRetrieved
         const palette = data.palette
         const title = data.title
         const font = data.titleFont
@@ -6052,12 +8214,12 @@ let generateBarChart = (data, element, animation, chart, list) => {
         let title_3d = showTitle(title, font, color, title_position);
         element.appendChild(title_3d);
 
-        let maxY = Math.max.apply(Math, dataToPrint.map(function(o) { return o.size; }))
+        let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[self.data.height]; }))
         if (scale) {
             maxY = maxY / scale
-        } else if (heightMax){
-            valueMax = maxY
-            proportion = heightMax / maxY
+        } else if (heightMax) {
+            self.valueMax = maxY
+            self.proportion = heightMax / maxY
             maxY = heightMax
         }
 
@@ -6069,19 +8231,19 @@ let generateBarChart = (data, element, animation, chart, list) => {
 
         for (let bar of dataToPrint) {
 
-            let barEntity = generateBar(bar['size'], widthBars, colorid, stepX, palette, animation, scale, list);
+            let barEntity = generateBar(self, bar[self.data.height], widthBars, colorid, stepX, palette, animation, scale, list);
             barEntity.classList.add("babiaxraycasterclass")
 
             //Prepare legend
             if (data.legend) {
-                showLegend(barEntity, bar, element)
+                showLegend(self, barEntity, bar, element, widthBars)
             }
 
             //Axis dict
             let bar_printed = {
                 colorid: colorid,
                 posX: stepX,
-                key: bar['key']
+                key: bar[self.data.x_axis]
             }
             axis_dict.push(bar_printed)
 
@@ -6095,35 +8257,32 @@ let generateBarChart = (data, element, animation, chart, list) => {
 
         //Print axis
         if (data.axis) {
-            showXAxis(element, stepX, axis_dict, palette)
-            showYAxis(element, maxY, scale)
+            showXAxis(widthBars, element, stepX, axis_dict, palette)
+            showYAxis(self.proportion, self.valueMax, widthBars, element, maxY, scale)
         }
-        
+
         chart = element.children[1]
         return chart;
     }
 }
 
-const widthBars = 1
-let proportion
-let valueMax
 
-function generateBar(size, width, colorid, position, palette, animation, scale, bar_array) {
+function generateBar(self, height, width, colorid, position, palette, animation, scale, bar_array) {
     let color = getColor(colorid, palette)
     console.log("Generating bar...")
     if (scale) {
-        size = size / scale
-    } else if (proportion){
-        size = proportion * size
+        height = height / scale
+    } else if (self.proportion) {
+        height = self.proportion * height
     }
     let entity = document.createElement('a-box');
     entity.setAttribute('color', color);
     entity.setAttribute('width', width);
     entity.setAttribute('depth', width);
     // Add animation
-    if (animation){
-        var increment = size / total_duration
-        var height_max = size
+    if (animation) {
+        var increment = height / self.total_duration
+        var height_max = height
         bar_array.push({
             increment: increment,
             height_max: height_max,
@@ -6133,37 +8292,39 @@ function generateBar(size, width, colorid, position, palette, animation, scale, 
         entity.setAttribute('height', 0.001);
         entity.setAttribute('position', { x: position, y: 0, z: 0 });
     } else {
-        entity.setAttribute('height', size);
-        entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
+        entity.setAttribute('height', height);
+        entity.setAttribute('position', { x: position, y: height / 2, z: 0 });
     }
     return entity;
 }
 
-function getColor(colorid, palette){
+function getColor(colorid, palette) {
     let color
-    for (let i in colors){
-        if(colors[i][palette]){
-            color = colors[i][palette][colorid%4]
+    for (let i in colors) {
+        if (colors[i][palette]) {
+            color = colors[i][palette][colorid % 4]
         }
     }
     return color
 }
 
-function generateLegend(bar, barEntity) {
-    let text = bar['key'] + ': ' + bar['size'];
+function generateLegend(self, bar, barEntity, widthBars) {
+    let text = bar[self.data.x_axis] + ': ' + bar[self.data.height];
     let width = 2;
     if (text.length > 16)
         width = text.length / 8;
-        let barPosition = barEntity.getAttribute('position')
+    let barPosition = barEntity.getAttribute('position')
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', { x: barPosition.x, y: 2 * barPosition.y + 1, 
-                                      z: barPosition.z + widthBars + 0.1 });
+    entity.setAttribute('position', {
+        x: barPosition.x, y: 2 * barPosition.y + 1,
+        z: barPosition.z + widthBars + 0.1
+    });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
     entity.setAttribute('text', {
-        'value': bar['key'] + ': ' + bar['size'],
+        'value': bar[self.data.x_axis] + ': ' + bar[self.data.height],
         'align': 'center',
         'width': 6,
         'color': 'black'
@@ -6172,7 +8333,7 @@ function generateLegend(bar, barEntity) {
     return entity;
 }
 
-function showXAxis(parent, xEnd, bars_printed, palette) {
+function showXAxis(widthBars, parent, xEnd, bars_printed, palette) {
     let axis = document.createElement('a-entity');
     //Print line
     let axis_line = document.createElement('a-entity');
@@ -6183,7 +8344,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
     });
     axis_line.setAttribute('position', { x: 0, y: 0, z: widthBars / 2 + widthBars / 4 });
     axis.appendChild(axis_line)
-    
+
     //Print keys
     bars_printed.forEach(e => {
         let key = document.createElement('a-entity');
@@ -6194,7 +8355,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
             'width': 10,
             'color': color
         });
-        key.setAttribute('position', { x: e.posX, y: 0, z: widthBars+5.2 })
+        key.setAttribute('position', { x: e.posX, y: 0, z: widthBars + 5.2 })
         key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
         axis.appendChild(key)
     });
@@ -6203,7 +8364,7 @@ function showXAxis(parent, xEnd, bars_printed, palette) {
     parent.appendChild(axis)
 }
 
-function showYAxis(parent, yEnd, scale) {
+function showYAxis(proportion, valueMax, widthBars, parent, yEnd, scale) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
     //Print line
@@ -6215,29 +8376,29 @@ function showYAxis(parent, yEnd, scale) {
     });
     axis_line.setAttribute('position', { x: 0, y: 0, z: widthBars / 2 + widthBars / 4 });
     axis.appendChild(axis_line)
-    if (proportion){
+    if (proportion) {
         yLimit = yLimit / proportion
         var mod = Math.floor(Math.log10(valueMax))
-    }   
-    for (let i = 0; i<=yLimit; i++){
+    }
+    for (let i = 0; i <= yLimit; i++) {
         let key = document.createElement('a-entity');
         let value = i
-        let pow = Math.pow(10, mod-1)
-        if (!proportion || (proportion && i%pow === 0)){  
+        let pow = Math.pow(10, mod - 1)
+        if (!proportion || (proportion && i % pow === 0)) {
             key.setAttribute('text', {
                 'value': value,
                 'align': 'right',
                 'width': 10,
                 'color': 'white '
             });
-            if (scale){
-                key.setAttribute('text', {'value': value * scale})
-                key.setAttribute('position', { x: -widthBars-5.2, y: value, z: widthBars / 2 + widthBars / 4 })
-            } else if (proportion){
-                key.setAttribute('position', { x: -widthBars-5.2, y: i * proportion, z: widthBars / 2 + widthBars / 4 })
+            if (scale) {
+                key.setAttribute('text', { 'value': value * scale })
+                key.setAttribute('position', { x: -widthBars - 5.2, y: value, z: widthBars / 2 + widthBars / 4 })
+            } else if (proportion) {
+                key.setAttribute('position', { x: -widthBars - 5.2, y: i * proportion, z: widthBars / 2 + widthBars / 4 })
             } else {
-                key.setAttribute('position', {x: -widthBars-5.2, y: i, z: widthBars / 2 + widthBars / 4})
-            }     
+                key.setAttribute('position', { x: -widthBars - 5.2, y: i, z: widthBars / 2 + widthBars / 4 })
+            }
         }
         axis.appendChild(key)
     }
@@ -6246,10 +8407,10 @@ function showYAxis(parent, yEnd, scale) {
     parent.appendChild(axis)
 }
 
-function showLegend(barEntity, bar, element) {
+function showLegend(self, barEntity, bar, element, widthBars) {
     barEntity.addEventListener('mouseenter', function () {
         this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-        legend = generateLegend(bar, barEntity);
+        legend = generateLegend(self, bar, barEntity, widthBars);
         element.appendChild(legend);
     });
 
@@ -6259,42 +8420,52 @@ function showLegend(barEntity, bar, element) {
     });
 }
 
-function showTitle(title, font, color, position){
+function showTitle(title, font, color, position) {
     let entity = document.createElement('a-entity');
-    entity.setAttribute('text-geometry',{
-        value : title,
+    entity.setAttribute('text-geometry', {
+        value: title,
     });
-    if (font){
+    if (font) {
         entity.setAttribute('text-geometry', {
             font: font,
         })
     }
-    if (color){
-        entity.setAttribute('material' ,{
-            color : color
+    if (color) {
+        entity.setAttribute('material', {
+            color: color
         })
     }
-    var position = position.split(" ") 
-    entity.setAttribute('position', {x: position[0], y: position[1], z: position[2]})
-    entity.setAttribute('rotation', {x: 0, y: 0, z: 0})
+    var position = position.split(" ")
+    entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.classList.add("babiaxrTitle")
     return entity;
 }
 
 let colors = [
-    {"blues": ["#142850", "#27496d", "#00909e", "#dae1e7"]},
-    {"foxy": ["#f79071", "#fa744f", "#16817a", "#024249"]},
-    {"flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"]},
-    {"sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"]},
-    {"bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"]},
-    {"icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"]},
-    {"ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"]},
-    {"pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"]},
-    {"commerce": ["#222831", "#30475e", "#f2a365", "#ececec"]},
+    { "blues": ["#142850", "#27496d", "#00909e", "#dae1e7"] },
+    { "foxy": ["#f79071", "#fa744f", "#16817a", "#024249"] },
+    { "flat": ["#120136", "#035aa6", "#40bad5", "#fcbf1e"] },
+    { "sunset": ["#202040", "#543864", "#ff6363", "#ffbd69"] },
+    { "bussiness": ["#de7119", "#dee3e2", "#116979", "#18b0b0"] },
+    { "icecream": ["#f76a8c", "#f8dc88", "#f8fab8", "#ccf0e1"] },
+    { "ubuntu": ["#511845", "#900c3f", "#c70039", "#ff5733"] },
+    { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
+    { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
 
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
+
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports) {
 
 AFRAME.registerComponent('babiaxr-terrain', {
@@ -6348,765 +8519,30 @@ AFRAME.registerComponent('babiaxr-terrain', {
   });
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-totem', {
-    schema: {
-        charts_id: { type: 'string' },
-        data_list: { type: 'string' },
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-        my_id = el.id
-        if (data) {
-            charts_id.push({
-                id: el.id,
-                charts_id: JSON.parse(data.charts_id)
-            })
-            if (data.data_list) {
-                dataToPrint_list = JSON.parse(data.data_list)
-                loadFiles(dataToPrint_list)
-            }
-        }
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        el = this.el;
-        /**
-         * Update or create chart component
-         */
-        if (data !== oldData) {
-            //Remove previous chart
-            while (this.el.firstChild)
-                this.el.firstChild.remove();
-            console.log("Generating totemchart...")
-            generateTotemChart(el)
-        }
-
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-let data_files = []
-let charts_id = []
-let my_id
-let dataToPrint_list
-let el
-
-let generateTotemChart = (element) => {
-    if (data_files) {
-        // Totem Data
-        generateTotemData(element, dataToPrint_list)
-    }
-}
-
-
-function loadFiles(list) {
-    let loader = new THREE.FileLoader();
-    // Load Data
-    for (let item of list) {
-        if (item.from_querier) {
-            let querierElement = document.getElementById(item.from_querier)
-            if (querierElement.getAttribute('babiaData')) {
-                let dataFromQuerier = JSON.parse(querierElement.getAttribute('babiaData'));
-                data_files.push({
-                    file: dataFromQuerier,
-                    path: item.from_querier
-                })
-            } else {
-                // Get if key or filter
-                querierElement.addEventListener('dataReady' + item.from_querier, function (e) {
-                    data_files.push({
-                        file: e.detail,
-                        path: item.from_querier
-                    })
-                })
-            }
-
-        } else if (item.path) {
-            let file = item.path
-            loader.load(file,
-                // onLoad callback
-                function (data) {
-                    data_files.push({
-                        file: data,
-                        path: file
-                    })
-                },
-                // onProgress callback
-                function (xhr) {
-                    console.log(file.toString() + ': ' + (xhr.loaded / xhr.total * 100) + '% loaded');
-                },
-
-                // onError callback
-                function (err) {
-                    console.error('An error happened');
-                }
-            );
-        }
-    }
-
-}
-
-function generateTotemData(element, list) {
-    console.log('Generating Totem...')
-    let position_y = 7.5
-    // Change List's height 
-    if (list.length % 2 == 1) {
-        let increment = Math.trunc(list.length / 2)
-        position_y += increment
-    }
-
-    let position_x = -3
-    let position_z = 6
-    let rotation_y = 0
-
-    //Get Width
-    let width = getWidthTotem(list)
-
-    // Generate Title
-
-    let entity = document.createElement
-    generateTotemTitle(element, position_x, position_y, position_z, rotation_y, width, 'Select Data')
-    position_y -= 1
-
-    // Generate List of Charts
-    generateTotem(element, position_x, position_y, position_z, rotation_y, width, list)
-}
-
-function generateTotemTitle(element, x, y, z, rotation_y, width, title) {
-
-    let entity = document.createElement('a-plane')
-    entity.setAttribute('class', 'title')
-    entity.setAttribute('position', { x: x, y: y, z: z })
-    entity.setAttribute('rotation', { x: 0, y: rotation_y, z: 0 })
-    entity.setAttribute('height', 1)
-    entity.setAttribute('width', width)
-    entity.setAttribute('color', 'blue')
-    entity.setAttribute('text', {
-        'value': title,
-        'align': 'center',
-        'width': '10',
-        'color': 'white'
-    })
-    element.appendChild(entity)
-}
-
-function generateTotem(element, x, y, z, rotation, width, list, list_used) {
-    // Generate List of Items
-    for (let item of list) {
-        // For data
-        if (item.data) {
-            item = item.data
-        }
-        let entity = document.createElement('a-plane')
-        entity.setAttribute('position', { x: x, y: y, z: z })
-        entity.setAttribute('rotation', { x: 0, y: rotation, z: 0 })
-        entity.setAttribute('height', 1)
-        entity.setAttribute('width', width)
-        entity.setAttribute('text', {
-            'value': item,
-            'align': 'center',
-            'width': '10',
-        })
-        entity.setAttribute('color', 'white')
-        entity.setAttribute('text', {
-            'color': 'black'
-        })
-
-        element.appendChild(entity)
-        y -= 1
-
-        entity.classList.add("babiaxraycasterclass")
-        entity.addEventListener('click', function () {
-            let id_totem = entity.parentElement.id
-            let children = entity.parentElement.children
-            list_used = item
-            for (let i of list) {
-                if ((i.path || i.from_querier) && (list_used == i.data)) {
-                    updateEntity(i.path || i.from_querier, id_totem)
-                }
-            }
-            for (let child in children) {
-                if (children[child] === entity) {
-                    entity.setAttribute('color', 'black')
-                    entity.setAttribute('text', {
-                        'color': 'white'
-                    })
-                } else if (!children[child].id) {
-                    if (children[child].className !== "title") {
-                        children[child].setAttribute('color', 'white')
-                        children[child].setAttribute('text', {
-                            'color': 'black'
-                        })
-                    }
-                }
-            }
-        })
-    }
-}
-
-function getWidthTotem(list) {
-    let width = 5
-    for (let line of list) {
-        if (line.data) {
-            line = line.data
-        }
-        if ((line.length > 10) && (width < line.length / 4)) {
-            width = line.length / 4
-        }
-    }
-    return width;
-}
-
-function updateEntity(data, id_totem) {
-    let entity = getEntity(id_totem)
-    for (let totem in charts_id) {
-        if (id_totem == charts_id[totem].id) {
-            let charts = charts_id[totem].charts_id
-            for (obj in charts) {
-                let type = charts[obj].type
-                let id = charts[obj].id
-                let new_data
-                for (let file in data_files) {
-                    if (data_files[file].path == data) {
-                        new_data = data_files[file].file
-                        //entity.setAttribute('geototemchart', { 'data' : data_files[file].file })
-
-                        if (type === "babiaxr-vismapper") {
-                            document.getElementById(id).setAttribute(type, "dataToShow", JSON.stringify(new_data))
-                        } else {
-                            document.getElementById(id).setAttribute(type, "data", new_data)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-function getEntity(id) {
-    let entity = document.getElementById(id)
-    return entity
-}
-
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-/* global AFRAME */
-if (typeof AFRAME === 'undefined') {
-    throw new Error('Component attempted to register before AFRAME was available.');
-}
-
-let MAX_SIZE_BAR = 10
-
-/**
-* A-Charts component for A-Frame.
-*/
-AFRAME.registerComponent('babiaxr-vismapper', {
-    schema: {
-        ui: {type: 'boolean', default: false},
-        // Data
-        dataToShow: { type: 'string' },
-        // Geo and charts
-        width: { type: 'string' },
-        depth: { type: 'string' },
-        height: { type: 'string' },
-        radius: { type: 'string' },
-        // Only for charts
-        slice: { type: 'string' },
-        x_axis: { type: 'string' },
-        z_axis: { type: 'string' },
-        // Codecity
-        fmaxarea: { type: 'string' },
-        farea: { type: 'string'},
-        fheight: { type: 'string'}
-    },
-
-    /**
-    * Set if component needs multiple instancing.
-    */
-    multiple: false,
-
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-        let data = this.data;
-        let el = this.el;
-        let controller;
-        let selector;
-        let dataJSON;
-        let metrics;
-        let selector_panel
-
-        document.addEventListener('babiaxr-dataLoaded', function loadMenu(event){
-            console.log('VISMAPPER: Data Loaded')
-            dataJSON = event.detail.data
-            if (dataJSON){
-                if (data.ui){
-                    if (event.detail.codecity){
-                        selector = getSelectorCodecity(dataJSON)
-                        metrics = ['fmaxarea', 'farea', 'fheight']
-                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, true)
-                    } else {
-                        selector = getSelectors(dataJSON)
-                        metrics = el.getAttribute('babiaToRepresent').split(',');
-                        selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el, false)
-                    }
-                    
-                    selector_panel.id = "Panel-scene"
-                    document.getElementsByTagName('a-scene')[0].appendChild(selector_panel)
-                    this.removeEventListener('babiaxr-dataLoaded', loadMenu)
-                }
-            }
-        });
-        document.addEventListener('controllerconnected', (event) => {
-            // event.detail.name ----> which VR controller
-            controller = event.detail.name;
-            let hand = event.target.getAttribute(controller).hand
-            if (hand === 'left'){
-                let entity_id = event.target.id
-                let selector_panel = generateSelectorPanel(selector, metrics, dataJSON, el)
-                selector_panel.setAttribute('position', {x:-0.16, y:0.08, z: -0.2});
-                selector_panel.id = "panel-mano"
-                selector_panel.setAttribute('scale', {x: 0.05, y:0.05, z:0.05});
-                selector_panel.setAttribute('rotation', {x:-45})
-                let background = document.createElement('a-plane');
-                background.setAttribute('color', "#AAAAAA")
-                background.setAttribute('position', {x:3.25, y: -0.5, z: -0.15})
-                background.setAttribute('width', 10);
-                background.setAttribute('height', 2.5)
-                background.setAttribute('material', 'opacity', 0.6)
-                selector_panel.appendChild(background)
-                document.getElementById(entity_id).appendChild(selector_panel);
-                document.getElementById('Panel-scene').setAttribute('visible', false);
-                openCloseMenu(event.detail.component.el.id, selector_panel)
-            }
-            
-        });
-
-        
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        /**
-         * Update geometry component
-         */
-        if (data.dataToShow) {
-            let dataJSON = JSON.parse(data.dataToShow)
-            el.emit('babiaxr-dataLoaded', {data: dataJSON})
-            updateComponent(el, data, dataJSON)
-        } else if (el.components["babiaxr-codecity"]){
-            updateComponent(el, data)
-        }
-
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-})
-
-const number_parameters = ['height', 'radius', 'width', 'slice', 'depth', 'fmaxarea', 'farea', 'fheight']
-const string_parameters = ['x_axis', 'z_axis']
-
-function updateComponent(el, data, dataJSON){
-    if (el.components.geometry) {
-        if (el.components.geometry.data.primitive === "box") {
-            el.setAttribute("geometry", "height", (dataJSON[data.height] / 100))
-            el.setAttribute("geometry", "width", dataJSON[data.width] || 2)
-            el.setAttribute("geometry", "depth", dataJSON[data.depth] || 2)
-            let oldPos = el.getAttribute("position")
-            el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height] / 200, z: oldPos.z })
-        } else if (el.components.geometry.data.primitive === "sphere") {
-            el.setAttribute("geometry", "radius", (dataJSON[data.radius] / 10000) || 2)
-            let oldPos = el.getAttribute("position")
-            el.setAttribute("position", { x: oldPos.x, y: dataJSON[data.height], z: oldPos.z })
-        }
-    } else if (el.components['babiaxr-simplebarchart']) {
-        let list = generate2Dlist(data, dataJSON, "x_axis")
-        el.setAttribute("babiaxr-simplebarchart", "data", JSON.stringify(list))
-    } else if (el.components['babiaxr-cylinderchart']) {
-        let list = generate2Dlist(data, dataJSON, "x_axis", "cylinder")
-        el.setAttribute("babiaxr-cylinderchart", "data", JSON.stringify(list))
-    } else if (el.components['babiaxr-piechart']) {
-        let list = generate2Dlist(data, dataJSON, "slice")
-        el.setAttribute("babiaxr-piechart", "data", JSON.stringify(list))
-    } else if (el.components['babiaxr-doughnutchart']) {
-        let list = generate2Dlist(data, dataJSON, "slice")
-        el.setAttribute("babiaxr-doughnutchart", "data", JSON.stringify(list))
-    } else if (el.components['babiaxr-3dbarchart']) {
-        let list = generate3Dlist(data, dataJSON, "3dbars")
-        el.setAttribute("babiaxr-3dbarchart", "data", JSON.stringify(list))
-    } else if (el.components['babiaxr-bubbleschart']) {
-        let list = generate3Dlist(data, dataJSON, "bubbles")
-        el.setAttribute("babiaxr-bubbleschart", "data", JSON.stringify(list))
-    } else if (el.components['babiaxr-3dcylinderchart']) {
-        let list = generate3Dlist(data, dataJSON, "3dcylinder")
-        el.setAttribute("babiaxr-3dcylinderchart", "data", JSON.stringify(list))
-    } else if (el.components["babiaxr-codecity"]) {
-        if (data.fmaxarea){
-            el.setAttribute("babiaxr-codecity", "fmaxarea", data.fmaxarea);
-        }
-        if (data.farea){
-            el.setAttribute("babiaxr-codecity", "farea", data.farea);
-        }
-        if (data.fheight){
-            el.setAttribute("babiaxr-codecity", "fheight", data.fheight);
-        }
-    }
-}
-
-let generate2Dlist = (data, dataToProcess, key_type, chart_type) => {
-    let list = []
-    if (Array.isArray(dataToProcess)) {
-        list = dataToProcess
-    } else {
-        if (chart_type === "cylinder") {
-            Object.values(dataToProcess).forEach(value => {
-                let item = {
-                    "key": value[data[key_type]],
-                    "height": value[data.height],
-                    "radius": value[data.radius]
-                }
-                list.push(item)
-            });
-        } else {
-            Object.values(dataToProcess).forEach(value => {
-                let item = {
-                    "key": value[data[key_type]],
-                    "size": value[data.height]
-                }
-                list.push(item)
-            });
-        }
-    }
-    return list
-}
-
-let generate3Dlist = (data, dataToProcess, chart_type) => {
-    let list = []
-    if (Array.isArray(dataToProcess)) {
-        list = dataToProcess
-    } else {
-        if (chart_type === "3dbars") {
-
-            Object.values(dataToProcess).forEach(value => {
-                let item = {
-                    "key": value[data.x_axis],
-                    "key2": value[data.z_axis],
-                    "size": value[data.height]
-                }
-                list.push(item)
-            });
-        } else if (chart_type === "bubbles" || chart_type === "3dcylinder") {
-            Object.values(dataToProcess).forEach(value => {
-                let item = {
-                    "key": value[data.x_axis],
-                    "key2": value[data.z_axis],
-                    "height": value[data.height],
-                    "radius": value[data.radius]
-                }
-                list.push(item)
-            });
-        }
-    }
-    return list
-}
-
-function normalize(val, min, max) { return (val - min) / (max - min); }
-
-let getSelectors = (data) => {
-    let selector = []
-    for (let element in Object.values(data)){
-        Object.keys(Object.values(data)[element]).forEach (function(key){
-            if ( !selector.includes(key)){
-                selector.push(key)
-            }
-        })
-    }
-    return selector
-}
-
-let getSelectorCodecity = (data) => {
-    let selector = []
-    let last_node = findLast(data.children[0])
-    for (let key in Object.keys(last_node)){
-        if (Object.keys(last_node)[key] != 'id'){
-            selector.push(Object.keys(last_node)[key])
-        }  
-    }
-    return selector
-}
-
-let findLast = (e) => {
-    if ('children' in e){
-        return findLast(e.children[0])
-    } else {
-        return e
-    }
-
-}
-
-let generateSelectorPanel = (items, metrics, data, element, codecity) => {
-    let structure = parameterStructure(metrics, items, data, codecity)
-    let panel = document.createElement('a-entity')
-    panel.setAttribute('class', 'selector')
-
-    let posY = 0
-    let posX = 0
-
-    for (let i in structure) {
-        let button = createButtonMetric(structure[i].name, posX, posY)
-        panel.appendChild(button)
-        for (let x in structure[i].options){
-            posX += 3.25
-            let button = createButton(structure[i].name, structure[i].options[x], posX, posY, element)
-            button.classList.add("babiaxraycasterclass")
-            panel.appendChild(button)
-        }
-        --posY
-        posX = 0   
-    }
-
-    panel.setAttribute('position', { x: -12, y: 10, z: 10})
-    return panel
-}
-
-let parameterStructure = (metrics, items, data, codecity) => {
-    let structure = []
-    let number_items = []
-    let string_items = []
-
-    // Sort data by type
-    if (codecity){
-        let last_node = findLast(data)
-        for (let i in items){
-            if (last_node[items[i]]){
-                if (typeof last_node[items[i]] == 'number'){
-                    if (!number_items.includes(items[i])){
-                        number_items.push(items[i]);
-                    }   
-                } else if (typeof last_node[items[i]] == 'string'){
-                    if (!string_items.includes(items[i])){
-                        string_items.push(items[i]);
-                    } 
-                }
-            }
-        }
-    } else {
-        for (let x in data){
-            for (let i in items){
-                if (data[x][items[i]]){
-                    if (typeof data[x][items[i]] == 'number'){
-                        if (!number_items.includes(items[i])){
-                            number_items.push(items[i]);
-                        }   
-                    } else if (typeof data[x][items[i]] == 'string'){
-                        if (!string_items.includes(items[i])){
-                            string_items.push(items[i]);
-                        } 
-                    }
-                }
-            }
-        }
-    }
-
-    // Create structure
-    for (let i in metrics){
-        if (number_parameters.includes(metrics[i])){
-            structure.push({
-                name: metrics[i],
-                type: 'number',
-                options: number_items
-            });
-        } else if (string_parameters.includes(metrics[i])){
-            structure.push({
-                name: metrics[i],
-                type: 'string',
-                options: string_items
-            }); 
-        }
-    }
-    return structure
-}
-
-let createButton = (name, item, positionX, positionY, element) =>{
-    let entity = document.createElement('a-box')
-    entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
-    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-    entity.setAttribute('height', 0.8)
-    entity.setAttribute('width', 3)
-    entity.setAttribute('depth', 0.01)
-
-    let text = document.createElement('a-entity')
-    text.setAttribute('text', {
-        'value': item,
-        'align': 'center',
-        'width': '10',
-        'color': 'black'
-    })
-    text.setAttribute('position', "0 0 0.01")
-    entity.appendChild(text)
-
-    entity.setAttribute('name', name)
-    entity.setAttribute('color', '#FFFFFF')
-    selection_events(entity, element)
-
-    return entity
-}
-
-function selection_events(entity, element){
-    entity.addEventListener('mouseenter', function(){
-        entity.children[0].setAttribute('text', {color: '#FFFFFF'})
-        entity.setAttribute('color', '#333333')
-    });
-
-    entity.addEventListener('mouseleave', function(){
-        entity.children[0].setAttribute('text', {color: 'black'})
-        entity.setAttribute('color', '#FFFFFF')
-    });
-
-    entity.addEventListener('click', function(){
-        let name = entity.getAttribute('name')
-        let metric = entity.children[0].getAttribute('text').value
-        element.setAttribute('babiaxr-vismapper', name, metric)
-    });
-}
-
-let createButtonMetric = (item, positionX, positionY) =>{
-    let entity = document.createElement('a-plane')
-    entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
-    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-    entity.setAttribute('height', 0.8)
-    entity.setAttribute('width', 3)
-    entity.setAttribute('text', {
-        'value': item,
-        'align': 'center',
-        'width': '10',
-        'color': '#FFFFFF'
-    })
-    entity.setAttribute('color', 'black')
-    return entity
-}
-
-function openCloseMenu(hand_id, entity_menu) {
-    let menu_opened = true
-    let entity_hand = document.getElementById(hand_id)
-    entity_hand.addEventListener('gripdown', function(evt){
-        if (menu_opened){
-            menu_opened = false
-            entity_menu.setAttribute('visible', false)
-        } else {
-            menu_opened = true
-            entity_menu.setAttribute('visible', true)
-        }
-    })
-}
-
-/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(15)
-__webpack_require__(16)
-__webpack_require__(14)
-__webpack_require__(20)
-__webpack_require__(8)
 __webpack_require__(9)
-__webpack_require__(5)
-__webpack_require__(13)
-__webpack_require__(17)
-__webpack_require__(0)
-__webpack_require__(2)
-__webpack_require__(3)
-__webpack_require__(4)
-__webpack_require__(1)
-__webpack_require__(6)
-__webpack_require__(19)
-__webpack_require__(18)
-__webpack_require__(12)
-__webpack_require__(7)
 __webpack_require__(10)
+__webpack_require__(8)
+__webpack_require__(7)
+__webpack_require__(0)
+__webpack_require__(3)
+__webpack_require__(1)
+__webpack_require__(18)
+__webpack_require__(19)
 __webpack_require__(11)
+__webpack_require__(13)
+__webpack_require__(14)
+__webpack_require__(15)
+__webpack_require__(12)
+__webpack_require__(16)
+__webpack_require__(6)
+__webpack_require__(20)
+__webpack_require__(5)
+__webpack_require__(2)
+__webpack_require__(17)
+__webpack_require__(4)
 
 /***/ })
 /******/ ]);

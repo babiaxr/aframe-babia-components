@@ -25,6 +25,11 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     },
 
     /**
+     * List of visualization properties
+     */
+    visProperties: ['height', 'x_axis'],
+
+    /**
     * Set if component needs multiple instancing.
     */
     multiple: false,
@@ -56,10 +61,19 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
+            // From data embedded, save it anyway
+            self.babiaData = self.data
+            self.babiaMetadata = {
+                id: self.babiaMetadata.id++
+            }
+
             while (self.el.firstChild)
                 self.el.firstChild.remove();
             console.log("Generating barchart from data...")
             self.chart = generateBarChart(self, self.data, JSON.parse(data.data), el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+            // Dispatch interested events because I updated my visualization
+            dataReadyToSend("babiaData", self)
 
         } else {
 
@@ -93,6 +107,9 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
                     self.el.firstChild.remove();
                 console.log("Generating barchart...")
                 self.chart = generateBarChart(self, self.data, self.babiaData, el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+                // Dispatch interested events because I updated my visualization
+                dataReadyToSend("babiaData", self)
             }
 
         }
@@ -193,6 +210,36 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
     */
     play: function () { },
 
+    /**
+    * Register function when I'm updated
+    */
+    register: function (interestedElem) {
+        let el = this.el
+        this.interestedElements.push(interestedElem)
+
+        // Send the latest version of the data
+        if (this.babiaData) {
+            dispatchEventOnElement(interestedElem, "babiaData")
+        }
+    },
+
+    /**
+     * Unregister function when I'm updated
+     */
+    unregister: function (interestedElem) {
+        const index = this.interestedElements.indexOf(interestedElem)
+
+        // Remove from the interested elements if still there
+        if (index > -1) {
+            this.interestedElements.splice(index, 1);
+        }
+    },
+
+    /**
+     * Interested elements when I'm updated
+     */
+    interestedElements: [],
+
 })
 
 let findDataComponent = (data, el, self) => {
@@ -259,6 +306,9 @@ let attachNewDataEventCallback = (self, e) => {
         self.el.firstChild.remove();
     console.log("Generating barchart...")
     self.chart = generateBarChart(self, self.data, rawData, self.el, self.animation, self.chart, self.bar_array, self.widthBars)
+
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self)
 }
 
 
@@ -520,3 +570,13 @@ let colors = [
     { "pearl": ["#efa8e4", "#f8e1f4", "#fff0f5", "#97e5ef"] },
     { "commerce": ["#222831", "#30475e", "#f2a365", "#ececec"] },
 ]
+
+let dataReadyToSend = (propertyName, self) => {
+    self.interestedElements.forEach(element => {
+        dispatchEventOnElement(element, propertyName)
+    });
+}
+
+let dispatchEventOnElement = (element, propertyName) => {
+    element.emit("babiaVisualizerUpdated", propertyName)
+}
