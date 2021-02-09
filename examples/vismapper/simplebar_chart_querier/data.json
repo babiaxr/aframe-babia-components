@@ -1,86 +1,86 @@
-{
-  "0": {
-    "name": "kbn_network",
+[
+  {
+    "x_axis": "kbn_network",
     "name2": "Maria",
     "size": 10,
     "height": 2
   },
-  "1": {
-    "name": "Maria",
+  {
+    "x_axis": "Maria",
     "name2": "Lemar",
     "size": 5,
     "height": 15
   },
-  "2": {
-    "name": "Dave",
+  {
+    "x_axis": "Dave",
     "name2": "Jesus",
     "size": 9,
     "height": 17
   },
-  "3": {
-    "name": "Jhon",
-    "name2": "kbn_network",
+  {
+    "x_axis": "Jhon",
+    "name2": "Jesus",
     "size": 12,
     "height": 2
   },
-  "4": {
-    "name": "Sara",
+  {
+    "x_axis": "Sara",
     "name2": "Alice",
     "size": 16,
     "height": 21
   },
-  "5": {
-    "name": "Lemar",
+  {
+    "x_axis": "Lemar",
     "name2": "Bitergia",
     "size": 2,
     "height": 13
   },
-  "6": {
-    "name": "Dawn",
+  {
+    "x_axis": "Dawn",
     "name2": "Dave",
     "size": 1,
     "height": 19
   },
-  "7": {
-    "name": "Jesus",
+  {
+    "x_axis": "Jesus",
     "name2": "URJC",
     "size": 8,
     "height": 8
   },
-  "8": {
-    "name": "Bitergia",
-    "name2": "Sara",
+  {
+    "x_axis": "Bitergia",
+    "name2": "Jesus",
     "size": 3,
     "height": 5
   },
-  "9": {
-    "name": "URJC",
-    "name2": "Seth",
+  {
+    "x_axis": "URJC",
+    "name2": "Jesus",
     "size": 6,
     "height": 11
   },
-  "10": {
-    "name": "Alice",
+  {
+    "x_axis": "Alice",
     "name2": "Pete",
     "size": 22,
     "height": 10
   },
-  "20": {
-    "name": "Pete",
+  {
+    "x_axis": "Pete",
     "name2": "Jhon",
     "size": 2,
     "height": 5
   },
-  "40": {
-    "name": "Seth",
-    "name2": "Maria",
+  {
+    "x_axis": "Seth",
+    "name2": "Jesus",
     "size": 6,
     "height": 20
   },
-  "80": {
-    "name": "Jesus",
+  {
+    "x_axis": "Jesus",
     "name2": "Jesus",
     "size": 9,
     "height": 3
   }
-}
+]

@@ -19,16 +19,39 @@
         <a-entity environment="playArea: 2"></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>
-        <a-entity babiaxr-simplebarchart='legend: true; axis: true' babiaxr-filterdata="from: queriertest" babiaxr-vismapper="ui: true; x_axis: name; height: size"></a-entity>
+        <!--<a-entity scale="0.1 0.1 0.1"
+                id="graph1" babiaxr-querier_json="url: ./data.json;" 
+                babiaxr-filterdata="filter: name2=Jesus" 
+                babiaxr-bubbleschart='x_axis: name; z_axis: x_axis; height: height; radius: size; legend: true'
+                position="10 0 0" rotation="0 0 0">
+        </a-entity>-->
 
-        <a-entity id ="cameraRig" position="0 1.8 20">
+        <!--<a-entity id="graph2" babiaxr-querier_json="url: ./data.json;" 
+                babiaxr-filterdata="filter: name2=Jesus" 
+                babiaxr-3dbarchart='x_axis: name2; z_axis: x_axis; height: size;'
+                position="-15 0 0" rotation="0 0 0"></a-entity> -->
+
+
+        <!--<a-entity id="graph3" babiaxr-querier_json="url: ./data.json;" 
+                babiaxr-filterdata="filter: name2=Jesus" 
+                babiaxr-piechart="legend: true; key: name; size: size" 
+                position="4 2 10" rotation="90 15 0"></a-entity>-->
+
+        <a-entity id="graph4" babiaxr-querier_json="url: ./data.json;" 
+                babiaxr-filterdata="filter: name2=Jesus" 
+                babiaxr-simplebarchart='legend: true; axis: true; heightMax: 15' 
+                position="-5 0 0" rotation="0 0 0"></a-entity>-->
+
+        <a-entity id="interface" babia-ui="target: graph4"
+                    position="0 0 15" scale="0.3 0.3 0.3"></a-entity>
+
+        <a-entity id ="cameraRig" position="0 1.8 18">
             <!-- camera -->
             <a-entity id="head" camera look-controls
             wasd-controls="fly: false">
             </a-entity>
             <!-- hand controls --> 
-            <a-entity id="leftHand" teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: .environmentGround;
+            <!--<a-entity id="leftHand" teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: .environmentGround;
                 hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger" 
                 oculus-touch-controls="hand: left">
                 <a-entity id="tooltip_trigger_L" class="tips" tooltip="text: Teleport; width: 0.07; height: 0.03; targetPosition: 0.002 -0.02 -0.014; lineHorizontalAlign: right; rotation: -90 0 0; src:assets/tooltip.png"
@@ -42,7 +65,7 @@
                 position="0.09 -0.04 -0.08"></a-entity>
                 <a-entity id="tooltip_grip_R" class="tips" tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
                 position="-0.085 -0.01 0.07"></a-entity>
-            </a-entity>
+            </a-entity>-->
             <a-entity id ="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
       </a-entity>
     </a-scene>
