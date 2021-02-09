@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>500 bars animated - Performance Example</title>
-    <meta name="description" content="A BabiaXR example - Create 3Dbarcharts with 500 bars animated." />
+    <meta name="description" content="A BabiaXR example - Create 3Dbarcharts with 500 bars (100 animated)." />
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
     <script src="../../../dist/aframe-babia-components.min.js"></script>
@@ -21,41 +21,29 @@
         <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>
 
         <a-entity id="bars1"
-            babiaxr-3dbarchart='legend: true; animation: false' 
-            babiaxr-filterdata="from: queriertest" 
-            babiaxr-vismapper="x_axis: name; z_axis: age; height: size" 
+            babiaxr-3dbarchart='legend: true; animation: false; x_axis: name; z_axis: age; height: size; from: queriertest' 
             position="-40 0 -30" rotation="0 0 0">
         </a-entity>
 
         <a-entity id="bars2"
-            babiaxr-3dbarchart='legend: true; palette: bussiness; animation: false' 
-            babiaxr-filterdata="from: queriertest" 
-            babiaxr-vismapper="x_axis: name; z_axis: age; height: size" 
+            babiaxr-3dbarchart='legend: true; palette: bussiness; animation: false; x_axis: name; z_axis: age; height: size; from: queriertest' 
             position="-10 0 -30" rotation="0 0 0">
         </a-entity>
 
         <a-entity id="bars3"
-            babiaxr-3dbarchart='legend: true; palette: flat; animation: false' 
-            babiaxr-filterdata="from: queriertest" 
-            babiaxr-vismapper="x_axis: name; z_axis: age; height: size" 
+            babiaxr-3dbarchart='legend: true; palette: flat; animation: false; x_axis: name; z_axis: age; height: size; from: queriertest' 
             position="20 0 -30" rotation="0 0 0">
         </a-entity>
 
         <a-entity id="bars4"
-            babiaxr-3dbarchart='legend: true; palette: icecream; animation: false' 
-            babiaxr-filterdata="from: queriertest" 
-            babiaxr-vismapper="x_axis: name; z_axis: age; height: size" 
+            babiaxr-3dbarchart='legend: true; palette: icecream; animation: false; x_axis: name; z_axis: age; height: size; from: queriertest' 
             position="-25 0 -8" rotation="0 0 0">
         </a-entity>
 
         <a-entity id="bars"
-            babiaxr-3dbarchart='legend: true; palette: foxy;  animation: true' 
-            babiaxr-filterdata="from: queriertest" 
-            babiaxr-vismapper="x_axis: name; z_axis: age; height: size" 
+            babiaxr-3dbarchart='legend: true; palette: foxy;  animation: true; x_axis: name; z_axis: age; height: size; from: queriertest' 
             position="5 0 -8" rotation="0 0 0">
         </a-entity>
-
-
 
         <a-entity movement-controls="fly: true" position="-3 15 25" rotation="-10 0 0">
             <a-entity camera look-controls></a-entity>

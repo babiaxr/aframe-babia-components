@@ -1,503 +1,502 @@
-{
-  "0": {
+[
+  {
     "name": "David",
     "age": "2019",
     "size": 9
   },
-  "1": {
+  {
     "name": "David",
     "age": "2018",
     "size": 8
   },
-  "2": {
+  {
     "name": "David",
     "age": "2017",
     "size": 7
   },
-  "3": {
+  {
     "name": "David",
     "age": "2016",
     "size": 6
   },
-  "4": {
+  {
     "name": "Jesus",
     "age": "2016",
     "size": 9
   },
-  "5": {
+  {
     "name": "Jesus",
     "age": "2011",
     "size": 8
   },
-  "6": {
+  {
     "name": "David",
     "age": "2015",
     "size": 5
   },
-  "7": {
+  {
     "name": "Jesus",
     "age": "2014",
     "size": 7
   },
-  "8": {
+  {
     "name": "Jesus",
     "age": "2016",
     "size": 6
   },
-  "9": {
+  {
     "name": "Jesus",
     "age": "2015",
     "size": 5
   },
-  "10": {
+  {
     "name": "Jesus",
     "age": "2016",
     "size": 9
   },
-  "11": {
+  {
     "name": "Pete",
     "age": "2011",
     "size": 8
   },
-  "12": {
+  {
     "name": "Pete",
     "age": "2014",
     "size": 7
   },
-  "13": {
+  {
     "name": "Josh",
     "age": "2016",
     "size": 6
   },
-  "14": {
+  {
     "name": "Josh",
     "age": "2015",
     "size": 5
   },
-  "15": {
+  {
     "name": "Steve",
     "age": "2016",
     "size": 9
   },
-  "16": {
+  {
     "name": "Steve",
     "age": "2017",
     "size": 8
   },
-  "17": {
+  {
     "name": "Steve",
     "age": "2014",
     "size": 7
   },
-  "18": {
+  {
     "name": "Steve",
     "age": "2013",
     "size": 6
   },
-  "19": {
+  {
     "name": "Moreno",
     "age": "2015",
     "size": 5
   },
-  "20": {
+  {
     "name": "David",
     "age": "2009",
     "size": 9
   },
-  "21": {
+  {
     "name": "David",
     "age": "2008",
     "size": 8
   },
-  "22": {
+  {
     "name": "David",
     "age": "2007",
     "size": 7
   },
-  "23": {
+  {
     "name": "David",
     "age": "2006",
     "size": 6
   },
-  "24": {
+  {
     "name": "Jesus",
     "age": "2006",
     "size": 9
   },
-  "25": {
+  {
     "name": "Jesus",
     "age": "2001",
     "size": 8
   },
-  "26": {
+  {
     "name": "David",
     "age": "2005",
     "size": 5
   },
-  "27": {
+  {
     "name": "Jesus",
     "age": "2004",
     "size": 7
   },
-  "28": {
+  {
     "name": "Jesus",
     "age": "2006",
     "size": 6
   },
-  "29": {
+  {
     "name": "Jesus",
     "age": "2005",
     "size": 5
   },
-  "30": {
+  {
     "name": "Jesus",
     "age": "2006",
     "size": 9
   },
-  "31": {
+  {
     "name": "Pete",
     "age": "2001",
     "size": 8
   },
-  "32": {
+  {
     "name": "Pete",
     "age": "2004",
     "size": 7
   },
-  "33": {
+  {
     "name": "Josh",
     "age": "2006",
     "size": 6
   },
-  "34": {
+  {
     "name": "Josh",
     "age": "2005",
     "size": 5
   },
-  "35": {
+  {
     "name": "Steve",
     "age": "2006",
     "size": 9
   },
-  "36": {
+  {
     "name": "Steve",
     "age": "2007",
     "size": 8
   },
-  "37": {
+  {
     "name": "Steve",
     "age": "2004",
     "size": 7
   },
-  "38": {
+  {
     "name": "Steve",
     "age": "2003",
     "size": 6
   },
-  "39": {
+  {
     "name": "Moreno",
     "age": "2005",
     "size": 5
   },
-  "40": {
+  {
     "name": "Mario",
     "age": "2019",
     "size": 9
   },
-  "41": {
+  {
     "name": "Mario",
     "age": "2018",
     "size": 8
   },
-  "42": {
+  {
     "name": "Mario",
     "age": "2017",
     "size": 7
   },
-  "43": {
+  {
     "name": "Mario",
     "age": "2016",
     "size": 6
   },
-  "44": {
+  {
     "name": "Ana",
     "age": "2016",
     "size": 9
   },
-  "45": {
+  {
     "name": "Ana",
     "age": "2011",
     "size": 8
   },
-  "46": {
+  {
     "name": "Mario",
     "age": "2015",
     "size": 5
   },
-  "47": {
+  {
     "name": "Ana",
     "age": "2014",
     "size": 7
   },
-  "48": {
+  {
     "name": "Ana",
     "age": "2016",
     "size": 6
   },
-  "49": {
+  {
     "name": "Ana",
     "age": "2015",
     "size": 5
   },
-  "50": {
+  {
     "name": "Ana",
     "age": "2016",
     "size": 9
   },
-  "51": {
+  {
     "name": "Maria",
     "age": "2011",
     "size": 8
   },
-  "52": {
+  {
     "name": "Maria",
     "age": "2014",
     "size": 7
   },
-  "53": {
+  {
     "name": "Bob",
     "age": "2016",
     "size": 6
   },
-  "54": {
+  {
     "name": "Bob",
     "age": "2015",
     "size": 5
   },
-  "55": {
+  {
     "name": "Liam",
     "age": "2016",
     "size": 9
   },
-  "56": {
+  {
     "name": "Liam",
     "age": "2017",
     "size": 8
   },
-  "57": {
+  {
     "name": "Liam",
     "age": "2014",
     "size": 7
   },
-  "58": {
+  {
     "name": "Liam",
     "age": "2013",
     "size": 6
   },
-  "59": {
+  {
     "name": "Miguel",
     "age": "2015",
     "size": 5
   },
-  "60": {
+  {
     "name": "Mario",
     "age": "2009",
     "size": 9
   },
-  "61": {
+  {
     "name": "Mario",
     "age": "2008",
     "size": 8
   },
-  "62": {
+  {
     "name": "Mario",
     "age": "2007",
     "size": 7
   },
-  "63": {
+  {
     "name": "Mario",
     "age": "2006",
     "size": 6
   },
-  "64": {
+  {
     "name": "Ana",
     "age": "2006",
     "size": 9
   },
-  "65": {
+  {
     "name": "Ana",
     "age": "2001",
     "size": 8
   },
-  "66": {
+  {
     "name": "Mario",
     "age": "2005",
     "size": 5
   },
-  "67": {
+  {
     "name": "Ana",
     "age": "2004",
     "size": 7
   },
-  "68": {
+  {
     "name": "Ana",
     "age": "2006",
     "size": 6
   },
-  "69": {
+  {
     "name": "Ana",
     "age": "2005",
     "size": 5
   },
-  "70": {
+  {
     "name": "Ana",
     "age": "2006",
     "size": 9
   },
-  "71": {
+  {
     "name": "Bob",
     "age": "2001",
     "size": 8
   },
-  "72": {
+  {
     "name": "Bob",
     "age": "2004",
     "size": 7
   },
-  "73": {
+  {
     "name": "Liam",
     "age": "2006",
     "size": 6
   },
-  "74": {
+  {
     "name": "Liam",
     "age": "2005",
     "size": 5
   },
-  "75": {
+  {
     "name": "Lisa",
     "age": "2006",
     "size": 9
   },
-  "76": {
+  {
     "name": "Lisa",
     "age": "2007",
     "size": 8
   },
-  "77": {
+  {
     "name": "Lisa",
     "age": "2004",
     "size": 7
   },
-  "78": {
+  {
     "name": "Lisa",
     "age": "2003",
     "size": 6
   },
-  "79": {
+  {
     "name": "Cass",
     "age": "2005",
     "size": 5
   },
-  "80": {
+  {
     "name": "Ross",
     "age": "2019",
     "size": 9
   },
-  "81": {
+  {
     "name": "Ross",
     "age": "2018",
     "size": 8
   },
-  "82": {
+  {
     "name": "Ross",
     "age": "2017",
     "size": 7
   },
-  "83": {
+  {
     "name": "Ross",
     "age": "2016",
     "size": 6
   },
-  "84": {
+  {
     "name": "Monica",
     "age": "2016",
     "size": 9
   },
-  "85": {
+  {
     "name": "Monica",
     "age": "2011",
     "size": 8
   },
-  "86": {
+  {
     "name": "Ross",
     "age": "2015",
     "size": 5
   },
-  "87": {
+  {
     "name": "Monica",
     "age": "2014",
     "size": 7
   },
-  "88": {
+  {
     "name": "Monica",
     "age": "2016",
     "size": 6
   },
-  "89": {
+  {
     "name": "Monica",
     "age": "2015",
     "size": 5
   },
-  "90": {
+  {
     "name": "Monica",
     "age": "2016",
     "size": 9
   },
-  "91": {
+  {
     "name": "Phoebe",
     "age": "2011",
     "size": 8
   },
-  "92": {
+  {
     "name": "Phoebe",
     "age": "2014",
     "size": 7
   },
-  "93": {
+  {
     "name": "Joey",
     "age": "2016",
     "size": 6
   },
-  "94": {
+  {
     "name": "Joey",
     "age": "2015",
     "size": 5
   },
-  "95": {
+  {
     "name": "Rachel",
     "age": "2016",
     "size": 9
   },
-  "96": {
+  {
     "name": "Rachel",
     "age": "2017",
     "size": 8
   },
-  "97": {
+  {
     "name": "Rachel",
     "age": "2014",
     "size": 7
   },
-  "98": {
+  {
     "name": "Rachel",
     "age": "2013",
     "size": 6
   },
-  "99": {
+  {
     "name": "Rachel",
     "age": "2015",
     "size": 5
   }
- 
-}
+]
