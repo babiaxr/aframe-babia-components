@@ -256,9 +256,11 @@ function generateTree(data, paths) {
                 let newPart = {}
                 if (j === path.length - 1) {
                     newPart = paths[i]
+                } else {
+                    newPart['children'] = []
                 }
                 newPart['id'] = part
-                newPart['children'] = []
+                
 
                 currentLevel.push(newPart);
                 currentLevel = newPart.children;
