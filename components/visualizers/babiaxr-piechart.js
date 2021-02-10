@@ -83,7 +83,7 @@ AFRAME.registerComponent('babiaxr-piechart', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     self.slice_array = []
                     attachNewDataEventCallback(self, e)
                 });

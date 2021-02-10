@@ -92,7 +92,7 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     attachNewDataEventCallback(self, e)
                 });
 
