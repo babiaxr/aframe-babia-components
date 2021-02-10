@@ -1,0 +1,317 @@
+[
+    {
+        "date": "04/05/2020", 
+        "country": "Switzerland", 
+        "cases": 88, 
+        "fatality": "0.0681818181818", 
+        "deaths": 6
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Ukraine", 
+        "cases": 502, 
+        "fatality": "0.0179282868526", 
+        "deaths": 9
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Jersey", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Kosovo", 
+        "cases": 28, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Latvia", 
+        "cases": 8, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Lithuania", 
+        "cases": 4, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Iceland", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Ireland", 
+        "cases": 330, 
+        "fatality": "0.115151515152", 
+        "deaths": 38
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Isle_of_Man", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Italy", 
+        "cases": 1389, 
+        "fatality": "0.125269978402", 
+        "deaths": 174
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "United_Kingdom", 
+        "cases": 4339, 
+        "fatality": "0.0725973726665", 
+        "deaths": 315
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Luxembourg", 
+        "cases": 12, 
+        "fatality": "0.333333333333", 
+        "deaths": 4
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Malta", 
+        "cases": 10, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Slovakia", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Sweden", 
+        "cases": 235, 
+        "fatality": "0.0425531914894", 
+        "deaths": 10
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Andorra", 
+        "cases": 1, 
+        "fatality": "1.0", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Albania", 
+        "cases": 6, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Austria", 
+        "cases": 39, 
+        "fatality": "0.0512820512821", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Armenia", 
+        "cases": 113, 
+        "fatality": "0.0176991150442", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Belarus", 
+        "cases": 877, 
+        "fatality": "0.00228050171038", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Azerbaijan", 
+        "cases": 38, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Bosnia_and_Herzegovina", 
+        "cases": 18, 
+        "fatality": "0.277777777778", 
+        "deaths": 5
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Belgium", 
+        "cases": 389, 
+        "fatality": "0.203084832905", 
+        "deaths": 79
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Croatia", 
+        "cases": 8, 
+        "fatality": "0.25", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Bulgaria", 
+        "cases": 24, 
+        "fatality": "0.0416666666667", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Serbia", 
+        "cases": 102, 
+        "fatality": "0.0392156862745", 
+        "deaths": 4
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "San_Marino", 
+        "cases": 2, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Czechia", 
+        "cases": 26, 
+        "fatality": "0.115384615385", 
+        "deaths": 3
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Cyprus", 
+        "cases": 8, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Estonia", 
+        "cases": 1, 
+        "fatality": "2.0", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Denmark", 
+        "cases": 116, 
+        "fatality": "0.0775862068966", 
+        "deaths": 9
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "France", 
+        "cases": 308, 
+        "fatality": "0.438311688312", 
+        "deaths": 135
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Finland", 
+        "cases": 75, 
+        "fatality": "0.133333333333", 
+        "deaths": 10
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Germany", 
+        "cases": 679, 
+        "fatality": "0.0633284241532", 
+        "deaths": 43
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Georgia", 
+        "cases": 7, 
+        "fatality": "0.142857142857", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Hungary", 
+        "cases": 37, 
+        "fatality": "0.297297297297", 
+        "deaths": 11
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Greece", 
+        "cases": 6, 
+        "fatality": "0.166666666667", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Netherlands", 
+        "cases": 335, 
+        "fatality": "0.205970149254", 
+        "deaths": 69
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Moldova", 
+        "cases": 69, 
+        "fatality": "0.0144927536232", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Russia", 
+        "cases": 10633, 
+        "fatality": "0.00545471644879", 
+        "deaths": 58
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Romania", 
+        "cases": 431, 
+        "fatality": "0.0208816705336", 
+        "deaths": 9
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Portugal", 
+        "cases": 92, 
+        "fatality": "0.217391304348", 
+        "deaths": 20
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Poland", 
+        "cases": 318, 
+        "fatality": "0.0440251572327", 
+        "deaths": 14
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Norway", 
+        "cases": 50, 
+        "fatality": "0.08", 
+        "deaths": 4
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "North_Macedonia", 
+        "cases": 5, 
+        "fatality": "0.4", 
+        "deaths": 2
+    }
+]

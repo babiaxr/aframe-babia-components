@@ -38,6 +38,9 @@ AFRAME.registerComponent('babia-ui', {
         // Find the component
         let eventName = findVisualizerComponent(data, self) 
 
+        // Find querier components
+        findQuerierComponents(self)
+
         // Target component properties
         if (self.targetComponent.visProperties) { 
             self.targetComponentVisProperties = self.targetComponent.visProperties
@@ -61,6 +64,7 @@ AFRAME.registerComponent('babia-ui', {
     targetComponentVisProperties: undefined,
     dataMetrics: undefined,
     interface: undefined,
+    dataQueriers: undefined,
 
      /**
      * Property of the visualizer where the data is saved
@@ -68,6 +72,23 @@ AFRAME.registerComponent('babia-ui', {
     dataComponentDataPropertyName: "babiaData",
 
 })
+
+let findQuerierComponents = (self) => {
+    self.dataQueriers = []
+    // All queriers and filterdatas of the scene
+    document.querySelectorAll('[babiaxr-querier_json]').forEach(querier => { 
+        self.dataQueriers.push(querier.id)
+    });
+    document.querySelectorAll('[babiaxr-querier_es]').forEach(querier => { 
+        self.dataQueriers.push(querier.id)
+    });
+    document.querySelectorAll('[babiaxr-querier_github]').forEach(querier => { 
+        self.dataQueriers.push(querier.id)
+    });
+    document.querySelectorAll('[babiaxr-filterdata]').forEach(querier => { 
+        self.dataQueriers.push(querier.id)
+    });
+}
 
 let findVisualizerComponent = (data, self) => {
     let eventName = "babiaVisualizerUpdated"
@@ -90,7 +111,6 @@ let findVisualizerComponent = (data, self) => {
             } else if (targetElement.components['babiaxr-bubbleschart']) {
                 self.targetComponent = targetElement.components['babiaxr-bubbleschart']
             } else if (targetElement.components['babiaxr-city']) {
-                console.log("Es codecity")
                 self.targetComponent = targetElement.components['babiaxr-city']
             } else {
                 console.error("Visualizer not found.")
@@ -110,11 +130,15 @@ let findVisualizerComponent = (data, self) => {
 let updateInterfaceEventCallback = (self, e) => {
     // Get the data from the info of the event (propertyName)
     self.dataComponentDataPropertyName = e.detail
-    getDataMetrics(self, self.targetComponent[e.detail], self.targetComponentVisProperties)
-
-    if(self.interface){
-        self.el.removechild(self.interface)
+    if(self.targetComponent[e.detail].data){
+        // Inserted data manually in the visualizer 
+        getDataMetrics(self, JSON.parse(self.targetComponent[e.detail].data), self.targetComponentVisProperties)
+    } else {
+        getDataMetrics(self, self.targetComponent[e.detail], self.targetComponentVisProperties)
     }
+    
+    while (self.el.firstChild)
+        self.el.firstChild.remove();
     // Generate interface
     console.log('Generating interface...')
     self.interface = generateInterface(self, self.dataMetrics)
@@ -132,8 +156,6 @@ let getDataMetrics = (self, data, properties) => {
     {
         // Get last child of the tree
         last_child = getLastChild(data)
-        console.log(last_child)
-
     } else { last_child = data[0] }
 
     Object.keys(last_child).forEach(metric => {
@@ -168,12 +190,27 @@ let generateInterface = (self, metrics) => {
     let posX = 0
     let maxX = 0
 
+    // Data files
+    if (self.dataQueriers.length > 1) { 
+        let button = createProperty("Data", posX, posY)
+        self.interface.appendChild(button)
+        self.dataQueriers.forEach(data => {
+            posX += 3.25
+            let button = createDataSelect(self, data, posX, posY)
+            button.classList.add("babiaxraycasterclass")
+            self.interface.appendChild(button) 
+        });
+    }
+    --posY
+    posX = 0 
+
+    // Properties and metrics
     metrics.forEach(property => {
         let button = createProperty(property.property, posX, posY)
         self.interface.appendChild(button)
         property.metrics.forEach(metric => {
             posX += 3.25
-            let button = createButton(self, property.property, metric, posX, posY)
+            let button = createMetric(self, property.property, metric, posX, posY)
             button.classList.add("babiaxraycasterclass")
             self.interface.appendChild(button)
         });
@@ -191,8 +228,7 @@ let generateInterface = (self, metrics) => {
     return self.interface
 }
 
-
-let createButton = (self, property, metric, positionX, positionY) =>{
+let createMetric = (self, property, metric, positionX, positionY) =>{
     let entity = document.createElement('a-box')
     entity.property = property
     entity.metric = metric
@@ -230,7 +266,13 @@ function selection_events(entity, visualizer){
     });
 
     entity.addEventListener('click', function(){
-        visualizer.el.setAttribute(visualizer.attrName, entity.property, entity.metric)
+        // Change parameters
+        if(entity.property && entity.metric) {
+            visualizer.el.setAttribute(visualizer.attrName, entity.property, entity.metric)
+        // Change selected querier in visualializer (from)
+        } else if (entity.from) {
+            visualizer.el.setAttribute(visualizer.attrName, "from", entity.from )
+        }
     });
 
 }
@@ -248,5 +290,30 @@ let createProperty = (property, positionX, positionY) =>{
         'color': '#FFFFFF'
     })
     entity.setAttribute('color', 'black')
+    return entity
+}
+
+let createDataSelect = (self, id, positionX, positionY) =>{
+    let entity = document.createElement('a-box')
+    entity.from = id;
+    entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
+    entity.setAttribute('height', 0.8)
+    entity.setAttribute('width', 3)
+    entity.setAttribute('depth', 0.01)
+
+    let text = document.createElement('a-entity')
+    text.setAttribute('text', {
+        'value': id,
+        'align': 'center',
+        'width': '10',
+        'color': 'black'
+    })
+    text.setAttribute('position', "0 0 0.01")
+    entity.appendChild(text)
+
+    entity.setAttribute('color', '#FFFFFF')
+    selection_events(entity, self.targetComponent)
+
     return entity
 }
