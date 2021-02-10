@@ -31,18 +31,16 @@ describe ('BabiaXR-Simplebarchart component', () => {
             // Add components
             let data = Cypress.$('<a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>');
             Cypress.$(scene).append(data);      
-            let chart = Cypress.$('<a-entity babiaxr-simplebarchart="legend: true; axis: true" babiaxr-filterdata="from: queriertest" babiaxr-vismapper="x_axis: name; height: size"></a-entity>');
+            let chart = Cypress.$('<a-entity babiaxr-simplebarchart="legend: true; axis: true; from: queriertest; x_axis: name; height: size"></a-entity>');
             Cypress.$(scene).append(chart); //appendchild
         });
         
         // Test entities existence
         assert.exists(cy.get('a-entity[babiaxr-querier_json]'));
         assert.exists(cy.get('a-entity[babiaxr-simplebarchart]'));
-        assert.exists(cy.get('a-entity[babiaxr-vismapper]'));
 
         // Check attributes
-        cy.get('a-entity[babiaxr-simplebarchart]').invoke('attr', 'babiaxr-vismapper')
-            .should('nested.include', {'ui': false})
+        cy.get('a-entity[babiaxr-simplebarchart]').invoke('attr', 'babiaxr-simplebarchart')
             .should('nested.include', {'x_axis': 'name'})
             .should('nested.include', {'height': 'size'});
     }); 
@@ -53,7 +51,7 @@ describe('BabiaXR-Simplebarchart component examples (screenshot)', () => {
     ['', '_querier'].forEach((example) => {
         it(`Screenshot Simplebarchart (${example})`, () => {
             cy.visit('/examples/charts'+ example+ '/simplebar_chart' + example + '/index.html');
-            cy.wait(15000);
+            cy.wait(5000);
             cy.screenshot('simplebarchart' + example);
         });
     });

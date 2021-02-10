@@ -13,7 +13,7 @@ describe ('Event Controller Bar component', () => {
             // Add components
             let data = Cypress.$(' <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>');
             Cypress.$(scene).append(data);      //appendchild
-            let chart = Cypress.$('<a-entity id="bar" babiaxr-simplebarchart="legend: true; axis: true" babiaxr-filterdata="from: queriertest" babiaxr-vismapper="x_axis: name; height: size"></a-entity>');
+            let chart = Cypress.$('<a-entity id="bar" babiaxr-simplebarchart="legend: true; axis: true; from: queriertest; x_axis: name; height: size"></a-entity>');
             Cypress.$(scene).append(chart);
             let bar = Cypress.$('<a-entity babiaxr-navigation-bar = "size: 5; to: right; points_by_line: 1; commits: [{date: 01/30/2003, commit: datatest}]"></a-entity>');
             Cypress.$(scene).append(bar);
