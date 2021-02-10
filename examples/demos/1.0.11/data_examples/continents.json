@@ -1,5 +1,5 @@
-{
-    "25": {
+[
+    {
         "date": "04/05/2020", 
         "country": "Sudan", 
         "cases": 0.86, 
@@ -7,7 +7,7 @@
         "deaths": 0,
         "continentExp": "Africa"
     }, 
-    "20": {
+    {
         "date": "04/05/2020", 
         "country": "Senegal", 
         "cases": 0.67, 
@@ -15,7 +15,7 @@
         "deaths": 0,
         "continentExp": "Africa"
     },  
-    "22": {
+    {
         "date": "04/05/2020", 
         "country": "Somalia", 
         "cases": 0.51, 
@@ -23,7 +23,7 @@
         "deaths": 0.01,
         "continentExp": "Africa"
     }, 
-    "23b": {
+    {
         "date": "04/05/2020", 
         "country": "South_Africa", 
         "cases": 4.47, 
@@ -31,7 +31,7 @@
         "deaths": 0.08,
         "continentExp": "Africa"
     }, 
-    "0": {
+    {
         "date": "04/05/2020", 
         "country": "Algeria", 
         "cases": 1.79, 
@@ -39,7 +39,7 @@
         "deaths": 0.04,
         "continentExp": "Africa"
     },  
-    "4": {
+    {
         "date": "04/05/2020", 
         "country": "Cote_dIvoire", 
         "cases": 0.36, 
@@ -47,7 +47,7 @@
         "deaths": 0.02,
         "continentExp": "Africa"
     }, 
-    "6b": {
+    {
         "date": "04/05/2020", 
         "country": "Egypt", 
         "cases": 2.72, 
@@ -55,7 +55,7 @@
         "deaths": 0.14,
         "continentExp": "Africa"
     }, 
-    "9": {
+    {
         "date": "04/05/2020", 
         "country": "Guinea_Bissau", 
         "cases": 0.35, 
@@ -63,7 +63,7 @@
         "deaths": 0.01,
         "continentExp": "Africa"
     }, 
-    "15": {
+    {
         "date": "04/05/2020", 
         "country": "Morocco", 
         "cases": 1.74, 
@@ -71,7 +71,7 @@
         "deaths": 0.01,
         "continentExp": "Africa"
     }, 
-    "18": {
+    {
         "date": "04/05/2020", 
         "country": "Nigeria", 
         "cases": 1.70, 
@@ -79,7 +79,7 @@
         "deaths": 0.02,
         "continentExp": "Africa"
     },
-    "43": {
+    {
         "date": "04/05/2020", 
         "country": "Ukraine", 
         "cases": 5.02, 
@@ -87,7 +87,7 @@
         "deaths": 0.09,
         "continentExp": "Africa"
     },  
-    "21": {
+    {
         "date": "04/05/2020", 
         "country": "Ireland", 
         "cases": 3.30, 
@@ -95,7 +95,7 @@
         "deaths": 0.38,
         "continentExp": "Europe"
     }, 
-    "23": {
+    {
         "date": "04/05/2020", 
         "country": "Italy", 
         "cases": 13.89, 
@@ -103,7 +103,7 @@
         "deaths": 1.74,
         "continentExp": "Europe"
     }, 
-    "44": {
+    {
         "date": "04/05/2020", 
         "country": "United_Kingdom", 
         "cases": 43.39, 
@@ -111,7 +111,7 @@
         "deaths": 3.15,
         "continentExp": "Europe"
     },  
-    "5": {
+    {
         "date": "04/05/2020", 
         "country": "Belarus", 
         "cases": 8.77, 
@@ -119,7 +119,7 @@
         "deaths": 0.02,
         "continentExp": "Europe"
     }, 
-    "6": {
+    {
         "date": "04/05/2020", 
         "country": "Belgium", 
         "cases": 3.89, 
@@ -127,7 +127,7 @@
         "deaths": 0.79,
         "continentExp": "Europe"
     },    
-    "17": {
+    {
         "date": "04/05/2020", 
         "country": "Germany", 
         "cases": 6.79, 
@@ -135,7 +135,7 @@
         "deaths": 0.43,
         "continentExp": "Europe"
     },   
-    "31": {
+    {
         "date": "04/05/2020", 
         "country": "Netherlands", 
         "cases": 3.35, 
@@ -143,7 +143,7 @@
         "deaths": 0.69,
         "continentExp": "Europe"
     },  
-    "37": {
+    {
         "date": "04/05/2020", 
         "country": "Russia", 
         "cases": 106.33, 
@@ -151,7 +151,7 @@
         "deaths": 0.58,
         "continentExp": "Europe"
     }, 
-    "36": {
+    {
         "date": "04/05/2020", 
         "country": "Romania", 
         "cases": 4.31, 
@@ -159,7 +159,7 @@
         "deaths": 0.9,
         "continentExp": "Europe"
     },
-    "23c": {
+    {
         "date": "04/05/2020", 
         "country": "United_States_of_America", 
         "cases": 249.72, 
@@ -167,7 +167,7 @@
         "deaths": 12.97,
         "continentExp": "America"
     }, 
-    "3": {
+    {
         "date": "04/05/2020", 
         "country": "Bolivia", 
         "cases": 1.24, 
@@ -175,7 +175,7 @@
         "deaths": 0.05,
         "continentExp": "America"
     }, 
-    "5b": {
+    {
         "date": "04/05/2020", 
         "country": "Canada", 
         "cases": 27.60, 
@@ -183,7 +183,7 @@
         "deaths": 1.16,
         "continentExp": "America"
     }, 
-    "4b": {
+    {
         "date": "04/05/2020", 
         "country": "Brazil", 
         "cases": 45.88, 
@@ -191,7 +191,7 @@
         "deaths": 2.75,
         "continentExp": "America"
     }, 
-    "7": {
+    {
         "date": "04/05/2020", 
         "country": "Colombia", 
         "cases": 3.83, 
@@ -199,7 +199,7 @@
         "deaths": 0.16,
         "continentExp": "America"
     }, 
-    "6c": {
+    {
         "date": "04/05/2020", 
         "country": "Chile", 
         "cases": 12.28, 
@@ -207,7 +207,7 @@
         "deaths": 0.13,
         "continentExp": "America"
     }, 
-    "11": {
+    {
         "date": "04/05/2020", 
         "country": "Ecuador", 
         "cases": 20.74, 
@@ -215,7 +215,7 @@
         "deaths": 1.93,
         "continentExp": "America"
     }, 
-    "10": {
+    {
         "date": "04/05/2020", 
         "country": "Dominican_Republic", 
         "cases": 3.76, 
@@ -223,7 +223,7 @@
         "deaths": 0.07,
         "continentExp": "America"
     },  
-    "16": {
+    {
         "date": "04/05/2020", 
         "country": "Mexico", 
         "cases": 13.83, 
@@ -231,7 +231,7 @@
         "deaths": 0.93,
         "continentExp": "America"
     }, 
-    "19": {
+    {
         "date": "04/05/2020", 
         "country": "Peru", 
         "cases": 33.94, 
@@ -239,4 +239,4 @@
         "deaths": 0.86,
         "continentExp": "America"
     }
-}
+]
