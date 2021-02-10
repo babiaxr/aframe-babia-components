@@ -168,7 +168,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 while (self.el.firstChild)
                     self.el.firstChild.remove();
                 console.log("Generating city...")
-                self.chart = self.onDataLoaded(rawData)
+                self.chart = self.onDataLoaded(self.babiaData)
 
                 // Dispatch interested events because I updated my visualization
                 dataReadyToSend("babiaData", self)

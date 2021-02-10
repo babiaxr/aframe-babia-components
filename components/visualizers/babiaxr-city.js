@@ -214,7 +214,7 @@ AFRAME.registerComponent('babiaxr-city', {
                 while (self.el.firstChild)
                     self.el.firstChild.remove();
                 console.log("Generating city...")
-                self.chart = generateCity(self, rawData)
+                self.chart = generateCity(self, self.babiaData)
 
                 // Dispatch interested events because I updated my visualization
                 dataReadyToSend("babiaData", self)
