@@ -74,22 +74,30 @@ let findVisualizerComponent = (data, self) => {
     if (data.target) {
         // Save the reference to the querier or filterdata
         let targetElement = document.getElementById(data.target)
-        if (targetElement.components['babiaxr-simplebarchart']) {
-            self.targetComponent = targetElement.components['babiaxr-simplebarchart']
-        } else if (targetElement.components['babiaxr-3dbarchart']) {
-            self.targetComponent = targetElement.components['babiaxr-3dbarchart']
-        } else if (targetElement.components['babiaxr-cylinderchart']) {
-            self.targetComponent = targetElement.components['babiaxr-cylinderchart']
-        } else if (targetElement.components['babiaxr-3dcylinderchart']) {
-            self.targetComponent = targetElement.components['babiaxr-3dcylinderchart']
-        } else if (targetElement.components['babiaxr-piechart']) {
-            self.targetComponent = targetElement.components['babiaxr-piechart']
-        } else if (targetElement.components['babiaxr-doughnutchart']) {
-            self.targetComponent = targetElement.components['babiaxr-doughnutchart']
-        } else if (targetElement.components['babiaxr-bubbleschart']) {
-            self.targetComponent = targetElement.components['babiaxr-bubbleschart']
+        if (targetElement != null) { 
+            if (targetElement.components['babiaxr-simplebarchart']) {
+                self.targetComponent = targetElement.components['babiaxr-simplebarchart']
+            } else if (targetElement.components['babiaxr-3dbarchart']) {
+                self.targetComponent = targetElement.components['babiaxr-3dbarchart']
+            } else if (targetElement.components['babiaxr-cylinderchart']) {
+                self.targetComponent = targetElement.components['babiaxr-cylinderchart']
+            } else if (targetElement.components['babiaxr-3dcylinderchart']) {
+                self.targetComponent = targetElement.components['babiaxr-3dcylinderchart']
+            } else if (targetElement.components['babiaxr-piechart']) {
+                self.targetComponent = targetElement.components['babiaxr-piechart']
+            } else if (targetElement.components['babiaxr-doughnutchart']) {
+                self.targetComponent = targetElement.components['babiaxr-doughnutchart']
+            } else if (targetElement.components['babiaxr-bubbleschart']) {
+                self.targetComponent = targetElement.components['babiaxr-bubbleschart']
+            } else if (targetElement.components['babiaxr-city']) {
+                console.log("Es codecity")
+                self.targetComponent = targetElement.components['babiaxr-city']
+            } else {
+                console.error("Visualizer not found.")
+                return
+            }
         } else {
-            console.error("Visualizer not found.")
+            console.error("Target not exist.")
             return
         }
     } else {
@@ -116,10 +124,20 @@ let getDataMetrics = (self, data, properties) => {
     self.dataMetrics=[]
 
     // Create structure
-    let number_properties = ['height', 'radius', 'width', 'size', 'depth', 'fmaxarea', 'farea', 'fheight']
+    let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight']
     let number_metrics = []
-    Object.keys(data[0]).forEach(metric => {
-        if (typeof data[0][metric] == 'number'){
+    let last_child
+
+    if(self.targetComponent.attrName == 'babiaxr-city')
+    {
+        // Get last child of the tree
+        last_child = getLastChild(data)
+        console.log(last_child)
+
+    } else { last_child = data[0] }
+
+    Object.keys(last_child).forEach(metric => {
+        if (typeof last_child[metric] == 'number'){
             number_metrics.push(metric)
 
         }
@@ -132,6 +150,15 @@ let getDataMetrics = (self, data, properties) => {
             self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
         }
     });   
+}
+
+let getLastChild = (data) => {
+    if (data.children){
+        child = getLastChild(data.children[0])
+    } else { 
+        child = data
+    }
+    return child
 }
 
 let generateInterface = (self, metrics) => {
@@ -203,8 +230,6 @@ function selection_events(entity, visualizer){
     });
 
     entity.addEventListener('click', function(){
-        console.log(entity.property)
-        //console.log(visualizer)
         visualizer.el.setAttribute(visualizer.attrName, entity.property, entity.metric)
     });
 
