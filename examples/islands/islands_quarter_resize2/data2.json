@@ -1,0 +1,60 @@
+[ 
+    {
+        "id": "/barrio",
+        "children": [
+            {
+                "id": "/barrio/002",
+                "width": "4",
+                "height": "1",
+                "depth": "4"
+            },
+            {
+                "id": "/barrio/003",
+                "children": [
+                    {
+                        "id": "barrio/003/block1",
+                        "width": "5",
+                        "height": "2",
+                        "depth": "5"
+                    },
+                    {
+                        "id": "barrio/003/block2",
+                        "width": "3",
+                        "height": "10",
+                        "depth": "3"
+                    },
+                    {
+                        "id": "barrio/003/block3",
+                        "width": "5",
+                        "height": "1",
+                        "depth": "5"
+                    },
+                    {
+                        "id": "barrio/003/block4",
+                        "width": "5",
+                        "height": "1",
+                        "depth": "5"
+                    },
+                    {
+                        "id": "barrio/003/block5",
+                        "width": "3",
+                        "height": "-1",
+                        "depth": "3"
+                    },
+                    {
+                        "id": "barrio/003/block6",
+                        "width": "3",
+                        "height": "1",
+                        "depth": "3"
+                    }
+                ]
+            },
+            {
+                "id": "/barrio/004",
+                "width": "3",
+                "height": "1",
+                "depth": "3"
+            }
+        ]
+    }
+]
