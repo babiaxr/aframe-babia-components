@@ -1,4 +1,4 @@
-# Aframe-babia-components
+# Aframe-babia-components - BRANCH DEPRECATED
 
 [![Version](http://img.shields.io/npm/v/aframe-babia-components.svg?style=flat-square)](https://npmjs.org/package/aframe-babia-components)
 [![License](http://img.shields.io/npm/l/aframe-babia-components.svg?style=flat-square)](https://npmjs.org/package/aframe-babia-components)
