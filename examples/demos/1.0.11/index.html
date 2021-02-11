@@ -62,41 +62,34 @@
 
             <!-- Simple Components -->
             <a-entity position=" 16 0 -18" lounge-plinth="width: 4; depth: 4" lounge-staydown>
-                <a-entity id = "pie" babiaxr-piechart = 'legend: true; palette: blues'
-                        babiaxr-filterdata="from: piedata1" babiaxr-vismapper="slice: country; height: cases" 
+                <a-entity id = "pie" babiaxr-piechart = 'legend: true; palette: blues; from: piedata1; key: country; size: cases' 
                         position = "0 2.5 0" rotation = "90 -45 0" scale = "2 2 2"></a-entity>
             </a-entity>
             <a-entity position="16 0 2" lounge-plinth="width: 4; depth: 4" lounge-staydown>
-                <a-entity id = "doughnut" babiaxr-doughnutchart = 'legend: true; palette: pearl'
-                        babiaxr-filterdata="from: doughnutdata" babiaxr-vismapper="slice: country; height: cases"
+                <a-entity id = "doughnut" babiaxr-doughnutchart = 'legend: true; palette: pearl; from: doughnutdata; key: country; size: cases'
                         position = "0 2.5 0" rotation = "90 -45 0" scale = "1.5 1.5 1.5"></a-entity> 
             </a-entity>
             <a-entity position="2 0 -8" lounge-plinth="width: 6.5; depth: 4" lounge-staydown>
-                <a-entity id = "bar" babiaxr-simplebarchart='legend: true; axis: true; heightMax: 15' 
-                        babiaxr-filterdata="from: simplebardata" babiaxr-vismapper="x_axis: date; height: deaths" 
+                <a-entity id = "bar" babiaxr-simplebarchart='legend: true; axis: true; heightMax: 15; from: simplebardata; x_axis: date; height: deaths' 
                         position="-2.25 0.275 0" rotation="0 0 0" scale = "0.5 0.5 0.5"></a-entity>
             </a-entity>
             <a-entity position=" 2 0 10" lounge-plinth="width: 7; depth: 4" lounge-staydown>
-                <a-entity id = "cylinder" babiaxr-cylinderchart='legend: true; axis: true; palette: sunset; heightMax: 15' 
-                        babiaxr-filterdata="from: cylinderdata" babiaxr-vismapper="x_axis: country; height: cases; radius: deaths" 
+                <a-entity id = "cylinder" babiaxr-cylinderchart='legend: true; axis: true; palette: sunset; heightMax: 15; x_axis: country; height: cases; radius: deaths; from: cylinderdata' 
                         position="-2.75 0.275 -0.8" rotation="0 0 0" scale = "0.2 0.5 0.2"></a-entity>
             </a-entity>
 
 
             <!-- 3D Components -->
             <a-entity position="-12 0 -18" lounge-plinth="width: 10; depth: 4" lounge-staydown>
-                <a-entity id = "bubbles" babiaxr-bubbleschart='legend: true; palette: ubuntu; radiusMax: 1; heightMax: 35' 
-                        babiaxr-filterdata="from: bubblesdata" babiaxr-vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
+                <a-entity id = "bubbles" babiaxr-bubbleschart='legend: true; palette: ubuntu; radiusMax: 1; heightMax: 35; from: bubblesdata; x_axis: country; z_axis: continentExp; height: cases; radius: deaths' 
                         position="-4.35 0.275 0" rotation="0 0 0" scale="0.15 0.15 0.2"></a-entity>
             </a-entity>
             <a-entity position="-12 0 2" lounge-plinth="width: 3; depth: 9.8" lounge-staydown>
-                <a-entity id = "3dcylinder" babiaxr-3dcylinderchart='legend: true; palette: flat; heightMax: 100; radiusMax: 1' 
-                        babiaxr-filterdata="from: 3dcylinderdata" babiaxr-vismapper="x_axis: country; z_axis: continentExp; height: cases; radius: deaths" 
+                <a-entity id = "3dcylinder" babiaxr-3dcylinderchart='legend: true; palette: flat; heightMax: 100; radiusMax: 1; from: 3dcylinderdata; x_axis: country; z_axis: continentExp; height: cases; radius: deaths' 
                         position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.1 0.09"></a-entity>
             </a-entity>
             <a-entity position="-12 0 20" lounge-plinth="width: 4; depth: 8" lounge-staydown>
-                <a-entity id = "3dbar" babiaxr-3dbarchart='legend: true; palette: foxy; heightMax: 15'
-                        babiaxr-filterdata="from: 3dbardata" babiaxr-vismapper="x_axis: date; z_axis: list; height: cases"
+                <a-entity id = "3dbar" babiaxr-3dbarchart='legend: true; palette: foxy; heightMax: 15; from: 3dbardata; x_axis: date; z_axis: list; height: cases'
                         position="0.6 0.275 1.8" rotation="0 90 0" scale = "0.5 0.5 0.5"></a-entity>
             </a-entity>
 

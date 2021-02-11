@@ -31,18 +31,16 @@ describe ('BabiaXR-3Dbarchart component', () => {
             // Add components
             let data = Cypress.$('<a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>');
             Cypress.$(scene).append(data);      
-            let chart = Cypress.$('<a-entity babiaxr-3dbarchart="legend: true; axis: true" babiaxr-filterdata="from: queriertest" babiaxr-vismapper="x_axis: name; z_axis: name2; height: size"></a-entity>');
+            let chart = Cypress.$('<a-entity babiaxr-3dbarchart="legend: true; axis: true; rom: queriertest; x_axis: name; z_axis: name2; height: size" ></a-entity>');
             Cypress.$(scene).append(chart); //appendchild
         });
         
         // Test entities existence
         assert.exists(cy.get('a-entity[babiaxr-querier_json]'));
         assert.exists(cy.get('a-entity[babiaxr-3dbarchart]'));
-        assert.exists(cy.get('a-entity[babiaxr-vismapper]'));
 
         // Check attributes
-        cy.get('a-entity[babiaxr-3dbarchart]').invoke('attr', 'babiaxr-vismapper')
-            .should('nested.include', {'ui': false})
+        cy.get('a-entity[babiaxr-3dbarchart]').invoke('attr', 'babiaxr-3dbarchart')
             .should('nested.include', {'x_axis': 'name'})
             .should('nested.include', {'z_axis': 'name2'})
             .should('nested.include', {'height': 'size'});
@@ -54,7 +52,7 @@ describe('BabiaXR-3Dbarchart component examples (screenshot)', () => {
     ['', '_querier'].forEach((example) => {
         it(`Screenshot 3Dbarchart (${example})`, () => {
             cy.visit('/examples/charts'+ example+ '/3dbars_chart' + example + '/index.html');
-            cy.wait(15000);
+            cy.wait(5000);
             cy.screenshot('3dbarschart' + example);
         });
     });

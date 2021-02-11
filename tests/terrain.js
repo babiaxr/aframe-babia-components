@@ -23,8 +23,7 @@ describe ('Terrain component', () => {
             .should('nested.include', {'width': 20})
             .should('nested.include', {'height': 20})
             .should('nested.include', {'segmentsHeight': 1})
-            .should('nested.include', {'segmentsWidth': 1})
-            .should('nested.include', {'data': ['0', '3', '6']});
+            .should('nested.include', {'segmentsWidth': 1});
     }); 
 });
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>A-Frame Babia components</title>
-    <meta name="description" content="Bubble example for A-Charts component." />
+    <meta name="description" content="Babia Bars example with Querier" />
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
     <script src="../../../dist/aframe-babia-components.min.js"></script>
@@ -18,14 +18,11 @@
         <a-entity environment="playArea: 2"></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <!--a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity-->
-        <!-- a-entity id="filtertest" babiaxr-filterdata="from: queriertest; filter: name2=Jesus"></a-entity-->
-
-
-        <a-entity babiaxr-querier_json="url: ./data.json;" babiaxr-filterdata="filter: name2=Jesus" babiaxr-simplebarchart='legend: true; axis: true' position="0 0 0" rotation="0 0 0"></a-entity>
-        <a-entity  babiaxr-simplebarchart='legend: true; axis: true' position="-10 0 0" rotation="0 0 0"></a-entity>
-
-
+        <a-entity babiaxr-querier_json="url: ./data.json;" 
+                babiaxr-filterdata="filter: name2=Jesus" 
+                babiaxr-simplebarchart='legend: true; axis: true' 
+                position="-5 0 0" rotation="0 0 0"></a-entity>
+        
         <a-entity movement-controls="fly: true" position="-3 5 20">
             <a-entity camera position="0 0 0" look-controls></a-entity>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
@@ -35,4 +32,4 @@
     </a-scene>
 
 </body>
-</>
+</html>

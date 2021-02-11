@@ -34,15 +34,3 @@ describe ('Navigation Bar component', () => {
             .should('nested.include', {'commits': '[{date: 01/30/2003, commit: datatest}]'});
     }); 
 });
-
-describe('Navigator Bar component examples (screenshot)', () => {
-    
-    ['multi_charts', 'simplebar_chart'].forEach((example) => {
-        it(`Screenshot ${example} Example with Navigation Bar`, () => {
-            cy.visit('/examples/ui_nav_bar/' + example + '_with_ui/index.html');
-            cy.wait(6000);
-            cy.screenshot(example + 'with_ui');
-        });
-    });
-
-});
