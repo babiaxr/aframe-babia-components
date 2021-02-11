@@ -379,7 +379,7 @@ AFRAME.registerComponent('babiaxr-treegenerator', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     // Get again the raw data from the querier/filterdata
                     self.dataComponentDataPropertyName = e.detail
                     let rawData = self.dataComponent[self.dataComponentDataPropertyName]
@@ -3027,7 +3027,7 @@ AFRAME.registerComponent('babiaxr-3dbarchart', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     attachNewDataEventCallback(self, e)
                 });
 
@@ -3652,7 +3652,7 @@ AFRAME.registerComponent('babiaxr-3dcylinderchart', {
         self.dataComponentEventName = eventName
 
         // Attach to the events of the data component
-        el.addEventListener(self.dataComponentEventName, function _listener(e) {
+        el.addEventListener(self.dataComponentEventName, _listener = (e) => {
           attachNewDataEventCallback(self, e)
         });
 
@@ -4310,7 +4310,7 @@ AFRAME.registerComponent('babiaxr-bubbleschart', {
           self.dataComponentEventName = eventName
   
           // Attach to the events of the data component
-          el.addEventListener(self.dataComponentEventName, function _listener(e) {
+          el.addEventListener(self.dataComponentEventName, _listener = (e) => {
             attachNewDataEventCallback(self, e)
           });
   
@@ -8210,7 +8210,7 @@ AFRAME.registerComponent('babiaxr-cylinderchart', {
         self.dataComponentEventName = eventName
 
         // Attach to the events of the data component
-        el.addEventListener(self.dataComponentEventName, function _listener(e) {
+        el.addEventListener(self.dataComponentEventName, _listener = (e) => {
           attachNewDataEventCallback(self, e)
         });
 
@@ -8817,7 +8817,7 @@ AFRAME.registerComponent('babiaxr-doughnutchart', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     self.slice_array = []
                     attachNewDataEventCallback(self, e)
                 });
@@ -10199,7 +10199,7 @@ AFRAME.registerComponent('babiaxr-piechart', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     self.slice_array = []
                     attachNewDataEventCallback(self, e)
                 });
@@ -10673,7 +10673,7 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
                 self.dataComponentEventName = eventName
 
                 // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, function _listener(e) {
+                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     attachNewDataEventCallback(self, e)
                 });
 

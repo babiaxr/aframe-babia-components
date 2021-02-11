@@ -23,13 +23,13 @@ The component to use is `babiaxr-codecity`, it has several arguments, most of th
 - `width`: Width of the entire city.
 - `depth`: Depth of the entire city.
 - `split`: Algoritm to split rectangle in buildings: naive, pivot
-- `farea`: Field in data items to represent as area
-- `fmaxarea`: Field in data items to represent as max_area
-- `fheight`: Field in data items to represent as area
+- `farea`: Field in data items to represent as building area
+- `fmaxarea`: Field in data items to represent as building max_area
+- `fheight`: Field in data items to represent as building height
 - `titles`: Titles on top of the buildings when hovering
-- `buffered`: Use buffered geometries (improves performance)
 - `building_color`: Color of the buildings
 - `base`: build the base or not
+- `base_thick`: thickness of the base
 - `base_color`: color of the base
 - `border`: Size of border around buildings (streets are built on it)
 - `extra`: Extra factor for total area with respect to built area
