@@ -69,7 +69,6 @@ AFRAME.registerComponent('babiaxr-simplebarchart', {
 
             while (self.el.firstChild)
                 self.el.firstChild.remove();
-            console.log("Generating barchart from data...")
             self.chart = generateBarChart(self, self.data, JSON.parse(data.data), el, self.animation, self.chart, self.bar_array, self.widthBars)
 
             // Dispatch interested events because I updated my visualization
@@ -386,7 +385,6 @@ let generateBarChart = (self, data, dataRetrieved, element, animation, chart, li
 
 function generateBar(self, height, width, colorid, position, palette, animation, scale, bar_array) {
     let color = getColor(colorid, palette)
-    console.log("Generating bar...")
     if (scale) {
         height = height / scale
     } else if (self.proportion) {
@@ -481,9 +479,21 @@ function showXAxis(widthBars, parent, xEnd, bars_printed, palette) {
     parent.appendChild(axis)
 }
 
+/*
+ * Show the Y axis
+ *
+ * @param {number} proportion Proportion between max value and top Y
+ * @param {number} valueMax Maximum value to show in the Y axis
+ * @param {number} widthBars Width of bars
+ * @param {number} parent Parent element
+ * @param {number} yEnd Top Y coordinate of the axis
+ * @param {number} scale Object scale
+ */
 function showYAxis(proportion, valueMax, widthBars, parent, yEnd, scale) {
     let axis = document.createElement('a-entity');
     let yLimit = yEnd
+    // Minimum number of steps (labels) shown in the axis
+    const minSteps = 6;
     //Print line
     let axis_line = document.createElement('a-entity');
     axis_line.setAttribute('line__yaxis', {
@@ -497,27 +507,38 @@ function showYAxis(proportion, valueMax, widthBars, parent, yEnd, scale) {
         yLimit = yLimit / proportion
         var mod = Math.floor(Math.log10(valueMax))
     }
-    for (let i = 0; i <= yLimit; i++) {
-        let key = document.createElement('a-entity');
-        let value = i
-        let pow = Math.pow(10, mod - 1)
-        if (!proportion || (proportion && i % pow === 0)) {
-            key.setAttribute('text', {
-                'value': value,
-                'align': 'right',
-                'width': 10,
-                'color': 'white '
-            });
-            if (scale) {
-                key.setAttribute('text', { 'value': value * scale })
-                key.setAttribute('position', { x: -widthBars - 5.2, y: value, z: widthBars / 2 + widthBars / 4 })
-            } else if (proportion) {
-                key.setAttribute('position', { x: -widthBars - 5.2, y: i * proportion, z: widthBars / 2 + widthBars / 4 })
-            } else {
-                key.setAttribute('position', { x: -widthBars - 5.2, y: i, z: widthBars / 2 + widthBars / 4 })
-            }
+    let yScale = yLimit / valueMax;
+    let step = Math.pow(10, mod);
+    steps = valueMax / step;
+    while (steps <= minSteps) {
+        step = step / 2;
+        steps = valueMax / step;
+    };
+
+    for (let i = 1; step * i < valueMax; i++) {
+        let label = document.createElement('a-entity');
+        let value = step * i;
+        label.setAttribute('text', {
+            'value': value,
+            'align': 'right',
+            'width': 10,
+            'color': 'white '
+        });
+        position = value * yScale;
+        if (scale) {
+            label.setAttribute('position', 
+                { x: -widthBars - 5.2, y: position * scale,
+                  z: widthBars / 2 + widthBars / 4 });
+        } else if (proportion) {
+            label.setAttribute('position',
+                { x: -widthBars - 5.2, y: position * proportion,
+                  z: widthBars / 2 + widthBars / 4 });
+        } else {
+            label.setAttribute('position',
+                { x: -widthBars - 5.2, y: position,
+                  z: widthBars / 2 + widthBars / 4 })
         }
-        axis.appendChild(key)
+        axis.appendChild(label)
     }
 
     //axis completion
