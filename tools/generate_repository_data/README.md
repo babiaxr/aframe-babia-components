@@ -2,8 +2,8 @@
 
 ## Requeriments
 
-1. ElasticSearch 6 deployed. There is a docker-compose file to launch it locally [here](./utils/docker-compose.yml)
-2. python-dev y cloc installed
+1. ElasticSearch 6 deployed. There is a docker-compose file to deploy it locally [here](./utils/docker-compose.yml)
+2. "python-dev" and "cloc" installed
 ```
 sudo apt-get install python3-dev
 sudo apt-get install cloc
@@ -11,7 +11,7 @@ sudo apt-get install cloc
 
 ## Steps
 
-1. Create a python3 virtual enviornment and activate it (optional).
+1. Create a python3 virtual environment and activate it (optional).
 
 ```
 python3 -m venv /tmp/babiaxr
