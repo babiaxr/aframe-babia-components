@@ -1,0 +1,19 @@
+pandas
+sklearn
+numpy
+urllib3==1.24.3
+requests==2.21.0
+PyMySQL==0.9.3
+wheel
+configparser
+colorlog==4.1.0
+elasticsearch==6.3.1
+elasticsearch-dsl==6.3.1
+file-read-backwards==2.0.0
+grimoirelab-toolkit
+sortinghat
+kidash
+grimoire-elk
+perceval
+-e git+https://github.com/chaoss/grimoirelab-graal/#egg=grimoirelab-graal
+-e git+https://github.com/chaoss/grimoirelab-sirmordred/#egg=grimoirelab-sirmordred
