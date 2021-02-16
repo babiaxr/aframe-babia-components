@@ -276,16 +276,16 @@ AFRAME.registerComponent('babiaxr-island', {
          */
         for (let i = 0; i < elements.length; i++) {
             if (this.data.width){
-                elements[i].width = elements[i][this.data.width]
+                elements[i].width = elements[i][this.data.width] || 0.5
             }
             if (this.data.height){
-                elements[i].height = elements[i][this.data.height]
+                elements[i].height = elements[i][this.data.height] || 1
             }
             if (this.data.depth){
-                elements[i].depth = elements[i][this.data.depth]
+                elements[i].depth = elements[i][this.data.depth] || 0.5
             }
             if (this.data.area){
-                elements[i].area = elements[i][this.data.area]
+                elements[i].area = elements[i][this.data.area] || 0.5
             }   
             if (elements[i].children) {
                 //console.log("ENTER to the quarter...")

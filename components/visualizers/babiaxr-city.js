@@ -193,13 +193,24 @@ AFRAME.registerComponent('babiaxr-city', {
                     // Get the data from the info of the event (propertyName)
                     self.querierDataPropertyName = e.detail
                     let rawData = self.dataComponent[self.querierDataPropertyName]
-                    self.babiaData = rawData[0]
+
+                    let toSave
+                    if (rawData.length > 0) {
+                        toSave = {
+                            id: "init",
+                            children: rawData
+                        }
+                    } else {
+                        toSave = rawData[0]
+                    }
+
+                    self.babiaData = toSave
                     self.babiaMetadata = {
                         id: self.babiaMetadata.id++
                     }
 
                     // Create city
-                    self.chart = generateCity(self, rawData[0])
+                    self.chart = generateCity(self, toSave)
 
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -427,8 +438,8 @@ let Zone = class {
             };
         } else {
             // Leaf node
-            node.area = data_node[this.farea];
-            node.max_area = data_node[this.fmaxarea]
+            node.area = data_node[this.farea] || 0.5;
+            node.max_area = data_node[this.fmaxarea] || 0.5
             node.inner = node.max_area;
             node.inner_real = node.area;
         };
@@ -1194,8 +1205,8 @@ let dateBar = (data) => {
 
 // TODO: legend scale fix
 let countDecimals = function (value) {
-    if(Math.floor(value) === value) return 0;
-    return value.toString().split(".")[1].length || 0; 
+    if (Math.floor(value) === value) return 0;
+    return value.toString().split(".")[1].length || 0;
 }
 
 
@@ -1230,7 +1241,7 @@ let generateLegend = (text, heightItem, boxPosition, model, rootCodecityEntity) 
     if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
         let scalefixes = Math.max(...[countDecimals(scaleParent.x), countDecimals(scaleParent.y), countDecimals(scaleParent.z)]) - 1
         let multiplyer = Math.pow(10, scalefixes)
-        entity.setAttribute('scale', { x: (1 / scaleParent.x)/multiplyer, y: (1 / scaleParent.y)/multiplyer, z: (1 / scaleParent.z)/multiplyer });
+        entity.setAttribute('scale', { x: (1 / scaleParent.x) / multiplyer, y: (1 / scaleParent.y) / multiplyer, z: (1 / scaleParent.z) / multiplyer });
 
     }
 
