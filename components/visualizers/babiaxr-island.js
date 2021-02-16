@@ -275,16 +275,28 @@ AFRAME.registerComponent('babiaxr-island', {
          * Then save all data in figures array
          */
         for (let i = 0; i < elements.length; i++) {
+            if (this.data.width){
+                elements[i].width = elements[i][this.data.width]
+            }
+            if (this.data.height){
+                elements[i].height = elements[i][this.data.height]
+            }
+            if (this.data.depth){
+                elements[i].depth = elements[i][this.data.depth]
+            }
+            if (this.data.area){
+                elements[i].area = elements[i][this.data.area]
+            }   
             if (elements[i].children) {
                 //console.log("ENTER to the quarter...")
                 this.quarter = true;
                 var children = [];
                 var translate_matrix;
                 // Save Zone's parameters
-                elements[i][this.data.height] = 0.3;
+                elements[i].height = 0.3;
                 increment -= this.data.border * this.data.extra;
-                [elements[i][this.data.width], elements[i][this.data.depth], translate_matrix, children] = this.generateElements(elements[i].children, children, translate_matrix, increment);
-                translate_matrix.y = elements[i][this.data.height];
+                [elements[i].width, elements[i].depth, translate_matrix, children] = this.generateElements(elements[i].children, children, translate_matrix, increment);
+                translate_matrix.y = elements[i].height;
                 increment = inc;
                 //console.log("====> CHILDREN:");
                 //console.log(children);
@@ -292,19 +304,19 @@ AFRAME.registerComponent('babiaxr-island', {
             }
             if (i == 0) {
                 if (this.data.area && !elements[i].children) {
-                    limit_up += Math.sqrt(elements[i][this.data.area]) / 2;
-                    limit_down -= Math.sqrt(elements[i][this.data.area]) / 2;
-                    limit_right += Math.sqrt(elements[i][this.data.area]) / 2;
-                    limit_left -= Math.sqrt(elements[i][this.data.area]) / 2;
+                    limit_up += Math.sqrt(elements[i].area) / 2;
+                    limit_down -= Math.sqrt(elements[i].area) / 2;
+                    limit_right += Math.sqrt(elements[i].area) / 2;
+                    limit_left -= Math.sqrt(elements[i].area) / 2;
                 } else {
-                    limit_up += elements[i][this.data.depth] / 2;
-                    limit_down -= elements[i][this.data.depth] / 2;
-                    limit_right += elements[i][this.data.width] / 2;
-                    limit_left -= elements[i][this.data.width] / 2;
+                    limit_up += elements[i].depth / 2;
+                    limit_down -= elements[i].depth / 2;
+                    limit_right += elements[i].width / 2;
+                    limit_left -= elements[i].width / 2;
                 }
                 //console.log("==== RIGHT SIDE ====");
                 current_horizontal = limit_up + this.data.building_separation / 2;
-            } else if (elements[i][this.data.height] > 0) {
+            } else if (elements[i].height > 0) {
                 if (up) {
                     [current_vertical, posX, posY, max_up] = this.UpSide(elements[i], limit_up, current_vertical, max_up);
                     if (current_vertical > limit_right) {
@@ -364,14 +376,13 @@ AFRAME.registerComponent('babiaxr-island', {
             // Save information about the figure
             let figure
             if (elements[i].children) {
-                // Calculate 
                 figure = {
                     id: "island-" + elements[i].id,
                     posX: posX,
                     posY: posY,
-                    width: elements[i][this.data.width],
-                    height: elements[i][this.data.height],
-                    depth: elements[i][this.data.depth],
+                    width: elements[i].width,
+                    height: elements[i].height,
+                    depth: elements[i].depth,
                     children: children,
                     translate_matrix: translate_matrix
                 }
@@ -381,18 +392,18 @@ AFRAME.registerComponent('babiaxr-island', {
                         id: "island-" + elements[i].id,
                         posX: posX,
                         posY: posY,
-                        width: Math.sqrt(elements[i][this.data.area]),
-                        height: elements[i][this.data.height],
-                        depth: Math.sqrt(elements[i][this.data.area])
+                        width: Math.sqrt(elements[i].area),
+                        height: elements[i].height,
+                        depth: Math.sqrt(elements[i].area)
                     }
                 } else {
                     figure = {
                         id: "island-" + elements[i].id,
                         posX: posX,
                         posY: posY,
-                        width: elements[i][this.data.width],
-                        height: elements[i][this.data.height],
-                        depth: elements[i][this.data.depth]
+                        width: elements[i].width,
+                        height: elements[i].height,
+                        depth: elements[i].depth
                     }
                 }
             }
@@ -482,11 +493,11 @@ AFRAME.registerComponent('babiaxr-island', {
         let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children) {
-            width = Math.sqrt(element[this.data.area]);
-            depth = Math.sqrt(element[this.data.area]) + separation;
+            width = Math.sqrt(element.area);
+            depth = Math.sqrt(element.area) + separation;
         } else {
-            width = parseFloat(element[this.data.width]);
-            depth = parseFloat(element[this.data.depth]) + separation;
+            width = parseFloat(element.width);
+            depth = parseFloat(element.depth) + separation;
         }
         // Calculate position
         let posX = limit_right + (width / 2) + separation;
@@ -506,11 +517,11 @@ AFRAME.registerComponent('babiaxr-island', {
         let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children) {
-            width = Math.sqrt(element[this.data.area]) + separation;
-            depth = Math.sqrt(element[this.data.area]);
+            width = Math.sqrt(element.area) + separation;
+            depth = Math.sqrt(element.area);
         } else {
-            width = parseFloat(element[this.data.width]) + separation;
-            depth = parseFloat(element[this.data.depth]);
+            width = parseFloat(element.width) + separation;
+            depth = parseFloat(element.depth);
         }
         // Calculate position
         let posX = current_vertical - (width / 2);
@@ -530,11 +541,11 @@ AFRAME.registerComponent('babiaxr-island', {
         let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children) {
-            width = Math.sqrt(element[this.data.area]);
-            depth = Math.sqrt(element[this.data.area]) + separation;
+            width = Math.sqrt(element.area);
+            depth = Math.sqrt(element.area) + separation;
         } else {
-            width = parseFloat(element[this.data.width]);
-            depth = parseFloat(element[this.data.depth]) + separation;
+            width = parseFloat(element.width);
+            depth = parseFloat(element.depth) + separation;
         }
         // Calculate position
         let posX = limit_left - (width / 2) - separation;
@@ -554,11 +565,11 @@ AFRAME.registerComponent('babiaxr-island', {
         let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children) {
-            width = Math.sqrt(element[this.data.area]) + separation;
-            depth = Math.sqrt(element[this.data.area]);
+            width = Math.sqrt(element.area) + separation;
+            depth = Math.sqrt(element.area);
         } else {
-            width = parseFloat(element[this.data.width]) + separation;
-            depth = parseFloat(element[this.data.depth]);
+            width = parseFloat(element.width) + separation;
+            depth = parseFloat(element.depth);
         }
         // Calculate position
         let posX = current_vertical + (width / 2);
@@ -817,11 +828,11 @@ function setOpacity(entity, opacity) {
 }
 
 let getLevels = (elements, levels) => {
-    let level = levels;
+    let level = levels
     for (let i in elements) {
         if (elements[i].children) {
-            level++;
-            levels = getLevels(elements[i].children, level);
+            level++
+            levels = getLevels(elements[i].children, level)
         }
     }
     return levels;
