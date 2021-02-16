@@ -112,6 +112,8 @@ let findVisualizerComponent = (data, self) => {
                 self.targetComponent = targetElement.components['babiaxr-bubbleschart']
             } else if (targetElement.components['babiaxr-city']) {
                 self.targetComponent = targetElement.components['babiaxr-city']
+            } else if (targetElement.components['babiaxr-island']) {
+                self.targetComponent = targetElement.components['babiaxr-island']
             } else {
                 console.error("Visualizer not found.")
                 return
@@ -141,14 +143,31 @@ let updateInterfaceEventCallback = (self, e) => {
         self.el.firstChild.remove();
     // Generate interface
     console.log('Generating interface...')
-    self.interface = generateInterface(self, self.dataMetrics)
+    self.interface = generateInterface(self, self.dataMetrics, self.el)
+
+    document.addEventListener('controllerconnected', (event) => {
+        self.el.setAttribute('visible', false)
+        // event.detail.name ----> which VR controller
+        controller = event.detail.name;
+        let hand = event.target.getAttribute(controller).hand
+        if (hand === 'left'){
+            let hand_entity = document.getElementById(event.target.id)
+            let scale = 0.03
+            self.interface = generateInterface(self, self.dataMetrics, hand_entity)
+            self.interface.setAttribute('scale', {x: scale, y: scale, z: scale}) 
+            self.interface.setAttribute('position', {x: -scale * self.interface.width / 2, y: scale * self.interface.height /2, z: -0.1})
+            self.interface.setAttribute('rotation', {x: -60}) 
+            openCloseMenu(event.detail.component.el.id, self.interface)
+        }    
+    });
+
 }
 
-let getDataMetrics = (self, data, properties) => {
+let getDataMetrics = (self, data, properties) =>{
     self.dataMetrics=[]
 
     // Create structure
-    let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight']
+    let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
     let number_metrics = []
     let last_child
 
@@ -156,7 +175,11 @@ let getDataMetrics = (self, data, properties) => {
     {
         // Get last child of the tree
         last_child = getLastChild(data)
-    } else { last_child = data[0] }
+    } else if (self.targetComponent.attrName == 'babiaxr-island'){
+        last_child = getLastChild(data[0])
+    } else { 
+        last_child = data[0] 
+    }
 
     Object.keys(last_child).forEach(metric => {
         if (typeof last_child[metric] == 'number'){
@@ -174,7 +197,7 @@ let getDataMetrics = (self, data, properties) => {
     });   
 }
 
-let getLastChild = (data) => {
+let getLastChild = (data) =>{
     if (data.children){
         child = getLastChild(data.children[0])
     } else { 
@@ -183,8 +206,9 @@ let getLastChild = (data) => {
     return child
 }
 
-let generateInterface = (self, metrics) => {
+let generateInterface = (self, metrics, parent) =>{
     self.interface = document.createElement('a-entity')
+    self.interface.id = "babia-menu"
 
     let posY = 0
     let posX = 0
@@ -219,11 +243,11 @@ let generateInterface = (self, metrics) => {
         posX = 0  
     });
  
-    let witdh = maxX + 3;
-    let height = Math.abs(posY)
+    self.interface.width = maxX + 3;
+    self.interface.height = Math.abs(posY)
 
-    self.interface.setAttribute('position', { x: -witdh / 2, y: height, z: 0})
-    self.el.appendChild(self.interface)
+    self.interface.setAttribute('position', { x: -self.interface.width / 2, y: self.interface.height, z: 0})
+    parent.appendChild(self.interface)
 
     return self.interface
 }
@@ -254,7 +278,7 @@ let createMetric = (self, property, metric, positionX, positionY) =>{
     return entity
 }
 
-function selection_events(entity, visualizer){
+let selection_events = (entity, visualizer) =>{
     entity.addEventListener('mouseenter', function(){
         entity.children[0].setAttribute('text', {color: '#FFFFFF'})
         entity.setAttribute('color', '#333333')
@@ -316,4 +340,18 @@ let createDataSelect = (self, id, positionX, positionY) =>{
     selection_events(entity, self.targetComponent)
 
     return entity
+}
+
+let openCloseMenu = (hand_id, entity_menu) =>{
+    let menu_opened = true
+    let entity_hand = document.getElementById(hand_id)
+    entity_hand.addEventListener('gripdown', function(){
+        if (menu_opened){
+            menu_opened = false
+            entity_menu.setAttribute('visible', false)
+        } else {
+            menu_opened = true
+            entity_menu.setAttribute('visible', true)
+        }
+    })
 }

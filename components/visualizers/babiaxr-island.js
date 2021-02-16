@@ -147,13 +147,13 @@ AFRAME.registerComponent('babiaxr-island', {
                     // Get the data from the info of the event (propertyName)
                     self.querierDataPropertyName = e.detail
                     let rawData = self.dataComponent[self.querierDataPropertyName]
-                    self.babiaData = rawData[0]
+                    self.babiaData = rawData
                     self.babiaMetadata = {
                         id: self.babiaMetadata.id++
                     }
 
                     // Create city
-                    self.chart = self.onDataLoaded(rawData)
+                    self.chart = self.onDataLoaded(self.babiaData)
 
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -208,8 +208,8 @@ AFRAME.registerComponent('babiaxr-island', {
     onDataLoaded: function (items) {
         console.log('Data Loaded.');
 
-        var el = this.el;
-        let elements = items
+        let el = this.el;
+        let elements = JSON.parse(JSON.stringify(items))
 
         // Calculate Increment
         let increment;
@@ -366,7 +366,7 @@ AFRAME.registerComponent('babiaxr-island', {
             if (elements[i].children) {
                 // Calculate 
                 figure = {
-                    id: elements[i].id,
+                    id: "island-" + elements[i].id,
                     posX: posX,
                     posY: posY,
                     width: elements[i][this.data.width],
@@ -378,7 +378,7 @@ AFRAME.registerComponent('babiaxr-island', {
             } else {
                 if (this.data.area) {
                     figure = {
-                        id: elements[i].id,
+                        id: "island-" + elements[i].id,
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(elements[i][this.data.area]),
@@ -387,7 +387,7 @@ AFRAME.registerComponent('babiaxr-island', {
                     }
                 } else {
                     figure = {
-                        id: elements[i].id,
+                        id: "island-" + elements[i].id,
                         posX: posX,
                         posY: posY,
                         width: elements[i][this.data.width],
@@ -898,7 +898,6 @@ let parseEmbeddedJSONData = (embedded) => {
     let dataRetrieved = JSON.parse(embedded)
     return dataRetrieved
 }
-
 
 let dataReadyToSend = (propertyName, self) => {
     self.interestedElements.forEach(element => {
