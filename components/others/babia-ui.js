@@ -272,22 +272,40 @@ let createMetric = (self, property, metric, positionX, positionY) =>{
     text.setAttribute('position', "0 0 0.01")
     entity.appendChild(text)
 
-    entity.setAttribute('color', '#FFFFFF')
-    selection_events(entity, self.targetComponent)
+    if (self.targetComponent.data[property] == metric){
+        entity.setAttribute('color', '#AAAAAA')
+    }
+    
+    selection_events(entity, self.targetComponent, false)
 
     return entity
 }
 
-let selection_events = (entity, visualizer) =>{
+let selection_events = (entity, visualizer, isData) =>{
     entity.addEventListener('mouseenter', function(){
         entity.children[0].setAttribute('text', {color: '#FFFFFF'})
         entity.setAttribute('color', '#333333')
     });
 
-    entity.addEventListener('mouseleave', function(){
-        entity.children[0].setAttribute('text', {color: 'black'})
-        entity.setAttribute('color', '#FFFFFF')
-    });
+    if (isData){
+        entity.addEventListener('mouseleave', function(){
+            entity.children[0].setAttribute('text', {color: 'black'})  
+            if(visualizer.data.from == entity.from) {
+                entity.setAttribute('color', '#AAAAAA')
+            } else if(visualizer.data.from == "" || visualizer.data.from != entity.from) {
+                entity.setAttribute('color', '#FFFFFF')
+            }
+        });  
+    } else {
+        entity.addEventListener('mouseleave', function(){
+            entity.children[0].setAttribute('text', {color: 'black'})  
+            if (visualizer.data[entity.property] == entity.metric){
+                entity.setAttribute('color', '#AAAAAA')
+            } else {
+                entity.setAttribute('color', '#FFFFFF')
+            }
+        });
+    }
 
     entity.addEventListener('click', function(){
         // Change parameters
@@ -336,8 +354,13 @@ let createDataSelect = (self, id, positionX, positionY) =>{
     text.setAttribute('position', "0 0 0.01")
     entity.appendChild(text)
 
-    entity.setAttribute('color', '#FFFFFF')
-    selection_events(entity, self.targetComponent)
+    if (self.targetComponent.data.from && self.targetComponent.data.from == id){
+        entity.setAttribute('color', '#AAAAAA')
+    } else {
+        entity.setAttribute('color', '#FFFFFF')
+    }
+    
+    selection_events(entity, self.targetComponent, true)
 
     return entity
 }
