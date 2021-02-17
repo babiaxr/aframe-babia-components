@@ -19,38 +19,27 @@
         <a-entity environment="playArea: 2"></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="queriertest" babiaxr-querier_json="url: ./europe.json;"></a-entity>
-        <a-entity id="queriertest2" babiaxr-querier_json="url: ./europe2.json;"></a-entity>
-        <a-entity id="filtertest1" babiaxr-filterdata="from: queriertest; filter: cases=1" ></a-entity>
+        <!-- Queriers and filters -->
+        <a-entity id="data1" babiaxr-querier_json="url: ./data.json;"></a-entity>
+        <a-entity id="data2" babiaxr-querier_json="url: ./data2.json;"></a-entity>
+        <a-entity id="filter1" babiaxr-filterdata="from: data1; filter: author=David" ></a-entity>
 
+        <!-- Visualizer -->
         <a-entity id="graph" 
-                babiaxr-filterdata="from: queriertest; filter: deaths=0"
-                babiaxr-simplebarchart='legend: true; x_axis: country; height: deaths;
-                data: [ {
-                    "date": "04/05/2020", 
-                    "country": "Switzerland", 
-                    "cases": 88, 
-                    "fatality": "0.0681818181818", 
-                    "deaths": 6
-                }, 
-                {
-                    "date": "04/05/2020", 
-                    "country": "Ukraine", 
-                    "cases": 502, 
-                    "fatality": "0.0179282868526", 
-                    "deaths": 9
-                } ]' 
-                position="0 0 0" rotation="0 0 0" scale="0.3 0.3 0.3"></a-entity>
+                babiaxr-filterdata="from: data1; filter: date=19/02/2021"
+                babiaxr-simplebarchart='legend: true; x_axis: author; height: contributions; heightMax: 10' 
+                position="-3 0 0" rotation="0 0 0" scale="0.3 0.3 0.3"></a-entity>
 
+        <!-- Interface -->
         <a-entity id="interface" babia-ui="target: graph"
-                    position="0 0 2" scale="0.3 0.3 0.3" ></a-entity>
+                    position="3 0 2" scale="0.2 0.2 0.2" ></a-entity>
          
-        <a-entity id ="cameraRig" position="0 1 5">
-            <!-- camera -->
+        <!-- Camera -->            
+        <a-entity id ="cameraRig" position="0 0.1 5">
             <a-entity id="head" camera look-controls
             wasd-controls="fly: false">
             </a-entity>
-            <!-- hand controls --> 
+            <!-- Hand Controls --> 
             <a-entity id="leftHand" teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: .environmentGround;
                 hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger" 
                 oculus-touch-controls="hand: left">
