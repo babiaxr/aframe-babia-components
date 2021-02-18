@@ -916,7 +916,7 @@ let createMetric = (self, property, metric, positionX, positionY) =>{
     entity.appendChild(text)
 
     if (self.targetComponent.data[property] == metric){
-        entity.setAttribute('color', '#AAAAAA')
+        entity.setAttribute('color', '#555555')
     }
     
     selection_events(entity, self.targetComponent, false)
@@ -934,7 +934,7 @@ let selection_events = (entity, visualizer, isData) =>{
         entity.addEventListener('mouseleave', function(){
             entity.children[0].setAttribute('text', {color: 'black'})  
             if(visualizer.data.from == entity.from) {
-                entity.setAttribute('color', '#AAAAAA')
+                entity.setAttribute('color', '#555555')
             } else if(visualizer.data.from == "" || visualizer.data.from != entity.from) {
                 entity.setAttribute('color', '#FFFFFF')
             }
@@ -943,7 +943,7 @@ let selection_events = (entity, visualizer, isData) =>{
         entity.addEventListener('mouseleave', function(){
             entity.children[0].setAttribute('text', {color: 'black'})  
             if (visualizer.data[entity.property] == entity.metric){
-                entity.setAttribute('color', '#AAAAAA')
+                entity.setAttribute('color', '#555555')
             } else {
                 entity.setAttribute('color', '#FFFFFF')
             }
@@ -1011,7 +1011,7 @@ let createDataSelect = (self, id, positionX, positionY) =>{
     entity.appendChild(text)
 
     if (self.targetComponent.data.from && self.targetComponent.data.from == id){
-        entity.setAttribute('color', '#AAAAAA')
+        entity.setAttribute('color', '#555555')
     } else {
         entity.setAttribute('color', '#FFFFFF')
     }
