@@ -494,6 +494,7 @@ let Zone = class {
         base_thick = .2, wireframe = false,
         building_color = "red", base_color = "green", model = null,
         visible = true, titles = true, rootCodecityEntity }) {
+        let self = this
         if (level === 0) {
             this.el = el;
         };
@@ -540,7 +541,7 @@ let Zone = class {
                         });
                         rootCodecityEntity.appendChild(transparentBox)
 
-                        legend = generateLegend(this.getAttribute("id"));
+                        legend = generateLegend(this.getAttribute("id"), 'black', 'white');
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(base.object3D.matrixWorld);
                         let coordinatesFinal = {
@@ -551,7 +552,7 @@ let Zone = class {
                         legend.setAttribute('position', coordinatesFinal)
                         legend.setAttribute('visible', true);
                         rootCodecityEntity.parentElement.appendChild(legend)
-                        
+
                     }
                 })
 
@@ -576,7 +577,6 @@ let Zone = class {
             };
         } else {
             // Leaf node, create the building
-            let height = area.data[this.fheight];
             let box = area.rect.box({
                 height: area.data[this.fheight],
                 elevation: elevation,
@@ -625,7 +625,7 @@ let Zone = class {
                             depth: oldGeometry.depth + 0.1,
                             width: oldGeometry.width + 0.1
                         });
-                        legend = generateLegend(this.getAttribute("id"));
+                        legend = generateLegend(this.getAttribute("id"), 'white', 'black', area.data, self.fheight, self.farea);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(box.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(box.object3D)
@@ -1243,10 +1243,22 @@ let countDecimals = function (value) {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (name) => {
+let generateLegend = (name, colorPlane, colorText, data, fheight, farea) => {
     let width = 2;
     if (name.length > 16)
         width = name.length / 8;
+
+    if (data) {
+        let heightText = "\n " + fheight + " (height): " + data[fheight]
+        if (heightText.length > 16)
+            width = heightText.length / 8;
+        name += heightText
+
+        let areaText = "\n " + farea + " (area): " + data[farea]
+        if (areaText.length > 16 && areaText > heightText)
+            width = areaText.length / 8;
+        name += areaText
+    }
 
     let entity = document.createElement('a-plane');
     entity.setAttribute('look-at', "[camera]");
@@ -1254,13 +1266,13 @@ let generateLegend = (name) => {
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
-    entity.setAttribute('color', 'white');
+    entity.setAttribute('color', colorPlane);
     entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
         'value': name,
         'align': 'center',
         'width': 6,
-        'color': 'black',
+        'color': colorText,
     });
     entity.setAttribute('visible', false);
 
