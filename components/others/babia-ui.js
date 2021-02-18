@@ -65,6 +65,7 @@ AFRAME.registerComponent('babia-ui', {
     dataMetrics: undefined,
     interface: undefined,
     dataQueriers: undefined,
+    handController: undefined,
 
      /**
      * Property of the visualizer where the data is saved
@@ -144,26 +145,47 @@ let updateInterfaceEventCallback = (self, e) => {
     
     while (self.el.firstChild)
         self.el.firstChild.remove();
+    
     // Generate interface
     console.log('Generating interface...')
-    self.interface = generateInterface(self, self.dataMetrics, self.el)
-
+    if (document.querySelector('#babia-menu-hand')) {
+        let hand_ui = document.querySelector('#babia-menu-hand')
+        hand_ui.parentNode.removeChild(hand_ui)
+        insertInterfaceOnHand(self, self.handController)
+    } else {
+        self.interface = generateInterface(self, self.dataMetrics, self.el)
+    }
+    
     document.addEventListener('controllerconnected', (event) => {
-        self.el.setAttribute('visible', false)
+        while (self.el.firstChild)
+            self.el.firstChild.remove();
         // event.detail.name ----> which VR controller
         controller = event.detail.name;
         let hand = event.target.getAttribute(controller).hand
-        if (hand === 'left'){
-            let hand_entity = document.getElementById(event.target.id)
-            let scale = 0.03
-            self.interface = generateInterface(self, self.dataMetrics, hand_entity)
-            self.interface.setAttribute('scale', {x: scale, y: scale, z: scale}) 
-            self.interface.setAttribute('position', {x: -scale * self.interface.width / 2, y: scale * self.interface.height /2, z: -0.1})
-            self.interface.setAttribute('rotation', {x: -60}) 
-            openCloseMenu(event.detail.component.el.id, self.interface)
+        if (hand === 'left' && !document.querySelector('#babia-menu-hand')){
+            self.handController = event.target.id
+            insertInterfaceOnHand(self, self.handController)
         }    
     });
+}
 
+let insertInterfaceOnHand = (self, hand) => {
+    let hand_entity = document.getElementById(hand)
+    let scale = 0.03
+    self.interface = generateInterface(self, self.dataMetrics, hand_entity)
+    self.interface.id = 'babia-menu-hand'
+    self.interface.setAttribute('scale', {x: scale, y: scale, z: scale}) 
+    self.interface.setAttribute('position', {x: -scale * self.interface.width / 2, y: scale * self.interface.height /2, z: -0.1})
+    self.interface.setAttribute('rotation', {x: -60}) 
+            self.interface.setAttribute('rotation', {x: -60}) 
+    self.interface.setAttribute('rotation', {x: -60}) 
+            self.interface.setAttribute('rotation', {x: -60}) 
+    self.interface.setAttribute('rotation', {x: -60}) 
+            self.interface.setAttribute('rotation', {x: -60}) 
+    self.interface.setAttribute('rotation', {x: -60}) 
+            self.interface.setAttribute('rotation', {x: -60}) 
+    self.interface.setAttribute('rotation', {x: -60}) 
+    openCloseMenu(self.handController, self.interface)
 }
 
 let getDataMetrics = (self, data, properties) =>{
@@ -259,6 +281,7 @@ let createMetric = (self, property, metric, positionX, positionY) =>{
     let entity = document.createElement('a-box')
     entity.property = property
     entity.metric = metric
+    entity.classList.add("babiaxraycasterclass")
     entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.setAttribute('height', 0.8)
@@ -353,6 +376,7 @@ let createProperty = (property, positionX, positionY) =>{
 let createDataSelect = (self, id, positionX, positionY) =>{
     let entity = document.createElement('a-box')
     entity.from = id;
+    entity.classList.add("babiaxraycasterclass")
     entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
     entity.setAttribute('height', 0.8)
