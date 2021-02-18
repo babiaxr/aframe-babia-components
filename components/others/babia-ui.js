@@ -77,7 +77,10 @@ let findQuerierComponents = (self) => {
     self.dataQueriers = []
     // All queriers and filterdatas of the scene
     document.querySelectorAll('[babiaxr-querier_json]').forEach(querier => { 
-        self.dataQueriers.push(querier.id)
+        // Skip querier data when the target visualizer has included filtered data too.
+        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babiaxr-filterdata')){
+            self.dataQueriers.push(querier.id)
+        } 
     });
     document.querySelectorAll('[babiaxr-querier_es]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
@@ -310,6 +313,18 @@ let selection_events = (entity, visualizer, isData) =>{
     entity.addEventListener('click', function(){
         // Change parameters
         if(entity.property && entity.metric) {
+            // When change from width/depth to area or vice-versa to island component
+            if (visualizer.attrName == 'babiaxr-island' && entity.property == "area"){
+                visualizer.el.removeAttribute(visualizer.attrName, 'width')
+                visualizer.el.removeAttribute(visualizer.attrName, 'depth')
+            } else if (visualizer.attrName == 'babiaxr-island' && (entity.property == "width" || entity.property == "depth") && visualizer.el.getAttribute('babiaxr-island').area){
+                visualizer.el.removeAttribute(visualizer.attrName, 'area')  
+                if (entity.property == "width"){
+                    visualizer.el.setAttribute(visualizer.attrName, 'depth', entity.metric)
+                } else {
+                    visualizer.el.setAttribute(visualizer.attrName, 'width', entity.metric)  
+                }  
+            } 
             visualizer.el.setAttribute(visualizer.attrName, entity.property, entity.metric)
         // Change selected querier in visualializer (from)
         } else if (entity.from) {
