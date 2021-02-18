@@ -276,18 +276,18 @@ AFRAME.registerComponent('babiaxr-island', {
          * Then save all data in figures array
          */
         for (let i = 0; i < elements.length; i++) {
-            if (this.data.width){
+            if (this.data.width) {
                 elements[i].width = elements[i][this.data.width] || 0.5
             }
-            if (this.data.height){
+            if (this.data.height) {
                 elements[i].height = elements[i][this.data.height] || 1
             }
-            if (this.data.depth){
+            if (this.data.depth) {
                 elements[i].depth = elements[i][this.data.depth] || 0.5
             }
-            if (this.data.area){
+            if (this.data.area) {
                 elements[i].area = elements[i][this.data.area] || 0.5
-            }   
+            }
             if (elements[i].children) {
                 //console.log("ENTER to the quarter...")
                 this.quarter = true;
@@ -411,6 +411,7 @@ AFRAME.registerComponent('babiaxr-island', {
                     }
                 }
             }
+            figure.rawData = elements[i]
             figures.push(figure);
         }
 
@@ -480,7 +481,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 let legend
 
                 entity.addEventListener('mouseenter', function () {
-                    legend = generateLegend(figures[i].name);
+                    legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -789,24 +790,54 @@ let countDecimals = function (value) {
     return value.toString().split(".")[1].length || 0;
 }
 
-let generateLegend = (name) => {
+/**
+ * This function generate a plane at the top of the building with the desired text
+ */
+let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth, fwidth) => {
     let width = 2;
+    let height = 1;
     if (name.length > 16)
         width = name.length / 8;
+
+    if (data) {
+        let heightText = "\n " + fheight + " (height): " + data[fheight]
+        if (heightText.length > 16)
+            width = heightText.length / 8;
+        name += heightText
+
+        if (farea) {
+            let areaText = "\n " + farea + " (area): " + data[farea]
+            if (areaText.length > 16 && areaText > heightText)
+                width = areaText.length / 8;
+            name += areaText
+        } else {
+            let depthText = "\n " + fdepth + " (depth): " + data[fdepth]
+            if (depthText.length > 16 && depthText > heightText)
+                width = depthText.length / 8;
+            name += depthText
+
+            let widthText = "\n " + fwidth + " (width): " + data[fwidth]
+            if (widthText.length > 16 && widthText > heightText && widthText > depthText)
+                width = widthText.length / 8;
+            name += widthText
+
+            height = 1.5
+        }
+    }
 
     let entity = document.createElement('a-plane');
     entity.setAttribute('look-at', "[camera]");
 
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-    entity.setAttribute('height', '1');
+    entity.setAttribute('height', height);
     entity.setAttribute('width', width);
-    entity.setAttribute('color', 'white');
+    entity.setAttribute('color', colorPlane);
     entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
         'value': name,
         'align': 'center',
         'width': 6,
-        'color': 'black',
+        'color': colorText,
     });
     entity.setAttribute('visible', false);
 
