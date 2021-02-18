@@ -379,6 +379,7 @@ AFRAME.registerComponent('babiaxr-island', {
             if (elements[i].children) {
                 figure = {
                     id: "island-" + elements[i].id,
+                    name: elements[i].id,
                     posX: posX,
                     posY: posY,
                     width: elements[i].width,
@@ -391,6 +392,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 if (this.data.area) {
                     figure = {
                         id: "island-" + elements[i].id,
+                        name: elements[i].id,
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(elements[i].area),
@@ -400,6 +402,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 } else {
                     figure = {
                         id: "island-" + elements[i].id,
+                        name: elements[i].id,
                         posX: posX,
                         posY: posY,
                         width: elements[i].width,
@@ -457,7 +460,7 @@ AFRAME.registerComponent('babiaxr-island', {
     },
 
     drawElements: function (element, figures, translate) {
-        console.log('Drawing elements....')
+        let self = this
         for (let i in figures) {
 
             let height = figures[i].height;
@@ -474,13 +477,24 @@ AFRAME.registerComponent('babiaxr-island', {
             if (figures[i].children) {
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
-                let legend = generateLegend(entity.id, height, entity.getAttribute('position'), this.el);
-                entity.appendChild(legend);
+                let legend
 
                 entity.addEventListener('mouseenter', function () {
+                    legend = generateLegend(figures[i].name);
+                    let worldPos = new THREE.Vector3();
+                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                    let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                    let coordinatesFinal = {
+                        x: coordinates.x,
+                        y: height_real.max.y + 1,
+                        z: coordinates.z
+                    }
+                    legend.setAttribute('position', coordinatesFinal)
                     legend.setAttribute('visible', true);
+                    self.el.parentElement.appendChild(legend);
                 });
                 entity.addEventListener('mouseleave', function () {
+                    self.el.parentElement.removeChild(legend)
                     legend.setAttribute('visible', false);
                 });
             }
@@ -587,6 +601,7 @@ AFRAME.registerComponent('babiaxr-island', {
     },
 
     Animation: function (element, figures, figures_old, delta, translate, translate_old) {
+        let self = this
         let new_time = Date.now();
         let entity;
         for (let i in figures) {
@@ -625,16 +640,6 @@ AFRAME.registerComponent('babiaxr-island', {
                 if (figures[i].children) {
                     this.drawElements(new_entity, figures[i].children, figures[i].translate_matrix);
                 }
-
-                let legend = generateLegend(new_entity.id, figures[i].height, new_entity.getAttribute('position'), this.el);
-                new_entity.appendChild(legend);
-
-                new_entity.addEventListener('mouseenter', function () {
-                    legend.setAttribute('visible', true);
-                });
-                new_entity.addEventListener('mouseleave', function () {
-                    legend.setAttribute('visible', false);
-                });
 
                 //Opacity 0
                 setOpacity(new_entity, 0);
@@ -784,37 +789,26 @@ let countDecimals = function (value) {
     return value.toString().split(".")[1].length || 0;
 }
 
-let generateLegend = (text, heightItem, boxPosition, rootEntity) => {
+let generateLegend = (name) => {
     let width = 2;
-    if (text.length > 16)
-        width = text.length / 8;
-
-    let height = heightItem
+    if (name.length > 16)
+        width = name.length / 8;
 
     let entity = document.createElement('a-plane');
     entity.setAttribute('look-at', "[camera]");
 
-    entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
     entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
-        'value': text,
+        'value': name,
         'align': 'center',
         'width': 6,
         'color': 'black',
     });
     entity.setAttribute('visible', false);
-
-    //Set Scale
-    let scaleParent = rootEntity.getAttribute("scale")
-    if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
-        let scalefixes = Math.max(...[countDecimals(scaleParent.x), countDecimals(scaleParent.y), countDecimals(scaleParent.z)]) - 1
-        let multiplyer = Math.pow(10, scalefixes)
-        entity.setAttribute('scale', { x: (1 / scaleParent.x) / multiplyer, y: (1 / scaleParent.y) / multiplyer, z: (1 / scaleParent.z) / multiplyer });
-    }
 
     return entity;
 }
