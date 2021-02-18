@@ -1,0 +1,128 @@
+[
+  {
+    "date": "15/02/2021",
+    "author": "Maria",
+    "contributions": 5,
+    "issues": 2
+  },
+  {
+    "date": "16/02/2021",
+    "author": "Maria",
+    "contributions": 15,
+    "issues": 1
+  },
+  {
+    "date": "17/02/2021",
+    "author": "Maria",
+    "contributions": 9,
+    "issues": 5
+  },
+  {
+    "date": "18/02/2021",
+    "author": "Maria",
+    "contributions": 12,
+    "issues": 2
+  },
+  {
+    "date": "19/02/2021",
+    "author": "Maria",
+    "contributions": 16,
+    "issues": 8
+  },
+  {
+    "date": "20/02/2021",
+    "author": "Maria",
+    "contributions": 10,
+    "issues": 10
+  },
+  {
+    "date": "21/02/2021",
+    "author": "Maria",
+    "contributions": 7,
+    "issues": 9
+  },
+  {
+    "date": "15/02/2021",
+    "author": "Jesus",
+    "contributions": 3,
+    "issues": 2
+  },
+  {
+    "date": "16/02/2021",
+    "author": "Jesus",
+    "contributions": 18,
+    "issues": 4
+  },
+  {
+    "date": "17/02/2021",
+    "author": "Jesus",
+    "contributions": 16,
+    "issues": 6
+  },
+  {
+    "date": "18/02/2021",
+    "author": "Jesus",
+    "contributions": 12,
+    "issues": 7
+  },
+  {
+    "date": "19/02/2021",
+    "author": "Jesus",
+    "contributions": 21,
+    "issues": 5
+  },
+  {
+    "date": "20/02/2021",
+    "author": "Jesus",
+    "contributions": 20,
+    "issues": 10
+  },
+  {
+    "date": "21/02/2021",
+    "author": "Jesus",
+    "contributions": 2,
+    "issues": 1
+  },
+  {
+    "date": "15/02/2021",
+    "author": "David",
+    "contributions": 6,
+    "issues": 6
+  },
+  {
+    "date": "16/02/2021",
+    "author": "David",
+    "contributions": 10,
+    "issues": 5
+  },
+  {
+    "date": "17/02/2021",
+    "author": "David",
+    "contributions": 19,
+    "issues": 8
+  },
+  {
+    "date": "18/02/2021",
+    "author": "David",
+    "contributions": 5,
+    "issues": 7
+  },
+  {
+    "date": "19/02/2021",
+    "author": "David",
+    "contributions": 12,
+    "issues": 9
+  },
+  {
+    "date": "20/02/2021",
+    "author": "David",
+    "contributions": 5,
+    "issues": 10
+  },
+  {
+    "date": "21/02/2021",
+    "author": "David",
+    "contributions": 21,
+    "issues": 2
+  }
+]
