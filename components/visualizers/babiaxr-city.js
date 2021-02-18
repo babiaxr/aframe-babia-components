@@ -516,15 +516,20 @@ let Zone = class {
                 base.addEventListener('click', function () {
                     if (legend) {
                         rootCodecityEntity.removeChild(transparentBox)
-                        rootCodecityEntity.removeChild(legend)
+                        rootCodecityEntity.parentElement.removeChild(legend)
                         legend = undefined
                         transparentBox = undefined
                     } else {
                         transparentBox = document.createElement('a-entity');
                         let oldGeometry = base.getAttribute('geometry')
-                        let boxPosition = base.getAttribute("position")
+                        let boxPosition = base.getAttribute('position')
+                        let scale = rootCodecityEntity.getAttribute("scale")
+                        let tsBoxHeight = oldGeometry.height + 11
+                        if (scale) {
+                            tsBoxHeight = ((oldGeometry.height + 11) / scale.y)
+                        }
                         transparentBox.setAttribute('geometry', {
-                            height: oldGeometry.height + 10,
+                            height: tsBoxHeight,
                             depth: oldGeometry.depth,
                             width: oldGeometry.width
                         });
@@ -533,9 +538,20 @@ let Zone = class {
                             'visible': true,
                             'opacity': 0.4
                         });
-                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 10, boxPosition, null, rootCodecityEntity);
-                        rootCodecityEntity.appendChild(legend)
                         rootCodecityEntity.appendChild(transparentBox)
+
+                        legend = generateLegend(this.getAttribute("id"));
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(base.object3D.matrixWorld);
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: 12,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        rootCodecityEntity.parentElement.appendChild(legend)
+                        
                     }
                 })
 
@@ -582,7 +598,9 @@ let Zone = class {
                 let alreadyActive = false;
                 box.addEventListener('click', function () {
                     if (alreadyActive) {
-                        rootCodecityEntity.removeChild(legend)
+                        legend.setAttribute('visible', false);
+                        legendBox.setAttribute('visible', false);
+                        rootCodecityEntity.parentElement.removeChild(legend)
                         rootCodecityEntity.removeChild(legendBox)
                         legend = undefined
                         legendBox = undefined
@@ -607,15 +625,27 @@ let Zone = class {
                             depth: oldGeometry.depth + 0.1,
                             width: oldGeometry.width + 0.1
                         });
-                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null, rootCodecityEntity);
-                        rootCodecityEntity.appendChild(legend)
+                        legend = generateLegend(this.getAttribute("id"));
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(box.object3D.matrixWorld);
+                        let height_real = new THREE.Box3().setFromObject(box.object3D)
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: height_real.max.y + 1,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        rootCodecityEntity.parentElement.appendChild(legend)
                         rootCodecityEntity.appendChild(legendBox)
                     }
                 })
 
                 box.addEventListener('mouseleave', function () {
                     if (!alreadyActive && legend) {
-                        rootCodecityEntity.removeChild(legend)
+                        legend.setAttribute('visible', false);
+                        legendBox.setAttribute('visible', false);
+                        rootCodecityEntity.parentElement.removeChild(legend)
                         rootCodecityEntity.removeChild(legendBox)
                         legend = undefined
                         legendBox = undefined
@@ -1213,37 +1243,26 @@ let countDecimals = function (value) {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (text, heightItem, boxPosition, model, rootCodecityEntity) => {
+let generateLegend = (name) => {
     let width = 2;
-    if (text.length > 16)
-        width = text.length / 8;
-
-    let height = heightItem
+    if (name.length > 16)
+        width = name.length / 8;
 
     let entity = document.createElement('a-plane');
+    entity.setAttribute('look-at', "[camera]");
 
-    entity.setAttribute('look-at', "[camera]")
-    entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
     entity.setAttribute('color', 'white');
     entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
-        'value': text,
+        'value': name,
         'align': 'center',
         'width': 6,
         'color': 'black',
     });
-
-    // Check scale
-    let scaleParent = rootCodecityEntity.getAttribute("scale")
-    if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
-        let scalefixes = Math.max(...[countDecimals(scaleParent.x), countDecimals(scaleParent.y), countDecimals(scaleParent.z)]) - 1
-        let multiplyer = Math.pow(10, scalefixes)
-        entity.setAttribute('scale', { x: (1 / scaleParent.x) / multiplyer, y: (1 / scaleParent.y) / multiplyer, z: (1 / scaleParent.z) / multiplyer });
-
-    }
+    entity.setAttribute('visible', false);
 
     return entity;
 }
