@@ -694,7 +694,10 @@ let findQuerierComponents = (self) => {
     self.dataQueriers = []
     // All queriers and filterdatas of the scene
     document.querySelectorAll('[babiaxr-querier_json]').forEach(querier => { 
-        self.dataQueriers.push(querier.id)
+        // Skip querier data when the target visualizer has included filtered data too.
+        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babiaxr-filterdata')){
+            self.dataQueriers.push(querier.id)
+        } 
     });
     document.querySelectorAll('[babiaxr-querier_es]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
