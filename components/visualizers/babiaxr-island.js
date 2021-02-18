@@ -15,6 +15,7 @@ AFRAME.registerComponent('babiaxr-island', {
         depth: { type: 'string', default: 'depth' },
         area: { type: 'string' },
         height: { type: 'string', default: 'height' },
+        zone_elevation: { type: 'number', default: 0.3 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
         levels: { type: 'number' }
@@ -293,7 +294,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 var children = [];
                 var translate_matrix;
                 // Save Zone's parameters
-                elements[i].height = 0.3;
+                elements[i].height = this.data.zone_elevation;
                 increment -= this.data.border * this.data.extra;
                 [elements[i].width, elements[i].depth, translate_matrix, children] = this.generateElements(elements[i].children, children, translate_matrix, increment);
                 translate_matrix.y = elements[i].height;

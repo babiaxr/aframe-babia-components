@@ -283,6 +283,7 @@ This component shows a city in a island chart.
 | building_separation  | Separation of the buildings by a numeric factor | number | 0.25 |
 | border          | Size of border around buildings (streets are built on it) | number | 0.5 |
 | extra          | Extra factor for total area with respect to built area | number | 1.0 |
+| zone_elevation          | Zone: elevation for each "depth" of quarters, over the previous one | number | 0.3 |
 | data          | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
 
 #### Data format example
