@@ -251,6 +251,7 @@ let generateInterface = (self, metrics, parent) =>{
         });
     }
     --posY
+    if(maxX < posX) { maxX = posX }
     posX = 0 
 
     // Properties and metrics
