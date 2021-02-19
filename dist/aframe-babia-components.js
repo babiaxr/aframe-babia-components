@@ -868,6 +868,7 @@ let generateInterface = (self, metrics, parent) =>{
         });
     }
     --posY
+    if(maxX < posX) { maxX = posX }
     posX = 0 
 
     // Properties and metrics
@@ -5461,6 +5462,7 @@ let Zone = class {
         base_thick = .2, wireframe = false,
         building_color = "red", base_color = "green", model = null,
         visible = true, titles = true, rootCodecityEntity }) {
+        let self = this
         if (level === 0) {
             this.el = el;
         };
@@ -5483,15 +5485,20 @@ let Zone = class {
                 base.addEventListener('click', function () {
                     if (legend) {
                         rootCodecityEntity.removeChild(transparentBox)
-                        rootCodecityEntity.removeChild(legend)
+                        rootCodecityEntity.parentElement.removeChild(legend)
                         legend = undefined
                         transparentBox = undefined
                     } else {
                         transparentBox = document.createElement('a-entity');
                         let oldGeometry = base.getAttribute('geometry')
-                        let boxPosition = base.getAttribute("position")
+                        let boxPosition = base.getAttribute('position')
+                        let scale = rootCodecityEntity.getAttribute("scale")
+                        let tsBoxHeight = oldGeometry.height + 11
+                        if (scale) {
+                            tsBoxHeight = ((oldGeometry.height + 11) / scale.y)
+                        }
                         transparentBox.setAttribute('geometry', {
-                            height: oldGeometry.height + 10,
+                            height: tsBoxHeight,
                             depth: oldGeometry.depth,
                             width: oldGeometry.width
                         });
@@ -5500,9 +5507,20 @@ let Zone = class {
                             'visible': true,
                             'opacity': 0.4
                         });
-                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 10, boxPosition, null, rootCodecityEntity);
-                        rootCodecityEntity.appendChild(legend)
                         rootCodecityEntity.appendChild(transparentBox)
+
+                        legend = generateLegend(this.getAttribute("id"), 'black', 'white');
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(base.object3D.matrixWorld);
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: 12,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        rootCodecityEntity.parentElement.appendChild(legend)
+
                     }
                 })
 
@@ -5527,7 +5545,6 @@ let Zone = class {
             };
         } else {
             // Leaf node, create the building
-            let height = area.data[this.fheight];
             let box = area.rect.box({
                 height: area.data[this.fheight],
                 elevation: elevation,
@@ -5549,7 +5566,9 @@ let Zone = class {
                 let alreadyActive = false;
                 box.addEventListener('click', function () {
                     if (alreadyActive) {
-                        rootCodecityEntity.removeChild(legend)
+                        legend.setAttribute('visible', false);
+                        legendBox.setAttribute('visible', false);
+                        rootCodecityEntity.parentElement.removeChild(legend)
                         rootCodecityEntity.removeChild(legendBox)
                         legend = undefined
                         legendBox = undefined
@@ -5574,15 +5593,27 @@ let Zone = class {
                             depth: oldGeometry.depth + 0.1,
                             width: oldGeometry.width + 0.1
                         });
-                        legend = generateLegend(this.getAttribute("id"), oldGeometry.height + 0.1, boxPosition, null, rootCodecityEntity);
-                        rootCodecityEntity.appendChild(legend)
+                        legend = generateLegend(this.getAttribute("id"), 'white', 'black', area.data, self.fheight, self.farea);
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(box.object3D.matrixWorld);
+                        let height_real = new THREE.Box3().setFromObject(box.object3D)
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: height_real.max.y + 1,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        rootCodecityEntity.parentElement.appendChild(legend)
                         rootCodecityEntity.appendChild(legendBox)
                     }
                 })
 
                 box.addEventListener('mouseleave', function () {
                     if (!alreadyActive && legend) {
-                        rootCodecityEntity.removeChild(legend)
+                        legend.setAttribute('visible', false);
+                        legendBox.setAttribute('visible', false);
+                        rootCodecityEntity.parentElement.removeChild(legend)
                         rootCodecityEntity.removeChild(legendBox)
                         legend = undefined
                         legendBox = undefined
@@ -6180,37 +6211,38 @@ let countDecimals = function (value) {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (text, heightItem, boxPosition, model, rootCodecityEntity) => {
+let generateLegend = (name, colorPlane, colorText, data, fheight, farea) => {
     let width = 2;
-    if (text.length > 16)
-        width = text.length / 8;
+    if (name.length > 16)
+        width = name.length / 8;
 
-    let height = heightItem
+    if (data) {
+        let heightText = "\n " + fheight + " (height): " + data[fheight]
+        if (heightText.length > 16)
+            width = heightText.length / 8;
+        name += heightText
+
+        let areaText = "\n " + farea + " (area): " + data[farea]
+        if (areaText.length > 16 && areaText > heightText)
+            width = areaText.length / 8;
+        name += areaText
+    }
 
     let entity = document.createElement('a-plane');
+    entity.setAttribute('look-at', "[camera]");
 
-    entity.setAttribute('look-at', "[camera]")
-    entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
-    entity.setAttribute('color', 'white');
+    entity.setAttribute('color', colorPlane);
     entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
-        'value': text,
+        'value': name,
         'align': 'center',
         'width': 6,
-        'color': 'black',
+        'color': colorText,
     });
-
-    // Check scale
-    let scaleParent = rootCodecityEntity.getAttribute("scale")
-    if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
-        let scalefixes = Math.max(...[countDecimals(scaleParent.x), countDecimals(scaleParent.y), countDecimals(scaleParent.z)]) - 1
-        let multiplyer = Math.pow(10, scalefixes)
-        entity.setAttribute('scale', { x: (1 / scaleParent.x) / multiplyer, y: (1 / scaleParent.y) / multiplyer, z: (1 / scaleParent.z) / multiplyer });
-
-    }
+    entity.setAttribute('visible', false);
 
     return entity;
 }
@@ -9586,18 +9618,18 @@ AFRAME.registerComponent('babiaxr-island', {
          * Then save all data in figures array
          */
         for (let i = 0; i < elements.length; i++) {
-            if (this.data.width){
+            if (this.data.width) {
                 elements[i].width = elements[i][this.data.width] || 0.5
             }
-            if (this.data.height){
+            if (this.data.height) {
                 elements[i].height = elements[i][this.data.height] || 1
             }
-            if (this.data.depth){
+            if (this.data.depth) {
                 elements[i].depth = elements[i][this.data.depth] || 0.5
             }
-            if (this.data.area){
+            if (this.data.area) {
                 elements[i].area = elements[i][this.data.area] || 0.5
-            }   
+            }
             if (elements[i].children) {
                 //console.log("ENTER to the quarter...")
                 this.quarter = true;
@@ -9689,6 +9721,7 @@ AFRAME.registerComponent('babiaxr-island', {
             if (elements[i].children) {
                 figure = {
                     id: "island-" + elements[i].id,
+                    name: elements[i].id,
                     posX: posX,
                     posY: posY,
                     width: elements[i].width,
@@ -9701,6 +9734,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 if (this.data.area) {
                     figure = {
                         id: "island-" + elements[i].id,
+                        name: elements[i].id,
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(elements[i].area),
@@ -9710,6 +9744,7 @@ AFRAME.registerComponent('babiaxr-island', {
                 } else {
                     figure = {
                         id: "island-" + elements[i].id,
+                        name: elements[i].id,
                         posX: posX,
                         posY: posY,
                         width: elements[i].width,
@@ -9718,6 +9753,7 @@ AFRAME.registerComponent('babiaxr-island', {
                     }
                 }
             }
+            figure.rawData = elements[i]
             figures.push(figure);
         }
 
@@ -9767,7 +9803,7 @@ AFRAME.registerComponent('babiaxr-island', {
     },
 
     drawElements: function (element, figures, translate) {
-        console.log('Drawing elements....')
+        let self = this
         for (let i in figures) {
 
             let height = figures[i].height;
@@ -9784,13 +9820,24 @@ AFRAME.registerComponent('babiaxr-island', {
             if (figures[i].children) {
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
-                let legend = generateLegend(entity.id, height, entity.getAttribute('position'), this.el);
-                entity.appendChild(legend);
+                let legend
 
                 entity.addEventListener('mouseenter', function () {
+                    legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
+                    let worldPos = new THREE.Vector3();
+                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                    let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                    let coordinatesFinal = {
+                        x: coordinates.x,
+                        y: height_real.max.y + 1,
+                        z: coordinates.z
+                    }
+                    legend.setAttribute('position', coordinatesFinal)
                     legend.setAttribute('visible', true);
+                    self.el.parentElement.appendChild(legend);
                 });
                 entity.addEventListener('mouseleave', function () {
+                    self.el.parentElement.removeChild(legend)
                     legend.setAttribute('visible', false);
                 });
             }
@@ -9897,6 +9944,7 @@ AFRAME.registerComponent('babiaxr-island', {
     },
 
     Animation: function (element, figures, figures_old, delta, translate, translate_old) {
+        let self = this
         let new_time = Date.now();
         let entity;
         for (let i in figures) {
@@ -9935,16 +9983,6 @@ AFRAME.registerComponent('babiaxr-island', {
                 if (figures[i].children) {
                     this.drawElements(new_entity, figures[i].children, figures[i].translate_matrix);
                 }
-
-                let legend = generateLegend(new_entity.id, figures[i].height, new_entity.getAttribute('position'), this.el);
-                new_entity.appendChild(legend);
-
-                new_entity.addEventListener('mouseenter', function () {
-                    legend.setAttribute('visible', true);
-                });
-                new_entity.addEventListener('mouseleave', function () {
-                    legend.setAttribute('visible', false);
-                });
 
                 //Opacity 0
                 setOpacity(new_entity, 0);
@@ -10094,37 +10132,56 @@ let countDecimals = function (value) {
     return value.toString().split(".")[1].length || 0;
 }
 
-let generateLegend = (text, heightItem, boxPosition, rootEntity) => {
+/**
+ * This function generate a plane at the top of the building with the desired text
+ */
+let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth, fwidth) => {
     let width = 2;
-    if (text.length > 16)
-        width = text.length / 8;
+    let height = 1;
+    if (name.length > 16)
+        width = name.length / 8;
 
-    let height = heightItem
+    if (data) {
+        let heightText = "\n " + fheight + " (height): " + data[fheight]
+        if (heightText.length > 16)
+            width = heightText.length / 8;
+        name += heightText
+
+        if (farea) {
+            let areaText = "\n " + farea + " (area): " + data[farea]
+            if (areaText.length > 16 && areaText > heightText)
+                width = areaText.length / 8;
+            name += areaText
+        } else {
+            let depthText = "\n " + fdepth + " (depth): " + data[fdepth]
+            if (depthText.length > 16 && depthText > heightText)
+                width = depthText.length / 8;
+            name += depthText
+
+            let widthText = "\n " + fwidth + " (width): " + data[fwidth]
+            if (widthText.length > 16 && widthText > heightText && widthText > depthText)
+                width = widthText.length / 8;
+            name += widthText
+
+            height = 1.5
+        }
+    }
 
     let entity = document.createElement('a-plane');
     entity.setAttribute('look-at', "[camera]");
 
-    entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-    entity.setAttribute('height', '1');
+    entity.setAttribute('height', height);
     entity.setAttribute('width', width);
-    entity.setAttribute('color', 'white');
+    entity.setAttribute('color', colorPlane);
     entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
-        'value': text,
+        'value': name,
         'align': 'center',
         'width': 6,
-        'color': 'black',
+        'color': colorText,
     });
     entity.setAttribute('visible', false);
-
-    //Set Scale
-    let scaleParent = rootEntity.getAttribute("scale")
-    if (scaleParent && (scaleParent.x !== scaleParent.y || scaleParent.x !== scaleParent.z)) {
-        let scalefixes = Math.max(...[countDecimals(scaleParent.x), countDecimals(scaleParent.y), countDecimals(scaleParent.z)]) - 1
-        let multiplyer = Math.pow(10, scalefixes)
-        entity.setAttribute('scale', { x: (1 / scaleParent.x) / multiplyer, y: (1 / scaleParent.y) / multiplyer, z: (1 / scaleParent.z) / multiplyer });
-    }
 
     return entity;
 }
