@@ -105,6 +105,7 @@ The basic Chart components are easy to use, they have few attributes but if you 
 
 - [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/tutorials/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
 - [HOW_TO_TIME_EVOLVE_CITY.md](./docs/tutorials/HOW_TO_TIME_EVOLVE_CITY.md): a simple user guide in order to learn how to create a time evolution codecity from scratch (with the data retrieval process and the scene building).
+- [HOW_TO_USE_UI.md](./docs/tutorials/HOW_TO_USE_UI.md): a simple user guide in order to learn how to create a interface to manage a visualizer and how to use it.
 
 
 ## Building and Running BabiaXR, and/or Contributing Code

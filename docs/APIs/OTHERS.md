@@ -1,3 +1,18 @@
+### babia-ui component
+
+This component lets us select the data and the metrics that we want to show in the targeted visualizer at any time.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| target          | ID of the visualizer that will manage | string | - |
+
+```html
+    <a-entity babia-ui = 'target: visualizerid'></a-entity>
+```
+
+
 ### babiaxr-event-controller component
 
 This component manages the events between the UI navigation bar and the chart component. You need it if you use a UI navigation bar component.
