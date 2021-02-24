@@ -946,13 +946,18 @@ function setOpacity(entity, opacity) {
 
 let getLevels = (elements, levels) => {
     let level = levels
+    let max_level = levels
     for (let i in elements) {
         if (elements[i].children) {
             level++
             levels = getLevels(elements[i].children, level)
+            if (max_level < levels) {
+                max_level = levels
+            }
+            level--
         }
-    }
-    return levels;
+    }  
+    return max_level;
 }
 
 /**

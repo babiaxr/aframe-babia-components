@@ -9360,7 +9360,9 @@ AFRAME.registerComponent('babiaxr-island', {
         zone_elevation: { type: 'number', default: 0.3 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
-        levels: { type: 'number' }
+        levels: { type: 'number' },
+        building_color: { type: 'string', default: "#E6B9A1" },
+        base_color: { type: 'color', default: '#98e690' },
     },
 
     /**
@@ -9812,27 +9814,121 @@ AFRAME.registerComponent('babiaxr-island', {
             let entity = this.createElement(figures[i], position);
 
             if (figures[i].children) {
+                // Quarter
+                let legend;
+                let transparentBox;
+                entity.addEventListener('click', function (e) {
+                    // Just launch the event on the child
+                    if (e.target !== this)
+                        return;
+
+                    if (legend) {
+                        entity.removeChild(transparentBox)
+                        self.el.parentElement.removeChild(legend)
+                        legend = undefined
+                        transparentBox = undefined
+                    } else {
+                        transparentBox = document.createElement('a-entity');
+                        let oldGeometry = entity.getAttribute('geometry')
+                        let scale = self.el.getAttribute("scale")
+                        let tsBoxHeight = oldGeometry.height + 11
+                        if (scale) {
+                            tsBoxHeight = ((oldGeometry.height + 11) / scale.y)
+                        }
+                        transparentBox.setAttribute('geometry', {
+                            height: tsBoxHeight,
+                            depth: oldGeometry.depth,
+                            width: oldGeometry.width
+                        });
+                        transparentBox.setAttribute('material', {
+                            'visible': true,
+                            'opacity': 0.4
+                        });
+                        entity.appendChild(transparentBox)
+
+                        legend = generateLegend(figures[i].name, 'black', 'white');
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: 12,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(legend)
+                    }
+                })
+
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
-                let legend
+                // Building
+                let legend;
+                let entityGeometry;
+                let alreadyActive = false;
+
+                entity.addEventListener('click', function () {
+                    if (alreadyActive) {
+                        legend.setAttribute('visible', false);
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height - 0.1,
+                            depth: entityGeometry.depth - 0.1,
+                            width: entityGeometry.width - 0.1
+                        });
+                        entity.setAttribute('material', {
+                            'color': self.data.building_color
+                        });
+                        self.el.parentElement.removeChild(legend)
+                        legend = undefined
+                        alreadyActive = false
+                    } else {
+                        alreadyActive = true
+                    }
+
+                })
 
                 entity.addEventListener('mouseenter', function () {
-                    legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
-                    let worldPos = new THREE.Vector3();
-                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                    let height_real = new THREE.Box3().setFromObject(entity.object3D)
-                    let coordinatesFinal = {
-                        x: coordinates.x,
-                        y: height_real.max.y + 1,
-                        z: coordinates.z
+                    if (!alreadyActive) {
+                        entityGeometry = entity.getAttribute('geometry')
+                        let boxPosition = entity.getAttribute("position")
+                        entity.setAttribute('position', boxPosition)
+                        entity.setAttribute('material', {
+                            'color': 'white'
+                        });
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height + 0.1,
+                            depth: entityGeometry.depth + 0.1,
+                            width: entityGeometry.width + 0.1
+                        });
+                        legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: height_real.max.y + 1,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(legend);
                     }
-                    legend.setAttribute('position', coordinatesFinal)
-                    legend.setAttribute('visible', true);
-                    self.el.parentElement.appendChild(legend);
+
                 });
                 entity.addEventListener('mouseleave', function () {
-                    self.el.parentElement.removeChild(legend)
-                    legend.setAttribute('visible', false);
+                    if (!alreadyActive && legend) {
+                        legend.setAttribute('visible', false);
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height - 0.1,
+                            depth: entityGeometry.depth - 0.1,
+                            width: entityGeometry.width - 0.1
+                        });
+                        entity.setAttribute('material', {
+                            'color': self.data.building_color
+                        });
+                        self.el.parentElement.removeChild(legend)
+                        legend = undefined
+                    }
                 });
             }
 
@@ -10085,6 +10181,7 @@ AFRAME.registerComponent('babiaxr-island', {
     },
 
     createElement: function (figure, position) {
+        let self = this
         // create entity
         //let entity = document.createElement('a-entity')
         let entity = document.createElement('a-box');
@@ -10098,9 +10195,9 @@ AFRAME.registerComponent('babiaxr-island', {
 
         // set color
         if (figure.children) {
-            color = "#98e690";
+            color = self.data.base_color;;
         } else {
-            color = "#E6B9A1";
+            color = self.data.building_color;
         }
 
         // create box
@@ -10191,13 +10288,18 @@ function setOpacity(entity, opacity) {
 
 let getLevels = (elements, levels) => {
     let level = levels
+    let max_level = levels
     for (let i in elements) {
         if (elements[i].children) {
             level++
             levels = getLevels(elements[i].children, level)
+            if (max_level < levels) {
+                max_level = levels
+            }
+            level--
         }
-    }
-    return levels;
+    }  
+    return max_level;
 }
 
 /**
