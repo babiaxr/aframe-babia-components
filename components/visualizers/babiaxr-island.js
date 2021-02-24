@@ -18,7 +18,9 @@ AFRAME.registerComponent('babiaxr-island', {
         zone_elevation: { type: 'number', default: 0.3 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
-        levels: { type: 'number' }
+        levels: { type: 'number' },
+        building_color: { type: 'string', default: "#E6B9A1" },
+        base_color: { type: 'color', default: '#98e690' },
     },
 
     /**
@@ -472,25 +474,72 @@ AFRAME.registerComponent('babiaxr-island', {
             if (figures[i].children) {
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
-                let legend
+                let legend;
+                let entityGeometry;
+                let alreadyActive = false;
+
+                entity.addEventListener('click', function () {
+                    if (alreadyActive) {
+                        legend.setAttribute('visible', false);
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height - 0.1,
+                            depth: entityGeometry.depth - 0.1,
+                            width: entityGeometry.width - 0.1
+                        });
+                        entity.setAttribute('material', {
+                            'color': self.data.building_color
+                        });
+                        self.el.parentElement.removeChild(legend)
+                        legend = undefined
+                        alreadyActive = false
+                    } else {
+                        alreadyActive = true
+                    }
+
+                })
 
                 entity.addEventListener('mouseenter', function () {
-                    legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
-                    let worldPos = new THREE.Vector3();
-                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                    let height_real = new THREE.Box3().setFromObject(entity.object3D)
-                    let coordinatesFinal = {
-                        x: coordinates.x,
-                        y: height_real.max.y + 1,
-                        z: coordinates.z
+                    if (!alreadyActive) {
+                        entityGeometry = entity.getAttribute('geometry')
+                        let boxPosition = entity.getAttribute("position")
+                        entity.setAttribute('position', boxPosition)
+                        entity.setAttribute('material', {
+                            'color': 'white'
+                        });
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height + 0.1,
+                            depth: entityGeometry.depth + 0.1,
+                            width: entityGeometry.width + 0.1
+                        });
+                        legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: height_real.max.y + 1,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(legend);
                     }
-                    legend.setAttribute('position', coordinatesFinal)
-                    legend.setAttribute('visible', true);
-                    self.el.parentElement.appendChild(legend);
+
                 });
                 entity.addEventListener('mouseleave', function () {
-                    self.el.parentElement.removeChild(legend)
-                    legend.setAttribute('visible', false);
+                    if (!alreadyActive && legend) {
+                        legend.setAttribute('visible', false);
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height - 0.1,
+                            depth: entityGeometry.depth - 0.1,
+                            width: entityGeometry.width - 0.1
+                        });
+                        entity.setAttribute('material', {
+                            'color': self.data.building_color
+                        });
+                        self.el.parentElement.removeChild(legend)
+                        legend = undefined
+                    }
                 });
             }
 
@@ -743,6 +792,7 @@ AFRAME.registerComponent('babiaxr-island', {
     },
 
     createElement: function (figure, position) {
+        let self = this
         // create entity
         //let entity = document.createElement('a-entity')
         let entity = document.createElement('a-box');
@@ -756,9 +806,9 @@ AFRAME.registerComponent('babiaxr-island', {
 
         // set color
         if (figure.children) {
-            color = "#98e690";
+            color = self.data.base_color;;
         } else {
-            color = "#E6B9A1";
+            color = self.data.building_color;
         }
 
         // create box
