@@ -9552,7 +9552,7 @@ AFRAME.registerComponent('babiaxr-island', {
         console.log('Data Loaded.');
 
         let el = this.el;
-        let elements = JSON.parse(JSON.stringify(items))
+        let elements = items
 
         // Calculate Increment
         let increment;
@@ -9618,96 +9618,90 @@ AFRAME.registerComponent('babiaxr-island', {
          * Then save all data in figures array
          */
         for (let i = 0; i < elements.length; i++) {
+            // To do not overwrite babiaData
+            let element = {}
             if (this.data.width) {
-                elements[i].width = elements[i][this.data.width] || 0.5
+                element.width = elements[i][this.data.width] || 0.5
             }
             if (this.data.height) {
-                elements[i].height = elements[i][this.data.height] || 1
+                element.height = elements[i][this.data.height] || 1
             }
             if (this.data.depth) {
-                elements[i].depth = elements[i][this.data.depth] || 0.5
+                element.depth = elements[i][this.data.depth] || 0.5
             }
             if (this.data.area) {
-                elements[i].area = elements[i][this.data.area] || 0.5
+                element.area = elements[i][this.data.area] || 0.5
             }
             if (elements[i].children) {
-                //console.log("ENTER to the quarter...")
+                element.children = elements[i].children
                 this.quarter = true;
                 var children = [];
                 var translate_matrix;
                 // Save Zone's parameters
-                elements[i].height = this.data.zone_elevation;
+                element.height = this.data.zone_elevation;
                 increment -= this.data.border * this.data.extra;
-                [elements[i].width, elements[i].depth, translate_matrix, children] = this.generateElements(elements[i].children, children, translate_matrix, increment);
-                translate_matrix.y = elements[i].height;
+                [element.width, element.depth, translate_matrix, children] = this.generateElements(element.children, children, translate_matrix, increment);
+                translate_matrix.y = element.height;
                 increment = inc;
-                //console.log("====> CHILDREN:");
-                //console.log(children);
-                //console.log("EXIT to the quarter... ")
             }
             if (i == 0) {
                 if (this.data.area && !elements[i].children) {
-                    limit_up += Math.sqrt(elements[i].area) / 2;
-                    limit_down -= Math.sqrt(elements[i].area) / 2;
-                    limit_right += Math.sqrt(elements[i].area) / 2;
-                    limit_left -= Math.sqrt(elements[i].area) / 2;
+                    limit_up += Math.sqrt(element.area) / 2;
+                    limit_down -= Math.sqrt(element.area) / 2;
+                    limit_right += Math.sqrt(element.area) / 2;
+                    limit_left -= Math.sqrt(element.area) / 2;
                 } else {
-                    limit_up += elements[i].depth / 2;
-                    limit_down -= elements[i].depth / 2;
-                    limit_right += elements[i].width / 2;
-                    limit_left -= elements[i].width / 2;
+                    limit_up += element.depth / 2;
+                    limit_down -= element.depth / 2;
+                    limit_right += element.width / 2;
+                    limit_left -= element.width / 2;
                 }
                 //console.log("==== RIGHT SIDE ====");
                 current_horizontal = limit_up + this.data.building_separation / 2;
-            } else if (elements[i].height > 0) {
+            } else if (element.height > 0) {
                 if (up) {
-                    [current_vertical, posX, posY, max_up] = this.UpSide(elements[i], limit_up, current_vertical, max_up);
+                    [current_vertical, posX, posY, max_up] = this.UpSide(element, limit_up, current_vertical, max_up);
                     if (current_vertical > limit_right) {
                         current_vertical += this.data.building_separation / 2;
                         max_right = current_vertical;
                         up = false;
                         right = true;
-                        //console.log("==== RIGHT SIDE ====");
                         if (max_left < limit_left) {
                             limit_left = max_left;
                         }
                         current_horizontal = limit_up + this.data.building_separation / 2;
                     }
                 } else if (right) {
-                    [current_horizontal, posX, posY, max_right] = this.RightSide(elements[i], limit_right, current_horizontal, max_right);
-                    // To pass next step
+                    [current_horizontal, posX, posY, max_right] = this.RightSide(element, limit_right, current_horizontal, max_right);
                     if (current_horizontal < limit_down) {
                         current_horizontal += this.data.building_separation / 2;
                         max_down = current_horizontal;
                         right = false;
                         down = true;
-                        //console.log("==== LOWER SIDE ====");
                         if (max_up > limit_up) {
                             limit_up = max_up;
                         }
                         current_vertical = limit_right + this.data.building_separation / 2;
                     }
                 } else if (down) {
-                    [current_vertical, posX, posY, max_down] = this.DownSide(elements[i], limit_down, current_vertical, max_down);
+                    [current_vertical, posX, posY, max_down] = this.DownSide(element, limit_down, current_vertical, max_down);
                     if (current_vertical < limit_left) {
                         current_vertical -= this.data.building_separation / 2;
                         max_left = current_vertical;
                         down = false;
                         left = true;
-                        //console.log("==== LEFT SIDE ====");
                         if (max_right > limit_right) {
                             limit_right = max_right;
                         }
                         current_horizontal = limit_down - this.data.building_separation / 2;
                     }
                 } else if (left) {
-                    [current_horizontal, posX, posY, max_left] = this.LeftSide(elements[i], limit_left, current_horizontal, max_left);
+                    [current_horizontal, posX, posY, max_left] = this.LeftSide(element, limit_left, current_horizontal, max_left);
                     if (current_horizontal > limit_up) {
                         current_horizontal -= this.data.building_separation / 2;
                         max_up = current_horizontal;
                         left = false;
                         up = true;
-                        //console.log("==== UPPER SIDE ====");
                         if (max_down < limit_down) {
                             limit_down = max_down;
                         }
@@ -9724,9 +9718,9 @@ AFRAME.registerComponent('babiaxr-island', {
                     name: elements[i].id,
                     posX: posX,
                     posY: posY,
-                    width: elements[i].width,
-                    height: elements[i].height,
-                    depth: elements[i].depth,
+                    width: element.width,
+                    height: element.height,
+                    depth: element.depth,
                     children: children,
                     translate_matrix: translate_matrix
                 }
@@ -9737,9 +9731,9 @@ AFRAME.registerComponent('babiaxr-island', {
                         name: elements[i].id,
                         posX: posX,
                         posY: posY,
-                        width: Math.sqrt(elements[i].area),
-                        height: elements[i].height,
-                        depth: Math.sqrt(elements[i].area)
+                        width: Math.sqrt(element.area),
+                        height: element.height,
+                        depth: Math.sqrt(element.area)
                     }
                 } else {
                     figure = {
@@ -9747,9 +9741,9 @@ AFRAME.registerComponent('babiaxr-island', {
                         name: elements[i].id,
                         posX: posX,
                         posY: posY,
-                        width: elements[i].width,
-                        height: elements[i].height,
-                        depth: elements[i].depth
+                        width: element.width,
+                        height: element.height,
+                        depth: element.depth
                     }
                 }
             }
