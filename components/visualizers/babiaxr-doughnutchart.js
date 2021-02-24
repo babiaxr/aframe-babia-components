@@ -232,8 +232,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babiaxr-querier_json']) {
             self.dataComponent = dataElement.components['babiaxr-querier_json']
-        } else if (dataElement.components['babiaxr-querier_es']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babia-queryes']) {
+            self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babiaxr-querier_github']) {
             self.dataComponent = dataElement.components['babiaxr-querier_github']
         } else {
@@ -247,8 +247,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (el.components['babiaxr-querier_json']) {
             self.dataComponent = el.components['babiaxr-querier_json']
-        } else if (el.components['babiaxr-querier_es']) {
-            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babia-queryes']) {
+            self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babiaxr-querier_github']) {
             self.dataComponent = el.components['babiaxr-querier_github']
         } else {
@@ -259,7 +259,7 @@ let findDataComponent = (data, el, self) => {
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
             } else {
