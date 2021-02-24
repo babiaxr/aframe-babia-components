@@ -262,8 +262,8 @@ let findQuerier = (data, el, self) => {
     let querierElement = document.getElementById(data.from)
     if (querierElement.components['babiaxr-querier_json']) {
       self.querierComponent = querierElement.components['babiaxr-querier_json']
-    } else if (querierElement.components['babiaxr-querier_es']) {
-      self.querierComponent = querierElement.components['babiaxr-querier_es']
+    } else if (querierElement.components['babia-queryes']) {
+      self.querierComponent = querierElement.components['babia-queryes']
     } else if (querierElement.components['babiaxr-querier_github']) {
       self.querierComponent = querierElement.components['babiaxr-querier_github']
     } else {
@@ -274,8 +274,8 @@ let findQuerier = (data, el, self) => {
     // Look for a querier in the same element and register
     if (el.components['babiaxr-querier_json']) {
       self.querierComponent = el.components['babiaxr-querier_json']
-    } else if (el.components['babiaxr-querier_es']) {
-      self.querierComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babia-queryes']) {
+      self.querierComponent = el.components['babia-queryes']
     } else if (el.components['babiaxr-querier_github']) {
       self.querierComponent = el.components['babiaxr-querier_github']
     } else {
@@ -283,7 +283,7 @@ let findQuerier = (data, el, self) => {
       if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
       } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-        self.querierComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+        self.querierComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
       } else {
@@ -509,8 +509,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babiaxr-querier_json']) {
             self.dataComponent = dataElement.components['babiaxr-querier_json']
-        } else if (dataElement.components['babiaxr-querier_es']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babia-queryes']) {
+            self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babiaxr-querier_github']) {
             self.dataComponent = dataElement.components['babiaxr-querier_github']
         } else {
@@ -524,8 +524,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (el.components['babiaxr-querier_json']) {
             self.dataComponent = el.components['babiaxr-querier_json']
-        } else if (el.components['babiaxr-querier_es']) {
-            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babia-queryes']) {
+            self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babiaxr-querier_github']) {
             self.dataComponent = el.components['babiaxr-querier_github']
         } else {
@@ -536,7 +536,7 @@ let findDataComponent = (data, el, self) => {
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
             } else {
@@ -700,7 +700,7 @@ let findQuerierComponents = (self) => {
             self.dataQueriers.push(querier.id)
         } 
     });
-    document.querySelectorAll('[babiaxr-querier_es]').forEach(querier => { 
+    document.querySelectorAll('[babia-queryes]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
     document.querySelectorAll('[babiaxr-querier_github]').forEach(querier => { 
@@ -2412,7 +2412,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-querier_es', {
+AFRAME.registerComponent('babia-queryes', {
     schema: {
         elasticsearch_url: { type: 'string' },
         index: { type: 'string' },
@@ -3257,8 +3257,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babiaxr-querier_json']) {
             self.dataComponent = dataElement.components['babiaxr-querier_json']
-        } else if (dataElement.components['babiaxr-querier_es']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babia-queryes']) {
+            self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babiaxr-querier_github']) {
             self.dataComponent = dataElement.components['babiaxr-querier_github']
         } else {
@@ -3272,8 +3272,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (el.components['babiaxr-querier_json']) {
             self.dataComponent = el.components['babiaxr-querier_json']
-        } else if (el.components['babiaxr-querier_es']) {
-            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babia-queryes']) {
+            self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babiaxr-querier_github']) {
             self.dataComponent = el.components['babiaxr-querier_github']
         } else {
@@ -3284,7 +3284,7 @@ let findDataComponent = (data, el, self) => {
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
             } else {
@@ -3889,8 +3889,8 @@ let findDataComponent = (data, el, self) => {
       eventName = "babiaFilterDataReady"
     } else if (dataElement.components['babiaxr-querier_json']) {
       self.dataComponent = dataElement.components['babiaxr-querier_json']
-    } else if (dataElement.components['babiaxr-querier_es']) {
-      self.dataComponent = dataElement.components['babiaxr-querier_es']
+    } else if (dataElement.components['babia-queryes']) {
+      self.dataComponent = dataElement.components['babia-queryes']
     } else if (dataElement.components['babiaxr-querier_github']) {
       self.dataComponent = dataElement.components['babiaxr-querier_github']
     } else {
@@ -3904,8 +3904,8 @@ let findDataComponent = (data, el, self) => {
       eventName = "babiaFilterDataReady"
     } else if (el.components['babiaxr-querier_json']) {
       self.dataComponent = el.components['babiaxr-querier_json']
-    } else if (el.components['babiaxr-querier_es']) {
-      self.dataComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babia-queryes']) {
+      self.dataComponent = el.components['babia-queryes']
     } else if (el.components['babiaxr-querier_github']) {
       self.dataComponent = el.components['babiaxr-querier_github']
     } else {
@@ -3916,7 +3916,7 @@ let findDataComponent = (data, el, self) => {
       } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
       } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+        self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
         self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
       } else {
@@ -4544,8 +4544,8 @@ let findDataComponent = (data, el, self) => {
         eventName = "babiaFilterDataReady"
       } else if (dataElement.components['babiaxr-querier_json']) {
         self.dataComponent = dataElement.components['babiaxr-querier_json']
-      } else if (dataElement.components['babiaxr-querier_es']) {
-        self.dataComponent = dataElement.components['babiaxr-querier_es']
+      } else if (dataElement.components['babia-queryes']) {
+        self.dataComponent = dataElement.components['babia-queryes']
       } else if (dataElement.components['babiaxr-querier_github']) {
         self.dataComponent = dataElement.components['babiaxr-querier_github']
       } else {
@@ -4559,8 +4559,8 @@ let findDataComponent = (data, el, self) => {
         eventName = "babiaFilterDataReady"
       } else if (el.components['babiaxr-querier_json']) {
         self.dataComponent = el.components['babiaxr-querier_json']
-      } else if (el.components['babiaxr-querier_es']) {
-        self.dataComponent = el.components['babiaxr-querier_es']
+      } else if (el.components['babia-queryes']) {
+        self.dataComponent = el.components['babia-queryes']
       } else if (el.components['babiaxr-querier_github']) {
         self.dataComponent = el.components['babiaxr-querier_github']
       } else {
@@ -4571,7 +4571,7 @@ let findDataComponent = (data, el, self) => {
         } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
           self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
         } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-          self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+          self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
         } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
           self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
         } else {
@@ -8491,8 +8491,8 @@ let findDataComponent = (data, el, self) => {
       eventName = "babiaFilterDataReady"
     } else if (dataElement.components['babiaxr-querier_json']) {
       self.dataComponent = dataElement.components['babiaxr-querier_json']
-    } else if (dataElement.components['babiaxr-querier_es']) {
-      self.dataComponent = dataElement.components['babiaxr-querier_es']
+    } else if (dataElement.components['babia-queryes']) {
+      self.dataComponent = dataElement.components['babia-queryes']
     } else if (dataElement.components['babiaxr-querier_github']) {
       self.dataComponent = dataElement.components['babiaxr-querier_github']
     } else {
@@ -8506,8 +8506,8 @@ let findDataComponent = (data, el, self) => {
       eventName = "babiaFilterDataReady"
     } else if (el.components['babiaxr-querier_json']) {
       self.dataComponent = el.components['babiaxr-querier_json']
-    } else if (el.components['babiaxr-querier_es']) {
-      self.dataComponent = el.components['babiaxr-querier_es']
+    } else if (el.components['babia-queryes']) {
+      self.dataComponent = el.components['babia-queryes']
     } else if (el.components['babiaxr-querier_github']) {
       self.dataComponent = el.components['babiaxr-querier_github']
     } else {
@@ -8518,7 +8518,7 @@ let findDataComponent = (data, el, self) => {
       } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
       } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+        self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
         self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
       } else {
@@ -9108,8 +9108,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babiaxr-querier_json']) {
             self.dataComponent = dataElement.components['babiaxr-querier_json']
-        } else if (dataElement.components['babiaxr-querier_es']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babia-queryes']) {
+            self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babiaxr-querier_github']) {
             self.dataComponent = dataElement.components['babiaxr-querier_github']
         } else {
@@ -9123,8 +9123,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (el.components['babiaxr-querier_json']) {
             self.dataComponent = el.components['babiaxr-querier_json']
-        } else if (el.components['babiaxr-querier_es']) {
-            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babia-queryes']) {
+            self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babiaxr-querier_github']) {
             self.dataComponent = el.components['babiaxr-querier_github']
         } else {
@@ -9135,7 +9135,7 @@ let findDataComponent = (data, el, self) => {
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
             } else {
@@ -10623,8 +10623,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babiaxr-querier_json']) {
             self.dataComponent = dataElement.components['babiaxr-querier_json']
-        } else if (dataElement.components['babiaxr-querier_es']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babia-queryes']) {
+            self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babiaxr-querier_github']) {
             self.dataComponent = dataElement.components['babiaxr-querier_github']
         } else {
@@ -10638,8 +10638,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (el.components['babiaxr-querier_json']) {
             self.dataComponent = el.components['babiaxr-querier_json']
-        } else if (el.components['babiaxr-querier_es']) {
-            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babia-queryes']) {
+            self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babiaxr-querier_github']) {
             self.dataComponent = el.components['babiaxr-querier_github']
         } else {
@@ -10650,7 +10650,7 @@ let findDataComponent = (data, el, self) => {
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
             } else {
@@ -11106,8 +11106,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babiaxr-querier_json']) {
             self.dataComponent = dataElement.components['babiaxr-querier_json']
-        } else if (dataElement.components['babiaxr-querier_es']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_es']
+        } else if (dataElement.components['babia-queryes']) {
+            self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babiaxr-querier_github']) {
             self.dataComponent = dataElement.components['babiaxr-querier_github']
         } else {
@@ -11121,8 +11121,8 @@ let findDataComponent = (data, el, self) => {
             eventName = "babiaFilterDataReady"
         } else if (el.components['babiaxr-querier_json']) {
             self.dataComponent = el.components['babiaxr-querier_json']
-        } else if (el.components['babiaxr-querier_es']) {
-            self.dataComponent = el.components['babiaxr-querier_es']
+        } else if (el.components['babia-queryes']) {
+            self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babiaxr-querier_github']) {
             self.dataComponent = el.components['babiaxr-querier_github']
         } else {
@@ -11133,7 +11133,7 @@ let findDataComponent = (data, el, self) => {
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
             } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_es]")[0].components['babiaxr-querier_es']
+                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
             } else {
