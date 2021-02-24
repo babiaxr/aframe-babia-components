@@ -472,8 +472,55 @@ AFRAME.registerComponent('babiaxr-island', {
             let entity = this.createElement(figures[i], position);
 
             if (figures[i].children) {
+                // Quarter
+                let legend;
+                let transparentBox;
+                entity.addEventListener('click', function (e) {
+                    // Just launch the event on the child
+                    if (e.target !== this)
+                        return;
+
+                    if (legend) {
+                        entity.removeChild(transparentBox)
+                        self.el.parentElement.removeChild(legend)
+                        legend = undefined
+                        transparentBox = undefined
+                    } else {
+                        transparentBox = document.createElement('a-entity');
+                        let oldGeometry = entity.getAttribute('geometry')
+                        let scale = self.el.getAttribute("scale")
+                        let tsBoxHeight = oldGeometry.height + 11
+                        if (scale) {
+                            tsBoxHeight = ((oldGeometry.height + 11) / scale.y)
+                        }
+                        transparentBox.setAttribute('geometry', {
+                            height: tsBoxHeight,
+                            depth: oldGeometry.depth,
+                            width: oldGeometry.width
+                        });
+                        transparentBox.setAttribute('material', {
+                            'visible': true,
+                            'opacity': 0.4
+                        });
+                        entity.appendChild(transparentBox)
+
+                        legend = generateLegend(figures[i].name, 'black', 'white');
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: 12,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(legend)
+                    }
+                })
+
                 this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
             } else {
+                // Building
                 let legend;
                 let entityGeometry;
                 let alreadyActive = false;
