@@ -193,7 +193,7 @@ This component shows a cylinder chart.
 
 ```
 
-### babiaxr-3dcylinderchart component
+### babia-cylsmap component
 
 This component shows a 3D cylinder chart.
 
