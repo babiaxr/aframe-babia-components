@@ -86,7 +86,7 @@ let findQuerierComponents = (self) => {
     document.querySelectorAll('[babia-queryes]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
-    document.querySelectorAll('[babiaxr-querier_github]').forEach(querier => { 
+    document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
     document.querySelectorAll('[babiaxr-filterdata]').forEach(querier => { 

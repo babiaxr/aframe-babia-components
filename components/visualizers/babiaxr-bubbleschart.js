@@ -224,8 +224,8 @@ let findDataComponent = (data, el, self) => {
         self.dataComponent = dataElement.components['babiaxr-querier_json']
       } else if (dataElement.components['babia-queryes']) {
         self.dataComponent = dataElement.components['babia-queryes']
-      } else if (dataElement.components['babiaxr-querier_github']) {
-        self.dataComponent = dataElement.components['babiaxr-querier_github']
+      } else if (dataElement.components['babia-querygithub']) {
+        self.dataComponent = dataElement.components['babia-querygithub']
       } else {
         console.error("Problem registering to the querier")
         return
@@ -239,8 +239,8 @@ let findDataComponent = (data, el, self) => {
         self.dataComponent = el.components['babiaxr-querier_json']
       } else if (el.components['babia-queryes']) {
         self.dataComponent = el.components['babia-queryes']
-      } else if (el.components['babiaxr-querier_github']) {
-        self.dataComponent = el.components['babiaxr-querier_github']
+      } else if (el.components['babia-querygithub']) {
+        self.dataComponent = el.components['babia-querygithub']
       } else {
         // Look for a querier or filterdata in the scene
         if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
@@ -250,8 +250,8 @@ let findDataComponent = (data, el, self) => {
           self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
         } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
           self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-        } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
-          self.dataComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+        } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
         } else {
           console.error("Error, querier not found")
           return

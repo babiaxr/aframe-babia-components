@@ -192,8 +192,8 @@ let findQuerier = (data, el, self) => {
       self.querierComponent = querierElement.components['babiaxr-querier_json']
     } else if (querierElement.components['babia-queryes']) {
       self.querierComponent = querierElement.components['babia-queryes']
-    } else if (querierElement.components['babiaxr-querier_github']) {
-      self.querierComponent = querierElement.components['babiaxr-querier_github']
+    } else if (querierElement.components['babia-querygithub']) {
+      self.querierComponent = querierElement.components['babia-querygithub']
     } else {
       console.error("Problem registering to the querier")
       return
@@ -204,16 +204,16 @@ let findQuerier = (data, el, self) => {
       self.querierComponent = el.components['babiaxr-querier_json']
     } else if (el.components['babia-queryes']) {
       self.querierComponent = el.components['babia-queryes']
-    } else if (el.components['babiaxr-querier_github']) {
-      self.querierComponent = el.components['babiaxr-querier_github']
+    } else if (el.components['babia-querygithub']) {
+      self.querierComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier in the scene
       if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
       } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-      } else if (document.querySelectorAll("[babiaxr-querier_github]").length > 0) {
-        self.querierComponent = document.querySelectorAll("[babiaxr-querier_github]")[0].components['babiaxr-querier_github']
+      } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
+        self.querierComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
       } else {
         console.error("Error, querier not found")
         return

@@ -1,4 +1,4 @@
-require('./components/queriers/babiaxr-querier_github')
+require('./components/queriers/babia-querygithub')
 require('./components/queriers/babiaxr-querier_json')
 require('./components/queriers/babia-queryes')
 require('./components/others/babia-ui')
