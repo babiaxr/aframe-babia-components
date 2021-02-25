@@ -10,7 +10,7 @@ Thing you need:
     
 3. Then, select the chart that you want...
 
-- **NOTE**: Use the component `babia-treebuilder` selecting the querier/filterdata entity (or putting it in the same entity) to generate a tree data format for the `babiaxr-city` and `babiaxr-islands` visualizations.
+- **NOTE**: Use the component `babia-treebuilder` selecting the querier/filterdata entity (or putting it in the same entity) to generate a tree data format for the `babia-city` and `babiaxr-islands` visualizations.
 
 Before using them, you need to understand how the components send data with each other, see [how is the components STACK/WORKFLOW](../others/STACK.md).
 
@@ -95,11 +95,11 @@ Before using them, you need to understand how the components send data with each
 ![Example](https://i.imgur.com/LtWp1Bn.png)
 
 
-## City chart
+## City
 
 **NOTE**: This chart needs a `babia-treebuilder` component for having a tree data format.
 
-1. Add the component `babiaxr-city` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
+1. Add the component `babia-city` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the **treebuilder** where the data for the chart is stored.
     - `fheight`: the **numeric** field of the data that will define the height of the buildings.
     - `farea`: the **area** field of the data that will define the area of the buildings.
