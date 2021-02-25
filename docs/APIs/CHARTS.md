@@ -30,7 +30,7 @@ This component shows a pie chart.
 ]
 ```
 
-### babiaxr-dougnutchart component
+### babia-doughnut component
 
 This component shows a doughnut chart.
 
