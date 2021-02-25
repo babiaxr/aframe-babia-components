@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-querier_github', {
+AFRAME.registerComponent('babia-querygithub', {
     schema: {
         user: { type: 'string' },
         token: { type: 'string' },
