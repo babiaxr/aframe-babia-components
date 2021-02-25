@@ -113,7 +113,7 @@ This component includes all the components that "visualize" data.
 Example:
 
 ```
-<a-entity babiaxr-visualizer="from: filtertest; x-axis: xxx; y-axis: ..." ></a-entity>
+<a-entity babia-visualizer="from: filtertest; x-axis: xxx; y-axis: ..." ></a-entity>
 ```
 
 1. The component should register itself in the querier/filterdata entity.

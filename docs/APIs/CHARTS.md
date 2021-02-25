@@ -123,9 +123,9 @@ This component shows a 3D bar chart.
 
 ```
 
-### babiaxr-bubblechart component
+### babia-bubbles component
 
-This component shows a 3D bar chart.
+This component shows a 3D Bubbles chart.
 
 #### API
 
