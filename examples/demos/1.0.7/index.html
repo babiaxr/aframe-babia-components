@@ -43,7 +43,7 @@
     <a-entity id="bubblesdata" babia-queryjson="url: data_examples/continents.json;"></a-entity>
 
     <!-- Simple Components -->
-    <a-entity id = "pie" babiaxr-piechart = 'legend: true; palette: blues; key: country; size: cases; from: piedata1'
+    <a-entity id = "pie" babia-pie = 'legend: true; palette: blues; key: country; size: cases; from: piedata1'
         position = "5.5 3.5 -21" rotation = "90 -45 0" scale = "3 1.5 3"></a-entity>
     <a-entity id = "doughnut" babiaxr-doughnutchart = 'legend: true; palette: pearl; key: country; size: cases; from: doughnutdata'
         position = "-16.5 4.5 3" rotation = "90 90 0" scale = "3 3 3"></a-entity> 
@@ -61,7 +61,7 @@
         position="-16 0.1 37" rotation="0 -140 0" scale="0.15 0.15 0.15"></a-entity>
     
     <!-- Totem Component -->
-    <a-entity id="totem1" babiaxr-totem='legend: true; axis: true; charts_id: [{"id": "pie", "type": "babiaxr-piechart"}];
+    <a-entity id="totem1" babiaxr-totem='legend: true; axis: true; charts_id: [{"id": "pie", "type": "babia-pie"}];
     data_list: [{"data":"Europe", "from_querier": "piedata1"}, {"data": "America", "from_querier": "piedata2"}]'
         position="19 -1 -18" rotation="0 -45 0"></a-entity>
 

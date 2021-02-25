@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-piechart', {
+AFRAME.registerComponent('babia-pie', {
     schema: {
         data: { type: 'string' },
         size: { type: 'string', default: 'size' },

@@ -2,7 +2,7 @@
 
 The installation contains the following components:
 
-### babiaxr-piechart component
+### babia-pie component
 
 This component shows a pie chart.
 
