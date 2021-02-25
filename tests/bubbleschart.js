@@ -29,14 +29,14 @@ describe ('BabiaXR-Bubbleschart component', () => {
     it ('Querier Creation', () => {
         cy.get('a-scene').then(scene => {
             // Add components
-            let data = Cypress.$('<a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>');
+            let data = Cypress.$('<a-entity id="queriertest" babia-queryjson="url: ./data.json;"></a-entity>');
             Cypress.$(scene).append(data);      
             let chart = Cypress.$('<a-entity babiaxr-bubbleschart="legend: true; axis: true; from: queriertest; x_axis: name; z_axis: name2; height: size; radius: height"></a-entity>');
             Cypress.$(scene).append(chart); 
         });
         
         // Test entities existence
-        assert.exists(cy.get('a-entity[babiaxr-querier_json]'));
+        assert.exists(cy.get('a-entity[babia-queryjson]'));
         assert.exists(cy.get('a-entity[babiaxr-bubbleschart]'));
 
         // Check attributes

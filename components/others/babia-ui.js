@@ -77,7 +77,7 @@ AFRAME.registerComponent('babia-ui', {
 let findQuerierComponents = (self) => {
     self.dataQueriers = []
     // All queriers and filterdatas of the scene
-    document.querySelectorAll('[babiaxr-querier_json]').forEach(querier => { 
+    document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
         // Skip querier data when the target visualizer has included filtered data too.
         if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babiaxr-filterdata')){
             self.dataQueriers.push(querier.id)

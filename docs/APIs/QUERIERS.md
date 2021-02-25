@@ -1,6 +1,6 @@
 ## Querier components API
 
-### babiaxr-querier_es component
+### babia-queryes component
 
 Component that will retrieve data from an ElasticSearch. It uses [ElasticSearch URI](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html) search to do it.
 
@@ -17,7 +17,7 @@ This component will put the data retrieved into the `babiaData` attribute of the
 
 > **Important**: The ElasticSearch must have enabled cross-origin resource sharing because the queries are made by the browser. See this [ElasticSearch reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html)
 
-### babiaxr-querier_json component
+### babia-queryjson component
 
 Component that will retrieve data from a JSON input that can be defined as an url or directly embedded.
 
@@ -31,7 +31,7 @@ This component will put the data retrieved into the `babiaData` attribute of the
 | embedded        | JSON data directly stringified in the property | string   | - |
 
 
-### babiaxr-querier_github component
+### babia-querygithub component
 
 Component that will retrieve data related to the repositories from an user using the GitHub API. It can be defined the username in order to get info about all the repositories or also it can be defined an array of repos in order to analyse just them (instead of all).
 

@@ -11,7 +11,7 @@ describe ('Event Controller Bar component', () => {
     it ('Creation', () => {
         cy.get('a-scene').then(scene => {
             // Add components
-            let data = Cypress.$(' <a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;"></a-entity>');
+            let data = Cypress.$(' <a-entity id="queriertest" babia-queryjson="url: ./data.json;"></a-entity>');
             Cypress.$(scene).append(data);      //appendchild
             let chart = Cypress.$('<a-entity id="bar" babiaxr-simplebarchart="legend: true; axis: true; from: queriertest; x_axis: name; height: size"></a-entity>');
             Cypress.$(scene).append(chart);

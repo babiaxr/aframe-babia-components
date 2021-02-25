@@ -28,7 +28,7 @@ Component that will query and fetch the data.
 Example: 
 
 ```
-<a-entity id="queriertest" babiaxr-querier_json="url: ./data.json;" ></a-entity>
+<a-entity id="queriertest" babia-queryjson="url: ./data.json;" ></a-entity>
 ```
 
 1. Querier retrieve the data

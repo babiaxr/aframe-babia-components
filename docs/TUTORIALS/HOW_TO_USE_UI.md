@@ -5,7 +5,7 @@ This tutorial teaches you how works the interface and how to use it.
 First, let's talk about how builds. We need:
 
 1. A **visualizer** that we want to target.
-2. Optional: If you want more datafiles than the data included in the visualizer, you need to add them into the scene using `babiaxr-filter` or `babiaxr-querier_json`.
+2. Optional: If you want more datafiles than the data included in the visualizer, you need to add them into the scene using `babiaxr-filter` or `babia-queryjson`.
 
 When we have these elements, we'll add the interface code indicating the ID of the target visualizer.
 
