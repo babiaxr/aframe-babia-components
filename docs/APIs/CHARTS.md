@@ -228,7 +228,7 @@ This component shows a 3D cylinder chart.
 
 ```
 
-### babiaxr-city component
+### babia-city component
 
 This component shows a city chart.
 
