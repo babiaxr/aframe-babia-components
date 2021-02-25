@@ -158,7 +158,7 @@ This component shows a 3D Bubbles chart.
 
 ```
 
-### babiaxr-cylinderchart component
+### babia-cyls component
 
 
 This component shows a cylinder chart.
