@@ -87,7 +87,7 @@ Before using them, you need to understand how the components send data with each
 
 ## Doughnut chart
 
-1. Add the component `babiaxr-doughnutchart` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
+1. Add the component `babia-doughnut` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.
     - `key`: the field of the data that will define each slice of the pie. (Make sure that this field has unique values!)
     - `size`: the **numeric** field of the data that will define the size of the slices.
