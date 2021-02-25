@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-doughnutchart', {
+AFRAME.registerComponent('babia-doughnut', {
     schema: {
         data: { type: 'string' },
         size: { type: 'string', default: 'size' },
