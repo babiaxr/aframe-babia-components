@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-treegenerator', {
+AFRAME.registerComponent('babia-treebuilder', {
     schema: {
         from: { type: 'string' },
         field: { type: 'string' },

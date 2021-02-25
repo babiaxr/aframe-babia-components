@@ -177,7 +177,7 @@ The city visualization has an special data format, a tree with the districts and
 Example for spliting a "path" field by the "/" character.
 
 ```
-<a-entity babiaxr-treegenerator="from: filtertest; field: path; split: '/'" ></a-entity>
+<a-entity babia-treebuilder="from: filtertest; field: path; split: '/'" ></a-entity>
 ```
 
 So, if we have this list:

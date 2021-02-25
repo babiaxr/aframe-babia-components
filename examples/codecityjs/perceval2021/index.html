@@ -22,7 +22,7 @@
 
     <a-entity id="queriertest" babia-queryjson="url: ./city.json;"></a-entity>
 
-    <a-entity id="treetest" babiaxr-treegenerator="field: file_path; split_by: /; from: queriertest"></a-entity>
+    <a-entity id="treetest" babia-treebuilder="field: file_path; split_by: /; from: queriertest"></a-entity>
 
     <a-entity position="-20 0 -3" scale="1 0.01 1" babiaxr-city='width: 20; depth: 20; streets: true; color: green;
                           extra: 1.5; base_thick: 1.2; split: pivot; fmaxarea: num_funs; farea: num_funs; fheight: loc;
