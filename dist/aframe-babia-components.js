@@ -78,8 +78,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-filterdata', {
-  dependencies: ['babiaxr-querier'],
+AFRAME.registerComponent('babia-filter', {
   schema: {
     from: { type: 'string' },
     filter: { type: 'string' },
@@ -321,7 +320,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-treegenerator', {
+AFRAME.registerComponent('babia-treebuilder', {
     schema: {
         from: { type: 'string' },
         field: { type: 'string' },
@@ -504,8 +503,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier or filterdata
         let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babiaxr-filterdata']) {
-            self.dataComponent = dataElement.components['babiaxr-filterdata']
+        if (dataElement.components['babia-filter']) {
+            self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
@@ -519,8 +518,8 @@ let findDataComponent = (data, el, self) => {
         }
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babiaxr-filterdata']) {
-            self.dataComponent = el.components['babiaxr-filterdata']
+        if (el.components['babia-filter']) {
+            self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
@@ -530,8 +529,8 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-querygithub']
         } else {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
                 eventName = "babiaFilterDataReady"
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -696,7 +695,7 @@ let findQuerierComponents = (self) => {
     // All queriers and filterdatas of the scene
     document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
         // Skip querier data when the target visualizer has included filtered data too.
-        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babiaxr-filterdata')){
+        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babia-filter')){
             self.dataQueriers.push(querier.id)
         } 
     });
@@ -706,7 +705,7 @@ let findQuerierComponents = (self) => {
     document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
-    document.querySelectorAll('[babiaxr-filterdata]').forEach(querier => { 
+    document.querySelectorAll('[babia-filter]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
 }
@@ -3252,8 +3251,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier or filterdata
         let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babiaxr-filterdata']) {
-            self.dataComponent = dataElement.components['babiaxr-filterdata']
+        if (dataElement.components['babia-filter']) {
+            self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
@@ -3267,8 +3266,8 @@ let findDataComponent = (data, el, self) => {
         }
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babiaxr-filterdata']) {
-            self.dataComponent = el.components['babiaxr-filterdata']
+        if (el.components['babia-filter']) {
+            self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
@@ -3278,8 +3277,8 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-querygithub']
         } else {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
                 eventName = "babiaFilterDataReady"
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -3884,8 +3883,8 @@ let findDataComponent = (data, el, self) => {
   if (data.from) {
     // Save the reference to the querier or filterdata
     let dataElement = document.getElementById(data.from)
-    if (dataElement.components['babiaxr-filterdata']) {
-      self.dataComponent = dataElement.components['babiaxr-filterdata']
+    if (dataElement.components['babia-filter']) {
+      self.dataComponent = dataElement.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (dataElement.components['babia-queryjson']) {
       self.dataComponent = dataElement.components['babia-queryjson']
@@ -3899,8 +3898,8 @@ let findDataComponent = (data, el, self) => {
     }
   } else {
     // Look for a querier or filterdata in the same element and register
-    if (el.components['babiaxr-filterdata']) {
-      self.dataComponent = el.components['babiaxr-filterdata']
+    if (el.components['babia-filter']) {
+      self.dataComponent = el.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (el.components['babia-queryjson']) {
       self.dataComponent = el.components['babia-queryjson']
@@ -3910,8 +3909,8 @@ let findDataComponent = (data, el, self) => {
       self.dataComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier or filterdata in the scene
-      if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+      if (document.querySelectorAll("[babia-filter]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
         eventName = "babiaFilterDataReady"
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
         self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -4539,8 +4538,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
       // Save the reference to the querier or filterdata
       let dataElement = document.getElementById(data.from)
-      if (dataElement.components['babiaxr-filterdata']) {
-        self.dataComponent = dataElement.components['babiaxr-filterdata']
+      if (dataElement.components['babia-filter']) {
+        self.dataComponent = dataElement.components['babia-filter']
         eventName = "babiaFilterDataReady"
       } else if (dataElement.components['babia-queryjson']) {
         self.dataComponent = dataElement.components['babia-queryjson']
@@ -4554,8 +4553,8 @@ let findDataComponent = (data, el, self) => {
       }
     } else {
       // Look for a querier or filterdata in the same element and register
-      if (el.components['babiaxr-filterdata']) {
-        self.dataComponent = el.components['babiaxr-filterdata']
+      if (el.components['babia-filter']) {
+        self.dataComponent = el.components['babia-filter']
         eventName = "babiaFilterDataReady"
       } else if (el.components['babia-queryjson']) {
         self.dataComponent = el.components['babia-queryjson']
@@ -4565,8 +4564,8 @@ let findDataComponent = (data, el, self) => {
         self.dataComponent = el.components['babia-querygithub']
       } else {
         // Look for a querier or filterdata in the scene
-        if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-          self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+        if (document.querySelectorAll("[babia-filter]").length > 0) {
+          self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
           eventName = "babiaFilterDataReady"
         } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
           self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -6698,20 +6697,20 @@ let findTreeGenerator = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier
         let querierElement = document.getElementById(data.from)
-        if (querierElement.components['babiaxr-treegenerator']) {
-            self.dataComponent = querierElement.components['babiaxr-treegenerator']
+        if (querierElement.components['babia-treebuilder']) {
+            self.dataComponent = querierElement.components['babia-treebuilder']
         } else {
             console.error("Problem registering to the treegenerator")
             return
         }
     } else {
         // Look for a querier in the same element and register
-        if (el.components['babiaxr-treegenerator']) {
-            self.dataComponent = el.components['babiaxr-treegenerator']
+        if (el.components['babia-treebuilder']) {
+            self.dataComponent = el.components['babia-treebuilder']
         } else {
             // Look for a querier in the scene
-            if (document.querySelectorAll("[babiaxr-treegenerator]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-treegenerator]")[0].components['babiaxr-treegenerator']
+            if (document.querySelectorAll("[babia-treebuilder]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-treebuilder]")[0].components['babia-treebuilder']
             } else {
                 console.error("Error, treegenerator not found")
                 return
@@ -8486,8 +8485,8 @@ let findDataComponent = (data, el, self) => {
   if (data.from) {
     // Save the reference to the querier or filterdata
     let dataElement = document.getElementById(data.from)
-    if (dataElement.components['babiaxr-filterdata']) {
-      self.dataComponent = dataElement.components['babiaxr-filterdata']
+    if (dataElement.components['babia-filter']) {
+      self.dataComponent = dataElement.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (dataElement.components['babia-queryjson']) {
       self.dataComponent = dataElement.components['babia-queryjson']
@@ -8501,8 +8500,8 @@ let findDataComponent = (data, el, self) => {
     }
   } else {
     // Look for a querier or filterdata in the same element and register
-    if (el.components['babiaxr-filterdata']) {
-      self.dataComponent = el.components['babiaxr-filterdata']
+    if (el.components['babia-filter']) {
+      self.dataComponent = el.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (el.components['babia-queryjson']) {
       self.dataComponent = el.components['babia-queryjson']
@@ -8512,8 +8511,8 @@ let findDataComponent = (data, el, self) => {
       self.dataComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier or filterdata in the scene
-      if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+      if (document.querySelectorAll("[babia-filter]").length > 0) {
+        self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
         eventName = "babiaFilterDataReady"
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
         self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -9103,8 +9102,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier or filterdata
         let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babiaxr-filterdata']) {
-            self.dataComponent = dataElement.components['babiaxr-filterdata']
+        if (dataElement.components['babia-filter']) {
+            self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
@@ -9118,8 +9117,8 @@ let findDataComponent = (data, el, self) => {
         }
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babiaxr-filterdata']) {
-            self.dataComponent = el.components['babiaxr-filterdata']
+        if (el.components['babia-filter']) {
+            self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
@@ -9129,8 +9128,8 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-querygithub']
         } else {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
                 eventName = "babiaFilterDataReady"
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -10347,20 +10346,20 @@ let findTreeGenerator = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier
         let querierElement = document.getElementById(data.from)
-        if (querierElement.components['babiaxr-treegenerator']) {
-            self.dataComponent = querierElement.components['babiaxr-treegenerator']
+        if (querierElement.components['babia-treebuilder']) {
+            self.dataComponent = querierElement.components['babia-treebuilder']
         } else {
             console.error("Problem registering to the treegenerator")
             return
         }
     } else {
         // Look for a querier in the same element and register
-        if (el.components['babiaxr-treegenerator']) {
-            self.dataComponent = el.components['babiaxr-treegenerator']
+        if (el.components['babia-treebuilder']) {
+            self.dataComponent = el.components['babia-treebuilder']
         } else {
             // Look for a querier in the scene
-            if (document.querySelectorAll("[babiaxr-treegenerator]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-treegenerator]")[0].components['babiaxr-treegenerator']
+            if (document.querySelectorAll("[babia-treebuilder]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-treebuilder]")[0].components['babia-treebuilder']
             } else {
                 console.error("Error, treegenerator not found")
                 return
@@ -10618,8 +10617,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier or filterdata
         let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babiaxr-filterdata']) {
-            self.dataComponent = dataElement.components['babiaxr-filterdata']
+        if (dataElement.components['babia-filter']) {
+            self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
@@ -10633,8 +10632,8 @@ let findDataComponent = (data, el, self) => {
         }
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babiaxr-filterdata']) {
-            self.dataComponent = el.components['babiaxr-filterdata']
+        if (el.components['babia-filter']) {
+            self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
@@ -10644,8 +10643,8 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-querygithub']
         } else {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
                 eventName = "babiaFilterDataReady"
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
@@ -11101,8 +11100,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier or filterdata
         let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babiaxr-filterdata']) {
-            self.dataComponent = dataElement.components['babiaxr-filterdata']
+        if (dataElement.components['babia-filter']) {
+            self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
@@ -11116,8 +11115,8 @@ let findDataComponent = (data, el, self) => {
         }
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babiaxr-filterdata']) {
-            self.dataComponent = el.components['babiaxr-filterdata']
+        if (el.components['babia-filter']) {
+            self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
@@ -11127,8 +11126,8 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-querygithub']
         } else {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
                 eventName = "babiaFilterDataReady"
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']

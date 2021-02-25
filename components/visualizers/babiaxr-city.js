@@ -1730,20 +1730,20 @@ let findTreeGenerator = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier
         let querierElement = document.getElementById(data.from)
-        if (querierElement.components['babiaxr-treegenerator']) {
-            self.dataComponent = querierElement.components['babiaxr-treegenerator']
+        if (querierElement.components['babia-treebuilder']) {
+            self.dataComponent = querierElement.components['babia-treebuilder']
         } else {
             console.error("Problem registering to the treegenerator")
             return
         }
     } else {
         // Look for a querier in the same element and register
-        if (el.components['babiaxr-treegenerator']) {
-            self.dataComponent = el.components['babiaxr-treegenerator']
+        if (el.components['babia-treebuilder']) {
+            self.dataComponent = el.components['babia-treebuilder']
         } else {
             // Look for a querier in the scene
-            if (document.querySelectorAll("[babiaxr-treegenerator]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-treegenerator]")[0].components['babiaxr-treegenerator']
+            if (document.querySelectorAll("[babia-treebuilder]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-treebuilder]")[0].components['babia-treebuilder']
             } else {
                 console.error("Error, treegenerator not found")
                 return
