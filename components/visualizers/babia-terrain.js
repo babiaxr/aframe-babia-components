@@ -1,4 +1,4 @@
-AFRAME.registerComponent('babiaxr-terrain', {
+AFRAME.registerComponent('babia-terrain', {
     schema: {
       width: {type: 'number', default: 1},
       height: {type: 'number', default: 1},
