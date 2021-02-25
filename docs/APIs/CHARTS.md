@@ -90,9 +90,9 @@ This component shows a simple 2D bar chart.
 
 ```
 
-### babiaxr-3dbarchart component
+### babia-barsmap component
 
-This component shows a 3D bar chart.
+This component shows a bars map.
 
 #### API
 
@@ -228,7 +228,7 @@ This component shows a 3D cylinder chart.
 
 ```
 
-### babiaxr-city component
+### babia-city component
 
 This component shows a city chart.
 
@@ -301,7 +301,7 @@ This component shows a city in a island chart.
 
 
 
-## babiaxr-terrain Component
+## babia-terrain Component
 This component creates a terrain using vertices data.
 
 #### API

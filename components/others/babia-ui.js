@@ -102,8 +102,8 @@ let findVisualizerComponent = (data, self) => {
         if (targetElement != null) { 
             if (targetElement.components['babiaxr-simplebarchart']) {
                 self.targetComponent = targetElement.components['babiaxr-simplebarchart']
-            } else if (targetElement.components['babiaxr-3dbarchart']) {
-                self.targetComponent = targetElement.components['babiaxr-3dbarchart']
+            } else if (targetElement.components['babia-barsmap']) {
+                self.targetComponent = targetElement.components['babia-barsmap']
             } else if (targetElement.components['babia-cyls']) {
                 self.targetComponent = targetElement.components['babia-cyls']
             } else if (targetElement.components['babia-cylsmap']) {
@@ -114,8 +114,8 @@ let findVisualizerComponent = (data, self) => {
                 self.targetComponent = targetElement.components['babia-doughnut']
             } else if (targetElement.components['babia-bubbles']) {
                 self.targetComponent = targetElement.components['babia-bubbles']
-            } else if (targetElement.components['babiaxr-city']) {
-                self.targetComponent = targetElement.components['babiaxr-city']
+            } else if (targetElement.components['babia-city']) {
+                self.targetComponent = targetElement.components['babia-city']
             } else if (targetElement.components['babiaxr-island']) {
                 self.targetComponent = targetElement.components['babiaxr-island']
             } else {
@@ -196,7 +196,7 @@ let getDataMetrics = (self, data, properties) =>{
     let number_metrics = []
     let last_child
 
-    if(self.targetComponent.attrName == 'babiaxr-city')
+    if(self.targetComponent.attrName == 'babia-city')
     {
         // Get last child of the tree
         last_child = getLastChild(data)

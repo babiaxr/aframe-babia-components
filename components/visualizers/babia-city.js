@@ -7,7 +7,7 @@ if (typeof AFRAME === 'undefined') {
 /**
  * CodeCity component for A-Frame.
  */
-AFRAME.registerComponent('babiaxr-city', {
+AFRAME.registerComponent('babia-city', {
     schema: {
         from: { type: 'string' },
         // Absolute size (width and depth will be used for proportions)

@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-3dbarchart', {
+AFRAME.registerComponent('babia-barsmap', {
     schema: {
         data: { type: 'string' },
         height: { type: 'string', default: 'height' },
