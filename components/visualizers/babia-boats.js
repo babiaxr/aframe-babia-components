@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-island', {
+AFRAME.registerComponent('babia-boats', {
     schema: {
         data: { type: 'asset' },
         from: { type: 'string' },
@@ -374,7 +374,7 @@ AFRAME.registerComponent('babiaxr-island', {
             let figure
             if (elements[i].children) {
                 figure = {
-                    id: "island-" + elements[i].id,
+                    id: "boat-" + elements[i].id,
                     name: elements[i].id,
                     posX: posX,
                     posY: posY,
@@ -387,7 +387,7 @@ AFRAME.registerComponent('babiaxr-island', {
             } else {
                 if (this.data.area) {
                     figure = {
-                        id: "island-" + elements[i].id,
+                        id: "boat-" + elements[i].id,
                         name: elements[i].id,
                         posX: posX,
                         posY: posY,
@@ -397,7 +397,7 @@ AFRAME.registerComponent('babiaxr-island', {
                     }
                 } else {
                     figure = {
-                        id: "island-" + elements[i].id,
+                        id: "boat-" + elements[i].id,
                         name: elements[i].id,
                         posX: posX,
                         posY: posY,

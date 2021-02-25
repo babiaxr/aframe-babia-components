@@ -267,9 +267,9 @@ This component shows a city chart.
 
 ```
 
-### babiaxr-island component
+### babia-boats component
 
-This component shows a city in a island chart.
+This component shows a city in boats.
 
 #### API
 
