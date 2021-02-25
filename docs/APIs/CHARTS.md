@@ -90,9 +90,9 @@ This component shows a simple 2D bar chart.
 
 ```
 
-### babiaxr-3dbarchart component
+### babia-barsmap component
 
-This component shows a 3D bar chart.
+This component shows a bars map.
 
 #### API
 
