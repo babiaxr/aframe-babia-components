@@ -301,7 +301,7 @@ This component shows a city in a island chart.
 
 
 
-## babiaxr-terrain Component
+## babia-terrain Component
 This component creates a terrain using vertices data.
 
 #### API

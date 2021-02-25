@@ -5885,6 +5885,60 @@ let dispatchEventOnElement = (element, propertyName) => {
 /* 17 */
 /***/ (function(module, exports) {
 
+AFRAME.registerComponent('babia-terrain', {
+    schema: {
+      width: {type: 'number', default: 1},
+      height: {type: 'number', default: 1},
+      segmentsHeight: {type: 'number', default: 1},
+      segmentsWidth: {type: 'number', default: 1},
+      data: {type: 'array'},
+      color: {type: 'string', default: '0xdddddd'},
+      filled: {type: 'boolean', default: false}
+    },
+  
+    /**
+     * Initial creation and setting of the mesh.
+     */
+    init: function () {
+        var data = this.data;
+        var el = this.el;
+
+        var vertices = data.data
+        console.log("Vertices:")
+        console.log(vertices)
+
+        // Create geometry.
+        this.geometry = new THREE.PlaneGeometry(data.width, data.height, data.segmentsHeight, data.segmentsWidth);
+        for (var i = 0, l = this.geometry.vertices.length; i < l; i++) {
+            this.geometry.vertices[i].z = vertices[i];
+        }
+  
+      // Create material.
+        var color = data.color
+        if (data.filled){
+          this.material = new THREE.MeshPhongMaterial({
+            color: color,
+            wireframe: false
+          });
+        } else {
+          this.material = new THREE.MeshPhongMaterial({
+            color: color,
+            wireframe: true
+          }); 
+        }
+
+      // Create mesh.
+      this.mesh = new THREE.Mesh(this.geometry, this.material);
+  
+      // Set mesh on entity.
+      el.setObject3D('mesh', this.mesh);
+    }
+  });
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -6505,7 +6559,7 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* global AFRAME */
@@ -8263,7 +8317,7 @@ let findTreeGenerator = (data, el, self) => {
 }
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* global AFRAME */
@@ -9801,7 +9855,7 @@ function hslToRgb(h, s, l) {
 }
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -10849,7 +10903,7 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -11457,60 +11511,6 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports) {
-
-AFRAME.registerComponent('babiaxr-terrain', {
-    schema: {
-      width: {type: 'number', default: 1},
-      height: {type: 'number', default: 1},
-      segmentsHeight: {type: 'number', default: 1},
-      segmentsWidth: {type: 'number', default: 1},
-      data: {type: 'array'},
-      color: {type: 'string', default: '0xdddddd'},
-      filled: {type: 'boolean', default: false}
-    },
-  
-    /**
-     * Initial creation and setting of the mesh.
-     */
-    init: function () {
-        var data = this.data;
-        var el = this.el;
-
-        var vertices = data.data
-        console.log("Vertices:")
-        console.log(vertices)
-
-        // Create geometry.
-        this.geometry = new THREE.PlaneGeometry(data.width, data.height, data.segmentsHeight, data.segmentsWidth);
-        for (var i = 0, l = this.geometry.vertices.length; i < l; i++) {
-            this.geometry.vertices[i].z = vertices[i];
-        }
-  
-      // Create material.
-        var color = data.color
-        if (data.filled){
-          this.material = new THREE.MeshPhongMaterial({
-            color: color,
-            wireframe: false
-          });
-        } else {
-          this.material = new THREE.MeshPhongMaterial({
-            color: color,
-            wireframe: true
-          }); 
-        }
-
-      // Create mesh.
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
-  
-      // Set mesh on entity.
-      el.setObject3D('mesh', this.mesh);
-    }
-  });
-
-/***/ }),
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11523,19 +11523,19 @@ __webpack_require__(1)
 __webpack_require__(5)
 __webpack_require__(3)
 __webpack_require__(16)
-__webpack_require__(21)
-__webpack_require__(17)
-__webpack_require__(12)
-__webpack_require__(19)
+__webpack_require__(22)
 __webpack_require__(18)
+__webpack_require__(12)
+__webpack_require__(20)
+__webpack_require__(19)
 __webpack_require__(13)
 __webpack_require__(14)
 __webpack_require__(15)
 __webpack_require__(8)
-__webpack_require__(22)
+__webpack_require__(17)
 __webpack_require__(7)
 __webpack_require__(4)
-__webpack_require__(20)
+__webpack_require__(21)
 __webpack_require__(6)
 
 /***/ })
