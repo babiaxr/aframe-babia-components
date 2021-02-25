@@ -15,7 +15,7 @@ Thing you need:
 Before using them, you need to understand how the components send data with each other, see [how is the components STACK/WORKFLOW](../others/STACK.md).
 
 
-## Pie chart
+## Pie
 
 1. Add the component `babia-pie` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.
@@ -46,7 +46,7 @@ Before using them, you need to understand how the components send data with each
 ![Example](https://i.imgur.com/Kolrz1I.png)
 
 
-## Bubbles chart
+## Bubbles
 
 1. Add the component `babia-bubbles` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.
@@ -58,9 +58,9 @@ Before using them, you need to understand how the components send data with each
 ![Example](https://i.imgur.com/5cw40tj.png)
 
 
-## 3D Cylinder chart
+## Cylinders Map
 
-1. Add the component `babiaxr-3dcylinderchart` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
+1. Add the component `babia-cylsmap` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.
     - `x_axis`: the field of the data that will define the tags of the x_axis of the chart (as a keys). (Make sure that this field has unique values!)
     - `z_axis`: the field of the data that will define the tags of the z_axis of the chart (as a keys). (Make sure that this field has unique values!)
@@ -72,7 +72,7 @@ Before using them, you need to understand how the components send data with each
 
 
 
-## Cylinder chart (2D cylinders)
+## Cylinders
 
 1. Add the component `babia-cyls` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.
@@ -85,7 +85,7 @@ Before using them, you need to understand how the components send data with each
 ![Example](https://i.imgur.com/frDHfoB.png)
 
 
-## Doughnut chart
+## Doughnut
 
 1. Add the component `babia-doughnut` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.

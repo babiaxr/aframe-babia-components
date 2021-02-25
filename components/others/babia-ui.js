@@ -106,8 +106,8 @@ let findVisualizerComponent = (data, self) => {
                 self.targetComponent = targetElement.components['babiaxr-3dbarchart']
             } else if (targetElement.components['babia-cyls']) {
                 self.targetComponent = targetElement.components['babia-cyls']
-            } else if (targetElement.components['babiaxr-3dcylinderchart']) {
-                self.targetComponent = targetElement.components['babiaxr-3dcylinderchart']
+            } else if (targetElement.components['babia-cylsmap']) {
+                self.targetComponent = targetElement.components['babia-cylsmap']
             } else if (targetElement.components['babia-pie']) {
                 self.targetComponent = targetElement.components['babia-pie']
             } else if (targetElement.components['babia-doughnut']) {
