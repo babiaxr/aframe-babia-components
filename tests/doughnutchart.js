@@ -30,7 +30,7 @@ describe ('BabiaXR-Doughnutchart component', () => {
             // Add components
             let data = Cypress.$('<a-entity id="queriertest" babia-queryjson="url: ./data.json;"></a-entity>');
             Cypress.$(scene).append(data);      
-            let chart = Cypress.$('<a-entity babiaxr-doughnutchart="legend: true; axis: true; from: queriertest; key: name; size: size" babiaxr-filterdata="from: queriertest" babiaxr-vismapper="slice: name; height: size"></a-entity>');
+            let chart = Cypress.$('<a-entity babiaxr-doughnutchart="legend: true; axis: true; from: queriertest; key: name; size: size" babia-filter="from: queriertest" babiaxr-vismapper="slice: name; height: size"></a-entity>');
             Cypress.$(scene).append(chart); //appendchild
         });
         

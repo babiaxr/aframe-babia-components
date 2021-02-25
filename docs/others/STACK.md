@@ -64,7 +64,7 @@ Component that will filter the data, this component is an interested of the quer
 Example:
 
 ```
-<a-entity id="filterdatatest" babiaxr-filterdata="from: queriertest; filter: .... ></a-entity>
+<a-entity id="filterdatatest" babia-filter="from: queriertest; filter: .... ></a-entity>
 ```
 
 1. The component should register itself in the querier entity.

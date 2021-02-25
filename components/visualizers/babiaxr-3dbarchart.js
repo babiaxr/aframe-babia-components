@@ -211,8 +211,8 @@ let findDataComponent = (data, el, self) => {
     if (data.from) {
         // Save the reference to the querier or filterdata
         let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babiaxr-filterdata']) {
-            self.dataComponent = dataElement.components['babiaxr-filterdata']
+        if (dataElement.components['babia-filter']) {
+            self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
@@ -226,8 +226,8 @@ let findDataComponent = (data, el, self) => {
         }
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babiaxr-filterdata']) {
-            self.dataComponent = el.components['babiaxr-filterdata']
+        if (el.components['babia-filter']) {
+            self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
@@ -237,8 +237,8 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-querygithub']
         } else {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
                 eventName = "babiaFilterDataReady"
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']

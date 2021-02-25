@@ -6,7 +6,7 @@ Thing you need:
 
 1. An entity with one of the `babiaxr-querier` components for querying the selected data.
   
-2. Optional: Use the component `babiaxr-filterdata` selecting the querier entity (or putting it in the same entity) to filter the data.
+2. Optional: Use the component `babia-filter` selecting the querier entity (or putting it in the same entity) to filter the data.
     
 3. Then, select the chart that you want...
 
