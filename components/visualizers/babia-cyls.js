@@ -6,7 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-cylinderchart', {
+AFRAME.registerComponent('babia-cyls', {
   schema: {
     data: { type: 'string' },
     height: { type: 'string', default: 'height' },
