@@ -116,8 +116,8 @@ let findVisualizerComponent = (data, self) => {
                 self.targetComponent = targetElement.components['babia-bubbles']
             } else if (targetElement.components['babia-city']) {
                 self.targetComponent = targetElement.components['babia-city']
-            } else if (targetElement.components['babiaxr-island']) {
-                self.targetComponent = targetElement.components['babiaxr-island']
+            } else if (targetElement.components['babia-boats']) {
+                self.targetComponent = targetElement.components['babia-boats']
             } else {
                 console.error("Visualizer not found.")
                 return
@@ -200,7 +200,7 @@ let getDataMetrics = (self, data, properties) =>{
     {
         // Get last child of the tree
         last_child = getLastChild(data)
-    } else if (self.targetComponent.attrName == 'babiaxr-island'){
+    } else if (self.targetComponent.attrName == 'babia-boats'){
         last_child = getLastChild(data[0])
     } else { 
         last_child = data[0] 
@@ -337,11 +337,11 @@ let selection_events = (entity, visualizer, isData) =>{
     entity.addEventListener('click', function(){
         // Change parameters
         if(entity.property && entity.metric) {
-            // When change from width/depth to area or vice-versa to island component
-            if (visualizer.attrName == 'babiaxr-island' && entity.property == "area"){
+            // When change from width/depth to area or vice-versa to boats component
+            if (visualizer.attrName == 'babia-boats' && entity.property == "area"){
                 visualizer.el.removeAttribute(visualizer.attrName, 'width')
                 visualizer.el.removeAttribute(visualizer.attrName, 'depth')
-            } else if (visualizer.attrName == 'babiaxr-island' && (entity.property == "width" || entity.property == "depth") && visualizer.el.getAttribute('babiaxr-island').area){
+            } else if (visualizer.attrName == 'babia-boats' && (entity.property == "width" || entity.property == "depth") && visualizer.el.getAttribute('babia-boats').area){
                 visualizer.el.removeAttribute(visualizer.attrName, 'area')  
                 if (entity.property == "width"){
                     visualizer.el.setAttribute(visualizer.attrName, 'depth', entity.metric)
