@@ -20,8 +20,7 @@
 
         <a-entity id="queriertest" babia-queryjson="url: ./data.json;"></a-entity>
 
-        <a-entity babiaxr-filterdata="from: queriertest; filter: size=12" babiaxr-piechart='animation: true; from: queriertest; key: name; legend: true' position="-3 5 15" rotation="90 0 0"></a-entity>
-
+        <a-entity babia-filter="from: queriertest; filter: size=12" babiaxr-piechart='animation: true; from: queriertest; key: name; legend: true' position="-3 5 15" rotation="90 0 0"></a-entity>
 
         <a-entity movement-controls="fly: true" position="-3 5 20">
             <a-entity camera position="0 0 0" look-controls></a-entity>

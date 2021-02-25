@@ -19,10 +19,10 @@
 
         <a-entity id="queriertest" babia-queryjson="url: ./europe.json;"></a-entity>
         <a-entity id="queriertest2" babia-queryjson="url: ./europe2.json;"></a-entity>
-        <a-entity id="filtertest1" babiaxr-filterdata="from: queriertest; filter: cases=1" ></a-entity>
+        <a-entity id="filtertest1" babia-filter="from: queriertest; filter: cases=1" ></a-entity>
 
         <a-entity id="graph" 
-                babiaxr-filterdata="from: queriertest; filter: deaths=0"
+                babia-filter="from: queriertest; filter: deaths=0"
                 babiaxr-3dbarchart='legend: true; x_axis: country; z_axis: date; height: deaths;
                 data: [ {
                     "date": "04/05/2020", 

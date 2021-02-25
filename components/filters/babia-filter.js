@@ -6,8 +6,7 @@ if (typeof AFRAME === 'undefined') {
 /**
 * A-Charts component for A-Frame.
 */
-AFRAME.registerComponent('babiaxr-filterdata', {
-  dependencies: ['babiaxr-querier'],
+AFRAME.registerComponent('babia-filter', {
   schema: {
     from: { type: 'string' },
     filter: { type: 'string' },

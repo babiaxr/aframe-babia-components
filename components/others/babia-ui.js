@@ -79,7 +79,7 @@ let findQuerierComponents = (self) => {
     // All queriers and filterdatas of the scene
     document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
         // Skip querier data when the target visualizer has included filtered data too.
-        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babiaxr-filterdata')){
+        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babia-filter')){
             self.dataQueriers.push(querier.id)
         } 
     });
@@ -89,7 +89,7 @@ let findQuerierComponents = (self) => {
     document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
-    document.querySelectorAll('[babiaxr-filterdata]').forEach(querier => { 
+    document.querySelectorAll('[babia-filter]').forEach(querier => { 
         self.dataQueriers.push(querier.id)
     });
 }

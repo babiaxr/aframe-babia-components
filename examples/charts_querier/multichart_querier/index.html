@@ -19,7 +19,7 @@
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
         <a-entity id="queriertest" babia-queryjson="url: ./data.json;"></a-entity>
-        <a-entity id="filtertest" babiaxr-filterdata="from: queriertest; filter: age=2019"></a-entity>
+        <a-entity id="filtertest" babia-filter="from: queriertest; filter: age=2019"></a-entity>
 
         <a-entity scale="0.1 0.1 0.1"
             babiaxr-bubbleschart='animation: true; x_axis: name; z_axis: age; height: metric2; radius: size; legend: true; from: queriertest'
