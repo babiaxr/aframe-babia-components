@@ -214,8 +214,8 @@ let findDataComponent = (data, el, self) => {
         if (dataElement.components['babiaxr-filterdata']) {
             self.dataComponent = dataElement.components['babiaxr-filterdata']
             eventName = "babiaFilterDataReady"
-        } else if (dataElement.components['babiaxr-querier_json']) {
-            self.dataComponent = dataElement.components['babiaxr-querier_json']
+        } else if (dataElement.components['babia-queryjson']) {
+            self.dataComponent = dataElement.components['babia-queryjson']
         } else if (dataElement.components['babia-queryes']) {
             self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babia-querygithub']) {
@@ -229,8 +229,8 @@ let findDataComponent = (data, el, self) => {
         if (el.components['babiaxr-filterdata']) {
             self.dataComponent = el.components['babiaxr-filterdata']
             eventName = "babiaFilterDataReady"
-        } else if (el.components['babiaxr-querier_json']) {
-            self.dataComponent = el.components['babiaxr-querier_json']
+        } else if (el.components['babia-queryjson']) {
+            self.dataComponent = el.components['babia-queryjson']
         } else if (el.components['babia-queryes']) {
             self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babia-querygithub']) {
@@ -240,9 +240,9 @@ let findDataComponent = (data, el, self) => {
             if (document.querySelectorAll("[babiaxr-filterdata]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babiaxr-filterdata]")[0].components['babiaxr-filterdata']
                 eventName = "babiaFilterDataReady"
-            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
-            } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
+                self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']

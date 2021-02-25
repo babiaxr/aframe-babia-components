@@ -188,8 +188,8 @@ let findQuerier = (data, el, self) => {
   if (data.from) {
     // Save the reference to the querier
     let querierElement = document.getElementById(data.from)
-    if (querierElement.components['babiaxr-querier_json']) {
-      self.querierComponent = querierElement.components['babiaxr-querier_json']
+    if (querierElement.components['babia-queryjson']) {
+      self.querierComponent = querierElement.components['babia-queryjson']
     } else if (querierElement.components['babia-queryes']) {
       self.querierComponent = querierElement.components['babia-queryes']
     } else if (querierElement.components['babia-querygithub']) {
@@ -200,17 +200,17 @@ let findQuerier = (data, el, self) => {
     }
   } else {
     // Look for a querier in the same element and register
-    if (el.components['babiaxr-querier_json']) {
-      self.querierComponent = el.components['babiaxr-querier_json']
+    if (el.components['babia-queryjson']) {
+      self.querierComponent = el.components['babia-queryjson']
     } else if (el.components['babia-queryes']) {
       self.querierComponent = el.components['babia-queryes']
     } else if (el.components['babia-querygithub']) {
       self.querierComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier in the scene
-      if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
-        self.querierComponent = document.querySelectorAll("[babiaxr-querier_json]")[0].components['babiaxr-querier_json']
-      } else if (document.querySelectorAll("[babiaxr-querier_json]").length > 0) {
+      if (document.querySelectorAll("[babia-queryjson]").length > 0) {
+        self.querierComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+      } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
         self.querierComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']

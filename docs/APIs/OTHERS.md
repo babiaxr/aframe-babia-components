@@ -43,10 +43,10 @@ This component creates a timeline bar that changes a chart using an array of dat
 | start_point          | Position of the starting point  | number | 0 |
 
 ```html
-        <a-entity id="datatest1" babiaxr-querier_json="url: ./data.json;"></a-entity>
-        <a-entity id="datatest2" babiaxr-querier_json="url: ./data2.json;"></a-entity>
+        <a-entity id="datatest1" babia-queryjson="url: ./data.json;"></a-entity>
+        <a-entity id="datatest2" babia-queryjson="url: ./data2.json;"></a-entity>
         ...
-        <a-entity id="datatest6" babiaxr-querier_json="url: ./data6.json;"></a-entity>
+        <a-entity id="datatest6" babia-queryjson="url: ./data6.json;"></a-entity>
 
         <a-entity id="navigationbar" babiaxr-navigation-bar =
        'commits: [{"date": "01/30/2003", "commit": "datatest1"}, 
