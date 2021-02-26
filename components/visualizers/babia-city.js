@@ -1261,7 +1261,7 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea) => {
     }
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('look-at', "[camera]");
+    entity.setAttribute('babia-lookat', "[camera]");
 
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');

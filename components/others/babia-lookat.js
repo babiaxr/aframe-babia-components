@@ -2,10 +2,10 @@
 var debug = AFRAME.utils.debug;
 var coordinates = AFRAME.utils.coordinates;
 
-var warn = debug('components:look-at:warn');
+var warn = debug('components:babia-lookat:warn');
 var isCoordinates = coordinates.isCoordinates || coordinates.isCoordinate;
 
-delete AFRAME.components['look-at'];
+delete AFRAME.components['babia-lookat'];
 
 /**
  * Look-at component.
@@ -16,7 +16,7 @@ delete AFRAME.components['look-at'];
  * If tracking an object via setting the component value via a selector, look-at will register
  * a behavior to the scene to update rotation on every tick.
  */
-AFRAME.registerComponent('look-at', {
+AFRAME.registerComponent('babia-lookat', {
   schema: {
     default: '0 0 0',
 
@@ -69,7 +69,7 @@ AFRAME.registerComponent('look-at', {
     // track the target on every tick.
     targetEl = self.el.sceneEl.querySelector(target);
     if (!targetEl) {
-      warn('"' + target + '" does not point to a valid entity to look-at');
+      warn('"' + target + '" does not point to a valid entity to babia-lookat');
       return;
     }
     if (!targetEl.hasLoaded) {
