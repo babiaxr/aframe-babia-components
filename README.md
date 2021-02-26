@@ -139,7 +139,7 @@ Charts included:
 
 [Go here to see the charts API](./docs/APIs/CHARTS.md).
 
-## Cities and Islands components API
+## Cities and Boats components API
 
 API for the city and inslands visualizers components.
 
