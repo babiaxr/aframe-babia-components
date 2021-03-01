@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>BabiaXR Demo - COVID-19 Data into BabiaXr Charts </title>
+  <meta name="description" content="BabiaXR Components Gallery using covid-19 data"></meta>
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+  <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+  <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+  <script src="dist/aframe-lounge-component.min.js"></script>
+  <script src="../../../dist/aframe-babia-components.min.js"></script>
+  <style>
+        h1{
+                color: #AAAAAA;
+                font-family: 'Archivo', sans-serif;
+                font-size: 45px;
+                text-align: center;
+                text-shadow: black 0.1em 0.1em 0.2em
+        }
+        p{
+                color: #444444;
+                font-family: 'Archivo', sans-serif;
+                font-size: 26px;
+                text-align: justify;
+                text-shadow:  #AAAAAA 0.1em 0.1em 0.2em
+        }
+  </style>
+</head>
+
+<body>
+    <a-scene id="scene" light="defaultLightsEnabled: false">  
+        
+        <!-- Assets -->
+        <a-assets>
+            <img id="sky" src="assets/360-panorama.jpg">
+            <img id="floor" src="assets/floor-texture.jpg">
+            <img id="metalic" src="assets/metalic-texture.jpg">
+        </a-assets>
+
+        <!-- Querier Components -->
+        <a-entity id="argoumldata" babia-queryjson="url: ./data/argouml.json;"></a-entity>
+        <a-entity id="argoumlcity" babia-treebuilder="field: file_path; split_by: /; from: argoumldata"></a-entity>
+  
+        <!-- Enviroment -->
+        <a-sky src="#sky"></a-sky>
+
+        <!-- Aframe Lounge -->
+        <a-entity id="lounge" position="5 0 0"
+                    lounge="width: 20; depth: 25; height: 11;
+                            north: barrier; 
+                            floorTexture: assets/floor-texture.jpg">
+
+            <a-entity position="2 0 -1" lounge-plinth="width: 8; depth: 8" lounge-staydown>
+                <a-entity></a-entity>
+            </a-entity>
+
+        </a-entity>
+
+        <a-entity position="9.5 -5 1.5" scale="0.006 0.001 0.006" babia-boats="zone_elevation: 10; from: argoumlcity; area: num_funs; height: loc"></a-entity>
+
+        <a-entity id="bardescription" position="12 -4.5 1.5" rotation="-30 0 0">
+                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                        <h1>ArgoUML project city</h1>
+                        <p>Raycaster: </br>Click/Over on a building to see the metrics, click on a quarter to see the folder</p>
+                        </p>
+                </a-entity>
+        </a-entity>
+  
+        <!-- Lights -->
+        <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+        
+        <!-- Controls and Camera -->
+        <a-entity lounge-entry-point>
+                <a-entity camera position="3 2 0" rotation="0 90 0"look-controls
+                        wasd-controls="fly: false"></a-entity>
+                <a-entity cursor="rayOrigin:mouse"raycaster="objects: .babiaxraycasterclass"></a-entity>
+                <a-entity laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
+        </a-entity>
+
+    </a-scene>
+  
+  <style>.gitlab-corner-wrapper{overflow:hidden;width:100px;height:100px;position:absolute;top:0;right:0}.gitlab-corner{position:absolute;top:-16px;right:-50px;transform:rotate(45deg);background:#548;border:44px solid #548;border-bottom:none;border-top:#548 solid 16px}.gitlab-corner svg{width:60px;height:60px;margin-bottom:-4px}.cls-1{fill:#fc6d26}.cls-2{fill:#e24329}.cls-3{fill:#fca326}.gitlab-corner:hover .cls-1{animation:cycle .6s}.gitlab-corner:hover .cls-2{animation:cycleMid .6s}.gitlab-corner:hover .cls-3{animation:cycleEnd .6s}@keyframes cycle{100%,15%,60%{fill:#fc6d26}30%,75%{fill:#e24329}45%,90%{fill:#fca326}}@keyframes cycleMid{100%,15%,60%{fill:#e24329}30%,75%{fill:#fca326}45%,90%{fill:#fc6d26}}@keyframes cycleEnd{100%,15%,60%{fill:#fca326}30%,75%{fill:#fc6d26}45%,90%{fill:#e24329}}@media (max-width:500px){.gitlab-corner:hover .cls-1,.gitlab-corner:hover .cls-2,.gitlab-corner:hover .cls-3{animation:none}.gitlab-corner .cls-1{animation:cycle .6s}.gitlab-corner .cls-2{animation:cycleMid .6s}.gitlab-corner .cls-3{animation:cycleEnd .6s}}</style><div class="gitlab-corner-wrapper"><a href="https://gitlab.com/babiaxr/aframe-babia-components" class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559"><g id="g44"><path id="path46" class="cls-1" d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39"/></g><g id="g48"><path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z"/></g><g id="g56"><path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z"/></g><g id="g64"><path id="path66" class="cls-3" d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z"/></g><g id="g72"><path id="path74" class="cls-2" d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z"/></g><g id="g76"><path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z"/></g><g id="g80"><path id="path82" class="cls-3" d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z"/></g><g id="g84"><path id="path86" class="cls-2" d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z"/></g></svg></a></div>
+  </body>
+  
+  </html>
