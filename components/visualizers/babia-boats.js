@@ -14,6 +14,7 @@ AFRAME.registerComponent('babia-boats', {
         width: { type: 'string', default: 'width' },
         depth: { type: 'string', default: 'depth' },
         area: { type: 'string' },
+        color: { type: 'string' },
         height: { type: 'string', default: 'height' },
         zone_elevation: { type: 'number', default: 0.3 },
         building_separation: { type: 'number', default: 0.25 },
@@ -133,6 +134,13 @@ AFRAME.registerComponent('babia-boats', {
                 id: self.babiaMetadata.id++
             }
 
+            // If color metric activated, save in the metadata the max and min value for mapping
+            if (data.color) {
+                let [color_max, color_min] = getMaxMinColorValues(rawData, data.color)
+                self.babiaMetadata['color_max'] = color_max
+                self.babiaMetadata['color_min'] = color_min
+            }
+
             // Create city
             self.chart = self.onDataLoaded(rawData)
 
@@ -153,6 +161,13 @@ AFRAME.registerComponent('babia-boats', {
                     self.babiaData = rawData
                     self.babiaMetadata = {
                         id: self.babiaMetadata.id++
+                    }
+
+                    // If color metric activated, save in the metadata the max and min value for mapping
+                    if (self.data.color) {
+                        let [color_max, color_min] = getMaxMinColorValues(rawData, self.data.color)
+                        self.babiaMetadata['color_max'] = color_max
+                        self.babiaMetadata['color_min'] = color_min
                     }
 
                     // Create city
@@ -534,7 +549,7 @@ AFRAME.registerComponent('babia-boats', {
                             width: entityGeometry.width - 0.1
                         });
                         entity.setAttribute('material', {
-                            'color': self.data.building_color
+                            'color': entity.getAttribute('babiaxrFirstColor')
                         });
                         self.el.parentElement.removeChild(legend)
                         legend = undefined
@@ -550,6 +565,7 @@ AFRAME.registerComponent('babia-boats', {
                         entityGeometry = entity.getAttribute('geometry')
                         let boxPosition = entity.getAttribute("position")
                         entity.setAttribute('position', boxPosition)
+                        entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
                         entity.setAttribute('material', {
                             'color': 'white'
                         });
@@ -582,7 +598,7 @@ AFRAME.registerComponent('babia-boats', {
                             width: entityGeometry.width - 0.1
                         });
                         entity.setAttribute('material', {
-                            'color': self.data.building_color
+                            'color': entity.getAttribute('babiaxrFirstColor')
                         });
                         self.el.parentElement.removeChild(legend)
                         legend = undefined
@@ -855,7 +871,11 @@ AFRAME.registerComponent('babia-boats', {
         if (figure.children) {
             color = self.data.base_color;;
         } else {
-            color = self.data.building_color;
+            if (self.data.color) {
+                color = heatMapColorforValue(figure.rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+            } else {
+                color = self.data.building_color;
+            }
         }
 
         // create box
@@ -956,7 +976,7 @@ let getLevels = (elements, levels) => {
             }
             level--
         }
-    }  
+    }
     return max_level;
 }
 
@@ -1040,4 +1060,27 @@ let dataReadyToSend = (propertyName, self) => {
 
 let dispatchEventOnElement = (element, propertyName) => {
     element.emit("babiaVisualizerUpdated", propertyName)
+}
+
+let getMaxMinColorValues = (data, colorfield, max, min) => {
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].children) {
+            [max, min] = getMaxMinColorValues(data[i].children, colorfield, max, min)
+        } else {
+            if (!max || data[i][colorfield] > max) {
+                max = data[i][colorfield]
+            }
+            if (!min || data[i][colorfield] < min) {
+                min = data[i][colorfield]
+            }
+        }
+    }
+    return [max, min]
+}
+
+function heatMapColorforValue(val, max, min) {
+    let value = ((val || 0) - min) / (max - min)
+
+    let h = (1.0 - value) * 240
+    return "hsl(" + h + ", 100%, 50%)";
 }

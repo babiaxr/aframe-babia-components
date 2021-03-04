@@ -280,6 +280,7 @@ This component shows a city in boats.
 | width          | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**.| string | width |
 | depth          | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**. | string | depth |
 | height          | Field in data items to represent as building height | string | height |
+| color          | Field in data items to represent the color of the buildings as HSL heatmap | string | - |
 | building_separation  | Separation of the buildings by a numeric factor | number | 0.25 |
 | border          | Size of border around buildings (streets are built on it) | number | 0.5 |
 | extra          | Extra factor for total area with respect to built area | number | 1.0 |
