@@ -58,7 +58,7 @@ This component shows a doughnut chart.
 ]
 ```
 
-### babiaxr-simplebarchart component
+### babia-bars component
 
 This component shows a simple 2D bar chart.
 

@@ -100,8 +100,8 @@ let findVisualizerComponent = (data, self) => {
         // Save the reference to the querier or filterdata
         let targetElement = document.getElementById(data.target)
         if (targetElement != null) { 
-            if (targetElement.components['babiaxr-simplebarchart']) {
-                self.targetComponent = targetElement.components['babiaxr-simplebarchart']
+            if (targetElement.components['babia-bars']) {
+                self.targetComponent = targetElement.components['babia-bars']
             } else if (targetElement.components['babia-barsmap']) {
                 self.targetComponent = targetElement.components['babia-barsmap']
             } else if (targetElement.components['babia-cyls']) {
