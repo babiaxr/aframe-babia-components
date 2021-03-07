@@ -27,7 +27,7 @@ Before using them, you need to understand how the components send data with each
 
 ## Simple bar chart (2D bars chart)
 
-1. Add the component `babiaxr-simplebarchart` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
+1. Add the component `babia-bars` (see the [API](../APIs/CHARTS.md) for more details), defining at least these attributes:
     - `from`: the filterdata/querier where the data for the chart is stored.
     - `x_axis`: the field of the data that will define the tags of the x_axis of the chart (as a keys). (Make sure that this field has unique values!)
     - `height`: the **numeric** field of the data that will define the height of the bars.
