@@ -15,10 +15,46 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Gantz         | 2020-08-19   |  2020-09-02  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/8) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Gantz) | [Link](#gantz) | - |
 | Haikyu!!         | 2020-09-09   |  2020-10-22  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/9) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Haikyu!!) | [Link](#haikyu!!)  | 1.0.11 |
 | Inuyasha        | 2020-10-22   |  2020-11-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/10) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Inuyasha) | [Link](#inuyasha)  | 1.0.12 |
-| Kakegurui        | 2020-10-22   |  2020-11-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
+| Kakegurui        | -   |  -  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
+| Light        | -   |  2021-03-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/13) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Light) | [Link](#light)  | 1.1.1 |
 
 
 ## Release notes
+
+### Light
+
+> NPM 1.1.1 version
+
+#### Stack changes
+
+- Components renaming (simpler names), all doc is updated (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/118).
+
+#### Boats component changes
+
+- Add building color as numeric metric, with a HSL gradient algorithim (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/140)
+- Show legend when clicking on a quarter (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/133)
+- Keep legend when clicking on a building (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/138)
+- Bug solved on `getLevels` function (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/134)
+- Scenes for a research experiment designed (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/136)
+- Show metrics on legends (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/107)
+- Bug with the legend scaling solved (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/129)
+- Allow to modify quarter height (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/128)
+
+#### User Interface component changes
+
+- Add documentation for the component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/131)
+- Bug solved on the metrics buttons layout (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/135)
+- Bug solved when the data retriever component changes (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/126)
+- Bug solved on the buttons click behavior in the Ocuslus Quest (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/132)
+- Bug solved about the raycaster and the buttons (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/130)
+- Bug solved about the repeated data sources (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/123)
+- Bug solved when changing between area and depth/width in the boats component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/124)
+
+
+#### City component changes
+
+- Show metrics on legends (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/107)
+- Bug with the legend scaling solved (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/129)
 
 ### Kakegurui
 
