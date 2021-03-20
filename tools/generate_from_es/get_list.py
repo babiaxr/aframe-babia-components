@@ -33,6 +33,8 @@ import logging
 from elasticsearch import Elasticsearch
 from elasticsearch.connection import create_ssl_context
 
+SOURCE_CODE_EXTENSIONS = ["java", "py"]
+
 
 def main():
     args = parse_args()
@@ -48,7 +50,7 @@ def main():
         fields = ["_score", "file_path", "blanks_per_loc", "ccn", "comments", "comments_per_loc", "loc",
                             "loc_per_function", "num_funs", "tokens"]
         
-    if args.date_field:
+    if args.output_file:
         output = args.output_file
     else:
         output = "data.json"
@@ -63,7 +65,7 @@ def main():
                        verify_certs=False)
     
     files_now = get_files_at_last_commit(es, args.index, date_field)
-    city_items = get_last_city(es, args.index, files_now, date_field, fields)
+    city_items = get_last_city(es, args.index, files_now, date_field, fields, args.source_code)
 
     with open(output, 'w') as f:
         json.dump(city_items, f)
@@ -95,9 +97,12 @@ def get_files_at_last_commit(es, index, date_field):
     return page['hits']['hits'][0]["_source"]["files_at_commit"]
 
 
-def get_last_city(es, index, files, date_field, fields):
+def get_last_city(es, index, files, date_field, fields, sourcecode):
     items = []
     for file in files:
+        # Check if analysis of source code is acivated and check if is a source code file
+        if sourcecode and file.split(".")[-1] not in SOURCE_CODE_EXTENSIONS:
+            continue
         logging.debug("Querying {}/{}".format(index, file))
         page = es.search(
             index=index,
@@ -114,7 +119,31 @@ def get_last_city(es, index, files, date_field, fields):
             }
         )
         if len(page['hits']['hits']) > 0:
-            items.append(page['hits']['hits'][0]["_source"])
+            to_append = page['hits']['hits'][0]["_source"]
+            # Custom metrics
+            if float(to_append["num_funs"]):
+                to_append["ccn_per_function"] = float(to_append["ccn"])/float(to_append["num_funs"])
+                to_append["tokens_per_function"] = float(to_append["tokens"])/float(to_append["num_funs"])
+            else:
+                to_append["ccn_per_function"] = None
+                to_append["tokens_per_function"] = None
+            if float(to_append["tokens"]):
+                to_append["ccn_per_token"] = float(to_append["ccn"])/float(to_append["tokens"])
+                to_append["functions_per_token"] = float(to_append["num_funs"])/float(to_append["tokens"])
+                to_append["loc_per_token"] = float(to_append["loc"])/float(to_append["tokens"])
+            else:
+                to_append["ccn_per_token"] = None
+                to_append["functions_per_token"] = None
+                to_append["loc_per_token"] = None
+            if float(to_append["loc"]):
+                to_append["ccn_per_loc"] = float(to_append["ccn"])/float(to_append["loc"])
+                to_append["functions_per_loc"] = float(to_append["num_funs"])/float(to_append["loc"])
+                to_append["token_per_loc"] = float(to_append["tokens"])/float(to_append["loc"])
+            else:
+                to_append["ccn_per_loc"] = None
+                to_append["functions_per_loc"] = None
+                to_append["token_per_loc"] = None
+            items.append(to_append)
     
     return items
 
@@ -132,6 +161,8 @@ def parse_args():
                         help="Date field of where the data is going to be fetched")
     parser.add_argument("-outputfile", "--output-file", required=False,
                         help="Date field of where the data is going to be fetched")
+    parser.add_argument('-sourcecode', '--source-code', required=False, action='store_true',
+                        help='Analyze only source code files')
     
     return parser.parse_args()
 
