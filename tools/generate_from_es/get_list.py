@@ -125,24 +125,24 @@ def get_last_city(es, index, files, date_field, fields, sourcecode):
                 to_append["ccn_per_function"] = float(to_append["ccn"])/float(to_append["num_funs"])
                 to_append["tokens_per_function"] = float(to_append["tokens"])/float(to_append["num_funs"])
             else:
-                to_append["ccn_per_function"] = None
-                to_append["tokens_per_function"] = None
+                to_append["ccn_per_function"] = to_append["ccn"]
+                to_append["tokens_per_function"] = to_append["tokens"]
             if float(to_append["tokens"]):
                 to_append["ccn_per_token"] = float(to_append["ccn"])/float(to_append["tokens"])
                 to_append["functions_per_token"] = float(to_append["num_funs"])/float(to_append["tokens"])
                 to_append["loc_per_token"] = float(to_append["loc"])/float(to_append["tokens"])
             else:
-                to_append["ccn_per_token"] = None
-                to_append["functions_per_token"] = None
-                to_append["loc_per_token"] = None
+                to_append["ccn_per_token"] = to_append["ccn"]
+                to_append["functions_per_token"] = to_append["num_funs"]
+                to_append["loc_per_token"] = to_append["loc"]
             if float(to_append["loc"]):
                 to_append["ccn_per_loc"] = float(to_append["ccn"])/float(to_append["loc"])
                 to_append["functions_per_loc"] = float(to_append["num_funs"])/float(to_append["loc"])
-                to_append["token_per_loc"] = float(to_append["tokens"])/float(to_append["loc"])
+                to_append["tokens_per_loc"] = float(to_append["tokens"])/float(to_append["loc"])
             else:
-                to_append["ccn_per_loc"] = None
-                to_append["functions_per_loc"] = None
-                to_append["token_per_loc"] = None
+                to_append["ccn_per_loc"] = to_append["ccn"]
+                to_append["functions_per_loc"] = to_append["num_funs"]
+                to_append["tokens_per_loc"] = to_append["tokens"]
             items.append(to_append)
     
     return items

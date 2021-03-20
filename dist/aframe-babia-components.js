@@ -4293,6 +4293,10 @@ AFRAME.registerComponent('babia-boats', {
         levels: { type: 'number' },
         building_color: { type: 'string', default: "#E6B9A1" },
         base_color: { type: 'color', default: '#98e690' },
+        // To add into the doc
+        min_building_height: { type: 'number', default: 1 },
+        height_quarter_legend_box: { type: 'number', default: 11 },
+        height_quarter_legend_title: { type: 'number', default: 12 }
     },
 
     /**
@@ -4570,7 +4574,7 @@ AFRAME.registerComponent('babia-boats', {
                 element.width = elements[i][this.data.width] || 0.5
             }
             if (this.data.height) {
-                element.height = elements[i][this.data.height] || 1
+                element.height = elements[i][this.data.height] || this.data.min_building_height
             }
             if (this.data.depth) {
                 element.depth = elements[i][this.data.depth] || 0.5
@@ -4775,9 +4779,9 @@ AFRAME.registerComponent('babia-boats', {
                         transparentBox = document.createElement('a-entity');
                         let oldGeometry = entity.getAttribute('geometry')
                         let scale = self.el.getAttribute("scale")
-                        let tsBoxHeight = oldGeometry.height + 11
+                        let tsBoxHeight = oldGeometry.height + self.data.height_quarter_legend_box
                         if (scale) {
-                            tsBoxHeight = ((oldGeometry.height + 11) / scale.y)
+                            tsBoxHeight = ((oldGeometry.height + self.data.height_quarter_legend_box) / scale.y)
                         }
                         transparentBox.setAttribute('geometry', {
                             height: tsBoxHeight,
@@ -4795,7 +4799,7 @@ AFRAME.registerComponent('babia-boats', {
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let coordinatesFinal = {
                             x: coordinates.x,
-                            y: 12,
+                            y: self.data.height_quarter_legend_title,
                             z: coordinates.z
                         }
                         legend.setAttribute('position', coordinatesFinal)
@@ -4845,7 +4849,7 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width);
+                        legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -5175,35 +5179,43 @@ let countDecimals = function (value) {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth, fwidth) => {
+let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth, fwidth, fcolor) => {
     let width = 2;
     let height = 1;
     if (name.length > 16)
-        width = name.length / 8;
+        width = name.length / 3.5;
 
     if (data) {
         let heightText = "\n " + fheight + " (height): " + data[fheight]
         if (heightText.length > 16)
-            width = heightText.length / 8;
+            width = heightText.length / 3.5;
         name += heightText
 
         if (farea) {
             let areaText = "\n " + farea + " (area): " + data[farea]
             if (areaText.length > 16 && areaText > heightText)
-                width = areaText.length / 8;
+                width = areaText.length / 3.5;
             name += areaText
         } else {
             let depthText = "\n " + fdepth + " (depth): " + data[fdepth]
             if (depthText.length > 16 && depthText > heightText)
-                width = depthText.length / 8;
+                width = depthText.length / 3.5;
             name += depthText
 
             let widthText = "\n " + fwidth + " (width): " + data[fwidth]
             if (widthText.length > 16 && widthText > heightText && widthText > depthText)
-                width = widthText.length / 8;
+                width = widthText.length / 3.5;
             name += widthText
 
             height = 1.5
+        }
+
+        if (fcolor) {
+            let colorText = "\n " + fcolor + " (color): " + data[fcolor]
+            if (colorText.length > 16 && colorText > heightText)
+                width = colorText.length / 3.5;
+            name += colorText
+            height += 0.2
         }
     }
 
@@ -5338,10 +5350,10 @@ let getMaxMinColorValues = (data, colorfield, max, min) => {
         if (data[i].children) {
             [max, min] = getMaxMinColorValues(data[i].children, colorfield, max, min)
         } else {
-            if (!max || data[i][colorfield] > max) {
+            if (data[i][colorfield] !== "null" && !max || data[i][colorfield] > max) {
                 max = data[i][colorfield]
             }
-            if (!min || data[i][colorfield] < min) {
+            if (data[i][colorfield] !== "null" && !min || data[i][colorfield] < min) {
                 min = data[i][colorfield]
             }
         }
