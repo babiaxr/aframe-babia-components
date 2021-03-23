@@ -912,37 +912,37 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth,
     let width = 2;
     let height = 1;
     if (name.length > 16)
-        width = name.length / 3.5;
+        width = name.length / 6;
 
     if (data) {
-        let heightText = "\n " + fheight + " (height): " + data[fheight]
+        let heightText = "\n " + fheight + " (height): " + Math.round(data[fheight] * 100) / 100
         if (heightText.length > 16)
-            width = heightText.length / 3.5;
+            width = heightText.length / 6;
         name += heightText
 
         if (farea) {
-            let areaText = "\n " + farea + " (area): " + data[farea]
+            let areaText = "\n " + farea + " (area): " +  Math.round(data[farea] * 100) / 100
             if (areaText.length > 16 && areaText > heightText)
-                width = areaText.length / 3.5;
+                width = areaText.length / 6;
             name += areaText
         } else {
-            let depthText = "\n " + fdepth + " (depth): " + data[fdepth]
+            let depthText = "\n " + fdepth + " (depth): " + Math.round(data[fdepth] * 100) / 100
             if (depthText.length > 16 && depthText > heightText)
-                width = depthText.length / 3.5;
+                width = depthText.length / 6;
             name += depthText
 
-            let widthText = "\n " + fwidth + " (width): " + data[fwidth]
+            let widthText = "\n " + fwidth + " (width): " + Math.round(data[fwidth] * 100) / 100
             if (widthText.length > 16 && widthText > heightText && widthText > depthText)
-                width = widthText.length / 3.5;
+                width = widthText.length / 6;
             name += widthText
 
             height = 1.5
         }
 
         if (fcolor) {
-            let colorText = "\n " + fcolor + " (color): " + data[fcolor]
+            let colorText = "\n " + fcolor + " (color): " + Math.round(data[fcolor] * 100) / 100
             if (colorText.length > 16 && colorText > heightText)
-                width = colorText.length / 3.5;
+                width = colorText.length / 6;
             name += colorText
             height += 0.2
         }
