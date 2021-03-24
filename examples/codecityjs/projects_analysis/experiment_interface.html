@@ -48,7 +48,7 @@
         </a-assets>
 
         <!-- Querier Components -->
-        <a-entity id="argoumldata" babia-queryjson="url: ./data/argouml_code_data.json;"></a-entity>
+        <a-entity id="argoumldata" babia-queryjson="url: ./data/jetuml_code_data.json;"></a-entity>
         <a-entity id="argoumlcity" babia-treebuilder="field: file_path; split_by: /; from: argoumldata"></a-entity>
 
         <!-- Enviroment -->
@@ -236,7 +236,7 @@
         </a-entity>
 
         <a-entity position="0.7 -5 -8.5" scale="0.013 0.006 0.013"
-            babia-boats="zone_elevation: 1; from: argoumlcity; area: num_funs; height: loc_per_function; color: tokens_per_function; height_quarter_legend_box: 5; height_quarter_legend_title: 1">
+            babia-boats="zone_elevation: 1; from: argoumlcity; area: num_funs; height: loc_per_function; color: tokens_per_function; height_quarter_legend_box: 3; height_quarter_legend_title: -2">
         </a-entity>
 
         <a-entity id="bardescription" position="9.2 -4.5 -4.5" rotation="-30 0 0">
@@ -251,8 +251,8 @@
             </a-entity>
         </a-entity>
 
-        <a-entity position="7.5 -5 11" scale="0.013 0.006 0.013" rotation="0 180 0"
-            babia-boats="zone_elevation: 1; from: argoumlcity; area: num_funs; height: loc_per_function; color: tokens_per_function; height_quarter_legend_box: 5; height_quarter_legend_title: 1">
+        <!-- <a-entity position="7.5 -5 11" scale="0.013 0.006 0.013" rotation="0 180 0"
+            babia-boats="zone_elevation: 1; from: argoumlcity; area: num_funs; height: loc_per_function; color: tokens_per_function; height_quarter_legend_box: 5; height_quarter_legend_title: 1"> -->
         </a-entity>
         <a-entity id="bardescription" position="-1.2 -4.5 6.5" rotation="-30 180 0">
             <a-box src="#floor" height="2.2" width="2.2" depth="0.1" position="0 0 0"></a-box>
@@ -272,7 +272,7 @@
 
         <!-- Controls and Camera -->
         <a-entity lounge-entry-point>
-            <a-entity camera position="0 2 -6" rotation="0 90 0" look-controls wasd-controls="fly: false"></a-entity>
+            <a-entity camera position="0 2 -6" rotation="0 90 0" look-controls wasd-controls="fly: true"></a-entity>
             <a-entity laser-controls raycaster="objects: .babiaxraycasterclass, #navbarpopup, .surveys, .surveys--close-icon, #navbarpopup--close-icon, #presurvey, #presurvey--close-icon, 
             #onesurvey, #onesurvey--close-icon, 
             #twosurvey, #twosurvey--close-icon, 
