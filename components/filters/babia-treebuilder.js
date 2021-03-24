@@ -248,7 +248,7 @@ function generateTree(data, paths) {
 
             let part = path[j];
 
-            let existingPath = findWhere(currentLevel, 'id', part);
+            let existingPath = findWhere(currentLevel, 'uid', part);
 
             if (existingPath) {
                 currentLevel = existingPath.children;
@@ -256,12 +256,13 @@ function generateTree(data, paths) {
                 let newPart = {}
                 if (j === path.length - 1) {
                     newPart = paths[i]
+                    newPart['id'] = part
                 } else {
                     newPart['children'] = []
+                    newPart['id'] = paths[i][data.field].split(part)[0] + part
                 }
-                newPart['id'] = part
-                
-
+                newPart['uid'] = part
+                                
                 currentLevel.push(newPart);
                 currentLevel = newPart.children;
             }
