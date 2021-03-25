@@ -27,8 +27,13 @@ AFRAME.registerComponent('babia-boats', {
         height_quarter_legend_box: { type: 'number', default: 11 },
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
-        legend_scale: {type: 'number', default: 1}
+        legend_scale: { type: 'number', default: 1 }
     },
+
+    /**
+    * Entities with legend activated
+    */
+    entitiesWithLegend: [],
 
     /**
     * Register function when I'm updated
@@ -506,8 +511,15 @@ AFRAME.registerComponent('babia-boats', {
                         self.el.parentElement.removeChild(legend)
                         legend = undefined
                         transparentBox = undefined
+
+                        // Remove from the array that has the entity activated
+                        const index = self.entitiesWithLegend.indexOf(entity);
+                        if (index > -1) {
+                            self.entitiesWithLegend.splice(index, 1);
+                        }
                     } else {
                         transparentBox = document.createElement('a-entity');
+                        transparentBox.setAttribute('class', 'babialegend')
                         let oldGeometry = entity.getAttribute('geometry')
                         let scale = self.el.getAttribute("scale")
                         let tsBoxHeight = oldGeometry.height + self.data.height_quarter_legend_box
@@ -536,6 +548,9 @@ AFRAME.registerComponent('babia-boats', {
                         legend.setAttribute('position', coordinatesFinal)
                         legend.setAttribute('visible', true);
                         self.el.parentElement.appendChild(legend)
+
+                        // Add to the elements that has the legend activated
+                        self.entitiesWithLegend.push(entity)
                     }
                 })
 
@@ -560,8 +575,17 @@ AFRAME.registerComponent('babia-boats', {
                         self.el.parentElement.removeChild(legend)
                         legend = undefined
                         alreadyActive = false
+
+                        // Remove from the array that has the entity activated
+                        const index = self.entitiesWithLegend.indexOf(entity);
+                        if (index > -1) {
+                            self.entitiesWithLegend.splice(index, 1);
+                        }
                     } else {
                         alreadyActive = true
+
+                        // Add to the elements that has the legend activated
+                        self.entitiesWithLegend.push(entity)
                     }
 
                 })
@@ -923,7 +947,7 @@ let generateLegend = (name, legend_scale, colorPlane, colorText, data, fheight, 
         name += heightText
 
         if (farea) {
-            let areaText = "\n " + farea + " (area): " +  Math.round(data[farea] * 100) / 100
+            let areaText = "\n " + farea + " (area): " + Math.round(data[farea] * 100) / 100
             if (areaText.length > 16 && areaText > heightText)
                 width = areaText.length / 5;
             name += areaText
@@ -963,10 +987,13 @@ let generateLegend = (name, legend_scale, colorPlane, colorText, data, fheight, 
         'align': 'center',
         'width': 6,
         'color': colorText,
+        'alphaTest': 6,
+        'opacity': 6,
         'transparent': false
     });
     entity.setAttribute('visible', false);
-    entity.setAttribute('scale', {x: legend_scale, y: legend_scale, z: legend_scale});
+    entity.setAttribute('class', 'babialegend');
+    entity.setAttribute('scale', { x: legend_scale, y: legend_scale, z: legend_scale });
 
     return entity;
 }
