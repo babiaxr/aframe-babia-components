@@ -4297,7 +4297,9 @@ AFRAME.registerComponent('babia-boats', {
         // To add into the doc
         min_building_height: { type: 'number', default: 1 },
         height_quarter_legend_box: { type: 'number', default: 11 },
-        height_quarter_legend_title: { type: 'number', default: 12 }
+        height_quarter_legend_title: { type: 'number', default: 12 },
+        height_building_legend: { type: 'number', default: 0 },
+        legend_scale: {type: 'number', default: 1}
     },
 
     /**
@@ -4795,7 +4797,7 @@ AFRAME.registerComponent('babia-boats', {
                         });
                         entity.appendChild(transparentBox)
 
-                        legend = generateLegend(figures[i].name, 'black', 'white');
+                        legend = generateLegend(figures[i].name, self.data.legend_scale, 'black', 'white');
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let coordinatesFinal = {
@@ -4850,13 +4852,13 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        legend = generateLegend(figures[i].name, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
                         let coordinatesFinal = {
                             x: coordinates.x,
-                            y: height_real.max.y + 1,
+                            y: height_real.max.y + 1 + self.data.height_building_legend,
                             z: coordinates.z
                         }
                         legend.setAttribute('position', coordinatesFinal)
@@ -5180,7 +5182,7 @@ let countDecimals = function (value) {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth, fwidth, fcolor) => {
+let generateLegend = (name, legend_scale, colorPlane, colorText, data, fheight, farea, fdepth, fwidth, fcolor) => {
     let width = 2;
     let height = 1;
     if (name.length > 16)
@@ -5236,6 +5238,7 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth,
         'transparent': false
     });
     entity.setAttribute('visible', false);
+    entity.setAttribute('scale', {x: legend_scale, y: legend_scale, z: legend_scale});
 
     return entity;
 }
