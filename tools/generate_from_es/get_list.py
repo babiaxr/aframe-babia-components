@@ -48,8 +48,8 @@ def main():
         fields = args.fields
     else:
         fields = ["_score", "file_path", "blanks_per_loc", "ccn", "comments", "comments_per_loc", "loc",
-                            "loc_per_function", "num_funs", "tokens"]
-        
+                  "loc_per_function", "num_funs", "tokens"]
+    
     if args.output_file:
         output = args.output_file
     else:
@@ -64,19 +64,16 @@ def main():
                        retry_on_timeout=True,
                        verify_certs=False)
     
-    files_now = get_files_at_last_commit(es, args.index, date_field)
-    city_items = get_last_city(es, args.index, files_now, date_field, fields, args.source_code)
-
+    files_now = get_files_at_last_commit(es, args.index, date_field, args.date)
+    city_items = get_last_city(es, args.index, files_now, date_field, fields, args.source_code, args.date)
+    
     with open(output, 'w') as f:
         json.dump(city_items, f)
-    
 
-def get_files_at_last_commit(es, index, date_field):
-    page = es.search(
-        index=index,
-        scroll="1m",
-        size=1,
-        body={
+
+def get_files_at_last_commit(es, index, date_field, date):
+    if not date:
+        body = {
             "sort": {
                 date_field: "desc"
             },
@@ -85,6 +82,27 @@ def get_files_at_last_commit(es, index, date_field):
             },
             "_source": ["files_at_commit"]
         }
+    else:
+        body = {
+            "sort": {
+                date_field: "desc"
+            },
+            "query": {
+                "range": {
+                    date_field: {
+                        "lte": date,
+                        "format": "epoch_millis"
+                    }
+                }
+            },
+            "_source": ["files_at_commit"]
+        }
+    
+    page = es.search(
+        index=index,
+        scroll="1m",
+        size=1,
+        body=body
     )
     
     sid = page['_scroll_id']
@@ -97,18 +115,12 @@ def get_files_at_last_commit(es, index, date_field):
     return page['hits']['hits'][0]["_source"]["files_at_commit"]
 
 
-def get_last_city(es, index, files, date_field, fields, sourcecode):
+def get_last_city(es, index, files, date_field, fields, sourcecode, date):
     items = []
     for file in files:
-        # Check if analysis of source code is acivated and check if is a source code file
-        if sourcecode and file.split(".")[-1] not in SOURCE_CODE_EXTENSIONS:
-            continue
-        logging.debug("Querying {}/{}".format(index, file))
-        page = es.search(
-            index=index,
-            scroll="1m",
-            size=1,
-            body={
+        # Filter by date is selected
+        if not date:
+            body = {
                 "sort": {date_field: "desc"},
                 "query": {
                     "match": {
@@ -117,28 +129,65 @@ def get_last_city(es, index, files, date_field, fields, sourcecode):
                 },
                 "_source": fields
             }
+        else:
+            body = {
+                "sort": {
+                    date_field: "desc"
+                },
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "match": {
+                                    "file_path": file
+                                }
+                            },
+                            {
+                                "range": {
+                                    date_field: {
+                                        "lte": date,
+                                        "format": "epoch_millis"
+                                    }
+                                }
+                            }
+                        
+                        ]
+                    }
+                },
+                "_source": fields
+            }
+            
+        # Check if analysis of source code is acivated and check if is a source code file
+        if sourcecode and file.split(".")[-1] not in SOURCE_CODE_EXTENSIONS:
+            continue
+        logging.debug("Querying {}/{}".format(index, file))
+        page = es.search(
+            index=index,
+            scroll="1m",
+            size=1,
+            body=body
         )
         if len(page['hits']['hits']) > 0:
             to_append = page['hits']['hits'][0]["_source"]
             # Custom metrics
             if float(to_append["num_funs"]):
-                to_append["ccn_per_function"] = float(to_append["ccn"])/float(to_append["num_funs"])
-                to_append["tokens_per_function"] = float(to_append["tokens"])/float(to_append["num_funs"])
+                to_append["ccn_per_function"] = float(to_append["ccn"]) / float(to_append["num_funs"])
+                to_append["tokens_per_function"] = float(to_append["tokens"]) / float(to_append["num_funs"])
             else:
                 to_append["ccn_per_function"] = to_append["ccn"]
                 to_append["tokens_per_function"] = to_append["tokens"]
             if float(to_append["tokens"]):
-                to_append["ccn_per_token"] = float(to_append["ccn"])/float(to_append["tokens"])
-                to_append["functions_per_token"] = float(to_append["num_funs"])/float(to_append["tokens"])
-                to_append["loc_per_token"] = float(to_append["loc"])/float(to_append["tokens"])
+                to_append["ccn_per_token"] = float(to_append["ccn"]) / float(to_append["tokens"])
+                to_append["functions_per_token"] = float(to_append["num_funs"]) / float(to_append["tokens"])
+                to_append["loc_per_token"] = float(to_append["loc"]) / float(to_append["tokens"])
             else:
                 to_append["ccn_per_token"] = to_append["ccn"]
                 to_append["functions_per_token"] = to_append["num_funs"]
                 to_append["loc_per_token"] = to_append["loc"]
             if float(to_append["loc"]):
-                to_append["ccn_per_loc"] = float(to_append["ccn"])/float(to_append["loc"])
-                to_append["functions_per_loc"] = float(to_append["num_funs"])/float(to_append["loc"])
-                to_append["tokens_per_loc"] = float(to_append["tokens"])/float(to_append["loc"])
+                to_append["ccn_per_loc"] = float(to_append["ccn"]) / float(to_append["loc"])
+                to_append["functions_per_loc"] = float(to_append["num_funs"]) / float(to_append["loc"])
+                to_append["tokens_per_loc"] = float(to_append["tokens"]) / float(to_append["loc"])
             else:
                 to_append["ccn_per_loc"] = to_append["ccn"]
                 to_append["functions_per_loc"] = to_append["num_funs"]
@@ -163,6 +212,8 @@ def parse_args():
                         help="Date field of where the data is going to be fetched")
     parser.add_argument('-sourcecode', '--source-code', required=False, action='store_true',
                         help='Analyze only source code files')
+    parser.add_argument('-date', '--date', required=False,
+                        help='Date of the repository analysis in epoch milliseconds format')
     
     return parser.parse_args()
 
