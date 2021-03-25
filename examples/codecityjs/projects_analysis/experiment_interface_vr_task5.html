@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>City table - BabiaXR Experiment </title>
+    <title>JetUML - BabiaXR Experiment </title>
     <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
     </meta>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -48,8 +48,8 @@
         </a-assets>
 
         <!-- Querier Components -->
-        <a-entity id="argoumldata" babia-queryjson="url: ./data/perceval.json;"></a-entity>
-        <a-entity id="argoumlcity" babia-treebuilder="field: file_path; split_by: /; from: argoumldata"></a-entity>
+        <a-entity id="jetumldata" babia-queryjson="url: ./data/jetuml_code_data_2.1_release.json;"></a-entity>
+        <a-entity id="jetumlcity" babia-treebuilder="field: file_path; split_by: /; from: jetumldata"></a-entity>
 
         <!-- Enviroment -->
         <a-sky src="#sky"></a-sky>
@@ -95,27 +95,23 @@
                             north: barrier; 
                             floorTexture: assets/floor-texture.jpg">
 
-            <a-entity position="0 0 4" lounge-plinth="width: 4; depth: 3; color: #A0841B" lounge-staydown>
+            <a-entity position="-0.7 0 4.5" lounge-plinth="width: 5.6; depth: 2.5; color: #A0841B" lounge-staydown>
                 <a-entity></a-entity>
             </a-entity>
 
         </a-entity>
 
-        <!-- <a-entity position="0.7 -5 -8.5" scale="0.013 0.006 0.013"
-            babia-boats="zone_elevation: 1; from: argoumlcity; area: num_funs; height: loc_per_function; color: tokens_per_function; height_quarter_legend_box: 5; height_quarter_legend_title: 1">
-        </a-entity> -->
-
-        <a-entity position="5 -5 2.6" scale="0.03 0.01 0.03"
-            babia-boats="zone_elevation: 1; from: argoumlcity; area: num_funs; height: loc_per_function; color: tokens; height_quarter_legend_box: 5; height_quarter_legend_title: 1">
+        <a-entity position="2.61 -5 4.45" scale="0.03 0.01 0.03"
+            babia-boats="extra: 1; zone_elevation: 1; from: jetumlcity; area: num_funs; height: loc_per_function; color: ccn; height_quarter_legend_box: 1; height_quarter_legend_title: -3">
         </a-entity>
 
         <a-entity id="bardescription" position="8.2 -4.5 4.5" rotation="-30 0 0">
             <a-box src="#floor" height="2.2" width="2.2" depth="0.1" position="0 0 0"></a-box>
             <a-box src="#metalic" height="2" width="2" depth="0.05" position="0 0 0.05"></a-box>
             <a-entity htmlembed position="0 0.1 0.1" style="width: 480px; height: 500px;">
-                <h1>City of 2010</h1>
+                <h1>JetUML 2.1 - 2018</h1>
                 <p>Each building represents a file of the code, each quarter and the quarter level represents the folder tree that file belongs to, each building has 3 metrics</p>
-                <p>Metrics: </br>Area: number of functions. Height: LoC per function. Color: Tokens</p>
+                <p>Metrics: </br>Area: Number of functions. Height: LoC per function. Color: CCN</p>
                 <p>Interaction: </br>Click/Over on a building to see the metrics, click on a quarter to see the folder</p>
                 </p>
             </a-entity>
