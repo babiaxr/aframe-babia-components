@@ -55,6 +55,22 @@
         <a-sky src="#sky"></a-sky>
 
         <!-- Information popup -->
+        <a-entity babia-lookat="[camera]" position="4.5 -1 -1.5" rotation="0 180 0"
+            geometry="primitive: plane; width: 4.2; height: 5.5" material="color: white">
+            <a-entity
+                text="value: Scene controls; color: black; font: mozillavr; wrapCount: 30; width: 3.6; baseline: top; anchor: left"
+                position="-1.8 2.6 0.01"></a-entity>
+            <a-entity
+                text="value: Use the WASD keys to move. 
+                \n The fly mode is activated, so if you go forward (W) or backward (S) you will fly to the 'look' direction
+                \n To move the angle of the camera, click on the scene and move the mouse, following an orbital movement.
+                \n There are no limits outside the lounge, so please, don't fly far away from the city.
+                \n To interact with the city, just click/hover on the buildings/quarters (more information in the below panel)
+                \n If you wan to reset the view, just refresh (F5) the page.
+                ; color: black; wrapCount: 30; width: 3.6; baseline: top; anchor: left"
+                position="-1.8 2 0.01"></a-entity>
+        </a-entity>
+        
         <!-- <a-entity id="navbarpopup" position="2 -1 -5" dialog-popup="
       openIconImage: ../assets/info.jpg;
       closeIconImage: ../assets/close.jpg;
