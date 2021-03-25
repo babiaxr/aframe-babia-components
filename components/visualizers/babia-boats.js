@@ -912,28 +912,28 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth,
     let width = 2;
     let height = 1;
     if (name.length > 16)
-        width = name.length / 6;
+        width = name.length / 5;
 
     if (data) {
         let heightText = "\n " + fheight + " (height): " + Math.round(data[fheight] * 100) / 100
         if (heightText.length > 16)
-            width = heightText.length / 6;
+            width = heightText.length / 5;
         name += heightText
 
         if (farea) {
             let areaText = "\n " + farea + " (area): " +  Math.round(data[farea] * 100) / 100
             if (areaText.length > 16 && areaText > heightText)
-                width = areaText.length / 6;
+                width = areaText.length / 5;
             name += areaText
         } else {
             let depthText = "\n " + fdepth + " (depth): " + Math.round(data[fdepth] * 100) / 100
             if (depthText.length > 16 && depthText > heightText)
-                width = depthText.length / 6;
+                width = depthText.length / 5;
             name += depthText
 
             let widthText = "\n " + fwidth + " (width): " + Math.round(data[fwidth] * 100) / 100
             if (widthText.length > 16 && widthText > heightText && widthText > depthText)
-                width = widthText.length / 6;
+                width = widthText.length / 5;
             name += widthText
 
             height = 1.5
@@ -942,7 +942,7 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth,
         if (fcolor) {
             let colorText = "\n " + fcolor + " (color): " + Math.round(data[fcolor] * 100) / 100
             if (colorText.length > 16 && colorText > heightText)
-                width = colorText.length / 6;
+                width = colorText.length / 5;
             name += colorText
             height += 0.2
         }
@@ -961,6 +961,7 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea, fdepth,
         'align': 'center',
         'width': 6,
         'color': colorText,
+        'transparent': false
     });
     entity.setAttribute('visible', false);
 
