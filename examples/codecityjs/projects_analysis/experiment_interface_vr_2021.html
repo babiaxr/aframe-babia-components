@@ -66,9 +66,9 @@
       bodyFont: roboto;
       dialogBoxHeight: 5;
       body: \n First of all, make sure that you have activated the recording for the survey (Oculus Menu -> Sharing -> Record Video) and you have an EXTERNAL DEVICE that is recording your voice.
-        \n Please, measure the time that it will take you to answer the tasks
-        \n When ready, please, go to the 0 circle and click it!
-        \n Click on X button to close this information (you can reopen it clicking on the 'i' button);
+      \n Please, measure the time that it will take you to answer the tasks
+      \n When ready, please, go to the 0 circle and click it!
+      \n Click on X button to close this information (you can reopen it by clicking on the 'i' button);
       " babia-lookat="[camera]"></a-entity>
 
         <a-entity id="presurvey" class=".surveys" position="7 0 -6" dialog-popup="
@@ -87,7 +87,7 @@
       \n Job position (i.e, developer, researcher, project manager, etc.)
       \n Experience level in (None, Beginner, Knowledgeable, Advanced, Expert): Object-oriented programming, Procedural programming, Functional programming, Reverse engineering, Using a programming IDE (Pycharm, Eclipse, Visual Studio)
       \n Number of years of (Less than 1, 1-3, 4-5, 7-10, 10+): Object-oriented programming, Procedural programming, Functional programming, Reverse engineering, Using a programming IDE (Pycharm, Eclipse, Visual Studio)
-      \n Click on X button to close this survey and go to the 1 button when finished(you can reopen it clicking on '0' button);
+      \n Click on X button to close this survey and go to the 1 button when finished(you can reopen it by clicking on '0' button);
       " babia-lookat="[camera]"></a-entity>
 
         <a-entity id="onesurvey" position="8 0 -5.5" dialog-popup="
@@ -101,10 +101,10 @@
       bodyFont: roboto;
       dialogBoxHeight: 5;
       body: Please, answer the questions talking the question and the answer clear and high
-      \n Locate all the test code (file and directory) of the system and identify their position in the city
-      \n Finding it was difficult: “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer?
-      \n Click on X button to close this survey and go to the 2 button when finished(you can reopen it clicking on '1' button);
+      \n Locate all the test code (file and directory) of the system and identify their position in the city. Where is the location of the files/directories?
+      \n Finding it was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
+      \n How long does it take you to answer? (in minutes)
+      \n Click on X button to close this survey and go to the 2 button when finished (you can reopen it by clicking on '1' button);
       " babia-lookat="[camera]"></a-entity>
 
         <a-entity id="twosurvey" position="9 0 -5" dialog-popup="
@@ -118,10 +118,10 @@
       bodyFont: roboto;
       dialogBoxHeight: 5;
       body: Please, answer the questions talking the question and the answer clear and high
-      \n Find the three source code files (not testing files) with the highest number of functions (num_funs) in the system
-      \n Finding it was difficult: “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer?
-      \n Click on X button to close this survey and go to the 3 button when finished(you can reopen it clicking on '2' button);
+      \n Find the three source code files (not testing files) with the highest number of functions (num_funs) in the system. Say their names in order.
+      \n Finding them was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
+      \n How long does it take you to answer? (in minutes)
+      \n Click on X button to close this survey and go to the 3 button when finished (you can reopen it by clicking on '2' button);
       " babia-lookat="[camera]"></a-entity>
 
         <a-entity id="threesurvey" position="10 0 -4.5" dialog-popup="
@@ -134,11 +134,11 @@
       dialogBoxColor: white;
       bodyFont: roboto;
       dialogBoxHeight: 5;
-      body: Please, answer the questions talking the question and the answer clear and high
-      \n Find the three source code files (not testing files) with the highest lines of code per function (loc_per_function) in the system.
-      \n Finding it was difficult: “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer?
-      \n Click on X button to close this survey and go to the 4 button when finished(you can reopen it clicking on '3' button);
+      body: Please, answer the questions talking the question and the answer clear and high.
+      \n Find the three source code files (not testing files) with the highest lines of code per function (loc_per_function) in the system. Say their names in order.
+      \n Finding them was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
+      \n How long does it take you to answer? (in minutes)
+      \n Click on X button to close this survey and go to the 4 button when finished (you can reopen it by clicking on '3' button);
       " babia-lookat="[camera]"></a-entity>
 
         <a-entity id="foursurvey" position="11 0 -4" dialog-popup="
@@ -150,10 +150,12 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 4;
-      body: Please, answer the questions talking the question and the answer clear and high
-      \n Identify what represents for you, the core of the project.
-      \n Click on X button to close this survey and go to the 5 button when finished (you can reopen it clicking on '4' button);
+      dialogBoxHeight: 5.2;
+      body: Please, answer the questions talking the question and the answer clear and high.
+      \n Find the three source code files (not testing files) with the highest cyclomatic complexity number (highest ccn). Say their names in order.
+      \n Finding them was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
+      \n How long does it take you to answer? (in minutes)
+      \n Click on X button to close this survey and go to the 4 button when finished (you can reopen it by clicking on '3' button);
       " babia-lookat="[camera]"></a-entity>
 
         <a-entity id="fivesurvey" position="12 0 -3.5" dialog-popup="
@@ -165,9 +167,11 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 3;
+      dialogBoxHeight: 4.5;
       body: Please, answer the questions talking the question and the answer clear and high
-      \n Go to the other scene that shows the same city but in an older snapshot (here <link>) and start and click on the button '5'.
+      \n For answering this task, you have to go here (ask your supervisor if you have any problem):
+      \n https://babiaxr.gitlab.io/aframe-babia-components/examples/codecityjs/projects_analysis/experiment_interface_vr_task5.html
+      \n The scene shows the same city but in an older snapshot and start and click on the button '5'.
       " babia-lookat="[camera]"></a-entity>
 
         <!-- Aframe Lounge -->
@@ -194,9 +198,11 @@
             <a-box src="#metalic" height="2" width="2" depth="0.05" position="0 0 0.05"></a-box>
             <a-entity htmlembed position="0 0.1 0.1" style="width: 480px; height: 500px;">
                 <h1>JetUML Mar 25 - 2021</h1>
-                <p>Each building represents a file of the code, each quarter and the quarter level represents the folder tree that file belongs to, each building has 3 metrics</p>
+                <p>Each building represents a file of the code, each quarter and the quarter level represents the folder
+                    tree that file belongs to, each building has 3 metrics</p>
                 <p>Metrics: </br>Area: Number of functions. Height: LoC per function. Color: CCN</p>
-                <p>Interaction: </br>Click/Over on a building to see the metrics, click on a quarter to see the folder</p>
+                <p>Interaction: </br>Click/Over on a building to see the metrics, click on a quarter to see the folder
+                </p>
                 </p>
             </a-entity>
         </a-entity>
