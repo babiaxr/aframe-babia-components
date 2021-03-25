@@ -30,6 +30,7 @@ python3 get_list.py --es-url <elasticsearch_url> --index <elasticsearch_index> -
     - `fields`: List of fields that will be retrieved for each item, default value: `["_score", "file_path", "blanks_per_loc", "ccn", "comments", "comments_per_loc", "loc", "loc_per_function", "num_funs", "tokens"]`
     - `output-file`: Output file path, default value: `data.json`
     - `source-code`: Only get the source code files
+    - `date`: Get data of an specific date (in epoch millisec format)
     
 ## Examples
 
