@@ -181,11 +181,15 @@
 
         </a-entity>
 
-        <a-entity position="2.2 -5 3.8" scale="0.03 0.01 0.03"
+        <a-entity position="2.2 -5 3.8" scale="0.03 0.01 0.03" id="city"
             babia-boats="height_building_legend: -0.5; legend_scale: 0.25; extra: 1; zone_elevation: 1; from: jetumlcity; area: num_funs; height: loc_per_function; color: ccn; height_quarter_legend_box: 1; height_quarter_legend_title: -3">
         </a-entity>
 
         <a-entity id="bardescription" position="8.2 -4.5 4.5" rotation="-30 0 0">
+            <!-- Close legends -->
+            <a-plane id="closelegends" babia-lookat="[camera]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
+                position="0 1.5 0" geometry="primitive: plane; width: 1.5; height: 0.5" color="#012752"
+                text="value: Close legends; color: white; align: center; wrapCount: 30; width: 3.6;"></a-plane>
             <a-box src="#floor" height="2.2" width="2.2" depth="0.1" position="0 0 0"></a-box>
             <a-box src="#metalic" height="2" width="2" depth="0.05" position="0 0 0.05"></a-box>
             <a-entity htmlembed position="0 0.1 0.1" style="width: 480px; height: 500px;">
@@ -229,6 +233,30 @@
         </a-entity>
 
     </a-scene>
+
+    <!-- Remove legends when clicking on close legends -->
+    <script>
+        function eventFire(el, etype) {
+            if (el.fireEvent) {
+                el.fireEvent('on' + etype);
+            } else {
+                var evObj = document.createEvent('Events');
+                evObj.initEvent(etype, true, false);
+                el.dispatchEvent(evObj);
+            }
+        }
+
+        document.getElementById("closelegends").addEventListener('click', function (event) {
+            let ewl = document.getElementById("city").components['babia-boats'].entitiesWithLegend
+            let newEwl = []
+            for (let i = 0; i < ewl.length; i++) {
+                newEwl.push(ewl[i])
+            }
+            for (let v = 0; v < newEwl.length; v++) {
+                newEwl[v].click()
+            }
+        }, false);
+    </script>
 
     <style>
         .gitlab-corner-wrapper {
