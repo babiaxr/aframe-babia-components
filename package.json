@@ -37,6 +37,10 @@
     "url": "https://gitlab.com/babiaxr/aframe-babia-components/issues"
   },
   "homepage": "https://babiaxr.gitlab.io/",
+  "dependencies": {
+    "accessor-fn": "^1.3.0",
+    "three-forcegraph": "^1.37.1"
+  },
   "devDependencies": {
     "aframe": "*",
     "browserify": "^13.3.0",
@@ -68,6 +72,7 @@
     "sinon-chai": "^2.8.0",
     "shx": "^0.1.1",
     "snazzy": "^4.0.0",
+    "three": "*",
     "uglify-es": "github:mishoo/UglifyJS2#harmony",
     "webpack": "^2.7.0"
   },

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame 3D Force-Directed Graph Component - Basic</title>
+    <meta name="description" content="Basic example for 3D Force-Directed Graph component.">
+    </meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment></a-entity>
+
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <a-entity movement-controls="fly: true" position="-3 5 10">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+        <a-entity id="network" babia-network='data: [{"country": "Italy", "continent": "Europe", "size": 0.30 , "population": 60.36, "world-heritage-sites": 55},
+            {"country": "China", "continent": "Asia", "size": 59.70, "population": 1393.00,"world-heritage-sites": 55},
+            {"country": "Spain", "continent": "Europe", "size": 5.06 , "population": 46.94,"world-heritage-sites": 48},
+            {"country": "Germany", "continent": "Europe", "size": 3.57, "population": 83.02,"world-heritage-sites": 46},
+            {"country": "France", "continent": "Europe", "size": 6.44, "population": 66.99,"world-heritage-sites": 45},
+            {"country": "India", "continent": "Asia", "size": 32.87, "population": 1353.00,"world-heritage-sites": 38},
+            {"country": "Mexico", "continent": "North America",  "size": 19.73, "population": 126.20,"world-heritage-sites": 35},
+            {"country": "UK", "continent": "Europe", "size": 2.42, "population": 66.65,"world-heritage-sites": 32},
+            {"country": "Russia", "continent": "Europe", "size": 171.30, "population": 144.50, "world-heritage-sites": 29},
+            {"country": "USA", "continent": "North America", "size": 98.34, "population": 328.20,"world-heritage-sites": 24}];
+            name: country; relationLink: continent; nodeLabel: name; linkLabel: relationLink; linkHoverPrecision: 2;
+            linkAutoColorBy: relationLink; nodeAutoColorBy: name ; linkDirectionalArrowLength: 0; nodeResolution: 20; linkWidth: 1;
+            linkOpacity: 0.5; nodeSize: size; nodeRelSize: 1; forceEngine: d3' position="-10 10 10">
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>

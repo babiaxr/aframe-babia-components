@@ -1,0 +1,10 @@
+[{"country": "Italy", "continent": "Europe", "size": 0.30 , "population": 60.36, "world-heritage-sites": 55},
+    {"country": "China", "continent": "Asia", "size": 59.70, "population": 1393.00,"world-heritage-sites": 55},
+    {"country": "Spain", "continent": "Europe", "size": 5.06 , "population": 46.94,"world-heritage-sites": 48},
+    {"country": "Germany", "continent": "Europe", "size": 3.57, "population": 83.02,"world-heritage-sites": 46},
+    {"country": "France", "continent": "Europe", "size": 6.44, "population": 66.99,"world-heritage-sites": 45},
+    {"country": "India", "continent": "Asia", "size": 32.87, "population": 1353.00,"world-heritage-sites": 38},
+    {"country": "Mexico", "continent": "North America",  "size": 19.73, "population": 126.20,"world-heritage-sites": 35},
+    {"country": "UK", "continent": "Europe", "size": 2.42, "population": 66.65,"world-heritage-sites": 32},
+    {"country": "Russia", "continent": "Europe", "size": 171.30, "population": 144.50, "world-heritage-sites": 29},
+    {"country": "USA", "continent": "North America", "size": 98.34, "population": 328.20,"world-heritage-sites": 24}]
