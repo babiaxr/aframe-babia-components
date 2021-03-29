@@ -65,8 +65,8 @@
       dialogBoxColor: black;
       bodyFont: roboto;
       dialogBoxHeight: 5;
-      body: \n First of all, make sure that you have activated the recording for the survey (Oculus Menu -> Sharing -> Record Video) and you have an EXTERNAL DEVICE that is recording your voice.
-      \n Please, measure the time that it will take you to answer the tasks
+      body: \n First of all, make sure that the supervisor acitvated the recording (voice and screen).
+      \n In the information panel close to the city you will see details of how to interact with it and the project and metrics that it shows.
       \n When ready, please, go to the 0 circle and click it!
       \n Click on X button to close this information (you can reopen it by clicking on the 'i' button);
       " babia-lookat="[camera]"></a-entity>
@@ -80,13 +80,15 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 8;
+      dialogBoxHeight: 9;
       body: Please, answer the questions talking the question and the answer clear and high
       \n Contact email address (not required, for future experiments)
       \n Age (for statistical purposes only)
       \n Job position (i.e, developer, researcher, project manager, etc.)
       \n Experience level in (None, Beginner, Knowledgeable, Advanced, Expert): Object-oriented programming, Procedural programming, Functional programming, Reverse engineering, Using a programming IDE (Pycharm, Eclipse, Visual Studio)
       \n Number of years of (Less than 1, 1-3, 4-5, 7-10, 10+): Object-oriented programming, Procedural programming, Functional programming, Reverse engineering, Using a programming IDE (Pycharm, Eclipse, Visual Studio)
+      \n Are you familiar with JetUML?
+      \n Have you ever used a Virtual Reality headset (e.g., Oculus)?
       \n Click on X button to close this survey and go to the 1 button when finished(you can reopen it by clicking on '0' button);
       " babia-lookat="[camera]"></a-entity>
 
@@ -99,11 +101,10 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 5;
+      dialogBoxHeight: 4.5;
       body: Please, answer the questions talking the question and the answer clear and high
-      \n Locate all the test code (file and directory) of the system and identify their position in the city. Where is the location of the files/directories?
-      \n Finding it was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer? (in minutes)
+      \n Locate all the test code (file and directory) of the system and identify their position in the city. Where is the location of the files/directories?. Select them and say where they are.
+      \n Finding it was difficult. 'strongly agree, agree,  don’t know, disagree, strongly disagree'. Say your choice.
       \n Click on X button to close this survey and go to the 2 button when finished (you can reopen it by clicking on '1' button);
       " babia-lookat="[camera]"></a-entity>
 
@@ -116,11 +117,10 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 5;
+      dialogBoxHeight: 4.5;
       body: Please, answer the questions talking the question and the answer clear and high
       \n Find the three source code files (not testing files) with the highest number of functions (num_funs) in the system. Say their names in order.
-      \n Finding them was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer? (in minutes)
+      \n Finding them was difficult. 'strongly agree, agree,  don’t know, disagree, strongly disagree'. Say your choice.
       \n Click on X button to close this survey and go to the 3 button when finished (you can reopen it by clicking on '2' button);
       " babia-lookat="[camera]"></a-entity>
 
@@ -133,11 +133,10 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 5;
+      dialogBoxHeight: 4.5;
       body: Please, answer the questions talking the question and the answer clear and high.
       \n Find the three source code files (not testing files) with the highest lines of code per function (loc_per_function) in the system. Say their names in order.
-      \n Finding them was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer? (in minutes)
+      \n Finding them was difficult. 'strongly agree, agree,  don’t know, disagree, strongly disagree'. Say your choice.
       \n Click on X button to close this survey and go to the 4 button when finished (you can reopen it by clicking on '3' button);
       " babia-lookat="[camera]"></a-entity>
 
@@ -150,11 +149,10 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 5.2;
+      dialogBoxHeight: 4.7;
       body: Please, answer the questions talking the question and the answer clear and high.
       \n Find the three source code files (not testing files) with the highest cyclomatic complexity number (highest ccn). Say their names in order.
-      \n Finding them was difficult. “strongly agree, agree,  don’t know, disagree, strongly disagree”
-      \n How long does it take you to answer? (in minutes)
+      \n Finding them was difficult. 'strongly agree, agree,  don’t know, disagree, strongly disagree'. Say your choice.
       \n Click on X button to close this survey and go to the 4 button when finished (you can reopen it by clicking on '3' button);
       " babia-lookat="[camera]"></a-entity>
 
@@ -173,8 +171,8 @@
       \n https://tinyurl.com/jetuml2018
       \n The scene shows the same city but in an older snapshot and start and click on the button '5'.
       " babia-lookat="[camera]">
-            <a-plane id="redirectscene" scale="1.2 1.2 1.2" visible="false" babia-lookat="[camera]" class="babiaxraycasterclass"
-                position="0 -1.5 1.5" geometry="primitive: plane; width: 1.8; height: 0.5"
+            <a-plane id="redirectscene" scale="1.2 1.2 1.2" visible="false" babia-lookat="[camera]"
+                class="babiaxraycasterclass" position="0 -1.5 1.5" geometry="primitive: plane; width: 1.8; height: 0.5"
                 color="#611d00"
                 text="value: Click here to go!; color: white; align: center; wrapCount: 30; width: 3.6;"></a-plane>
         </a-entity>
@@ -203,11 +201,11 @@
             <a-box src="#metalic" height="2" width="2" depth="0.05" position="0 0 0.05"></a-box>
             <a-entity htmlembed position="0 0.1 0.1" style="width: 480px; height: 500px;">
                 <h1>JetUML Mar 25 - 2021</h1>
-                <p>Each building represents a file of the code, each quarter and the quarter level represents the folder
-                    tree that file belongs to, each building has 3 metrics</p>
+                <p>Each building represents a code file of the project, each quarter and the quarter level represents
+                    the folder tree that file belongs to, each building has 3 metrics</p>
                 <p>Metrics: </br>Area: Number of functions. Height: LoC per function. Color: CCN</p>
-                <p>Interaction: </br>Click/Over on a building to see the metrics, click on a quarter to see the folder
-                </p>
+                <p>Interaction: </br>Click/Over on a building to see the metrics, Click on a quarter to see the folder
+                    path</p>
                 </p>
             </a-entity>
         </a-entity>
@@ -261,16 +259,18 @@
 
         document.getElementById("fivesurvey").addEventListener('click', function (event) {
             console.log(event)
-            if(event.target.id === "fivesurvey--close-icon"){
+            if (event.target.id === "fivesurvey--close-icon") {
                 redirectButton.setAttribute("visible", "false")
-            } else {
+            } else if (event.target.id === "fivesurvey") {
                 redirectButton.setAttribute("visible", "true")
             }
 
         }, false);
 
         redirectButton.addEventListener('click', function (event) {
-            window.location.replace("https://tinyurl.com/jetuml2018")
+            if (redirectButton.getAttribute("visible")) {
+                window.location.replace("https://tinyurl.com/jetuml2018")
+            }
         }, false);
 
         document.getElementById("closelegends").addEventListener('click', function (event) {

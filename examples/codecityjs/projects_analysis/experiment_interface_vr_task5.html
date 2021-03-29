@@ -66,12 +66,11 @@
       bodyFont: roboto;
       dialogBoxHeight: 9;
       body: \n Please, answer the questions talking the question and the answer clear and high
-      \n Locate all the test code (file and directory) of the system and identify their position in the city. Where is the location of the files/directories?
+      \n Locate all the test code (file and directory) of the system and identify their position in the city. Where is the location of the files/directories?. Select them and say where they are.
       \n Find the three source code files (not testing files) with the highest number of functions (num_funs) in the system. Say their names in order.
       \n Find the three source code files (not testing files) with the highest lines of code per function (loc_per_function) in the system. Say their names in order.
       \n Find the three source code files (not testing files) with the highest cyclomatic complexity number (highest ccn). Say their names in order.
-      \n Finding it was difficult: “strongly agree, agree, don’t know, disagree, strongly disagree”.
-      \n How long does it take you to answer?
+      \n Finding it was difficult: 'strongly agree, agree, don’t know, disagree, strongly disagree'. Say your choice.
       \n Click on X button to close this survey and go to the 6 button when finished (you can reopen it clicking on '5' button)
       " babia-lookat="[camera]"></a-entity>
 
@@ -84,13 +83,13 @@
       bodyColor: black;
       dialogBoxColor: white;
       bodyFont: roboto;
-      dialogBoxHeight: 5.5;
+      dialogBoxHeight: 5.7;
       body: Please, answer the questions talking the question and the answer clear and high
-      \n After your experience with the cities and the metrics that it represents, identify what represents for you, the core of the project.
+      \n After your experience with the cities and the metrics that it shows, identify what represents for you the core of the JetUML project. Select the location and say where it is.
       \n Did you find it difficult to understand the experiment? (In that case, why?)
       \n What device did you use for the experiment? (i.e. computer, Oculus, etc).
       \n Any other suggestion/comment?
-      \n When finished, stop recording (Oculus Menu -> Sharing -> Recording)
+      \n When finished, let the supervisor know.
       \n Thank you very much!
       " babia-lookat="[camera]"></a-entity>
 
@@ -118,9 +117,9 @@
             <a-box src="#metalic" height="2" width="2" depth="0.05" position="0 0 0.05"></a-box>
             <a-entity htmlembed position="0 0.1 0.1" style="width: 480px; height: 500px;">
                 <h1>JetUML 2.1 - 2018</h1>
-                <p>Each building represents a file of the code, each quarter and the quarter level represents the folder tree that file belongs to, each building has 3 metrics</p>
+                <p>Each building represents a code file of the project, each quarter and the quarter level represents the folder tree that file belongs to, each building has 3 metrics</p>
                 <p>Metrics: </br>Area: Number of functions. Height: LoC per function. Color: CCN</p>
-                <p>Interaction: </br>Click/Over on a building to see the metrics, click on a quarter to see the folder</p>
+                <p>Interaction: </br>Click/Over on a building to see the metrics, Click on a quarter to see the folder path</p>
                 </p>
             </a-entity>
         </a-entity>
