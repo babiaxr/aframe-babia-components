@@ -170,9 +170,14 @@
       dialogBoxHeight: 4.5;
       body: Please, answer the questions talking the question and the answer clear and high
       \n For answering this task, you have to go here (ask your supervisor if you have any problem):
-      \n https://babiaxr.gitlab.io/aframe-babia-components/examples/codecityjs/projects_analysis/experiment_interface_vr_task5.html
+      \n https://tinyurl.com/jetuml2018
       \n The scene shows the same city but in an older snapshot and start and click on the button '5'.
-      " babia-lookat="[camera]"></a-entity>
+      " babia-lookat="[camera]">
+            <a-plane id="redirectscene" scale="1.2 1.2 1.2" visible="false" babia-lookat="[camera]" class="babiaxraycasterclass"
+                position="0 -1.5 1.5" geometry="primitive: plane; width: 1.8; height: 0.5"
+                color="#611d00"
+                text="value: Click here to go!; color: white; align: center; wrapCount: 30; width: 3.6;"></a-plane>
+        </a-entity>
 
         <!-- Aframe Lounge -->
         <a-entity id="lounge" position="5 0 0" lounge="width: 20; depth: 25; height: 11;
@@ -251,6 +256,22 @@
                 el.dispatchEvent(evObj);
             }
         }
+
+        let redirectButton = document.getElementById("redirectscene");
+
+        document.getElementById("fivesurvey").addEventListener('click', function (event) {
+            console.log(event)
+            if(event.target.id === "fivesurvey--close-icon"){
+                redirectButton.setAttribute("visible", "false")
+            } else {
+                redirectButton.setAttribute("visible", "true")
+            }
+
+        }, false);
+
+        redirectButton.addEventListener('click', function (event) {
+            window.location.replace("https://tinyurl.com/jetuml2018")
+        }, false);
 
         document.getElementById("closelegends").addEventListener('click', function (event) {
             let ewl = document.getElementById("city").components['babia-boats'].entitiesWithLegend
