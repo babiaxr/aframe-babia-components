@@ -561,7 +561,10 @@ AFRAME.registerComponent('babia-boats', {
                 let entityGeometry;
                 let alreadyActive = false;
 
-                entity.addEventListener('click', function () {
+                entity.addEventListener('click', function (e) {
+                    if (e.target !== this)
+                        return;
+
                     if (alreadyActive) {
                         legend.setAttribute('visible', false);
                         entity.setAttribute('geometry', {
