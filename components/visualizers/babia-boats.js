@@ -683,7 +683,7 @@ AFRAME.registerComponent('babia-boats', {
         let posY = limit_down - (depth / 2) - separation;
 
         // Calculate state
-        current_vertical -= depth + separation;
+        current_vertical -= width;
         let total_y = limit_down - depth - separation;
         if (total_y < max_down) {
             max_down = total_y;
@@ -731,7 +731,7 @@ AFRAME.registerComponent('babia-boats', {
         let posY = limit_up + (depth / 2) + separation;
 
         // Calculate state
-        current_vertical += depth + separation;
+        current_vertical += width;
         let total_y = limit_up + depth + separation;
         if (total_y > max_up) {
             max_up = total_y;
