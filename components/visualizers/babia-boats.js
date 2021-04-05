@@ -587,6 +587,35 @@ AFRAME.registerComponent('babia-boats', {
                     } else {
                         alreadyActive = true
 
+                        // If clicked again but not mouseover
+                        if (!legend) {
+                            // COPY FROM 626
+                            entityGeometry = entity.getAttribute('geometry')
+                            let boxPosition = entity.getAttribute("position")
+                            entity.setAttribute('position', boxPosition)
+                            entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
+                            entity.setAttribute('material', {
+                                'color': 'white'
+                            });
+                            entity.setAttribute('geometry', {
+                                height: entityGeometry.height + 0.1,
+                                depth: entityGeometry.depth + 0.1,
+                                width: entityGeometry.width + 0.1
+                            });
+                            legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                            let worldPos = new THREE.Vector3();
+                            let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                            let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                            let coordinatesFinal = {
+                                x: coordinates.x,
+                                y: height_real.max.y + 1 + self.data.height_building_legend,
+                                z: coordinates.z
+                            }
+                            legend.setAttribute('position', coordinatesFinal)
+                            legend.setAttribute('visible', true);
+                            self.el.parentElement.appendChild(legend);
+                        }
+
                         // Add to the elements that has the legend activated
                         self.entitiesWithLegend.push(entity)
                     }
