@@ -47,6 +47,7 @@ AFRAME.registerComponent('babia-network', {
     name: { type: 'string', default: ''},
     relationLink: { type: 'string', default: ''},
     nodeSize: { type: 'string', default: ''},
+    legend: { type: 'boolean' },
     jsonUrl: { type: 'string', default: '' },
     numDimensions: { type: 'number', default: 3 },
     dagMode: { type: 'string', default: '' },
@@ -114,6 +115,7 @@ AFRAME.registerComponent('babia-network', {
 
     return this.forceGraph.getGraphBbox();
   },
+
   emitParticle: function () {
     if (!this.forceGraph) {
       // Got here before component init -> initialize forceGraph
@@ -155,34 +157,8 @@ AFRAME.registerComponent('babia-network', {
   init: function () {
     var state = this.state = {}; // Internal state
 
-    // Add info msg
-    state.infoEl = document.createElement('a-text');
-    state.infoEl.setAttribute('position', '0 -0.1 -1'); // Canvas center
-    state.infoEl.setAttribute('width', 1);
-    state.infoEl.setAttribute('align', 'center');
-    state.infoEl.setAttribute('color', 'lavender');
-
-    // Setup tooltip
-    state.tooltipEl = document.createElement('a-text');
-    state.tooltipEl.setAttribute('position', '0 -0.5 -1'); // Aligned to canvas bottom
-    state.tooltipEl.setAttribute('width', 2);
-    state.tooltipEl.setAttribute('align', 'center');
-    state.tooltipEl.setAttribute('color', 'lavender');
-    state.tooltipEl.setAttribute('value', '');
-
-    // Setup sub-tooltip
-    state.subTooltipEl = document.createElement('a-text');
-    state.subTooltipEl.setAttribute('position', '0 -0.6 -1'); // Aligned to canvas bottom
-    state.subTooltipEl.setAttribute('width', 1.5);
-    state.subTooltipEl.setAttribute('align', 'center');
-    state.subTooltipEl.setAttribute('color', 'lavender');
-    state.subTooltipEl.setAttribute('value', '');
-
     // Get camera dom element and attach fixed view elements to camera
     var cameraEl = document.querySelector('a-entity[camera], a-camera');
-    cameraEl.appendChild(state.infoEl);
-    cameraEl.appendChild(state.tooltipEl);
-    cameraEl.appendChild(state.subTooltipEl);
 
     // Keep reference to Three camera object
     state.cameraObj = cameraEl.object3D.children
@@ -197,27 +173,16 @@ AFRAME.registerComponent('babia-network', {
     // setup FG object
     if (!this.forceGraph) this.forceGraph = new ThreeForceGraph(); // initialize forceGraph if it doesn't exist yet
     this.el.object3D.add(this.forceGraph);
-
-    this.forceGraph
-      .onLoading(function () {
-        state.infoEl.setAttribute('value', 'Loading...'); // Add loading msg
-      })
-      .onFinishLoading(function () {
-        state.infoEl.setAttribute('value', '');
-      });
   },
 
-  remove: function () {
-    // Clean-up elems
-    this.state.infoEl.remove();
-    this.state.tooltipEl.remove();
-    this.state.subTooltipEl.remove();
-  },
+  remove: function () {  },
 
   update: function (oldData) {
-    var comp = this;
+    var self = this;
     var elData = this.data;
+    var el = this.el;
 
+    // Get nodes and links from data (ALMU)
     let nodes = [];
     let links = [];
 
@@ -231,56 +196,48 @@ AFRAME.registerComponent('babia-network', {
       let index = data.indexOf(element);
       let node = {"id" : index};
 
-      Object.keys(element).forEach(function (key) {
-        console.log(key , element[key]);
-        if (key === name){
-          node.name = element[key];
-        } else if (key === relationLink) {
-          node.relationLink = element[key];
-        } else if (key === nodeSize){
-          node.nodeSize = element[key];
+      Object.keys(element).forEach(function (k) {
+        if (k === name) {
+          node.name = element[k];
+        } else if (k === relationLink) {
+          node.relationLink = element[k];
+        } else if (k === nodeSize) {
+          node.nodeSize = element[k];
         }
       });
       nodes.push(node);
     });
   
     nodes.forEach(firstNode => {
-      nodes.forEach(SecondNode => {
-        if (firstNode.id !== SecondNode.id){ // not same country
-          if (firstNode.relationLink === SecondNode.relationLink){ // same continent, make link
+      nodes.forEach(secondNode => {
+        if (firstNode.id !== secondNode.id) { // not same id
+          if (firstNode.relationLink === secondNode.relationLink) { // same relationLink, make link
             if (links.length > 0){
               let linkExists = false;
               links.forEach(link => {
-                if ((link.source === firstNode.id && link.target === SecondNode.id) || (link.source === SecondNode.id && link.target === firstNode.id)){ // the link does already exists, in any direction
+                if ((link.source === firstNode.id && link.target === secondNode.id) || (link.source === secondNode.id && link.target === firstNode.id)) { // the link does already exists, in any direction
                   linkExists = true;
                 } 
               })
-              if (linkExists){
-                console.log("Link already exists")
+              if (linkExists) {
               } else {
                 let newLink = {
                   "source" : firstNode.id,
-                  "target" : SecondNode.id
+                  "target": secondNode.id
                 }
-                console.log(newLink);
                 links.push(newLink);
               }
-            }else{
-              console.log("EMPTY")
+            } else {
               let newLink = {
                 "source" : firstNode.id,
-                "target" : SecondNode.id
+                "target": secondNode.id
               }
-              console.log(newLink);
               links.push(newLink);
             }    
           }
         }
       })
     });          
-  
-    console.log(nodes);
-    console.log(links);
 
     elData.nodes = nodes;
     elData.links = links;
@@ -341,10 +298,14 @@ AFRAME.registerComponent('babia-network', {
 
     fgProps
       .filter(function (p) { return p in diff; })
-      .forEach(function (p) { comp.forceGraph[p](elData[p] !== '' ? elData[p] : null); }); // Convert blank values into nulls
+      .forEach(function (p) {
+        self.forceGraph[p](elData[p] !== '' ? elData[p] : null);
+      }); // Convert blank values into nulls
+
+
 
     if ('nodes' in diff || 'links' in diff) {
-      comp.forceGraph.graphData({
+      self.forceGraph.graphData({
         nodes: elData.nodes,
         links: elData.links
       });
@@ -352,15 +313,12 @@ AFRAME.registerComponent('babia-network', {
   },
 
   tick: function (t, td) {
-    // Update tooltip
-    var centerRaycaster = new THREE.Raycaster();
-    centerRaycaster.params.Line.threshold = this.data.linkHoverPrecision;
-    centerRaycaster.setFromCamera(
-      new THREE.Vector2(0, 0), // Canvas center
-      this.state.cameraObj
-    );
 
-    var intersects = centerRaycaster.intersectObjects(this.forceGraph.children)
+    // (Almu) NEXT STEP:  Implement raycaster as in other components in Babia
+
+    var cursor = document.querySelector('[cursor]');
+
+    var intersects = cursor.components.raycaster.raycaster.intersectObjects(this.forceGraph.children)
       .filter(function (o) { // Check only node/link objects
         return ['node', 'link'].indexOf(o.object.__graphObjType) !== -1;
       })
@@ -380,6 +338,9 @@ AFRAME.registerComponent('babia-network', {
       if (prevObjType && prevObjType !== objType) {
         // Hover out
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
+        if (prevObjType === 'node'){
+          removeLegend(this.el)
+        }
       }
       if (objType) {
         // Hover in
@@ -387,11 +348,56 @@ AFRAME.registerComponent('babia-network', {
       }
 
       this.state.hoverObj = topObject;
-      this.state.tooltipEl.setAttribute('value', topObject ? accessorFn(this.data[topObject.__graphObjType + 'Label'])(topObject.__data) || '' : '');
-      this.state.subTooltipEl.setAttribute('value', topObject ? accessorFn(this.data[topObject.__graphObjType + 'Desc'])(topObject.__data) || '' : '');
+
+      if (topObject) {
+        if (topObject.__graphObjType === 'node') {
+          showLegend(topObject, topObject.__data)
+        }
+      }
     }
 
     // Run force-graph ticker
     this.forceGraph.tickFrame();
   }
 });
+
+
+function generateLegend(node, nodePosition, radius) {
+  let text = node.name;
+
+  let width = 2;
+  if (text.length > 16)
+    width = text.length / 8;
+
+
+  let entity = document.createElement('a-plane');
+  entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius + 1, z: nodePosition.z})
+  entity.setAttribute('babia-lookat', "[camera]");
+  entity.setAttribute('width', width);
+  entity.setAttribute('height', '1');
+  entity.setAttribute('color', 'white');
+  entity.setAttribute('text', {
+    'value': node.name,
+    'align': 'center',
+    'width': 6,
+    'color': 'black'
+  });
+  entity.classList.add("babiaxrLegend")
+  return entity;
+}
+
+// (Almu) NEXT STEP: Change legend position so it is relative to the node and not to the scene
+
+function showLegend(nodeThree, node) {
+  var worldPosition = new THREE.Vector3();
+  nodeThree.getWorldPosition(worldPosition);
+  var radius = nodeThree.geometry.boundingSphere.radius
+  var sceneEl = document.querySelector('a-scene');
+  legend = generateLegend(node, worldPosition, radius);
+  sceneEl.appendChild(legend);
+}
+
+function removeLegend(){
+  var sceneEl = document.querySelector('a-scene');
+  sceneEl.removeChild(legend)
+}
