@@ -61,7 +61,7 @@ AFRAME.registerComponent('babia-network', {
     nodeId: { type: 'string', default: 'id' },
     nodeLabel: { parse: parseAccessor, default: 'name' },
     nodeDesc: { parse: parseAccessor, default: 'desc' },
-    nodeVal: { parse: parseAccessor, default: 'val' },
+    nodeVal: { parse: parseAccessor, default: 'nodeSize' },
     nodeResolution: { type: 'number', default: 8 }, // how many slice segments in the sphere's circumference
     nodeVisibility: { parse: parseAccessor, default: true },
     nodeColor: { parse: parseAccessor, default: 'color' },
@@ -193,9 +193,11 @@ AFRAME.registerComponent('babia-network', {
     let name = elData.name;
     let relationLink = elData.relationLink;
     let nodeSize = elData.nodeSize;
+
     elData.nodeVal = "nodeSize";
 
     data.forEach(element => {
+      console.log(element)
       let index = data.indexOf(element);
       let node = {"id" : index};
 
@@ -205,6 +207,7 @@ AFRAME.registerComponent('babia-network', {
         } else if (k === relationLink) {
           node.relationLink = element[k];
         } else if (k === nodeSize) {
+          console.log(element[k])
           node.nodeSize = element[k];
         }
       });
@@ -240,7 +243,9 @@ AFRAME.registerComponent('babia-network', {
           }
         }
       })
-    });          
+    });
+    
+    nodes.includes
 
     elData.nodes = nodes;
     elData.links = links;
@@ -359,7 +364,7 @@ AFRAME.registerComponent('babia-network', {
 
       this.state.hoverObj = topObject;
 
-      if (topObject) {
+      if (topObject && this.data.legend) {
         if (topObject.__graphObjType === 'node') {
           showLegend(topObject, topObject.__data)
         }
