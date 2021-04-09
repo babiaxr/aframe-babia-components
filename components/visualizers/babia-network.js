@@ -4,35 +4,35 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
-var accessorFn = require('accessor-fn');
+let accessorFn = require('accessor-fn');
 if ('default' in accessorFn) {
   // unwrap default export
   accessorFn = accessorFn.default;
 }
 
-var ThreeForceGraph = require('three-forcegraph');
+let ThreeForceGraph = require('three-forcegraph');
 if ('default' in ThreeForceGraph) {
   // unwrap default export
   ThreeForceGraph = ThreeForceGraph.default;
 }
 
-var parseJson = function (prop) {
+let parseJson = function (prop) {
   return (typeof prop === 'string')
     ? JSON.parse(prop)
     : prop; // already parsed
 };
 
-var parseFn = function (prop) {
+let parseFn = function (prop) {
   if (typeof prop === 'function') return prop; // already a function
-  var geval = eval; // Avoid using eval directly https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
+  let geval = eval; // Avoid using eval directly https://github.com/rollup/rollup/wiki/Troubleshooting#avoiding-eval
   try {
-    var evalled = geval('(' + prop + ')');
+    let evalled = geval('(' + prop + ')');
     return evalled;
   } catch (e) {} // Can't eval, not a function
   return null;
 };
 
-var parseAccessor = function (prop) {
+let parseAccessor = function (prop) {
   if (!isNaN(parseFloat(prop))) { return parseFloat(prop); } // parse numbers
   if (parseFn(prop)) { return parseFn(prop); } // parse functions
   return prop; // strings
@@ -41,6 +41,9 @@ var parseAccessor = function (prop) {
 /**
  * 3D Force-Directed Graph component for A-Frame.
  */
+
+let cursor = '';
+
 AFRAME.registerComponent('babia-network', {
   schema: {
     data: { type: 'string', default: ''},
@@ -155,10 +158,10 @@ AFRAME.registerComponent('babia-network', {
   },
 
   init: function () {
-    var state = this.state = {}; // Internal state
+    let state = this.state = {}; // Internal state
 
     // Get camera dom element and attach fixed view elements to camera
-    var cameraEl = document.querySelector('a-entity[camera], a-camera');
+    let cameraEl = document.querySelector('a-entity[camera], a-camera');
 
     // Keep reference to Three camera object
     state.cameraObj = cameraEl.object3D.children
@@ -178,9 +181,9 @@ AFRAME.registerComponent('babia-network', {
   remove: function () {  },
 
   update: function (oldData) {
-    var self = this;
-    var elData = this.data;
-    var el = this.el;
+    let self = this;
+    let elData = this.data;
+    let el = this.el;
 
     // Get nodes and links from data (ALMU)
     let nodes = [];
@@ -242,9 +245,9 @@ AFRAME.registerComponent('babia-network', {
     elData.nodes = nodes;
     elData.links = links;
 
-    var diff = AFRAME.utils.diff(elData, oldData);
+    let diff = AFRAME.utils.diff(elData, oldData);
 
-    var fgProps = [
+    let fgProps = [
       'jsonUrl',
       'numDimensions',
       'dagMode',
@@ -310,15 +313,22 @@ AFRAME.registerComponent('babia-network', {
         links: elData.links
       });
     }
+
+    // (Almu) NEXT STEP:  Implement raycaster as in other components in Babia
+    
+    // When loading, cursor gets entity cursor
+    cursor = document.querySelector('[cursor]');
+
+    // When controllers are connected, change cursor to laser control
+    document.addEventListener('controllerconnected', (event) => {
+      cursor = document.querySelector('[laser-controls]');
+      console.log(cursor)
+  });
   },
 
   tick: function (t, td) {
 
-    // (Almu) NEXT STEP:  Implement raycaster as in other components in Babia
-
-    var cursor = document.querySelector('[cursor]');
-
-    var intersects = cursor.components.raycaster.raycaster.intersectObjects(this.forceGraph.children)
+    let intersects = cursor.components.raycaster.raycaster.intersectObjects(this.forceGraph.children)
       .filter(function (o) { // Check only node/link objects
         return ['node', 'link'].indexOf(o.object.__graphObjType) !== -1;
       })
@@ -327,7 +337,7 @@ AFRAME.registerComponent('babia-network', {
         function isNode (o) { return o.object.__graphObjType === 'node'; }
       });
 
-    var topObject = intersects.length ? intersects[0].object : null;
+    let topObject = intersects.length ? intersects[0].object : null;
 
     if (topObject !== this.state.hoverObj) {
       const prevObjType = this.state.hoverObj ? this.state.hoverObj.__graphObjType : null;
@@ -389,15 +399,17 @@ function generateLegend(node, nodePosition, radius) {
 // (Almu) NEXT STEP: Change legend position so it is relative to the node and not to the scene
 
 function showLegend(nodeThree, node) {
-  var worldPosition = new THREE.Vector3();
+  let worldPosition = new THREE.Vector3();
+  //let position = new THREE.Vector3();
   nodeThree.getWorldPosition(worldPosition);
-  var radius = nodeThree.geometry.boundingSphere.radius
-  var sceneEl = document.querySelector('a-scene');
+  //nodeThree.getWorldPosition(position);
+  let radius = nodeThree.geometry.boundingSphere.radius
+  let sceneEl = document.querySelector('a-scene');
   legend = generateLegend(node, worldPosition, radius);
-  sceneEl.appendChild(legend);
+  sceneEl.el.appendChild(legend);
 }
 
 function removeLegend(){
-  var sceneEl = document.querySelector('a-scene');
+  let sceneEl = document.querySelector('a-scene');
   sceneEl.removeChild(legend)
 }
