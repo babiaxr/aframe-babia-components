@@ -406,7 +406,7 @@ function showLegend(nodeThree, node) {
   let radius = nodeThree.geometry.boundingSphere.radius
   let sceneEl = document.querySelector('a-scene');
   legend = generateLegend(node, worldPosition, radius);
-  sceneEl.el.appendChild(legend);
+  sceneEl.appendChild(legend);
 }
 
 function removeLegend(){
