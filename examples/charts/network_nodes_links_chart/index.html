@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame 3D Force-Directed Graph Component - Basic</title>
+    <meta name="description" content="Basic example for 3D Force-Directed Graph component.">
+    </meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+    <a-scene background="color: #4682B4" id="AframeScene">
+        <a-entity id="network" babia-network='nodes: [{"country": "Italy", "continent": "Europe", "size": 301300},
+            {"country": "China", "size": 9600000},
+            {"country": "Spain", "size": 505400},
+            {"country": "Germany", "size": 357000},
+            {"country": "France", "size": 643800},
+            {"country": "India", "size": 3290000},
+            {"country": "Mexico", "size": 1970000},
+            {"country": "UK", "size": 243600},
+            {"country": "Russia", "size": 17100000},
+            {"country": "USA", "size": 9160000}]; 
+            links: [
+            {"source": "China","target": "Italy"},
+            {"source": "China","target": "Spain"},
+            {"source": "China","target": "Germany"},
+            {"source": "China","target": "France"},
+            {"source": "China","target": "India"},
+            {"source": "China","target": "Mexico"},
+            {"source": "China","target": "UK"},
+            {"source": "China","target": "Russia"},
+            {"source": "China","target": "USA"}];
+            nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
+            nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04;
+            linkWidth: 0.5;  linkAutoColorBy: source; legend: true;' rotation="0 0 90">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="0 90 0" rotation="-90 90 90">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse" raycaster></a-entity>
+            <a-entity laser-controls="hand: right" raycaster></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>

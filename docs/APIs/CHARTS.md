@@ -350,3 +350,74 @@ font is fairly large, from at least 60KB to hundreds of KBs.
 
 To include a font for use with the text component, it is recommended to define
 it in `<a-asset-item>` and point at it with a selector.
+
+### babia-network component
+
+This component shows a network chart.
+
+#### API
+
+| Property      | Description           | Type   | Parse    | Default value |
+| -----    |--------           | ----   |---------   | --------  |
+| legend          | Shows a legend when hovering a node.  | boolean | - | false |
+| from          | The filterdata/querier entity ID where the data for the chart is.| string | - | - |
+| data          | Complete data to show in the chart. Link information will be obtained from the information inside the nodes. **Important**: Using this attribute will disable the `from`, `nodes` and `links` attributes.  | JSON (list of objects) | -  | - |
+| nodes          | Nodes data to show in the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - | - |
+| links          | Links data to show in the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - | - |
+| nodeId          | Field of data/nodes that will define each node of the network. (Make sure that this field has unique values!) | string | - | id |
+| nodeLabel          | Field of data/nodes or property that will be shown in the legend of each node of the network. It accepts **numbers**, **strings** or **functions**.| - | parseAccessor | id |
+| linkId          | Field of data that will define the relation between different nodes of the network. **Important**: Used when adding complete data, to generate links.| string | - | - |
+| linkSource          | Field of data/links that will define the links' sources.| string | - | source |
+| linkTarget          | Field of data/links that will define the links' targets.| string | - | target |
+| nodeVal          | Field of data/nodes or property that will define the size of the spheres. It accepts **numbers**, **strings** or **functions**.| - | parseAccessor |size |
+| nodeRelSize          | Volume per nodeVal unit, it adjusts the size of the spheres my multiplying their nodeVal. | number | - | 4 |
+| nodeColor          | Field of data/nodes or property that will define the color of each node. It accepts **numbers**, **strings** or **functions**.| - |parseAccessor | color |
+| nodeAutoColorBy          | Field of data/nodes or property that will define the color of each node by coloring those with the same field equally. It accepts **numbers**, **strings** or **functions**. **Important**: It only affects nodes without a nodeColor property. | - |parseAccessor | - |
+| nodeResolution          | Defines the number of slice segments in the sphere's circumference in the nodes | number | 8 | - |
+| linkColor          | Field of data/links that will define the color of each link. It accepts **numbers**, **strings** or **functions**.| - | parseAccessor | color |
+| linkAutoColorBy          | Field of data/links that will define the color of each link of the network by coloring those with the same field equally. It accepts **numbers**, **strings** or **functions**. **Important**: It only affects links without a linkColor property.  | - | parseAccessor | - |
+| linkWidth          | Defines the width of the links. It accepts **numbers**, **strings** or **functions**.| - | parseAccessor | 6 |
+| linkResolution        | Defines the number of radial segments in the line cylinder's geometry in each link. | number | - | 6 |
+
+
+#### Data format example
+
+**data**
+```json
+[ {"country": "Italy", "continent": "Europe", "size": 301300},
+  {"country": "China", "continent": "Asia", "size": 9600000},
+  {"country": "Spain", "continent": "Europe", "size": 505400},
+  {"country": "India", "continent": "Asia", "size": 3290000}
+...
+]
+
+```
+
+In this case, **linkID** could be defined as *continent*, and a link would be created between the countries with equal *continent*. The result will be the same as getting the data separared in nodes and links as follows.
+
+**nodes**
+```json
+[ {"country": "Italy", "continent": "Europe", "size": 301300},
+  {"country": "China", "continent": "Asia", "size": 9600000},
+  {"country": "Spain", "continent": "Europe", "size": 505400},
+  {"country": "India", "continent": "Asia", "size": 3290000}
+...
+]
+
+```
+**links**
+```json
+[ {"source": "Italy", "target": "Spain"},
+  {"source": "China", "target": "India"},
+...
+]
+
+```
+#### **Original Component**
+
+This component is based on the 3D Force-Directed Graph Component for A-Frame created by Vasco Asturiano.
+
+It accepts the following properties defined in the original component: *numDimensions, dagMode, dagLevelDistance, dagNodeFilter, onDagError, nodeResolution, nodeVisibility, nodeOpacity, nodeThreeObject, nodeThreeObjectExtend, linkVisibility, linkOpacity, linkCurvature, linkCurveRotation, linkMaterial, linkThreeObject, linkThreeObjectExtend, linkPositionUpdate, linkDirectionalArrowLength, linkDirectionalArrowColor, linkDirectionalArrowRelPos, linkDirectionalArrowResolution, linkDirectionalParticles, linkDirectionalParticleSpeed, linkDirectionalParticleWidth, linkDirectionalParticleColor, linkDirectionalParticleResolution, forceEngine, d3AlphaMin, d3AphaDecay, d3VelocityDecay, ngraphPhysics, warmupTicks, cooldownTicks, cooldownTime, onEngineTick, onEngineStop*. To know more or to access all the information related to this component visit https://github.com/vasturiano/aframe-forcegraph-component
+
+
+

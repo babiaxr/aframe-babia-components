@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Babia Network Component</title>
+    <meta name="description" content="Example for BabiaXR- component.">
+    </meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+    <a-scene background="color: #4682B4" id="AframeScene">
+        <a-entity id="network" babia-network='data: [{"country": "Italy", "continent": "Europe", "size": 301300},
+        {"country": "China", "continent": "Asia", "size": 9600000},
+        {"country": "Spain", "continent": "Europe", "size": 505400},
+        {"country": "Germany", "continent": "Europe", "size": 357000},
+        {"country": "France", "continent": "Europe", "size": 643800},
+        {"country": "India", "continent": "Asia", "size": 3290000},
+        {"country": "Mexico", "continent": "America",  "size": 1970000},
+        {"country": "UK", "continent": "Europe", "size": 243600},
+        {"country": "Russia", "continent": "Europe", "size": 17100000},
+        {"country": "USA", "continent": "America", "size": 9160000},
+        {"country": "Estonia", "continent": "Europe", "size": 45230},
+        {"country": "Senegal", "continent": "Africa", "size": 196700},
+        {"country": "Benin", "continent": "Africa", "size": 112600},
+        {"country": "Uruguay", "continent": "America", "size": 175000},
+        {"country": "Canada", "continent": "America", "size": 9970000},
+        {"country": "Australia", "continent": "Oceania", "size": 7690000},
+        {"country": "Guinea", "continent": "Africa",  "size": 246000},
+        {"country": "Fidji", "continent": "Oceania", "size": 18275},
+        {"country": "Indonesia", "continent": "Asia", "size": 1900000},
+        {"country": "Samoa", "continent": "Oceania", "size": 2831}];
+            nodeId: country; nodeLabel: country; nodeAutoColorBy: country;
+            nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04;
+            linkId: continent; linkResolution: 6; linkAutoColorBy: continent;  
+            linkWidth: 0.5; legend: true;' rotation="180 -50 0">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="100 0 -80">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse" raycaster></a-entity>
+            <a-entity laser-controls="hand: right" raycaster></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>

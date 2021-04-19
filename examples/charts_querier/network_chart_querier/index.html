@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame 3D Force-Directed Graph Component - Basic</title>
+    <meta name="description" content="Basic example for 3D Force-Directed Graph component.">
+    </meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+    <a-scene background="color: #4682B4" id="AframeScene" stats>
+
+        <a-entity id="queriertest" babia-queryjson="url: ./data.json;"></a-entity>
+
+
+        <a-entity id="network" babia-filter="from: queriertest; filter: continent=Asia" babia-network='nodeId: country; nodeLabel: country;nodeAutoColorBy: country; 
+        nodeResolution: 10; nodeVal: size; nodeRelSize: 0.05;
+        linkId: continent; linkWidth: 0.2; legend: true;' rotation="0 -90 0">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="20 40 100" rotation="-30 20 -10">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse" raycaster></a-entity>
+            <a-entity laser-controls="hand: right" raycaster></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
