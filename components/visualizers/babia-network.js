@@ -299,9 +299,9 @@ AFRAME.registerComponent('babia-network', {
       if (prevObjType && prevObjType !== objType) {
         // Hover out
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
-        if (prevObjType === 'node'){
-          removeLegend(this.el)
-        }
+      }
+      if (prevObjType === 'node'){
+        removeLegend(this.el)
       }
       if (objType) {
         // Hover in
@@ -647,11 +647,12 @@ function generateLegend(node, nodeId, nodePosition, radius) {
     width = text.length / 8;
 
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius + 1, z: nodePosition.z})
+  entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius + 3, z: nodePosition.z})
   entity.setAttribute('babia-lookat', "[camera]");
   entity.setAttribute('width', width);
   entity.setAttribute('height', '1');
   entity.setAttribute('color', 'white');
+  entity.setAttribute('scale', {x:3, y:3, z:3})
   entity.setAttribute('text', {
     'value': node[nodeId],
     'align': 'center',
@@ -672,8 +673,11 @@ function showLegend(nodeThree, node, nodeId) {
 }
 
 function removeLegend(){
-  let sceneEl = document.querySelector('a-scene');
-  sceneEl.removeChild(legend)
+  if (legend){
+    let sceneEl = document.querySelector('a-scene');
+    sceneEl.removeChild(legend)
+  }
+  
 }
 
 function showTitle(title, font, color, position) {
