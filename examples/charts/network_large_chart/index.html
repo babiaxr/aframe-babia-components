@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Babia Network Component</title>
+    <meta name="description" content="Example for BabiaXR- component.">
+    </meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+    <a-scene background="color: #4682B4" id="AframeScene">
+        <a-entity id="network" babia-network='data: [{"country": "Italy", "continent": "Europe", "size": 301300},
+            {"country": "China", "continent": "Asia", "size": 9600000},
+            {"country": "Spain", "continent": "Europe", "size": 505400},
+            {"country": "Germany", "continent": "Europe", "size": 357000},
+            {"country": "France", "continent": "Europe", "size": 643800},
+            {"country": "India", "continent": "Asia", "size": 3290000},
+            {"country": "Mexico", "continent": "America",  "size": 1970000},
+            {"country": "UK", "continent": "Europe", "size": 243600},
+            {"country": "Russia", "continent": "Europe", "size": 17100000},
+            {"country": "USA", "continent": "America", "size": 9160000},
+            {"country": "Estonia", "continent": "Europe", "size": 45230},
+            {"country": "Senegal", "continent": "Africa", "size": 196700},
+            {"country": "Benin", "continent": "Africa", "size": 112600},
+            {"country": "Uruguay", "continent": "America", "size": 175000},
+            {"country": "Canada", "continent": "America", "size": 9970000},
+            {"country": "Australia", "continent": "Oceania", "size": 7690000},
+            {"country": "Guinea", "continent": "Africa",  "size": 246000},
+            {"country": "Fidji", "continent": "Oceania", "size": 18275},
+            {"country": "Indonesia", "continent": "Asia", "size": 1900000},
+            {"country": "Samoa", "continent": "Oceania", "size": 2831},
+            {"country": "Greece", "continent": "Europe", "size": 131960},
+            {"country": "South Korea", "continent": "Asia", "size": 103000},
+            {"country": "Poland", "continent": "Europe", "size": 312700},
+            {"country": "Kenia", "continent": "Africa", "size": 580000},
+            {"country": "New Zealand", "continent": "Oceania", "size": 268000},
+            {"country": "Philippines", "continent": "Asia", "size": 300000},
+            {"country": "Tanzania", "continent": "Africa",  "size": 945000},
+            {"country": "Papua New Guinea", "continent": "Oceania", "size": 463000},
+            {"country": "Japan", "continent": "Asia", "size": 378000},
+            {"country": "Costa Rica", "continent": "America", "size": 51100},
+        
+            {"country": "Hungary", "continent": "Europe", "size": 93030},
+            {"country": "Thailand", "continent": "Asia", "size": 513100},
+            {"country": "Denmark", "continent": "Europe", "size": 43100},
+            {"country": "Finland", "continent": "Europe", "size": 338150},
+            {"country": "Lithuania", "continent": "Europe", "size": 65300},
+            {"country": "Pakistan", "continent": "Asia", "size": 799400},
+            {"country": "Argentina", "continent": "America",  "size": 2780000},
+            {"country": "Peru", "continent": "America", "size": 1970000},
+            {"country": "Chile", "continent": "America", "size": 756000},
+            {"country": "Puerto Rico", "continent": "America", "size": 94900},
+            {"country": "Austria", "continent": "Europe", "size": 83870},
+            {"country": "Argelia", "continent": "Africa", "size": 2382000},
+            {"country": "Congo", "continent": "Africa", "size": 342000},
+            {"country": "Paraguay", "continent": "America", "size": 406750},
+            {"country": "Colombia", "continent": "America", "size": 1140000},
+            {"country": "Nepal", "continent": "Asia", "size": 147200},
+            {"country": "Libia", "continent": "Africa",  "size": 176000},
+            {"country": "Mongolia", "continent": "Asia", "size": 1575000},
+            {"country": "Malaysia", "continent": "Asia", "size": 330000},
+            {"country": "Vanuatu", "continent": "Oceania", "size": 12190},
+            {"country": "Belgium", "continent": "Europe", "size": 30530},
+            {"country": "Singapur", "continent": "Asia", "size": 697},
+            {"country": "Serbia", "continent": "Europe", "size": 77470},
+            {"country": "Chad", "continent": "Africa", "size": 1284000},
+            {"country": "Nauru", "continent": "Oceania", "size": 23.1},
+            {"country": "Vietnam", "continent": "Asia", "size": 331200},
+            {"country": "Niger", "continent": "Africa",  "size": 1267000},
+            {"country": "Cook Islands", "continent": "Oceania", "size": 237},
+            {"country": "Cambodia", "continent": "Asia", "size": 181000},
+            {"country": "Cuba", "continent": "America", "size": 110000},
+        
+            {"country": "Ireland", "continent": "Europe", "size": 70270},
+                {"country": "Uzbekistan", "continent": "Asia", "size": 447400},
+                {"country": "Romania", "continent": "Europe", "size": 239000},
+                {"country": "Norway", "continent": "Europe", "size": 323800},
+                {"country": "Luxembourg", "continent": "Europe", "size": 2590},
+                {"country": "Bangladesh", "continent": "Asia", "size": 144000},
+                {"country": "Bolivia", "continent": "America",  "size": 1100000},
+                {"country": "Iceland", "continent": "Europe", "size": 103000},
+                {"country": "Andorra", "continent": "Europe", "size": 468},
+                {"country": "Barbados", "continent": "America", "size": 430},
+                {"country": "Croatia", "continent": "Europe", "size": 56600},
+                {"country": "Sierra Leona", "continent": "Africa", "size": 71740},
+                {"country": "South Africa", "continent": "Africa", "size": 1221000},
+                {"country": "Dominican Republic", "continent": "America", "size": 47900},
+                {"country": "El Salvador", "continent": "America", "size": 21040},
+                {"country": "Tuvalu", "continent": "Oceania", "size": 26},
+                {"country": "Ecuatorial Guinea", "continent": "Africa",  "size": 28050},
+                {"country": "Palaos", "continent": "Oceania", "size": 460},
+                {"country": "Turkey", "continent": "Asia", "size": 783560},
+                {"country": "Trinidad and Tobago", "continent": "America", "size": 5155},
+                {"country": "Latvia", "continent": "Europe", "size": 64590},
+                {"country": "Iran", "continent": "Asia", "size": 1650000},
+                {"country": "Portugal", "continent": "Europe", "size": 92100},
+                {"country": "Cabo Verde", "continent": "Africa", "size": 4035},
+                {"country": "Kiribati", "continent": "Oceania", "size": 811},
+                {"country": "Myanmar", "continent": "Asia", "size": 676600},
+                {"country": "Gambia", "continent": "Africa",  "size": 10400},
+                {"country": "Mali", "continent": "Africa", "size": 1240000},
+                {"country": "Iraq", "continent": "Asia", "size": 438300},
+                {"country": "Honduras", "continent": "America", "size": 112100},
+            
+                {"country": "Sweden", "continent": "Europe", "size": 450300},
+                {"country": "Afghanistan", "continent": "Asia", "size": 652230},
+                {"country": "Slovenia", "continent": "Europe", "size": 20275},
+                {"country": "Slovakia", "continent": "Europe", "size": 49050},
+                {"country": "Netherlands", "continent": "Europe", "size": 41870},
+                {"country": "Saudi Arabia", "continent": "Asia", "size": 2150000},
+                {"country": "Guatemala", "continent": "America",  "size": 109000},
+                {"country": "Suriname", "continent": "America", "size": 163800},
+                {"country": "Venezuela", "continent": "America", "size": 915000},
+                {"country": "Ecuador", "continent": "America", "size": 255000},
+                {"country": "Bulgaria", "continent": "Europe", "size": 110880},
+                {"country": "Ghana", "continent": "Africa", "size": 238500},
+                {"country": "Democratic Republic of Congo", "continent": "Africa", "size": 2345000},
+                {"country": "Brazil", "continent": "America", "size": 8515000},
+                {"country": "Nicaragua", "continent": "America", "size": 121430},
+                {"country": "Sri Lanka", "continent": "Asia", "size": 65600},
+                {"country": "Morocco", "continent": "Africa",  "size": 446500},
+                {"country": "Israel", "continent": "Asia", "size": 22070},
+                {"country": "Kazakhstan", "continent": "Asia", "size": 2725000},
+                {"country": "French Polynesia", "continent": "Oceania", "size": 4167},
+                {"country": "Cyprus", "continent": "Europe", "size": 9250},
+                {"country": "Syria", "continent": "Asia", "size": 185200},
+                {"country": "Czechia", "continent": "Europe", "size": 78870},
+                {"country": "Angola", "continent": "Africa", "size": 1247000},
+                {"country": "Guam", "continent": "Oceania", "size": 549},
+                {"country": "Jordan", "continent": "Asia", "size": 89350},
+                {"country": "Mauritania", "continent": "Africa",  "size": 1030000},
+                {"country": "Micronesia", "continent": "Oceania", "size": 702},
+                {"country": "Azerbaijan", "continent": "Asia", "size": 86600},
+                {"country": "Panama", "continent": "America", "size": 74180}];
+            nodeId: country; nodeLabel: country; nodeAutoColorBy: country ;
+            nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04; 
+            linkId: continent; linkAutoColorBy: continent; linkWidth: 0.2;
+            legend: true;' rotation="90 0 0">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="-3 150 50" rotation="-30 20 -10">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse" raycaster></a-entity>
+            <a-entity laser-controls="hand: right" raycaster></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
