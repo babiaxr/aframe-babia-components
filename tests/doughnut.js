@@ -2,7 +2,7 @@
  * Cypress test for babia-doughnut component
  */
 
-describe ('BabiaXR-Doughnutchart component', () => {
+describe ('Babia-Doughnut component', () => {
 
     beforeEach(() => {
         cy.visit('/tests/index.html');
@@ -45,13 +45,13 @@ describe ('BabiaXR-Doughnutchart component', () => {
     }); 
 });
 
-describe('BabiaXR-Doughnutchart component examples (screenshot)', () => {
+describe('BabiaXR-Doughnut component examples (screenshot)', () => {
 
     ['', '_querier'].forEach((example) => {
-        it(`Screenshot Doughnutchart (${example})`, () => {
-            cy.visit('/examples/charts'+ example+ '/doughnut_chart' + example + '/index.html');
+        it(`Screenshot Doughnut (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/doughnut' + example + '/index.html');
             cy.wait(5000);
-            cy.screenshot('doughnutchart' + example);
+            cy.screenshot('doughnut' + example);
         });
     });
 });

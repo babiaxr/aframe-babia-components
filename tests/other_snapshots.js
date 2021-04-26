@@ -29,9 +29,17 @@ describe('Others examples (screenshot)', () => {
         });
     });
 
-    ['islands', 'islands_plan_view', 'islands2', 'islands_plan_view2', 'island_codecity', 'island_codecity_plan_view'].forEach((example) => {
+    ['boats', 'boats_plan_view', 'boats2', 'boats_plan_view2', 'boats_city', 'boats_city_plan_view', 'boats_temporal'].forEach((example) => {
         it(`Screenshot Performance ${example} Example`, () => {
-            cy.visit('/examples/islands/' + example + '/index.html');
+            cy.visit('/examples/boats/' + example + '/index.html');
+            cy.wait(3000);
+            cy.screenshot(example);
+        });
+    });
+
+    ['boats_new_element', 'boats_new_quarter', 'boats_treegenerator', 'boats_resize', 'boats_quarter_resize', 'boats_quarter_resize2'].forEach((example) => {
+        it(`Screenshot Performance ${example} Example`, () => {
+            cy.visit('/examples/boats/' + example + '/index.html');
             cy.wait(3000);
             cy.screenshot(example);
         });

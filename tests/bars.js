@@ -49,10 +49,10 @@ describe ('Babia-Bars component', () => {
 describe('Babia-bars component examples (screenshot)', () => {
 
     ['', '_querier'].forEach((example) => {
-        it(`Screenshot Simplebarchart (${example})`, () => {
-            cy.visit('/examples/charts'+ example+ '/simplebar_chart' + example + '/index.html');
+        it(`Screenshot Bars (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/bars' + example + '/index.html');
             cy.wait(5000);
-            cy.screenshot('simplebarchart' + example);
+            cy.screenshot('bars' + example);
         });
     });
 });
