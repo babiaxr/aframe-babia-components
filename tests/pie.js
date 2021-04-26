@@ -45,13 +45,13 @@ describe ('BabiaXR-Piechart component', () => {
     }); 
 });
 
-describe('BabiaXR-Piechart component examples (screenshot)', () => {
+describe('BabiaXR-Pie component examples (screenshot)', () => {
 
     ['', '_querier'].forEach((example) => {
-        it(`Screenshot Piechart (${example})`, () => {
-            cy.visit('/examples/charts'+ example+ '/pie_chart' + example + '/index.html');
+        it(`Screenshot Pie (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/pie' + example + '/index.html');
             cy.wait(5000);
-            cy.screenshot('piechart' + example);
+            cy.screenshot('pie' + example);
         });
     });
 });
