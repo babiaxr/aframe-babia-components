@@ -26,18 +26,20 @@
             {"country": "Russia", "size": 17100000},
             {"country": "USA", "size": 9160000}]; 
             links: [
-            {"source": "China","target": "Italy"},
-            {"source": "China","target": "Spain"},
-            {"source": "China","target": "Germany"},
-            {"source": "China","target": "France"},
-            {"source": "China","target": "India"},
-            {"source": "China","target": "Mexico"},
-            {"source": "China","target": "UK"},
-            {"source": "China","target": "Russia"},
-            {"source": "China","target": "USA"}];
+            {"id": "Link 1", "source": "China","target": "Italy"},
+            {"id": "Link 2", "source": "China","target": "Spain"},
+            {"id": "Link 3", "source": "China","target": "Germany"},
+            {"id": "Link 4", "source": "China","target": "France"},
+            {"id": "Link 5", "source": "China","target": "India"},
+            {"id": "Link 6", "source": "China","target": "Mexico"},
+            {"id": "Link 7", "source": "China","target": "UK"},
+            {"id": "Link 8", "source": "China","target": "Russia"},
+            {"id": "Link 9", "source": "China","target": "USA"}];
             nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
             nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04;
-            linkWidth: 0.5;  linkAutoColorBy: source; legend: true;' rotation="0 0 90">
+            linkWidth: 0.5;  linkAutoColorBy: source; 
+            nodeLegend: true; linkLegend: true; linkLabel: id;
+            nodeOpacity: 0.5; linkOpacity: 0.5' rotation="0 0 90">
         </a-entity>
 
         <a-entity movement-controls="fly: true" position="0 90 0" rotation="-90 90 90">
