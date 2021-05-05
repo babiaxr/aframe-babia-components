@@ -17,9 +17,50 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Inuyasha        | 2020-10-22   |  2020-11-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/10) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Inuyasha) | [Link](#inuyasha)  | 1.0.12 |
 | Kakegurui        | -   |  -  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
 | Light        | -   |  2021-03-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/13) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Light) | [Link](#light)  | 1.1.1 |
+| Mazinger Z        | -   |  2021-04-21  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#mazinger-z)  | - |
+| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#naruto)  | - |
 
 
 ## Release notes
+
+### Naruto
+
+> NPM 1.1.2 version
+
+#### Boats component changes
+
+- Fix bug with the quarter base (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/159)
+
+#### Network componente NEW
+
+- New component added for building node graphs
+- Assess options and make proposals (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/152, https://gitlab.com/babiaxr/aframe-babia-components/-/issues/163)
+- Tested perfomance (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/164)
+- Doc added (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/162)
+- Adapted to queriers (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/165)
+
+#### Web changes
+
+- How to debug with Quest (tutorial) (https://gitlab.com/babiaxr/babiaxr.gitlab.io/-/issues/19)
+- Add link to source code in examples (https://gitlab.com/babiaxr/babiaxr.gitlab.io/-/issues/8)
+- Add favicon (https://gitlab.com/babiaxr/babiaxr.gitlab.io/-/issues/19)
+- Add table of contents (https://gitlab.com/babiaxr/babiaxr.gitlab.io/-/issues/11)
+- Add get started to left side menu (https://gitlab.com/babiaxr/babiaxr.gitlab.io/-/issues/19)
+
+#### New time evolution
+
+- Implement temporal evolution in barsmap (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/167)
+
+### Mazinger Z
+
+#### New time evolution
+
+- Design workflow for the temporal evolution (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/144)
+- Bars adapted to the new desing (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/155)
+
+##### Docs
+
+- Debug and test with Oculus (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/158)
 
 ### Light
 
