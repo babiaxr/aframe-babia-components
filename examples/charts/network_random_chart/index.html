@@ -15,12 +15,8 @@
 </head>
 
 <body>
-    <a-scene background="color: #4682B4" id="AframeScene">
-        <a-entity id="network" babia-network='
-        nodeId: id; nodeLabel: id; nodeAutoColorBy: id; 
-        nodeResolution: 10; nodeVal: size; nodeRelSize: 0.04;
-        linkWidth: 0.5;  linkAutoColorBy: source; 
-        nodeLegend: true; linkLegend: true; linkLabel: link_id;'>
+    <a-scene background="color: #000" id="AframeScene">
+        <a-entity id="network" babia-network='linkLabel: link_id'>
         </a-entity>
 
         <a-entity movement-controls="fly: true" position="100 0 -80">
@@ -33,7 +29,7 @@
         let nodes = []
         let links = []
         for (id = 0; id < 1500; id++) {
-            let random_size = Math.floor(Math.random() * (1000000 - 1000 + 1)) + 1000; // max & min both included 
+            let random_size = Math.floor(Math.random() * (100000000 - 100 + 1)) + 100; // max & min both included 
             let node = {
                 "id": id,
                 "size": random_size
@@ -43,7 +39,7 @@
         let nodes_str = ""
         nodes_str = JSON.stringify(nodes)
 
-        for (link_id = 0; link_id < 1500; link_id++) {
+            for (link_id = 0; link_id < 1500; link_id++) {
             let random_source = Math.floor(Math.random() * (nodes.length + 1)); // max & min both included 
             let random_target = Math.floor(Math.random() * (nodes.length + 1)); // max & min both included 
 
@@ -62,18 +58,29 @@
                 let link = {
                     "source": random_source,
                     "target": random_target,
-                    "link_id": link_id
+                    "link_id": link_id,
                 }
                 links.push(link)
             }
         }
 
-        let links_str = ""
-        links_str = JSON.stringify(links)
+            let links_str = "";
+            links_str = JSON.stringify(links);
+            let nodeVal = "size";
+        
         let network = document.getElementById('network')
         network.setAttribute('babia-network', {
             'nodes': nodes_str,
-            'links': links_str
+            'links': links_str,
+            'nodeResolution': 20,
+            'nodeVal': nodeVal,
+            'nodeAutoColorBy': nodeVal,
+            'nodeRelSize': 0.04,
+            'linkWidth': 0.5,
+            'nodeLegend': true,
+            'linkLegend': true,
+            'nodeOpacity': 2,
+            'linkOpacity': 1.5
         })
     </script>
 </body>

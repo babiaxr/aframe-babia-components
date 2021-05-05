@@ -710,7 +710,7 @@ function showLegend(nodeThree, node, nodeLabel) {
 
 function generateLinkLegend(link, linkLabel, linkPosition, radius) {
   let text = link[linkLabel];
-
+  console.log(text)
   let width = 2;
   if (text.length > 16)
     width = text.length / 8;
@@ -768,28 +768,6 @@ function removeLegend(){
   
 }
 
-function showTitle(title, font, color, position) {
-  let entity = document.createElement('a-entity');
-  entity.setAttribute('text-geometry', {
-    value: title,
-  });
-  if (font) {
-    entity.setAttribute('text-geometry', {
-      font: font,
-    })
-  }
-  if (color) {
-    entity.setAttribute('material', {
-      color: color
-    })
-  }
-  var position = position.split(" ")
-  entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
-  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-  entity.classList.add("babiaxrTitle")
-  return entity;
-}
-
 function setCursor() {
   // When loading, cursor gets entity cursor
   cursor = document.querySelector('[cursor]');
@@ -797,7 +775,6 @@ function setCursor() {
   // When controllers are connected, change cursor to laser control
   document.addEventListener('controllerconnected', (event) => {
     cursor = document.querySelector('[laser-controls]');
-    console.log(cursor)
   });
 }
 
