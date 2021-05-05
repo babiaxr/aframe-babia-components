@@ -1,0 +1,127 @@
+.gitlab-corner-wrapper {
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    position: absolute !important;
+    top: 0;
+    right: 0
+}
+
+.gitlab-corner {
+    position: absolute;
+    top: -20px;
+    right: -70px;
+    transform: rotate(45deg);
+    background: #548;
+    border: 60px solid #548;
+    border-bottom: none;
+    border-top: #548 solid 16px
+}
+
+.gitlab-corner svg {
+    width: 60px;
+    height: 60px;
+    margin-bottom: -4px
+}
+
+.cls-1 {
+    fill: #fc6d26
+}
+
+.cls-2 {
+    fill: #e24329
+}
+
+.cls-3 {
+    fill: #fca326
+}
+
+.gitlab-corner:hover .cls-1 {
+    animation: cycle .6s
+}
+
+.gitlab-corner:hover .cls-2 {
+    animation: cycleMid .6s
+}
+
+.gitlab-corner:hover .cls-3 {
+    animation: cycleEnd .6s
+}
+
+@keyframes cycle {
+
+    100%,
+    15%,
+    60% {
+    fill: #fc6d26
+    }
+
+    30%,
+    75% {
+    fill: #e24329
+    }
+
+    45%,
+    90% {
+    fill: #fca326
+    }
+}
+
+@keyframes cycleMid {
+
+    100%,
+    15%,
+    60% {
+    fill: #e24329
+    }
+
+    30%,
+    75% {
+    fill: #fca326
+    }
+
+    45%,
+    90% {
+    fill: #fc6d26
+    }
+}
+
+@keyframes cycleEnd {
+
+    100%,
+    15%,
+    60% {
+    fill: #fca326
+    }
+
+    30%,
+    75% {
+    fill: #fc6d26
+    }
+
+    45%,
+    90% {
+    fill: #e24329
+    }
+}
+
+@media (max-width:500px) {
+
+    .gitlab-corner:hover .cls-1,
+    .gitlab-corner:hover .cls-2,
+    .gitlab-corner:hover .cls-3 {
+    animation: none
+    }
+
+    .gitlab-corner .cls-1 {
+    animation: cycle .6s
+    }
+
+    .gitlab-corner .cls-2 {
+    animation: cycleMid .6s
+    }
+
+    .gitlab-corner .cls-3 {
+    animation: cycleEnd .6s
+    }
+}

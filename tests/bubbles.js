@@ -48,13 +48,13 @@ describe ('babia-bubbles component', () => {
     }); 
 });
 
-describe('BabiaXR-Bubbleschart component examples (screenshot)', () => {
+describe('Babia-Bubbles component examples (screenshot)', () => {
 
     ['', '_querier'].forEach((example) => {
-        it(`Screenshot Bubblesrchart (${example})`, () => {
-            cy.visit('/examples/charts'+ example+ '/bubbles_chart' + example + '/index.html');
+        it(`Screenshot Bubbles (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/bubbles' + example + '/index.html');
             cy.wait(5000);
-            cy.screenshot('bubbleschart' + example);
+            cy.screenshot('bubbles' + example);
         });
     });
 });

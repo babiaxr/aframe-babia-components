@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Babia components</title>
+    <meta name="description" content="Babia Pie example" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+</head>
+
+<body>
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <a-assets>
+            <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
+        </a-assets>
+
+        <a-entity babia-pie='size: points; legend: true; palette: blues; title: babia-pie; titleColor: #FFFFFF;
+        titleFont: #optimerBoldFont; titlePosition: -1.5 0.5 1.5; animation: true;
+        data: [{"key":"kbn_network","points":10},{"key":"Maria","points":5},{"key":"Dave","points":9},{"key":"Jhon","points":12},{"key":"Sara","points":16},{"key":"Lemar","points":2},{"key":"Dawn","points":1},{"key":"Jesus","points":8},{"key":"Bitergia","points":3},{"key":"URJC","points":6},{"key":"Alice","points":22},{"key":"Pete","points":2},{"key":"Seth","points":6},{"key":"Martin","points":9}]'
+        position="-3 5 15" rotation="90 0 0"></a-entity>
+
+        <a-entity movement-controls="fly: true" position="-3 5 20">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+    </a-scene>
+
+    <!-- GITLAB CORNER-->
+    <div class="gitlab-corner-wrapper"><a href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/charts/pie/index.html" class="gitlab-corner"
+        aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art" xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 586 559">
+        <g id="g44">
+            <path id="path46" class="cls-1"
+            d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+        </g>
+        <g id="g48">
+            <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+        </g>
+        <g id="g56">
+            <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+        </g>
+        <g id="g64">
+            <path id="path66" class="cls-3"
+            d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+        </g>
+        <g id="g72">
+            <path id="path74" class="cls-2" d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+        </g>
+        <g id="g76">
+            <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+        </g>
+        <g id="g80">
+            <path id="path82" class="cls-3"
+            d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+        </g>
+        <g id="g84">
+            <path id="path86" class="cls-2" d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+        </g>
+    </svg></a></div>
+
+
+</body>
+</html>

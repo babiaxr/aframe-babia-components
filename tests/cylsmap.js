@@ -48,13 +48,13 @@ describe ('babia-cylsmap component', () => {
     }); 
 });
 
-describe('BabiaXR-3Dcylinderchart component examples (screenshot)', () => {
+describe('Babia-Cylsmap component examples (screenshot)', () => {
 
     ['', '_querier'].forEach((example) => {
-        it(`Screenshot 3Dcylinderchart (${example})`, () => {
-            cy.visit('/examples/charts'+ example+ '/3dcylinder_chart' + example + '/index.html');
+        it(`Screenshot Cylsmap (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/cylsmap' + example + '/index.html');
             cy.wait(5000);
-            cy.screenshot('3dcylinderchart' + example);
+            cy.screenshot('cylsmap' + example);
         });
     });
 });

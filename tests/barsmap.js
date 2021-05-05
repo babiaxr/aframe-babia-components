@@ -47,13 +47,13 @@ describe ('babia-barsmap component', () => {
     }); 
 });
 
-describe('BabiaXR-3Dbarchart component examples (screenshot)', () => {
+describe('Babia-barsmap component examples (screenshot)', () => {
 
     ['', '_querier'].forEach((example) => {
-        it(`Screenshot 3Dbarchart (${example})`, () => {
-            cy.visit('/examples/charts'+ example+ '/3dbars_chart' + example + '/index.html');
+        it(`Screenshot barsmap (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/barsmap' + example + '/index.html');
             cy.wait(5000);
-            cy.screenshot('3dbarschart' + example);
+            cy.screenshot('barsmap' + example);
         });
     });
 });
