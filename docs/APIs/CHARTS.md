@@ -72,13 +72,14 @@ This component shows a simple 2D bar chart.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
-| heightMax          | Adjusts the height of the chart.  | number | - |
+| chartHeight          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
 | titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
+| dur         | Duration of the animation(ms)   | number | 2000 |
 | data          | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
 
 #### Data format example
@@ -105,13 +106,14 @@ This component shows a bars map.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
-| heightMax          | Adjusts the height of the chart.  | number | - |
+| chartHeight          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
 | titlePosition          | Position of the title  | string | 0 0 0 |
 | animation          | Animates chart   | boolean | false |
+| dur         | Duration of the animation(ms)   | number | 2000 |
 | data          | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
 
 #### Data format example
