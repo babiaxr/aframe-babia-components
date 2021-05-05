@@ -16,5 +16,10 @@ describe('Babia-Network component examples (screenshot)', () => {
             cy.wait(5000);
             cy.screenshot('network_nodes_links_chart' + example);
         });
+        it(`Screenshot Network (${example})`, () => {
+            cy.visit('/examples/charts'+ example+ '/network_random_chart' + example + '/index.html');
+            cy.wait(5000);
+            cy.screenshot('network_random_chart' + example);
+        });
     });
 });
