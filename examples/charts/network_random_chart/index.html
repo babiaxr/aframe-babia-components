@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Babia Network Component</title>
+    <meta name="description" content="Example for BabiaXR- component.">
+    </meta>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+    <a-scene background="color: #000" id="AframeScene">
+        <a-entity id="network" babia-network='linkLabel: link_id'>
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="100 0 -80">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse" raycaster></a-entity>
+            <a-entity laser-controls="hand: right" raycaster></a-entity>
+        </a-entity>
+    </a-scene>
+    <script>
+        let nodes = []
+        let links = []
+        for (id = 0; id < 1500; id++) {
+            let random_size = Math.floor(Math.random() * (100000000 - 100 + 1)) + 100; // max & min both included 
+            let node = {
+                "id": id,
+                "size": random_size
+            }
+            nodes.push(node)
+        }
+        let nodes_str = ""
+        nodes_str = JSON.stringify(nodes)
+
+            for (link_id = 0; link_id < 1500; link_id++) {
+            let random_source = Math.floor(Math.random() * (nodes.length + 1)); // max & min both included 
+            let random_target = Math.floor(Math.random() * (nodes.length + 1)); // max & min both included 
+
+            let source_exists = false;
+            let target_exists = false;
+            nodes.forEach(node => {
+                if (node.id === random_source) {
+                    source_exists = true;
+                }
+                if (node.id === random_target && random_source != random_target) {
+                    target_exists = true;
+                }
+            })
+
+            if (source_exists && target_exists) {
+                let link = {
+                    "source": random_source,
+                    "target": random_target,
+                    "link_id": link_id,
+                }
+                links.push(link)
+            }
+        }
+
+            let links_str = "";
+            links_str = JSON.stringify(links);
+            let nodeVal = "size";
+        
+        let network = document.getElementById('network')
+        network.setAttribute('babia-network', {
+            'nodes': nodes_str,
+            'links': links_str,
+            'nodeResolution': 20,
+            'nodeVal': nodeVal,
+            'nodeAutoColorBy': nodeVal,
+            'nodeRelSize': 0.04,
+            'linkWidth': 0.5,
+            'nodeLegend': true,
+            'linkLegend': true,
+            'nodeOpacity': 2,
+            'linkOpacity': 1.5
+        })
+    </script>
+</body>
+
+</html>

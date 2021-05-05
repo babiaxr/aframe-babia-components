@@ -1,3 +1,30 @@
+/**
+ * 
+ *This component is based on vasturiano/aframe-forcegraph-component, that
+ is licensed under the The MIT License (MIT)
+
+Copyright (c) 2017 Vasco Asturiano &lt;vastur@gmail.com&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+ */
+
+
 /* global AFRAME */
 
 if (typeof AFRAME === 'undefined') {
@@ -46,7 +73,8 @@ let cursor = '';
 
 AFRAME.registerComponent('babia-network', {
   schema: {
-    legend: { type: 'boolean', default: false },
+    nodeLegend: { type: 'boolean', default: false },
+    linkLegend: {type: 'boolean', default: false},
     from: { type: 'string' },
     data: { type: 'string', default: ''},
     nodes: { type:'string', default: '' },
@@ -65,8 +93,8 @@ AFRAME.registerComponent('babia-network', {
     linkAutoColorBy: { parse: parseAccessor, default: '' },
     linkWidth: { parse: parseAccessor, default: 0 },
     linkResolution: { type: 'number', default: 6 }, 
-
-    linkLabel: { parse: parseAccessor, default: 'linkId' },
+    linkLabel: { parse: parseAccessor, default: '' },
+    
     nodeDesc: { parse: parseAccessor, default: 'desc' },
     linkDesc: { parse: parseAccessor, default: 'desc' },
     nodeVisibility: { parse: parseAccessor, default: true },
@@ -300,8 +328,10 @@ AFRAME.registerComponent('babia-network', {
         // Hover out
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
       }
-      if (prevObjType === 'node'){
-        removeLegend(this.el)
+      if (this.data.nodeLegend && prevObjType === 'node' ){
+        removeLegend()
+      } else if(this.data.linkLegend && this.data.linkLabel!="" && prevObjType === 'link'){
+        removeLegend()
       }
       if (objType) {
         // Hover in
@@ -310,9 +340,13 @@ AFRAME.registerComponent('babia-network', {
 
       this.state.hoverObj = topObject;
 
-      if (topObject && this.data.legend) {
-        if (topObject.__graphObjType === 'node') {
-          showLegend(topObject, topObject.__data, this.data.nodeId)
+      if (topObject) {
+        if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
+          showLegend(topObject, topObject.__data, this.data.nodeLabel)
+        } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
+          if (this.data.linkLabel != ""){
+            showLinkLegend(this, topObject, topObject.__data, this.data.linkLabel)
+          }
         }
       }
     }
@@ -553,6 +587,7 @@ function elDataFromData(elData){
   let nodeVal = elData.nodeVal;
   let source = elData.linkSource;
   let target = elData.linkTarget;
+  let linkLabel = elData.linkLabel;
 
   data.forEach(element => {
     let node = {};
@@ -580,15 +615,16 @@ function elDataFromData(elData){
                 linkExists = true;
               } 
             })
-            if (linkExists) {
-            } else {
+            if (!linkExists) {
               let newLink = {}
+              newLink[linkLabel] = firstNode[linkLabel]
               newLink[source] = firstNode[nodeId]
               newLink[target] = secondNode[nodeId]
               links.push(newLink);
             }
           } else {
             let newLink = {}
+            newLink[linkLabel] = firstNode[linkLabel]
             newLink[source] = firstNode[nodeId]
             newLink[target] = secondNode[nodeId]
             links.push(newLink);
@@ -610,8 +646,8 @@ function elDataFromNodesAndLinks(elData) {
   let nodes = JSON.parse(elData.nodes);
   let links = JSON.parse(elData.links);
 
-  let nodeId = elData.nodeId
-  let nodeVal = elData.nodeVal
+  let nodeId = elData.nodeId;
+  let nodeVal = elData.nodeVal;
   let source = elData.linkSource;
   let target = elData.linkTarget;
 
@@ -639,8 +675,8 @@ function elDataFromNodesAndLinks(elData) {
   return elData;
 } 
 
-function generateLegend(node, nodeId, nodePosition, radius) {
-  let text = node[nodeId];
+function generateLegend(node, nodeLabel, nodePosition, radius) {
+  let text = node[nodeLabel];
 
   let width = 2;
   if (text.length > 16)
@@ -654,7 +690,7 @@ function generateLegend(node, nodeId, nodePosition, radius) {
   entity.setAttribute('color', 'white');
   entity.setAttribute('scale', {x:3, y:3, z:3})
   entity.setAttribute('text', {
-    'value': node[nodeId],
+    'value': node[nodeLabel],
     'align': 'center',
     'width': 6,
     'color': 'black'
@@ -663,12 +699,64 @@ function generateLegend(node, nodeId, nodePosition, radius) {
   return entity;
 }
 
-function showLegend(nodeThree, node, nodeId) {
+function showLegend(nodeThree, node, nodeLabel) {
   let worldPosition = new THREE.Vector3();
   nodeThree.getWorldPosition(worldPosition);
   let radius = nodeThree.geometry.boundingSphere.radius
   let sceneEl = document.querySelector('a-scene');
-  legend = generateLegend(node, nodeId, worldPosition, radius);
+  legend = generateLegend(node, nodeLabel, worldPosition, radius);
+  sceneEl.appendChild(legend);
+}
+
+function generateLinkLegend(link, linkLabel, linkPosition, radius) {
+  let text = link[linkLabel];
+  console.log(text)
+  let width = 2;
+  if (text.length > 16)
+    width = text.length / 8;
+
+  let entity = document.createElement('a-plane');
+  entity.setAttribute('position', {x: linkPosition.x, y: linkPosition.y + radius + 3, z: linkPosition.z})
+  entity.setAttribute('babia-lookat', "[camera]");
+  entity.setAttribute('width', width);
+  entity.setAttribute('height', '1');
+  entity.setAttribute('color', 'white');
+  entity.setAttribute('scale', {x:3, y:3, z:3})
+  entity.setAttribute('text', {
+    'value': link[linkLabel],
+    'align': 'center',
+    'width': 6,
+    'color': 'black'
+  });
+  entity.classList.add("babiaxrLegend")
+  return entity;
+}
+
+function showLinkLegend(self, linkThree, link, linkLabel, linkWidth) {
+  let worldPosition = new THREE.Vector3();
+  //linkThree.getWorldPosition(worldPosition);
+  let radius = linkThree.geometry.boundingSphere.radius
+
+  let sourcePos = new THREE.Vector3();
+  let targetPos = new THREE.Vector3();
+
+  let nodes = self.forceGraph.children.filter(element => element.__graphObjType == "node")
+
+  nodes.forEach(node => {
+    if(node.__data[self.data.nodeId] == link.source[self.data.nodeId]){
+      node.getWorldPosition(sourcePos)
+    }
+    if(node.__data[self.data.nodeId] == link.target[self.data.nodeId]){
+      node.getWorldPosition(targetPos)
+    }
+  })
+  
+  worldPosition.x = (sourcePos.x + targetPos.x)/2
+  worldPosition.y = (sourcePos.y + targetPos.y)/2
+  worldPosition.z = (sourcePos.z + targetPos.z)/2
+
+  let sceneEl = document.querySelector('a-scene');
+  legend = generateLinkLegend(link, linkLabel, worldPosition, radius);
   sceneEl.appendChild(legend);
 }
 
@@ -680,28 +768,6 @@ function removeLegend(){
   
 }
 
-function showTitle(title, font, color, position) {
-  let entity = document.createElement('a-entity');
-  entity.setAttribute('text-geometry', {
-    value: title,
-  });
-  if (font) {
-    entity.setAttribute('text-geometry', {
-      font: font,
-    })
-  }
-  if (color) {
-    entity.setAttribute('material', {
-      color: color
-    })
-  }
-  var position = position.split(" ")
-  entity.setAttribute('position', { x: position[0], y: position[1], z: position[2] })
-  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
-  entity.classList.add("babiaxrTitle")
-  return entity;
-}
-
 function setCursor() {
   // When loading, cursor gets entity cursor
   cursor = document.querySelector('[cursor]');
@@ -709,7 +775,6 @@ function setCursor() {
   // When controllers are connected, change cursor to laser control
   document.addEventListener('controllerconnected', (event) => {
     cursor = document.querySelector('[laser-controls]');
-    console.log(cursor)
   });
 }
 
