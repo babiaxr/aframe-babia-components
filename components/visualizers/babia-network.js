@@ -646,11 +646,10 @@ function elDataFromNodesAndLinks(elData) {
   let nodes = JSON.parse(elData.nodes);
   let links = JSON.parse(elData.links);
 
-  let nodeId = elData.nodeId
-  let nodeVal = elData.nodeVal
+  let nodeId = elData.nodeId;
+  let nodeVal = elData.nodeVal;
   let source = elData.linkSource;
   let target = elData.linkTarget;
-  let linkLabel = elData.linkLabel;
 
   nodes.forEach(node => {
     Object.keys(node).forEach(function (k) {
@@ -763,7 +762,6 @@ function showLinkLegend(self, linkThree, link, linkLabel, linkWidth) {
 
 function removeLegend(){
   if (legend){
-    console.log(legend)
     let sceneEl = document.querySelector('a-scene');
     sceneEl.removeChild(legend)
   }
