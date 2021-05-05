@@ -409,20 +409,6 @@ AFRAME.registerComponent('babia-barsmap', {
                     'labelText': xLabel + ', ' + zLabel + ': ' + item[data.height]
                 });
             };
-            //console.log("Position:", posX, barEl.getAttribute('position')['x']);
-            if (posX !== barEl.object3D.position.x) {
-                if (data.animation) {
-                    //console.log("Setting position anim:", posX, barEl.object3D.position.x)
-                    barEl.setAttribute('animation', {
-                        'property': 'object3D.position.x',
-                        'to': posX,
-                        'dur': data.dur
-                    });
-                } else {
-                    console.log("Setting position")
-                    barEl.object3D.position.x = posX;
-                };
-            }
         }
 
         //Print axis
@@ -483,15 +469,8 @@ let attachNewDataEventCallback = (self, e) => {
                             'labelText': bar[self.data.x_axis] +"," + bar[self.data.z_axis] + ': ' + bar[self.data.height]
                         })
                     } else {
-                        // Find last bar and get its position
-                        let colorId = self.chartEl.querySelectorAll('[babia-bar]').length
-                        let posX = self.chartEl.querySelectorAll('[babia-bar]')[colorId - 1].getAttribute('position').x + self.widthBars + self.widthBars / 4
                         // Create new bar
-                        let barEntity = generateBar(self, self.data, bar, self.maxValue, self.widthBars, colorId, self.data.palette, posX);
-                        self.chartEl.appendChild(barEntity)
-                        // Add label and tick
-                        self.xlabels.push(barEntity.id)
-                        self.xticks.push(posX)
+                        generateBar(self, self.data, bar, self.maxValue, self.widthBars, colors, self.xLabels, self.zLabels, self.xTicks, self.zTicks);
                     }
                 } else {
                     // Delete bar
@@ -513,22 +492,56 @@ let attachNewDataEventCallback = (self, e) => {
     }
 }
 
-let generateBar = (self, data, item, maxValue, widthBars, colorId, palette, stepX ) => {
-    let bar = document.createElement('a-entity');
-    bar.setAttribute('babia-bar', {
-        'height': item[self.data.height] * data.chartHeight / self.maxValue,
+let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLabels, xTicks, zTicks) => {
+    let xLabel = item[data.x_axis]
+    let zLabel = item[data.z_axis]
+
+    // Check if exist labels and calculate posX
+    let posX
+    if (!xLabels.includes(xLabel)){
+        xLabels.push(xLabel)
+        posX = (xLabels.length - 1) * widthBars * 1.25;
+        xTicks.push(posX + widthBars/2)
+    }
+    if (!posX){
+        posX = xLabels.indexOf(xLabel) * widthBars * 1.25
+    }
+
+    let posZ 
+    if (!zLabels.includes(zLabel)){
+        zLabels.push(zLabel)
+        posZ = (zLabels.length - 1) * widthBars * 1.25;
+        zTicks.push(posZ + widthBars/2)
+    }
+    if (!posZ){
+        posZ = zLabels.indexOf(zLabel) * widthBars * 1.25
+    }
+
+    let colorId = xLabels.indexOf(xLabel)
+
+    let barEl = document.createElement('a-entity');
+    barEl.id = xLabel + zLabel;
+    barEl.classList.add("babiaxraycasterclass");
+    barEl.setAttribute('babia-bar', {
+        'height': item[data.height] * this.lengthY / maxValue,
         'width': widthBars,
         'depth': widthBars,
         'color': colors.get(colorId, palette),
         'label': 'events'
     });
+    barEl.object3D.position.x = posX;
+    barEl.object3D.position.z = posZ;
+    chartEl.appendChild(barEl);
+
     if (data.legend) {
-        bar.setAttribute('babia-bar', {
+        barEl.setAttribute('babia-bar', {
             'labelText': item[self.data.x_axis] + ': ' + item[self.data.height]
         });
     };
-    bar.setAttribute('position', { x: stepX, y: 0, z: 0 }); 
-    bar.id = item[self.data.index]
-    bar.classList.add("babiaxraycasterclass");
+
+    this.xlabels = xLabels
+    this.xticks = xTicks
+    this.zlabels = zLabels
+    this.zticks = zTicks
     return bar
 }
