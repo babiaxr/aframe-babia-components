@@ -1,0 +1,43 @@
+[
+    {
+      "x_axis": "David",
+      "z_axis": "2018",
+      "height": 8,
+      "_not": true
+    },
+    {
+        "x_axis": "David",
+        "z_axis": "2015",
+        "height": 2
+    },
+    {
+      "x_axis": "Jesus",
+      "z_axis": "2016",
+      "height": 9,
+      "_not": true
+    },
+    {
+      "x_axis": "Pete",
+      "z_axis": "2011",
+      "height": 8,
+      "_not": true
+    },
+    {
+      "x_axis": "Pete",
+      "z_axis": "2019",
+      "height": 10,
+      "_not": true
+    },    
+    {
+      "x_axis": "Steve",
+      "z_axis": "2016",
+      "height": 9,
+      "_not": true
+    },
+    {
+      "x_axis": "Steve",
+      "z_axis": "2013",
+      "height": 6,
+      "_not": true
+    }
+  ]

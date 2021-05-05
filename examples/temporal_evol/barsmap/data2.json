@@ -1,0 +1,54 @@
+[
+  {
+    "x_axis": "David",
+    "z_axis": "2019",
+    "height": 9
+  },
+  {
+    "x_axis": "David",
+    "z_axis": "2018",
+    "height": 8,
+    "_not": true
+  },
+  {
+    "x_axis": "David",
+    "z_axis": "2017",
+    "height": 7
+  },
+  {
+    "x_axis": "David",
+    "z_axis": "2016",
+    "height": 6
+  },
+  {
+    "x_axis": "David",
+    "z_axis": "2015",
+    "height": 5,
+    "_not": true
+  },
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2016",
+    "height": 9
+  },
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2011",
+    "height": 8
+  },
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2014",
+    "height": 7
+  },
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2015",
+    "height": 5
+  },
+  {
+    "x_axis": "Jesus",
+    "z_axis": "2019",
+    "height": 10
+  }
+]
