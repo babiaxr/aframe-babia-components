@@ -80,10 +80,10 @@ AFRAME.registerComponent('babia-bars', {
         result = this.loadData(oldData);
         if (result === "Ready") {
             // Data is ready, build chart
+            self.currentData = JSON.parse(JSON.stringify(self.newData))
             this.updateChart();
             // Dispatch events because I updated my visualization
             dataReadyToSend("newData", self)
-            self.currentData = JSON.parse(JSON.stringify(self.newData))
         };
 
     },
@@ -306,6 +306,7 @@ AFRAME.registerComponent('babia-bars', {
         } else {
             babiaData = this.newData;
         }
+        console.log("Data:", babiaData)
         const widthBars = this.widthBars;
         const palette = data.palette
         const scale = data.scale
