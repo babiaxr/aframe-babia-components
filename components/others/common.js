@@ -41,8 +41,11 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = dataElement.components['babia-queryes']
         } else if (dataElement.components['babia-querygithub']) {
             self.dataComponent = dataElement.components['babia-querygithub']
+        } else if (dataElement.components['babia-selector']) {
+            self.dataComponent = dataElement.components['babia-selector'];
+            eventName = "babiaSelectorDataReady";
         } else {
-            console.error("Problem registering to the querier")
+            console.error("Problem registering to the querier", el);
             return
         }
     } else {
@@ -56,6 +59,9 @@ let findDataComponent = (data, el, self) => {
             self.dataComponent = el.components['babia-queryes']
         } else if (el.components['babia-querygithub']) {
             self.dataComponent = el.components['babia-querygithub']
+        } else if (el.components['babia-selector']) {
+            self.dataComponent = el.components['babia-selector'];
+            eventName = "babiaSelectorDataReady";
         } else {
             // Look for a querier or filterdata in the scene
             if (document.querySelectorAll("[babia-filter]").length > 0) {
@@ -67,8 +73,11 @@ let findDataComponent = (data, el, self) => {
                 self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
                 self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
+            } else if (document.querySelectorAll('[babia-selector]').length > 0) {
+                self.dataComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
+                eventName = "babiaSelectorDataReady";
             } else {
-                console.error("Error, querier not found")
+                console.error("Error, querier not found", el, el.components, el.components['babia-selector']);
                 return
             }
         }
