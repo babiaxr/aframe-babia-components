@@ -1,11 +1,22 @@
+stages:
+  - triggerpage
+  - deploy
+
+triggerpage:
+  stage: triggerpage
+  trigger:
+    project: babiaxr/babiaxr.gitlab.io
+    branch: master
+    
 pages:
   stage: deploy
   script:
-  - mkdir .public
-  - cp -r * .public
-  - mv .public public
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
   artifacts:
     paths:
     - public
   only:
-  - master
+    - master
+
