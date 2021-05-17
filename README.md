@@ -101,11 +101,9 @@ import 'aframe-babia-components'
 
 ## How to use this components
 
-The basic Chart components are easy to use, they have few attributes but if you want to see all the components and how to use them, there are user guides in the [docs](https://github.com/dlumbrer/aframe-babia-components/tree/master/docs) folder, here are the links:
+The first step is to follow the Getting started guide, you can find it [here](https://babiaxr.gitlab.io/tutorials/get_started).
 
-- [HOW_TO_CHARTS_WITH_QUERIER.md](./docs/tutorials/HOW_TO_CHARTS.md): a simple user guide in order to learn how to create charts with this pack of components.
-- [HOW_TO_TIME_EVOLVE_CITY.md](./docs/tutorials/HOW_TO_TIME_EVOLVE_CITY.md): a simple user guide in order to learn how to create a time evolution codecity from scratch (with the data retrieval process and the scene building).
-- [HOW_TO_USE_UI.md](./docs/tutorials/HOW_TO_USE_UI.md): a simple user guide in order to learn how to create a interface to manage a visualizer and how to use it.
+Once finished, you can follow the other tutorials on the [main page](https://babiaxr.gitlab.io/tutorials/)!
 
 
 ## Building and Running BabiaXR, and/or Contributing Code
@@ -141,9 +139,9 @@ Charts included:
 
 ## Cities and Boats components API
 
-API for the city and inslands visualizers components.
+API for the city and boats visualizers components.
 
-[Go here to see the cities and islands API](./docs/APIs/CITIES.md).
+[Go here to see the cities and boats API](./docs/APIs/CHARTS.md).
 
 ## Other components API
 
@@ -157,7 +155,7 @@ Other components:
 
 ### Data model
 
-The dataset returned from the parsing of the `babiaxr-querier*` components must follow this model:
+The dataset returned from the parsing of the `babia-query*` components must follow this model:
 
 ```
 [

@@ -1,3 +1,13 @@
+---
+linktitle: "how_to_use_ui"
+date: 2021-04-27T12:40:05+02:00
+title: How to use the UI component
+draft: false
+categories: [ "Tutorials", "Documentation" ]
+tags: ["api", "test", "guide", "cypress"]
+---
+
+
 # How to use UI component
 
 This tutorial teaches you how works the interface and how to use it.
