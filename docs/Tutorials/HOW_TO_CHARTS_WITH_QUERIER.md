@@ -1,3 +1,12 @@
+---
+linktitle: "guide_querier_filter_mapper"
+date: 2020-08-26T17:32:05+02:00
+title: How to build charts with queriers
+draft: false
+categories: [ "Tutorials", "Documentation" ]
+tags: ["api", "components", "guide", "demo"]
+---
+
 # How to make charts
 
 The user guide in order to use this components for building charts with A-Frame.

@@ -1,3 +1,13 @@
+---
+linktitle: "stack"
+date: 2020-08-26T17:32:05+02:00
+title: BabiaXR complete stack
+draft: false
+categories: [ "Tutorials", "Documentation" ]
+tags: ["api", "components", "guide", "demo"]
+---
+
+
 # BabiaXR Stack (WIP)
 
 This document contains all the information about how the stack is built, including the data format and the goal of each component

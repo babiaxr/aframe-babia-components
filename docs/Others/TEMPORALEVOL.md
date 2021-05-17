@@ -1,3 +1,13 @@
+---
+linktitle: "temporal_evolution"
+date: 2020-08-26T17:32:05+02:00
+title: How we are working on the temporal evolution (WIP)
+draft: false
+categories: [ "Tutorials", "Documentation" ]
+tags: ["api", "components", "guide", "demo"]
+---
+
+
 # TEMPORAL EVOLUTION (Work in Progress)
 
 ## New parameters for babia-bars and babia-barsmap
