@@ -172,7 +172,7 @@ Moreover, the querier/filterdata component will save in another component proper
 
 ### City tree data format
 
-The city visualization has an special data format, a tree with the districts and the buildings (as leaf nodes). To produce this data-set there is a new component called **treegenerator** (name WIP) that will select a field of the data-set (list) and will split it with a char, building a tree with the file splitted.
+The city visualization has an special data format, a tree with the districts and the buildings (as leaf nodes). To produce this data-set there is a new component called **treebuilder** (name WIP) that will select a field of the data-set (list) and will split it with a char, building a tree with the file splitted.
 
 Example for spliting a "path" field by the "/" character.
 
@@ -190,7 +190,7 @@ So, if we have this list:
 ]
 ```
 
-The treegenerator component will produce the next tree:
+The treebuilder component will produce the next tree:
 ```
 [ 
     list[2],
