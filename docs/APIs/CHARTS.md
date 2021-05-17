@@ -238,7 +238,7 @@ This component shows a city chart.
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| from          | The treegenerator entity ID where  is the data for the chart | string | - |
+| from          | The treebuilder entity ID where  is the data for the chart | string | - |
 | absolute          | Absolute size (width and depth will be used for proportions) | boolean | false |
 | width          | Width of the entire city. | number | 20 |
 | depth          | Depth of the entire city. | number | 20 |
@@ -277,7 +277,7 @@ This component shows a city in boats.
 
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ----- |
-| from          | The treegenerator entity ID where  is the data for the chart | string | - |
+| from          | The treebuilder entity ID where  is the data for the chart | string | - |
 | area          | Field in data items to represent as building area. **DON'T USE IT WITH WIDTH/DEPTH PARAMETERS**. | string | - |
 | width          | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**.| string | width |
 | depth          | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**. | string | depth |
