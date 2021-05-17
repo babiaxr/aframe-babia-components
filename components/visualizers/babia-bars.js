@@ -325,72 +325,74 @@ AFRAME.registerComponent('babia-bars', {
         };
         this.maxValue = maxValue;
 
+        let chartEl = this.chartEl;
+        let bars = chartEl.querySelectorAll('a-entity[babia-bar]');
+        let currentBars = {};
+        for (let bar of bars) {
+            let barName = bar.getAttribute('babia-name');
+            currentBars[barName] = {'el': bar, 'found': false};
+        };
+
         let xLabels = [];
         let xTicks = [];
         let colorId = 0
 
-        let chartEl = this.chartEl;
+        // Add or modify bars for new data
         for (let i = 0; i < babiaData.length; i++) {
             let item = babiaData[i]
  
             // Build bar
-            xLabel = item[data.index];
+            xLabel = item[data.x_axis];
             let posX = i * widthBars * 1.25;
-            let barEl = chartEl.querySelector('#' + xLabel);
-            if (!barEl) {
+            if ( currentBars[xLabel] && !item['_not'] ) {
+                barEl = currentBars[xLabel].el;
+                currentBars[xLabel].found = true;
+            } else {
                 barEl = document.createElement('a-entity');
-                barEl.id = xLabel;
+                barEl.setAttribute('babia-name', xLabel);
                 barEl.classList.add("babiaxraycasterclass");
                 barEl.object3D.position.x = posX;
                 chartEl.appendChild(barEl);
-            };
-
-            if (!item['_not']) { 
-                barEl.setAttribute('babia-bar', {
-                    'height': item[data.height] * this.lengthY / maxValue,
-                    'width': widthBars,
-                    'depth': widthBars,
-                    'color': colors.get(colorId, palette),
-                    'label': 'events'
-                });
-            } else {
-                barEl.setAttribute('babia-bar', {
-                    'height': -0.1,
-                    'color': colors.get(colorId, palette),
-                });
             }
-
+            barEl.setAttribute('babia-bar', {
+                'height': item[data.height] * this.lengthY / maxValue,
+                'width': widthBars,
+                'depth': widthBars,
+                'color': colors.get(colorId, palette),
+                'label': 'events'
+            });
             if (data.legend) {
                 barEl.setAttribute('babia-bar', {
                     'labelText': xLabel + ': ' + item[data.height]
                 });
             };
-            console.log("Position:", posX, barEl.getAttribute('position')['x']);
             if (posX !== barEl.object3D.position.x) {
                 if (data.animation) {
-                    console.log("Setting position anim:", posX, barEl.object3D.position.x)
                     barEl.setAttribute('animation', {
                         'property': 'object3D.position.x',
                         'to': posX,
                         'dur': data.dur
                     });
                 } else {
-                    console.log("Setting position")
                     barEl.object3D.position.x = posX;
                 };
             }
 
-            xLabels.push(item[data.index]);
+            xLabels.push(item[data.x_axis]);
             xTicks.push(posX);
 
             colorId++
         }
 
+        // Remove old bars (not in new data)
+        for (let name in currentBars) {
+            if ( !currentBars[name].found ) {
+                currentBars[name].el.remove();
+            };
+        };
         //Print axis
-        const lengthX = widthBars * (babiaData.length * 1.25 + 0.75);
+        const lengthX = widthBars * (babiaData.length * 1.25);
         this.updateAxis(xLabels, xTicks, lengthX, maxValue);
-        this.labels = xLabels
-        this.ticks = xTicks
     },
 })
 
