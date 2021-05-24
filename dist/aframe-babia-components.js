@@ -5383,7 +5383,7 @@ function createPhysicsSimulator(settings) {
   var bodies = []; // Bodies in this simulation.
   var springs = []; // Springs in this simulation.
 
-  var quadTree =  createQuadTree(settings, random);
+  var quadTree = createQuadTree(settings, random);
   var bounds = createBounds(bodies, settings, random);
   var springForce = createSpringForce(settings, random);
   var dragForce = createDragForce(settings);
@@ -15822,7 +15822,9 @@ AFRAME.registerComponent('babia-network', {
   schema: {
     nodeLegend: { type: 'boolean', default: false },
     linkLegend: {type: 'boolean', default: false},
-    from: { type: 'string' },
+    from: { type: 'string', default: undefined },
+    nodesFrom: { type: 'string', default: undefined },
+    linksFrom: { type: 'string', default: undefined },
     data: { type: 'string', default: ''},
     nodes: { type:'string', default: '' },
     links: { type: 'string', default: '' },
@@ -15996,13 +15998,13 @@ AFRAME.registerComponent('babia-network', {
       /*while (self.el.firstChild)
         self.el.firstChild.remove();*/
       console.log("Generating Network from nodes and links...")
-      elData = elDataFromNodesAndLinks(elData)
-      self.data = elData
-      self.chart = generateNetworkChart(elData, oldData, self) 
-      
+      elData.nodes = JSON.parse(elData.nodes);
+      elData.links = JSON.parse(elData.links);    
+      elData = elDataFromNodesAndLinks(elData);
+      self.data = elData;
+      self.chart = generateNetworkChart(elData, oldData, self);
       // Dispatch interested events because I updated my visualization
-      dataReadyToSend("babiaData", self)
-
+      dataReadyToSend("babiaData", self);
     // Data from querier
     } else {
       // If changed from, need to re-register to the new data component
@@ -16011,13 +16013,14 @@ AFRAME.registerComponent('babia-network', {
         if (self.dataComponent) { self.dataComponent.unregister(el) }
 
         // Find the component and get if querier or filterdata by the event               
-        let eventName = findDataComponent(elData, el, self)
+        let dataComponent = findDataComponent(elData, el, self, 'from');
+        self.dataComponent = dataComponent.component;
         // If changed to filterdata or to querier
-        if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+        if (self.dataComponentEventName && self.dataComponentEventName !== dataComponent.eventName) {
           el.removeEventListener(self.dataComponentEventName, _listener, true)
         }
         // Assign new eventName
-        self.dataComponentEventName = eventName
+        self.dataComponentEventName = dataComponent.eventName
 
         // Attach to the events of the data component
         el.addEventListener(self.dataComponentEventName, _listener = (e) => {
@@ -16027,13 +16030,57 @@ AFRAME.registerComponent('babia-network', {
         // Register for the new one
         self.dataComponent.register(el)
         return
+      } else if (elData.nodesFrom !== oldData.nodesFrom) {
+        // Now we have nodesFrom, should have linksFrom too
+        // Unregister for old querier
+        if (self.nodesDataComponent) { self.nodesDataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        let dataComponent = findDataComponent(elData, el, self, 'nodesFrom')
+        self.nodesDataComponent = dataComponent.component;
+        // If changed to filterdata or to querier
+        if (self.nodesDataComponentEventName && self.nodesDataComponentEventName !== dataComponent.eventName) {
+          el.removeEventListener(self.nodesDataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.nodesDataComponentEventName = dataComponent.eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.nodesDataComponentEventName, _listener = (e) => {
+          attachNewNodesDataEventCallback(self, e, oldData)
+        });
+
+        // Register for the new one
+        self.nodesDataComponent.register(el)
+
+        // Now, the same for linksfrom
+        // Unregister for old querier
+        if (self.linksDataComponent) { self.linksDataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        dataComponent = findDataComponent(elData, el, self, 'linksFrom')
+        self.linksDataComponent = dataComponent.component;
+        // If changed to filterdata or to querier
+        if (self.linksDataComponentEventName && self.linksDataComponentEventName !== dataComponent.eventName) {
+          el.removeEventListener(self.linksDataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.linksDataComponentEventName = dataComponent.eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.linksDataComponentEventName, _listener = (e) => {
+          attachNewLinksDataEventCallback(self, e, oldData)
+        });
+
+        // Register for the new one
+        self.linksDataComponent.register(el)
+        return
       }
 
       // If changed whatever, re-print with the current data
       if (elData !== oldData && self.babiaData) {
         /*while (self.el.firstChild)
           self.el.firstChild.remove();*/
-        console.log("Generating Network...")
         elData.data = JSON.parse(elData.data)
         elData = elDataFromData(elData)
         self.data = elData
@@ -16146,6 +16193,8 @@ AFRAME.registerComponent('babia-network', {
   * Querier component target
   */
   dataComponent: undefined,
+  nodesDataComponent: undefined,
+  linksDataComponent: undefined,
 
   /**
    * Property of the querier where the data is saved
@@ -16161,7 +16210,7 @@ AFRAME.registerComponent('babia-network', {
   /**
    * Where the data is gonna be stored
    */
-  babiaData: undefined,
+  babiaData: {'nodes': undefined, 'links': undefined},
 
   /**
    * Where the metaddata is gonna be stored
@@ -16172,53 +16221,59 @@ AFRAME.registerComponent('babia-network', {
 
 });
 
-let findDataComponent = (data, el, self) => {
-  let eventName = "babiaQuerierDataReady"
-  if (data.from) {
+
+let findDataComponent = (data, el, self, from) => {
+  let eventName = "babiaQuerierDataReady";
+  let dataComponent;
+  let error = false;
+  if (data[from]) {
     // Save the reference to the querier or filterdata
-    let dataElement = document.getElementById(data.from)
+    let dataElement = document.getElementById(data[from])
     if (dataElement.components['babia-filter']) {
-      self.dataComponent = dataElement.components['babia-filter']
+      dataComponent = dataElement.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (dataElement.components['babia-queryjson']) {
-      self.dataComponent = dataElement.components['babia-queryjson']
+      dataComponent = dataElement.components['babia-queryjson']
     } else if (dataElement.components['babia-queryes']) {
-      self.dataComponent = dataElement.components['babia-queryes']
+      dataComponent = dataElement.components['babia-queryes']
     } else if (dataElement.components['babia-querygithub']) {
-      self.dataComponent = dataElement.components['babia-querygithub']
+      dataComponent = dataElement.components['babia-querygithub']
     } else {
-      console.error("Problem registering to the querier")
-      return
+      error = true
     }
   } else {
     // Look for a querier or filterdata in the same element and register
     if (el.components['babia-filter']) {
-      self.dataComponent = el.components['babia-filter']
+      dataComponent = el.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (el.components['babia-queryjson']) {
-      self.dataComponent = el.components['babia-queryjson']
+      dataComponent = el.components['babia-queryjson']
     } else if (el.components['babia-queryes']) {
-      self.dataComponent = el.components['babia-queryes']
+      dataComponent = el.components['babia-queryes']
     } else if (el.components['babia-querygithub']) {
-      self.dataComponent = el.components['babia-querygithub']
+      dataComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier or filterdata in the scene
       if (document.querySelectorAll("[babia-filter]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
+        dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
         eventName = "babiaFilterDataReady"
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+        dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
+        dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
+        dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
       } else {
-        console.error("Error, querier not found")
-        return
+        error = true
       }
     }
   }
-  return eventName
+  if (error) {
+    console.error("Problem fiding the querier or filter");
+    return;
+  } else {
+    return {'component': dataComponent, 'eventName': eventName};
+  };
 }
 
 let attachNewDataEventCallback = (self, e, oldData) => {
@@ -16226,27 +16281,66 @@ let attachNewDataEventCallback = (self, e, oldData) => {
   self.dataComponentDataPropertyName = e.detail
   let rawData = self.dataComponent[self.dataComponentDataPropertyName]
 
-  console.log(rawData)
-
   self.babiaData = rawData
-  self.babiaMetadata = {
-    id: self.babiaMetadata.id++
-  }
+  self.babiaMetadata = { id: self.babiaMetadata.id++ }
   
   let elData = self.data
-
   elData.data = rawData
 
-  //remove previous chart
- /*while (self.el.firstChild)
-    self.el.firstChild.remove();*/
+  //remove previous chart (TODO)
   elData = elDataFromData(elData)
 
-  console.log("Generating Network from callback...")
+  console.log("Generating Network from data callback (Data)...")
   self.chart = generateNetworkChart(elData, oldData, self)
-
   // Dispatch interested events because I updated my visualization
   dataReadyToSend("babiaData", self)
+}
+
+let attachNewNodesDataEventCallback = (self, e, oldData) => {
+  // Get the data from the info of the event (propertyName)
+  self.nodesDataComponentDataPropertyName = e.detail
+  let rawData = self.nodesDataComponent[self.nodesDataComponentDataPropertyName]
+
+  self.babiaData.nodes = rawData
+  self.babiaMetadata = { id: self.babiaMetadata.id++ }
+  
+  let elData = self.data
+  elData.nodes = rawData
+
+  //remove previous chart (TODO)
+  elData = elDataFromNodesAndLinks(elData)
+  if (elData) {
+    console.log("Generating Network from callback (Nodes)...");
+    self.chart = generateNetworkChart(elData, oldData, self);
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self);
+  } else {
+    console.log("Nodes or links not ready yet");
+  };
+}
+
+let attachNewLinksDataEventCallback = (self, e, oldData) => {
+  // Get the data from the info of the event (propertyName)
+  self.linksDataComponentDataPropertyName = e.detail
+  let rawData = self.linksDataComponent[self.linksDataComponentDataPropertyName]
+
+  console.log("NewLinksData:", rawData)
+  self.babiaData.links = rawData
+  self.babiaMetadata = { id: self.babiaMetadata.id++ }
+  
+  let elData = self.data
+  elData.links = rawData
+
+  //remove previous chart (TODO)
+  elData = elDataFromNodesAndLinks(elData)
+  if (elData) {
+    console.log("Generating Network from callback (Links)...");
+    self.chart = generateNetworkChart(elData, oldData, self);
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self);
+  } else {
+    console.log("Nodes or links not ready yet");
+  };
 }
 
 // Generate or update network
@@ -16390,14 +16484,20 @@ function elDataFromData(elData){
 // Format nodes and links
 
 function elDataFromNodesAndLinks(elData) {
-  let nodes = JSON.parse(elData.nodes);
-  let links = JSON.parse(elData.links);
+//  let nodes = JSON.parse(elData.nodes);
+//  let links = JSON.parse(elData.links);
+  let nodes = elData.nodes;
+  let links = elData.links;
 
   let nodeId = elData.nodeId;
   let nodeVal = elData.nodeVal;
   let source = elData.linkSource;
   let target = elData.linkTarget;
 
+  if (!Array.isArray(nodes) || !Array.isArray(links)) {
+    // Either nodes or links are not ready yet
+    return false
+  }
   nodes.forEach(node => {
     Object.keys(node).forEach(function (k) {
       if (k === nodeId) {
@@ -16457,7 +16557,6 @@ function showLegend(nodeThree, node, nodeLabel) {
 
 function generateLinkLegend(link, linkLabel, linkPosition, radius) {
   let text = link[linkLabel];
-  console.log(text)
   let width = 2;
   if (text.length > 16)
     width = text.length / 8;
@@ -24620,29 +24719,18 @@ const [timeTicks, timeTickInterval] = ticker(__WEBPACK_IMPORTED_MODULE_9__year_j
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_index_array_by__ = __webpack_require__(301);
 
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
   if (Object.getOwnPropertySymbols) {
     var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
     keys.push.apply(keys, symbols);
   }
 
@@ -24667,6 +24755,21 @@ function _objectSpread2(target) {
   }
 
   return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
 }
 
 function _objectWithoutPropertiesLoose(source, excluded) {
@@ -24706,19 +24809,15 @@ function _objectWithoutProperties(source, excluded) {
 }
 
 function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _arrayWithHoles(arr) {
@@ -24726,21 +24825,21 @@ function _arrayWithHoles(arr) {
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 function _iterableToArrayLimit(arr, i) {
-  if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-    return;
-  }
+  var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]);
 
+  if (_i == null) return;
   var _arr = [];
   var _n = true;
   var _d = false;
-  var _e = undefined;
+
+  var _s, _e;
 
   try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
       _arr.push(_s.value);
 
       if (i && _arr.length === i) break;
@@ -24759,12 +24858,29 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 function diffArrays(prev, next, idAccessor) {
@@ -25032,19 +25148,15 @@ function _objectWithoutProperties(source, excluded) {
 }
 
 function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
 }
 
 function _arrayWithHoles(arr) {
@@ -25052,21 +25164,21 @@ function _arrayWithHoles(arr) {
 }
 
 function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 function _iterableToArrayLimit(arr, i) {
-  if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-    return;
-  }
+  var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]);
 
+  if (_i == null) return;
   var _arr = [];
   var _n = true;
   var _d = false;
-  var _e = undefined;
+
+  var _s, _e;
 
   try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
       _arr.push(_s.value);
 
       if (i && _arr.length === i) break;
@@ -25085,12 +25197,29 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 function _toPrimitive(input, hint) {
@@ -25236,7 +25365,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
 
 function _arrayWithHoles(arr) {
@@ -25244,17 +25373,17 @@ function _arrayWithHoles(arr) {
 }
 
 function _iterableToArrayLimit(arr, i) {
-  if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-    return;
-  }
+  var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]);
 
+  if (_i == null) return;
   var _arr = [];
   var _n = true;
   var _d = false;
-  var _e = undefined;
+
+  var _s, _e;
 
   try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
       _arr.push(_s.value);
 
       if (i && _arr.length === i) break;
@@ -25273,8 +25402,25 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
 function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 var Prop = function Prop(name, _ref) {
@@ -25901,6 +26047,12 @@ const createPatternBuilder = __webpack_require__(14);
 module.exports = generateCreateBodyFunction;
 module.exports.generateCreateBodyFunctionBody = generateCreateBodyFunctionBody;
 
+// InlineTransform: getVectorCode
+module.exports.getVectorCode = getVectorCode;
+// InlineTransform: getBodyCode
+module.exports.getBodyCode = getBodyCode;
+// InlineTransformExport: module.exports = function() { return Body; }
+
 function generateCreateBodyFunction(dimension, debugSetters) {
   let code = generateCreateBodyFunctionBody(dimension, debugSetters);
   let {Body} = (new Function(code))();
@@ -25908,38 +26060,18 @@ function generateCreateBodyFunction(dimension, debugSetters) {
 }
 
 function generateCreateBodyFunctionBody(dimension, debugSetters) {
-  let pattern = createPatternBuilder(dimension);
-  let variableList = pattern('{var}', {join: ', '});
-  let setters = '';
-  if (debugSetters) {
-    setters = `${pattern("\n\
-   var v{var};\n\
-Object.defineProperty(this, '{var}', {\n\
-  set: function(v) { \n\
-    if (!Number.isFinite(v)) throw new Error('Cannot set non-numbers to {var}');\n\
-    v{var} = v; \n\
-  },\n\
-  get: function() { return v{var}; }\n\
-});")}`;
-  }
-
   let code = `
-function Vector(${variableList}) {
-${setters}
-  if (typeof arguments[0] === 'object') {
-    // could be another vector
-    let v = arguments[0];
-    ${pattern('if (!Number.isFinite(v.{var})) throw new Error("Expected value is not a finite number at Vector constructor ({var})");', {indent: 4})}
-    ${pattern('this.{var} = v.{var};', {indent: 4})}
-  } else {
-    ${pattern('this.{var} = typeof {var} === "number" ? {var} : 0;', {indent: 4})}
-  }
+${getVectorCode(dimension, debugSetters)}
+${getBodyCode(dimension, debugSetters)}
+return {Body: Body, Vector: Vector};
+`;
+  return code;
 }
 
-Vector.prototype.reset = function () {
-  ${pattern('this.{var} = ', {join: ''})}0;
-};
-
+function getBodyCode(dimension) {
+  let pattern = createPatternBuilder(dimension);
+  let variableList = pattern('{var}', {join: ', '});
+  return `
 function Body(${variableList}) {
   this.isPinned = false;
   this.pos = new Vector(${variableList});
@@ -25959,11 +26091,40 @@ Body.prototype.reset = function() {
 
 Body.prototype.setPosition = function (${variableList}) {
   ${pattern('this.pos.{var} = {var} || 0;', {indent: 2})}
-};
+};`;
+}
 
-return {Body: Body, Vector: Vector};
-`;
-  return code;
+function getVectorCode(dimension, debugSetters) {
+  let pattern = createPatternBuilder(dimension);
+  let setters = '';
+  if (debugSetters) {
+    setters = `${pattern("\n\
+   var v{var};\n\
+Object.defineProperty(this, '{var}', {\n\
+  set: function(v) { \n\
+    if (!Number.isFinite(v)) throw new Error('Cannot set non-numbers to {var}');\n\
+    v{var} = v; \n\
+  },\n\
+  get: function() { return v{var}; }\n\
+});")}`;
+  }
+
+  let variableList = pattern('{var}', {join: ', '});
+  return `function Vector(${variableList}) {
+  ${setters}
+    if (typeof arguments[0] === 'object') {
+      // could be another vector
+      let v = arguments[0];
+      ${pattern('if (!Number.isFinite(v.{var})) throw new Error("Expected value is not a finite number at Vector constructor ({var})");', {indent: 4})}
+      ${pattern('this.{var} = v.{var};', {indent: 4})}
+    } else {
+      ${pattern('this.{var} = typeof {var} === "number" ? {var} : 0;', {indent: 4})}
+    }
+  }
+  
+  Vector.prototype.reset = function () {
+    ${pattern('this.{var} = ', {join: ''})}0;
+  };`;
 }
 
 /***/ }),
@@ -26113,6 +26274,18 @@ const getVariableName = __webpack_require__(98);
 module.exports = generateQuadTreeFunction;
 module.exports.generateQuadTreeFunctionBody = generateQuadTreeFunctionBody;
 
+// These exports are for InlineTransform tool.
+// InlineTransform: getInsertStackCode
+module.exports.getInsertStackCode = getInsertStackCode;
+// InlineTransform: getQuadNodeCode
+module.exports.getQuadNodeCode = getQuadNodeCode;
+// InlineTransform: isSamePosition
+module.exports.isSamePosition = isSamePosition;
+// InlineTransform: getChildBodyCode
+module.exports.getChildBodyCode = getChildBodyCode;
+// InlineTransform: setChildBodyCode
+module.exports.setChildBodyCode = setChildBodyCode;
+
 function generateQuadTreeFunction(dimension) {
   let code = generateQuadTreeFunctionBody(dimension);
   return (new Function(code))();
@@ -26124,7 +26297,10 @@ function generateQuadTreeFunctionBody(dimension) {
 
   let code = `
 ${getInsertStackCode()}
-${getQuadNodeCode()}
+${getQuadNodeCode(dimension)}
+${isSamePosition(dimension)}
+${getChildBodyCode(dimension)}
+${setChildBodyCode(dimension)}
 
 function createQuadTree(options, random) {
   options = options || {};
@@ -26360,53 +26536,11 @@ ${assignInsertionQuadIndex(8)}
     }
   }
 }
-
-function getChild(node, idx) {
-${getChildBody()}
-  return null;
-}
-
-function setChild(node, idx, child) {
-${setChildBody()}
-}
-
-function isSamePosition(point1, point2) {
-  ${pattern('var d{var} = Math.abs(point1.{var} - point2.{var});', {indent: 2})}
-
-  return ${pattern('d{var} < 1e-8', {join: ' && '})};
-}
-
 return createQuadTree;
 
 `;
   return code;
 
-  function getChildBody() {
-    let childBody = [];
-    for (let i = 0; i < quadCount; ++i) {
-      childBody.push(`  if (idx === ${i}) return node.quad${i};`);
-    }
-
-    return childBody.join('\n');
-    // if (idx === 0) return node.quad0;
-    // if (idx === 1) return node.quad1;
-    // if (idx === 2) return node.quad2;
-    // if (idx === 3) return node.quad3;
-  }
-
-  function setChildBody() {
-    let childBody = [];
-    for (let i = 0; i < quadCount; ++i) {
-      let prefix = (i === 0) ? '  ' : '  else ';
-      childBody.push(`${prefix}if (idx === ${i}) node.quad${i} = child;`);
-    }
-
-    return childBody.join('\n');
-    // if (idx === 0) node.quad0 = child;
-    // else if (idx === 1) node.quad1 = child;
-    // else if (idx === 2) node.quad2 = child;
-    // else if (idx === 3) node.quad3 = child;
-  }
 
   function assignInsertionQuadIndex(indentCount) {
     let insertionCode = [];
@@ -26444,9 +26578,76 @@ return createQuadTree;
     // }
   }
 
+  function assignQuads(indent) {
+    // this.quad0 = null;
+    // this.quad1 = null;
+    // this.quad2 = null;
+    // this.quad3 = null;
+    let quads = [];
+    for (let i = 0; i < quadCount; ++i) {
+      quads.push(`${indent}quad${i} = null;`);
+    }
+    return quads.join('\n');
+  }
+}
 
-  function getQuadNodeCode() {
-    let quadNodeCode = `
+function isSamePosition(dimension) {
+  let pattern = createPatternBuilder(dimension);
+  return `
+  function isSamePosition(point1, point2) {
+    ${pattern('var d{var} = Math.abs(point1.{var} - point2.{var});', {indent: 2})}
+  
+    return ${pattern('d{var} < 1e-8', {join: ' && '})};
+  }  
+`;
+}
+
+function setChildBodyCode(dimension) {
+  var quadCount = Math.pow(2, dimension);
+  return `
+function setChild(node, idx, child) {
+  ${setChildBody()}
+}`;
+  function setChildBody() {
+    let childBody = [];
+    for (let i = 0; i < quadCount; ++i) {
+      let prefix = (i === 0) ? '  ' : '  else ';
+      childBody.push(`${prefix}if (idx === ${i}) node.quad${i} = child;`);
+    }
+
+    return childBody.join('\n');
+    // if (idx === 0) node.quad0 = child;
+    // else if (idx === 1) node.quad1 = child;
+    // else if (idx === 2) node.quad2 = child;
+    // else if (idx === 3) node.quad3 = child;
+  }
+}
+
+function getChildBodyCode(dimension) {
+  return `function getChild(node, idx) {
+${getChildBody()}
+  return null;
+}`;
+
+  function getChildBody() {
+    let childBody = [];
+    let quadCount = Math.pow(2, dimension);
+    for (let i = 0; i < quadCount; ++i) {
+      childBody.push(`  if (idx === ${i}) return node.quad${i};`);
+    }
+
+    return childBody.join('\n');
+    // if (idx === 0) return node.quad0;
+    // if (idx === 1) return node.quad1;
+    // if (idx === 2) return node.quad2;
+    // if (idx === 3) return node.quad3;
+  }
+}
+
+function getQuadNodeCode(dimension) {
+  let pattern = createPatternBuilder(dimension);
+  let quadCount = Math.pow(2, dimension);
+  var quadNodeCode = `
 function QuadNode() {
   // body stored inside this node. In quad tree only leaf nodes (by construction)
   // contain bodies:
@@ -26469,8 +26670,7 @@ ${assignQuads('  this.')}
   ${pattern('this.max_{var} = 0;', {indent: 2})}
 }
 `;
-    return quadNodeCode;
-  }
+  return quadNodeCode;
 
   function assignQuads(indent) {
     // this.quad0 = null;
@@ -26484,7 +26684,6 @@ ${assignQuads('  this.')}
     return quads.join('\n');
   }
 }
-
 
 function getInsertStackCode() {
   return `
