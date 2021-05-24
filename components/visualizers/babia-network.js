@@ -75,7 +75,9 @@ AFRAME.registerComponent('babia-network', {
   schema: {
     nodeLegend: { type: 'boolean', default: false },
     linkLegend: {type: 'boolean', default: false},
-    from: { type: 'string' },
+    from: { type: 'string', default: undefined },
+    nodesFrom: { type: 'string', default: undefined },
+    linksFrom: { type: 'string', default: undefined },
     data: { type: 'string', default: ''},
     nodes: { type:'string', default: '' },
     links: { type: 'string', default: '' },
@@ -249,13 +251,13 @@ AFRAME.registerComponent('babia-network', {
       /*while (self.el.firstChild)
         self.el.firstChild.remove();*/
       console.log("Generating Network from nodes and links...")
-      elData = elDataFromNodesAndLinks(elData)
-      self.data = elData
-      self.chart = generateNetworkChart(elData, oldData, self) 
-      
+      elData.nodes = JSON.parse(elData.nodes);
+      elData.links = JSON.parse(elData.links);    
+      elData = elDataFromNodesAndLinks(elData);
+      self.data = elData;
+      self.chart = generateNetworkChart(elData, oldData, self);
       // Dispatch interested events because I updated my visualization
-      dataReadyToSend("babiaData", self)
-
+      dataReadyToSend("babiaData", self);
     // Data from querier
     } else {
       // If changed from, need to re-register to the new data component
@@ -264,13 +266,14 @@ AFRAME.registerComponent('babia-network', {
         if (self.dataComponent) { self.dataComponent.unregister(el) }
 
         // Find the component and get if querier or filterdata by the event               
-        let eventName = findDataComponent(elData, el, self)
+        let dataComponent = findDataComponent(elData, el, self, 'from');
+        self.dataComponent = dataComponent.component;
         // If changed to filterdata or to querier
-        if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
+        if (self.dataComponentEventName && self.dataComponentEventName !== dataComponent.eventName) {
           el.removeEventListener(self.dataComponentEventName, _listener, true)
         }
         // Assign new eventName
-        self.dataComponentEventName = eventName
+        self.dataComponentEventName = dataComponent.eventName
 
         // Attach to the events of the data component
         el.addEventListener(self.dataComponentEventName, _listener = (e) => {
@@ -280,13 +283,57 @@ AFRAME.registerComponent('babia-network', {
         // Register for the new one
         self.dataComponent.register(el)
         return
+      } else if (elData.nodesFrom !== oldData.nodesFrom) {
+        // Now we have nodesFrom, should have linksFrom too
+        // Unregister for old querier
+        if (self.nodesDataComponent) { self.nodesDataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        let dataComponent = findDataComponent(elData, el, self, 'nodesFrom')
+        self.nodesDataComponent = dataComponent.component;
+        // If changed to filterdata or to querier
+        if (self.nodesDataComponentEventName && self.nodesDataComponentEventName !== dataComponent.eventName) {
+          el.removeEventListener(self.nodesDataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.nodesDataComponentEventName = dataComponent.eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.nodesDataComponentEventName, _listener = (e) => {
+          attachNewNodesDataEventCallback(self, e, oldData)
+        });
+
+        // Register for the new one
+        self.nodesDataComponent.register(el)
+
+        // Now, the same for linksfrom
+        // Unregister for old querier
+        if (self.linksDataComponent) { self.linksDataComponent.unregister(el) }
+
+        // Find the component and get if querier or filterdata by the event               
+        dataComponent = findDataComponent(elData, el, self, 'linksFrom')
+        self.linksDataComponent = dataComponent.component;
+        // If changed to filterdata or to querier
+        if (self.linksDataComponentEventName && self.linksDataComponentEventName !== dataComponent.eventName) {
+          el.removeEventListener(self.linksDataComponentEventName, _listener, true)
+        }
+        // Assign new eventName
+        self.linksDataComponentEventName = dataComponent.eventName
+
+        // Attach to the events of the data component
+        el.addEventListener(self.linksDataComponentEventName, _listener = (e) => {
+          attachNewLinksDataEventCallback(self, e, oldData)
+        });
+
+        // Register for the new one
+        self.linksDataComponent.register(el)
+        return
       }
 
       // If changed whatever, re-print with the current data
       if (elData !== oldData && self.babiaData) {
         /*while (self.el.firstChild)
           self.el.firstChild.remove();*/
-        console.log("Generating Network...")
         elData.data = JSON.parse(elData.data)
         elData = elDataFromData(elData)
         self.data = elData
@@ -399,6 +446,8 @@ AFRAME.registerComponent('babia-network', {
   * Querier component target
   */
   dataComponent: undefined,
+  nodesDataComponent: undefined,
+  linksDataComponent: undefined,
 
   /**
    * Property of the querier where the data is saved
@@ -414,7 +463,7 @@ AFRAME.registerComponent('babia-network', {
   /**
    * Where the data is gonna be stored
    */
-  babiaData: undefined,
+  babiaData: {'nodes': undefined, 'links': undefined},
 
   /**
    * Where the metaddata is gonna be stored
@@ -425,53 +474,59 @@ AFRAME.registerComponent('babia-network', {
 
 });
 
-let findDataComponent = (data, el, self) => {
-  let eventName = "babiaQuerierDataReady"
-  if (data.from) {
+
+let findDataComponent = (data, el, self, from) => {
+  let eventName = "babiaQuerierDataReady";
+  let dataComponent;
+  let error = false;
+  if (data[from]) {
     // Save the reference to the querier or filterdata
-    let dataElement = document.getElementById(data.from)
+    let dataElement = document.getElementById(data[from])
     if (dataElement.components['babia-filter']) {
-      self.dataComponent = dataElement.components['babia-filter']
+      dataComponent = dataElement.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (dataElement.components['babia-queryjson']) {
-      self.dataComponent = dataElement.components['babia-queryjson']
+      dataComponent = dataElement.components['babia-queryjson']
     } else if (dataElement.components['babia-queryes']) {
-      self.dataComponent = dataElement.components['babia-queryes']
+      dataComponent = dataElement.components['babia-queryes']
     } else if (dataElement.components['babia-querygithub']) {
-      self.dataComponent = dataElement.components['babia-querygithub']
+      dataComponent = dataElement.components['babia-querygithub']
     } else {
-      console.error("Problem registering to the querier")
-      return
+      error = true
     }
   } else {
     // Look for a querier or filterdata in the same element and register
     if (el.components['babia-filter']) {
-      self.dataComponent = el.components['babia-filter']
+      dataComponent = el.components['babia-filter']
       eventName = "babiaFilterDataReady"
     } else if (el.components['babia-queryjson']) {
-      self.dataComponent = el.components['babia-queryjson']
+      dataComponent = el.components['babia-queryjson']
     } else if (el.components['babia-queryes']) {
-      self.dataComponent = el.components['babia-queryes']
+      dataComponent = el.components['babia-queryes']
     } else if (el.components['babia-querygithub']) {
-      self.dataComponent = el.components['babia-querygithub']
+      dataComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier or filterdata in the scene
       if (document.querySelectorAll("[babia-filter]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
+        dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
         eventName = "babiaFilterDataReady"
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+        dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
+        dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-        self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
+        dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
       } else {
-        console.error("Error, querier not found")
-        return
+        error = true
       }
     }
   }
-  return eventName
+  if (error) {
+    console.error("Problem fiding the querier or filter");
+    return;
+  } else {
+    return {'component': dataComponent, 'eventName': eventName};
+  };
 }
 
 let attachNewDataEventCallback = (self, e, oldData) => {
@@ -479,27 +534,66 @@ let attachNewDataEventCallback = (self, e, oldData) => {
   self.dataComponentDataPropertyName = e.detail
   let rawData = self.dataComponent[self.dataComponentDataPropertyName]
 
-  console.log(rawData)
-
   self.babiaData = rawData
-  self.babiaMetadata = {
-    id: self.babiaMetadata.id++
-  }
+  self.babiaMetadata = { id: self.babiaMetadata.id++ }
   
   let elData = self.data
-
   elData.data = rawData
 
-  //remove previous chart
- /*while (self.el.firstChild)
-    self.el.firstChild.remove();*/
+  //remove previous chart (TODO)
   elData = elDataFromData(elData)
 
-  console.log("Generating Network from callback...")
+  console.log("Generating Network from data callback (Data)...")
   self.chart = generateNetworkChart(elData, oldData, self)
-
   // Dispatch interested events because I updated my visualization
   dataReadyToSend("babiaData", self)
+}
+
+let attachNewNodesDataEventCallback = (self, e, oldData) => {
+  // Get the data from the info of the event (propertyName)
+  self.nodesDataComponentDataPropertyName = e.detail
+  let rawData = self.nodesDataComponent[self.nodesDataComponentDataPropertyName]
+
+  self.babiaData.nodes = rawData
+  self.babiaMetadata = { id: self.babiaMetadata.id++ }
+  
+  let elData = self.data
+  elData.nodes = rawData
+
+  //remove previous chart (TODO)
+  elData = elDataFromNodesAndLinks(elData)
+  if (elData) {
+    console.log("Generating Network from callback (Nodes)...");
+    self.chart = generateNetworkChart(elData, oldData, self);
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self);
+  } else {
+    console.log("Nodes or links not ready yet");
+  };
+}
+
+let attachNewLinksDataEventCallback = (self, e, oldData) => {
+  // Get the data from the info of the event (propertyName)
+  self.linksDataComponentDataPropertyName = e.detail
+  let rawData = self.linksDataComponent[self.linksDataComponentDataPropertyName]
+
+  console.log("NewLinksData:", rawData)
+  self.babiaData.links = rawData
+  self.babiaMetadata = { id: self.babiaMetadata.id++ }
+  
+  let elData = self.data
+  elData.links = rawData
+
+  //remove previous chart (TODO)
+  elData = elDataFromNodesAndLinks(elData)
+  if (elData) {
+    console.log("Generating Network from callback (Links)...");
+    self.chart = generateNetworkChart(elData, oldData, self);
+    // Dispatch interested events because I updated my visualization
+    dataReadyToSend("babiaData", self);
+  } else {
+    console.log("Nodes or links not ready yet");
+  };
 }
 
 // Generate or update network
@@ -643,14 +737,20 @@ function elDataFromData(elData){
 // Format nodes and links
 
 function elDataFromNodesAndLinks(elData) {
-  let nodes = JSON.parse(elData.nodes);
-  let links = JSON.parse(elData.links);
+//  let nodes = JSON.parse(elData.nodes);
+//  let links = JSON.parse(elData.links);
+  let nodes = elData.nodes;
+  let links = elData.links;
 
   let nodeId = elData.nodeId;
   let nodeVal = elData.nodeVal;
   let source = elData.linkSource;
   let target = elData.linkTarget;
 
+  if (!Array.isArray(nodes) || !Array.isArray(links)) {
+    // Either nodes or links are not ready yet
+    return false
+  }
   nodes.forEach(node => {
     Object.keys(node).forEach(function (k) {
       if (k === nodeId) {
@@ -710,7 +810,6 @@ function showLegend(nodeThree, node, nodeLabel) {
 
 function generateLinkLegend(link, linkLabel, linkPosition, radius) {
   let text = link[linkLabel];
-  console.log(text)
   let width = 2;
   if (text.length > 16)
     width = text.length / 8;

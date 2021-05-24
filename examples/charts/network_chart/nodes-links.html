@@ -15,33 +15,37 @@
 
 <body>
     <a-scene background="color: grey" id="AframeScene">
-        <a-entity id="network" babia-network='data: [{"country": "Italy", "continent": "Europe", "size": 301300},
-        {"country": "China", "continent": "Asia", "size": 9600000},
-        {"country": "Spain", "continent": "Europe", "size": 505400},
-        {"country": "Germany", "continent": "Europe", "size": 357000},
-        {"country": "France", "continent": "Europe", "size": 643800},
-        {"country": "India", "continent": "Asia", "size": 3290000},
-        {"country": "Mexico", "continent": "America",  "size": 1970000},
-        {"country": "UK", "continent": "Europe", "size": 243600},
-        {"country": "Russia", "continent": "Europe", "size": 17100000},
-        {"country": "USA", "continent": "America", "size": 9160000},
-        {"country": "Estonia", "continent": "Europe", "size": 45230},
-        {"country": "Senegal", "continent": "Africa", "size": 196700},
-        {"country": "Benin", "continent": "Africa", "size": 112600},
-        {"country": "Uruguay", "continent": "America", "size": 175000},
-        {"country": "Canada", "continent": "America", "size": 9970000},
-        {"country": "Australia", "continent": "Oceania", "size": 7690000},
-        {"country": "Guinea", "continent": "Africa",  "size": 246000},
-        {"country": "Fidji", "continent": "Oceania", "size": 18275},
-        {"country": "Indonesia", "continent": "Asia", "size": 1900000},
-        {"country": "Samoa", "continent": "Oceania", "size": 2831}];
-            nodeId: country; nodeLabel: country; nodeAutoColorBy: country;
+        <a-entity id="network" babia-network='nodes: [
+                {"country": "Italy", "size": 301300},
+                {"country": "China", "size": 9600000},
+                {"country": "Spain", "size": 505400},
+                {"country": "Germany", "size": 357000},
+                {"country": "France", "size": 643800},
+                {"country": "India", "size": 3290000},
+                {"country": "Mexico", "size": 1970000},
+                {"country": "UK", "size": 243600},
+                {"country": "Russia", "size": 17100000},
+                {"country": "USA", "size": 9160000}]; 
+            links: [
+                {"id": "Link 1", "source": "China","target": "Italy"},
+                {"id": "Link 2", "source": "China","target": "Spain"},
+                {"id": "Link 3", "source": "Spain","target": "Germany"},
+                {"id": "Link 4", "source": "Spain","target": "France"},
+                {"id": "Link 4", "source": "China","target": "France"},
+                {"id": "Link 5", "source": "China","target": "India"},
+                {"id": "Link 6", "source": "UK","target": "Mexico"},
+                {"id": "Link 6", "source": "Spain","target": "Mexico"},
+                {"id": "Link 7", "source": "China","target": "UK"},
+                {"id": "Link 8", "source": "China","target": "Russia"},
+                {"id": "Link 9", "source": "China","target": "USA"}];
+            nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
             nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04;
-            linkId: continent; linkResolution: 6; linkAutoColorBy: continent;  
-            linkWidth: 0.5; nodeLegend: true; linkLegend: true; linkLabel: linkId' rotation="180 -50 0">
+            linkWidth: 0.5;  linkAutoColorBy: source; 
+            nodeLegend: true; linkLegend: true; linkLabel: id;'
+            rotation="0 0 90">
         </a-entity>
 
-        <a-entity movement-controls="fly: true" position="100 0 -80">
+        <a-entity movement-controls="fly: true" position="0 90 0" rotation="-90 90 90">
             <a-entity camera position="0 0 0" look-controls></a-entity>
             <a-entity cursor="rayOrigin:mouse" raycaster></a-entity>
             <a-entity laser-controls="hand: right" raycaster></a-entity>
