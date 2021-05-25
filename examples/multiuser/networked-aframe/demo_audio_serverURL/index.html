@@ -1,0 +1,39 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Basic Example — Networked-Aframe</title>
+    <meta name="description" content="Basic Example — Networked-Aframe" />
+</head>
+
+<body>
+    <h1>Welcome to the New Demo</h1>
+    <h2>Choose a server URL to connect to:</h2>
+    <label for="server_url">Server URL:</label>
+    <input type="text" id="server_url" name="server_url"><br><br>
+    <h2>Choose a username:</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <h2>Choose a color:</h2>
+    <label for="color">Color:</label>
+    <input type="color" id="color" name="color"><br><br>
+    <input type="button" id="start_button" value="Start">
+</body>
+
+<script>
+    let startButton = document.getElementById("start_button");
+    let serverUrlInput = document.getElementById("server_url");
+    let colorInput = document.getElementById("color");
+    let usernameInput = document.getElementById("username");
+    startButton.addEventListener('click', function (event) {
+        let serverURL = serverUrlInput.value;
+        let username = usernameInput.value;
+        let color = colorInput.value.split("#")[1];
+
+        let url = "./scene.html" + "?serverURL=" + serverURL + "&username=" + username + "&color=" + color;
+        console.log(url)
+        window.location.href = url;
+    });
+</script>
+
+</html>

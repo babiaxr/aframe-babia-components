@@ -19,6 +19,9 @@
     "test:firefox": "cypress run --browser firefox:dev",
     "test:chrome": "cypress run --browser chrome"
   },
+  "dependencies": {
+    "networked-aframe": "^0.8.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/babiaxr/aframe-babia-components.git"
