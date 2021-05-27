@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame Querier Component with Watchers</title>
+    <meta name="description" content="Example for BabiaXR- component with watchers.">
+    </meta>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>fr
+</head>
+
+<body>
+
+    <a-scene background="color: #000" id="AframeScene">
+        <a-entity id="queriertest"></a-entity>
+    </a-scene>
+
+
+    <script>
+        let scene = document.getElementById('AframeScene')
+        let querier_entity = document.getElementById('queriertest')
+
+        sceneUpdater();
+
+        async function sceneUpdater() {
+
+            //child-attached (append child)
+            await delay();
+            let entity_1 = document.createElement('a-entity');
+            entity_1.setAttribute('id', 'entity_1')
+            scene.appendChild(entity_1)
+
+
+            //child-detached (remove child)
+            await delay();
+            scene.removeChild(entity_1)
+
+            //componentinitialized (set component as attribute in entity)
+            await delay();
+            querier_entity.setAttribute('babia-queryjson', 'data', '{"name": "Holly","age": 19}')
+
+
+            //componentchanged (add, change or remove entity attributes or component attributes)
+            await delay();
+            querier_entity.setAttribute('babia-queryjson', {
+                'data': '{"name": "Georgia","age": 28}', //change attribute in component
+                'url': './data_2.json' //add new attribute to component
+            })
+            await delay();
+            querier_entity.setAttribute('babia-queryjson', {
+                'data': '{"name": "María", "siblings": 3}',//change attribute in component
+                'url': './data_1.json'//change attribute in component
+            })
+            await delay();
+            querier_entity.removeAttribute('babia-queryjson', 'data') //remove attribute from component
+
+            //componentremoved (remove whole component from entity)
+            await delay();
+            querier_entity.removeAttribute('babia-queryjson')
+        }
+
+
+        function delay() {
+            return new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    </script>
+    <script>
+
+        scene.addEventListener('child-attached', function (event) {
+            console.log(event);
+            if (event.detail.el.id === 'entity_1') {
+                console.log('Entity_1 has been added: ', event.target.children["entity_1"])
+                let entity_1 = document.getElementById('entity_1')
+                entity_1.addEventListener('loaded', function (event) {
+                    console.log(event)
+                    console.log('Entity_1 has been loaded: ', event.target)
+                })
+            }
+        })
+        scene.addEventListener('child-detached', function (event) {
+            console.log(event);
+            console.log('Entity has been removed')
+
+        })
+
+        querier_entity.addEventListener('componentchanged', function (event) {
+            console.log(event);
+            if (event.detail.name === 'babia-queryjson') {
+                console.log('Querier component has been updated: ', event.target.components["babia-queryjson"].data, '!')
+                //console.log('Entity has changed querier: ', event.target.getAttribute('babia-queryjson'), '!');
+            }
+        });
+
+        querier_entity.addEventListener('componentinitialized', function (event) {
+            console.log(event)
+            console.log('Querier entity has initialized new component: ', event.target.components["babia-queryjson"], '!')
+        })
+
+        querier_entity.addEventListener('componentremoved', function (event) {
+            console.log(event)
+            console.log('Component has been removed from: ', event.target)
+        })
+
+
+
+    </script>
+    <script>
+        /*var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            console.log(mutation);
+            console.log(mutation.addedNodes)
+            if (mutation.addedNodes[0] == 'a-entity') { console.log('entity') }});
+        });
+        var config = { attributes: true, childList: true, characterData: true, subTree: true };
+        observer.observe(target, config);*/
+    </script>
+
+</body>
+
+</html>
