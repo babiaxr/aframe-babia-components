@@ -72,7 +72,7 @@ return {
 
 
 
-var _adapter_factory = require('./adapter_factory.js.js.js');
+var _adapter_factory = require('./adapter_factory.js');
 
 var adapter = (0, _adapter_factory.adapterFactory)({ window: window });
 module.exports = adapter; // this is the difference from adapter_core.
@@ -291,7 +291,7 @@ exports.shimAddTrackRemoveTrack = shimAddTrackRemoveTrack;
 exports.shimPeerConnection = shimPeerConnection;
 exports.fixNegotiationNeeded = fixNegotiationNeeded;
 
-var _utils = require('../utils.js.js');
+var _utils = require('../utils.js');
 
 var utils = _interopRequireWildcard(_utils);
 
@@ -1082,7 +1082,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.shimGetUserMedia = shimGetUserMedia;
 
-var _utils = require('../utils.js.js');
+var _utils = require('../utils.js');
 
 var utils = _interopRequireWildcard(_utils);
 
