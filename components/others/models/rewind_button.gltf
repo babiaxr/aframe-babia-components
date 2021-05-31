@@ -1,0 +1,106 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.2.75",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "rewind",
+            "rotation" : [
+                0.7071067690849304,
+                0,
+                0,
+                0.7071067690849304
+            ]
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Plane.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 40,
+            "max" : [
+                1,
+                0,
+                1
+            ],
+            "min" : [
+                -1,
+                -0.19749708473682404,
+                -1
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 40,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 40,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 60,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 480,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 480,
+            "byteOffset" : 480
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 320,
+            "byteOffset" : 960
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 120,
+            "byteOffset" : 1280
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1400,
+            "uri" : "data:application/octet-stream;base64,AACAPwAAAAAAAIA/AACAP608Sr4AAIA/JxY7u608Sr4AKng7JxY7uwAAAAAAKng7AACAP608Sr4AAIC/JxY7u608Sr4AKng7AACAP608Sr4AAIA/AACAvwAAAAAA6Pi7AACAv608Sr4A6Pi7ACCru608Sr4AAIC/ACCruwAAAAAAAIC/AACAvwAAAAAA6Pi7ACCruwAAAAAAAIC/JxY7uwAAAAAAKng7AGAEugAAAAAAAIA/ACCruwAAAAAAAIC/ACCru608Sr4AAIC/JxY7u608Sr4AKng7JxY7uwAAAAAAKng7AACAPwAAAAAAAIC/AACAPwAAAAAAAIA/ACCru608Sr4AAIC/AACAv608Sr4A6Pi7AGAEuq08Sr4AAIA/JxY7uwAAAAAAKng7JxY7u608Sr4AKng7AGAEuq08Sr4AAIA/AGAEugAAAAAAAIA/AACAPwAAAAAAAIC/AACAP608Sr4AAIC/AACAP608Sr4AAIA/AACAPwAAAAAAAIA/JxY7uwAAAAAAKng7JxY7u608Sr4AKng7AACAP608Sr4AAIC/AACAPwAAAAAAAIC/AGAEugAAAAAAAIA/AGAEuq08Sr4AAIA/AACAv608Sr4A6Pi7AACAvwAAAAAA6Pi7vWo0PwAAAACnnjW/vWo0PwAAAACnnjW/vWo0PwAAAACnnjW/vWo0PwAAAACnnjW/AAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAkM00PwAAAABFPDU/kM00PwAAAABFPDU/kM00PwAAAABFPDU/kM00PwAAAABFPDU/AAAAAAAAgL8AAACAAAAAAAAAgL8AAACAAAAAAAAAgL8AAACAAAAAAAAAgL8AAACA0v9/vwAAAADlkxo70v9/vwAAAADlkxo70v9/vwAAAADlkxo70v9/vwAAAADlkxo7AAAAAAAAgL8AAACAAAAAAAAAgL8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACA0P9/vwAAAADjkxo70P9/vwAAAADjkxo70P9/vwAAAADjkxo70P9/vwAAAADjkxo7AACAvwAAAAAAAACAAACAvwAAAAAAAACAAACAvwAAAAAAAACAAACAvwAAAAAAAACAdxo1PwAAAABr7zQ/dxo1PwAAAABr7zQ/dxo1PwAAAABr7zQ/dxo1PwAAAABr7zQ/nb81PwAAAACJSTS/nb81PwAAAACJSTS/nb81PwAAAACJSTS/nb81PwAAAACJSTS/AACAPwAAgD8AAIA/AACAP+pE/z4VfAA/6kT/PhV8AD8AAIA/AAAAAOpE/z4VfAA/AACAPwAAgD8AAAAAMA7+PgAAAAAwDv4+wKn+PgAAAADAqf4+AAAAAAAAAAAwDv4+wKn+PgAAAADqRP8+FXwAP+je/z4AAIA/wKn+PgAAAADAqf4+AAAAAOpE/z4VfAA/6kT/PhV8AD8AAIA/AAAAAAAAgD8AAIA/wKn+PgAAAAAAAAAAMA7+Puje/z4AAIA/6kT/PhV8AD/qRP8+FXwAP+je/z4AAIA/6N7/PgAAgD8AAIA/AAAAAAAAgD8AAAAAAACAPwAAgD8AAIA/AACAP+pE/z4VfAA/6kT/PhV8AD8AAIA/AAAAAAAAgD8AAAAA6N7/PgAAgD/o3v8+AACAPwAAAAAwDv4+AAAAADAO/j4AAAEAAgAAAAIAAwAEAAUABgAHAAgACQAHAAkACgALAAwADQAOAAsADQAPABAAEQAPABEAEgATABQADQAFABUAFgAFABYAFwAYABkAGgAYABoAGwAcAB0AHgAcAB4AHwAgACEAIgAgACIAIwAkACUAJgAkACYAJwA="
+        }
+    ]
+}
