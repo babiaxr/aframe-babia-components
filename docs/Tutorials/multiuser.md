@@ -11,11 +11,11 @@ tags: ["api", "networked", "guide", "multiuser", "syncronization", "webrtc"]
 
 In order to create a multiuser scene, where two or more users can join and share entities, messages and other information (like everyone's location on scene,  for example) there are some basic and necessary steps to follow, as well as some options to customize the scene and get the desired behaviour. In this tutorial, we will cover the basic steps, as well as some of the most useful options.
 
-## WebRTC Server
+## Deploying a WebRTC Server (Optional)
 
-The first step is to launch a WebRTC server to connect to and share information.
+It is needed a WebRTC Server for sharing information, you can connect to an existing one or the next guide provides the necessary steps to deploy one.
 
-**// Link to server tutorial here**
+[Deployying a WebRTC (easyrtc) server for using the multiuser feature](./deploy_webrtc_server.md)
 
 Once you have access to the WebRTC server, you will have to remember the url to connect to it, since it will be needed in the next step.
 
