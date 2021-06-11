@@ -15,7 +15,9 @@ In order to create a multiuser scene, where two or more users can join and share
 
 It is needed a WebRTC Server for sharing information, you can connect to an existing one or the next guide provides the necessary steps to deploy one.
 
-[Deploying a WebRTC (easyrtc) server for using the multiuser feature](./deploy_webrtc_server)
+[Deploying a WebRTC (easyrtc) server for using the multiuser feature](/tutorials/deploy_webrtc_server/)
+
+> Markdown file on repo: https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/Tutorials/deploy_webrtc_server.md
 
 Once you have access to the WebRTC server, you will have to remember the url to connect to it, since it will be needed in the next step.
 
