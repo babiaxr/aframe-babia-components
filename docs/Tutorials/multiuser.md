@@ -15,7 +15,7 @@ In order to create a multiuser scene, where two or more users can join and share
 
 It is needed a WebRTC Server for sharing information, you can connect to an existing one or the next guide provides the necessary steps to deploy one.
 
-[Deployying a WebRTC (easyrtc) server for using the multiuser feature](./deploy_webrtc_server.md)
+[Deploying a WebRTC (easyrtc) server for using the multiuser feature](./deploy_webrtc_server)
 
 Once you have access to the WebRTC server, you will have to remember the url to connect to it, since it will be needed in the next step.
 
