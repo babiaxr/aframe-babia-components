@@ -39,7 +39,9 @@ AFRAME.registerComponent('babia-queryjson', {
             parseEmbeddedJSONData(data.data, el, self)
         } else {
             if (oldData.url !== data.url) {
-                requestJSONDataFromURL(data, el, self)
+                //Almu
+                retrieveData(data, self)
+                //requestJSONDataFromURL(data, el, self) //Current 
             } else if (oldData.embedded !== data.embedded) {
                 parseEmbeddedJSONData(data.embedded, el, self)
             }
@@ -111,8 +113,105 @@ AFRAME.registerComponent('babia-queryjson', {
     interestedElements: [],
 })
 
+/* ALMU ADDITION */
+/* OPTION 1: Make XMLHttpRequest Asynchronous (inside a promise) and use async/await*/
 
-let requestJSONDataFromURL = (data, el, self) => {
+/*async function retrieveData(data, self){
+    let result = await requestJSONDataFromURL(data)
+    let dataRetrieved
+    if (typeof result === 'string' || result instanceof String) {
+        dataRetrieved = JSON.parse(result)
+    } else {
+        dataRetrieved = result
+    }
+
+    // Check if a list
+    if (!Array.isArray(dataRetrieved)) {
+        console.error("Data must be an array")
+        return
+    }
+
+    // Save
+    self.babiaData = dataRetrieved
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend("babiaData", self)
+}
+
+let requestJSONDataFromURL = (data) => {
+    return new Promise (function(resolve, reject){
+        // Create a new request object
+    let request = new XMLHttpRequest();
+
+    // Initialize a request
+    request.open('get', data.url)
+    // Send it
+    request.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+            resolve(request.response)
+            // Save data
+            
+        } else {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+            console.error("Error during requesting data", this.status, xhr.statusText)
+        }
+    };
+    request.onerror = function () {
+        reject({
+            status: this.status,
+            statusText: xhr.statusText
+        });
+        console.error("Error during requesting data", this.status, xhr.statusText)
+    };
+    request.send();
+    })
+}*/
+
+/* OPTION 2: Use Fetch (implements promises) and async/await*/
+
+async function retrieveData(data, self){
+    let result = await requestJSONDataFromURL(data)
+    let dataRetrieved
+    if (typeof result === 'string' || result instanceof String) {
+        dataRetrieved = JSON.parse(result)
+    } else {
+        dataRetrieved = result
+    }
+
+    // Check if a list
+    if (!Array.isArray(dataRetrieved)) {
+        console.error("Data must be an array")
+        return
+    }
+
+    // Save
+    self.babiaData = dataRetrieved
+    self.babiaMetadata = {
+        id: self.babiaMetadata.id++
+    }
+    // Dispatch/Trigger/Fire the event
+    dataReadyToSend("babiaData", self)
+}
+
+async function requestJSONDataFromURL(data) { 
+    let response = await fetch(data.url);
+
+    if (response.status == 200) {
+       let json = await response.json(); 
+       return json;
+    }
+ 
+    throw new Error(response.status);
+ }
+
+/* CURRENT VERSION (synchronous XMLHttpRequest, with callbacks) */
+
+/*let requestJSONDataFromURL = (data, el, self) => {
     // Create a new request object
     let request = new XMLHttpRequest();
 
@@ -160,7 +259,7 @@ let requestJSONDataFromURL = (data, el, self) => {
         console.error("Error during requesting data", this.status, xhr.statusText)
     };
     request.send();
-}
+}*/
 
 let parseEmbeddedJSONData = (embedded, el, self) => {
     // Save data

@@ -1,0 +1,364 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Basic Example — Networked-Aframe</title>
+    <meta name="description" content="Basic Example — Networked-Aframe" />
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="../easyrtc.js"></script>
+    <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+
+    <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+</head>
+
+<body>
+    <a-scene id="AframeScene" networked-scene="
+      room: room_persistance;
+      adapter: easyrtc;
+      debug: true;
+      serverURL: empty_server;
+    ">
+        <!-- serverURL:http://10.1.130.131:8080/; -->
+
+        <a-assets>
+            <!-- Dummy asset to make the scene sync (WIP)-->
+            <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
+
+            <!-- Templates -->
+            <!-- Box -->
+            <template id="box-template">
+                <a-box class="box"></a-box>
+            </template>
+            <!-- Box Button -->
+            <template id="box-button-template">
+                <a-plane class="box_button"></a-plane>
+            </template>
+            <!-- Box Label-->
+            <template id="box-label-template">
+                <a-text class="box_label"></a-text>
+            </template>
+            <!-- Cyl -->
+            <template id="cyl-template">
+                <a-cylinder class="cyl"></a-cylinder>
+            </template>
+            <!-- Cyl Label -->
+            <template id="cyl-label-template">
+                <a-text class="cyl_label"></a-text>
+            </template>
+            <!-- Avatar -->
+            <template id="mov-template">
+                <a-entity class="mov"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-sphere class="avatar"></a-sphere>
+            </template>
+            <template id="username-tag-template">
+                <a-text class="username-tag"></a-text>
+            </template>
+        </a-assets>
+
+        <!-- Entities -->
+
+        <!-- Environment -->
+        <a-entity environment="preset: japan; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-entity light="color: #95E0FF; intensity: 1; type: ambient;" visible="true"></a-entity>
+
+        <!-- Sync entities, not persistent -->
+        <a-entity id="mov" movement-controls="fly: true" position="0 3 10" rotation="0 30 0"
+            networked="template:#mov-template; attachTemplateToLocal:false">
+            <a-sphere id="avatar" camera color="#66FFFF" look-controls scale="0.2 0.2 0.2"
+                networked="template:#avatar-template;attachTemplateToLocal:false;"></a-sphere>
+            <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
+                position="-0.5 2 0" width="5" color="black" value="Light Blue Player"></a-text>
+            </a-sphere>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+        <!-- Sync entities, persistent -->
+        <!-- Box, only color not shared -->
+        <a-box id="box" color="#3C78D8"
+            networked="template:#box-template; networkId:box; persistent: true; owner: scene" position="-7 1 5"
+            rotation="0 -45 0"></a-box>
+        <a-plane id="box_button"
+            networked="template:#box-button-template; networkId:box_button; persistent: true; owner: scene"
+            position="-7 3 5" rotation="0 65 0" height="1" width="2" color="#F8F6F2">
+            <a-text id="box_label"
+                networked="template:#box-label-template; networkId:box_label; persistent: true; owner: scene"
+                value="Start" color="#0582B5" width="10" position="-0.5 0 0" rotation="0 0 0"></a-text>
+        </a-plane>
+
+        <!-- Cyl, all shared -->
+        <a-cylinder id="cyl" color="#FF33CC"
+            networked="template:#cyl-template; networkId:cyl; persistent: true; owner: scene" position="0 1 0"
+            rotation="0 0 0">
+            <a-text id="cyl_label"
+                networked="template:#cyl-label-template; networkId:cyl_label; persistent: true; owner: scene"
+                value="Click on cylinder to change color" color="#FF33CC" width="10" position="-2.5 1 0"
+                rotation="0 0 0">
+            </a-text>
+        </a-cylinder>
+
+    </a-scene>
+
+    <script>
+        /* GET DOM ELEMENTS */
+        let scene = document.getElementById('AframeScene')
+        let avatar = document.getElementById('avatar')
+        let usernameTag = document.getElementById('username-tag')
+        let box = document.getElementById('box')
+        let boxButton = document.getElementById("box_button")
+        let boxLabel = document.getElementById("box_label")
+        let cyl = document.getElementById('cyl')
+        let cylLabel = document.getElementById('cyl_label')
+
+        /* SET SERVER URL FROM QUERY STRING */
+        let serverURL = getValueFromQueryString('serverURL');
+        console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
+        if (serverURL) { scene.setAttribute('networked-scene', 'serverURL', serverURL) }
+
+        /* Cyl colors*/
+        let colors = [
+            "#FF33CC",
+            "#33CC66",
+            "#FF6666",
+            "#66FFFF",
+            "#3C78D8",
+            "#FFFF66",
+            "#B28DFF",
+            "#663300",
+            "#999999",
+            "#F6F7FB"
+        ]
+
+        /* UI Event Listeners */
+
+        // BoxButton
+        boxButton.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(box)) {
+                NAF.utils.takeOwnership(box)
+            }
+            moveBox();
+            if (!NAF.utils.isMine(boxButton)) {
+                NAF.utils.takeOwnership(boxButton)
+            }
+            if (!NAF.utils.isMine(boxLabel)) {
+                NAF.utils.takeOwnership(boxLabel)
+            }
+        });
+
+        // Cyl
+        cyl.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(cyl)) {
+                NAF.utils.takeOwnership(cyl)
+            }
+            if (!NAF.utils.isMine(cylLabel)) {
+                NAF.utils.takeOwnership(cylLabel)
+            }
+            changeCylColor()
+        })
+
+        /* NAF Event Listeners */
+
+        // Connected
+        document.body.addEventListener('connected', function (event) {
+            console.log('connected event. clientId =', event.detail.clientId);
+            console.log("Filled serverURL, networked-scene: ", scene.getAttribute('networked-scene'))
+
+        });
+
+        // Client Connected
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+        });
+
+        // Client Disconnected
+        document.body.addEventListener('clientDisconnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientDisconnected event. clientId =', clientId);
+        });
+
+        // Entity Created
+        document.body.addEventListener('entityCreated', function (event) {
+            console.log(event.detail.el)
+            if (event.detail.el === box) {
+                // Set starting color, blue if owner, gray if not owner
+                if (NAF.utils.isMine(box)) {
+                    box.setAttribute('color', '#3C78D8')
+                } else {
+                    box.setAttribute('color', '#B28DFF')
+                }
+            }
+
+        });
+
+        /* Ownership Event Listeners */
+
+        // Box
+        box.addEventListener('ownership-gained', e => {
+            console.log("Box ownership gained, old Owner:", e.detail.oldOwner)
+            box.setAttribute('color', '#3C78D8');
+        });
+        box.addEventListener('ownership-lost', e => {
+            console.log("Box ownership lost")
+            box.setAttribute('color', '#B28DFF')
+        });
+
+        // BoxButton
+        boxButton.addEventListener('ownership-gained', e => {
+            console.log("Box button ownership gained")
+        });
+        boxButton.addEventListener('ownership-lost', e => console.log("Box button ownership lost"));
+
+        // BoxLabel
+        boxLabel.addEventListener('ownership-gained', e => {
+            console.log("Box label ownership gained")
+        });
+        boxLabel.addEventListener('ownership-lost', e => console.log("Box label ownership lost"));
+
+        // Cyl
+        cyl.addEventListener('ownership-gained', e => {
+            console.log("Cyl ownership gained")
+        });
+        cyl.addEventListener('ownership-lost', e => console.log("Cyl ownership lost"));
+
+        // CylLabel
+        cylLabel.addEventListener('ownership-gained', e => {
+            console.log("Cyl label ownership gained")
+        });
+        cylLabel.addEventListener('ownership-lost', e => console.log("Cyl label ownership lost"));
+
+        /* Other methods */
+
+        // Get Server
+        function getValueFromQueryString(string) {
+            string = string.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + string + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Update Box
+        function moveBox() {
+            if (boxLabel.getAttribute('value') === 'Start') {
+                box.setAttribute('animation', { 'property': 'position', 'from': '-7 1 5', 'to': '-2 3 5', 'dur': '2000', 'easing': 'linear', 'loop': 'true' })
+                boxButton.setAttribute('color', '#E44B00')
+                boxLabel.setAttribute('value', 'Stop')
+            } else {
+                let pos = `${box.getAttribute('position').x} 
+                            ${box.getAttribute('position').y} 
+                            ${box.getAttribute('position').z}`
+                box.setAttribute('animation', { 'property': 'position', 'from': pos, 'to': pos, 'loop': 'false' })
+                boxButton.setAttribute('color', '#F8F6F2')
+                boxLabel.setAttribute('value', 'Start')
+            }
+        }
+
+        // Update Cyl
+        function changeCylColor() {
+            let _colors = colors.filter(color => color === cyl.getAttribute('color'))
+            let index = colors.indexOf(_colors[0]) + 1
+            if (index >= colors.length) { index = 0 }
+            cyl.setAttribute('color', colors[index])
+            cylLabel.setAttribute('color', colors[index])
+        }
+    </script>
+
+    <script>
+        // Schemas with components and attributes for syncronization
+
+        // Not adding color, since we want it to be associated with ownership
+        // Adding animation since we want everyone to see it
+        NAF.schemas.add({
+            template: '#box-template',
+            components: [
+                'position',
+                'rotation',
+                'animation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#box-button-template',
+            components: [
+                'position',
+                'rotation',
+                'height',
+                'width',
+                'color'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#box-label-template',
+            components: [
+                'value',
+                'color',
+                'width',
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#cyl-template',
+            components: [
+                'position',
+                'rotation',
+                'color',
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#cyl-label-template',
+            components: [
+                'value',
+                'color',
+                'width',
+                'position',
+                'rotation'
+            ]
+        });
+
+
+        NAF.schemas.add({
+            template: '#mov-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#avatar-template',
+            components: [
+                'position',
+                'rotation',
+                'color',
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#username-tag-template',
+            components: [
+                'value',
+                'color',
+                'width',
+                'position',
+                'rotation'
+            ]
+        });
+
+    </script>
+</body>
+
+</html>

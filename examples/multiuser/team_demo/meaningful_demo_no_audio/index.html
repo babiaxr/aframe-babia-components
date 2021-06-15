@@ -1,0 +1,339 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Basic Example — Networked-Aframe</title>
+    <meta name="description" content="Basic Example — Networked-Aframe" />
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="../easyrtc.js"></script>
+    <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+
+    <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+</head>
+
+<body>
+    <a-scene id="AframeScene" networked-scene="
+      room: room_demo;
+      adapter: easyrtc;
+      debug: true;
+      serverURL: empty_server;
+    ">
+        <!-- serverURL:http://10.1.130.131:8080/; -->
+
+        <a-assets>
+            <!-- Dummy asset to make the scene sync (WIP)-->
+            <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
+
+            <!-- Templates -->
+            <!-- Avatar -->
+            <template id="mov-template">
+                <a-entity class="mov"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-sphere class="avatar"></a-sphere>
+            </template>
+            <template id="username-tag-template">
+                <a-text class="username-tag"></a-text>
+            </template>
+            <!-- Cyls -->
+            <template id="cyls-template">
+                <a-entity class="cyls"></a-entity>
+            </template>
+            <!-- Bars -->
+            <template id="bars-template">
+                <a-entity class="bars"></a-entity>
+            </template>
+            <!-- Querier, same one for all graphs -->
+            <template id="querier-template">
+                <a-entity class="querier"></a-entity>
+            </template>
+            <!-- Interface, same one for all interfaces -->
+            <template id="interface-template">
+                <a-entity class="interface"></a-entity>
+            </template>
+
+
+        </a-assets>
+
+
+        <!--Not sync entities-->
+        <a-plane id="color_button" position="-5 0.5 5" rotation="0 45 0" height="0.5" width="3.5" color="#66FFFF">
+            <a-text id="color_label" value="Light Blue Player. Click to change player" color="black" width="4"
+                position="-1.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <!--Sync entities, not persistent-->
+        <a-entity id="mov" movement-controls="fly: true" position="0 2 10"
+            networked="template:#mov-template; attachTemplateToLocal:false">
+            <a-sphere id="avatar" camera color="#66FFFF" look-controls scale="0.2 0.2 0.2"
+                networked="template:#avatar-template;attachTemplateToLocal:false;"></a-sphere>
+            <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
+                position="-0.5 3 0" width="5" color="black" value="Light Blue Player"></a-text>
+            </a-sphere>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+
+        <!-- Sync entities, persistent -->
+        <a-entity id="querierData" babia-queryjson="url: ./data_vaccination.json;"
+            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
+
+        <a-entity id="cyls" babia-cyls='from: querierData; x_axis:country; height: partial; radius: population; legend: foxy; palette: foxy;
+            radiusMax: 2; heightMax: 100; animation: true;'
+            networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" position="5 1 -10"
+            rotation="0 0 0" scale="0.25 0.1 0.25">
+        </a-entity>
+
+        <a-entity id="interface_cyls" babia-ui="target: cyls"
+            networked="template:#interface-template; networkId:interface_cyls; persistent: true; owner: scene"
+            position="22 1 -5" rotation="0 -45 0" scale="0.5 0.5 0.5"></a-entity>
+
+        <a-entity id="bars" babia-bars='index: country; height: partial; legend: true; axis: true; palette: foxy;  title: babia-bars;
+        titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 100; animation: true;
+           from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
+            position="-10 1 -15" rotation="0 0 0" scale="0.5 1 0.5"></a-entity>
+
+
+        <a-entity id="interface_bars" babia-ui="target: bars"
+            networked="template:#interface-template; networkId: interface_bars; persistent: true; owner: scene"
+            position="-15 1 -5" rotation="0 45 0" scale="0.5 0.5 0.5"></a-entity>
+
+    </a-scene>
+
+    <script>
+        /* GET DOM ELEMENTS */
+        let scene = document.getElementById('AframeScene')
+        let avatar = document.getElementById('avatar')
+        let usernameTag = document.getElementById('username-tag')
+        let colorButton = document.getElementById('color_button')
+        let colorLabel = document.getElementById('color_label')
+        let cyls = document.getElementById('cyls')
+        let interfaceCyls = document.getElementById('interface_cyls')
+        let bars = document.getElementById('bars')
+        let interfaceBars = document.getElementById('interface_bars')
+
+        /* SET SERVER URL FROM QUERY STRING */
+        let serverURL = getValueFromQueryString('serverURL');
+        console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
+        if (serverURL) { scene.setAttribute('networked-scene', 'serverURL', serverURL) }
+
+        /* LIST OF USERNAMES AND AVATAR COLORS */
+        let players = [
+            { color: "#66FFFF", username: "Light Blue Player", clientId: "" },
+            { color: "#FF33CC", username: "Pink Player", clientId: "" },
+            { color: "#33CC66", username: "Green Player", clientId: "" },
+            { color: "#FF6666", username: "Red Player", clientId: "" },
+            { color: "#3C78D8", username: "Dark Blue Player", clientId: "" },
+            { color: "#FFFF66", username: "Yellow Player", clientId: "" },
+            { color: "#B28DFF", username: "Purple Player", clientId: "" },
+            { color: "#663300", username: "Brown Player", clientId: "" },
+            { color: "#999999", username: "Gray Player", clientId: "" },
+            { color: "#F6F7FB", username: "Pearl Player", clientId: "" }
+        ]
+
+        /* UI Event Listeners */
+
+        // ColorButton
+        colorButton.addEventListener('click', function (event) {
+            let _players = players.filter(player => player.color === colorButton.getAttribute('color'))
+            let index = players.indexOf(_players[0]) + 1
+            if (index >= players.length) {
+                index = 0;
+            }
+            colorButton.setAttribute('color', players[index].color)
+            colorLabel.setAttribute('value', `${players[index].username}. Click to change player`)
+            usernameTag.setAttribute('value', players[index].username)
+            avatar.setAttribute('color', players[index].color)
+        })
+
+        // InterfaceCyls
+        interfaceCyls.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(cyls)) {
+                NAF.utils.takeOwnership(cyls)
+            }
+            if (!NAF.isMine(interfaceCyls)) {
+                NAF.utils.takeOwnership(interfaceCyls)
+            }
+        });
+
+        // InterfacebBars
+        interfaceBars.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(bars)) {
+                NAF.utils.takeOwnership(bars)
+            }
+            if (!NAF.utils.isMine(interfaceBars)) {
+                NAF.utils.takeOwnership(interfaceBars)
+            }
+        });
+
+
+        /* NAF Messages */
+
+        // Subscriptions
+        NAF.connection.subscribeToDataChannel('hello_message', function (senderId, dataType, data, targetId) {
+            console.log('Message received: ', data)
+        })
+
+        // Senders
+
+        // One client
+        function sendMessage(client, dataType, data) {
+            NAF.connection.sendDataGuaranteed(client, dataType, data)
+            console.log(`message sent to ${client}`)
+        };
+
+        // To everyone
+        function broadcastMessage(dataType, data) {
+            NAF.connection.broadcastDataGuaranteed(dataType, data)
+            console.log(`message broadcasted`)
+        };
+
+        /* NAF Event Listeners */
+
+        // Connected
+        document.body.addEventListener('connected', function (event) {
+            console.log('connected event. clientId =', event.detail.clientId);
+            console.log("Filled serverURL, networked-scene: ", scene.getAttribute('networked-scene'))
+            let message = 'Hello everyone! I am: ' + event.detail.clientId
+            broadcastMessage('hello_message', message)
+        });
+
+        // Client Connected
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            let message = 'Hello, ' + clientId + '! I am ' + NAF.clientId
+            sendMessage(clientId, 'hello_message', message)
+        });
+
+        // Client Disconnected
+        document.body.addEventListener('clientDisconnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientDisconnected event. clientId =', clientId);
+        });
+
+        /* Ownership Event Listeners */
+
+        // Cyls
+        cyls.addEventListener('ownership-gained', e => {
+            console.log("Cyls ownership gained")
+        });
+        cyls.addEventListener('ownership-lost', e => console.log("Cyls ownership lost"));
+
+        // InterfaceCyls
+        interfaceCyls.addEventListener('ownership-gained', e => {
+            console.log("InterfaceCyls ownership gained")
+        });
+        interfaceCyls.addEventListener('ownership-lost', e => console.log("InterfaceCyls ownership lost"));
+
+        // Bars
+        bars.addEventListener('ownership-gained', e => {
+            console.log("Bars ownership gained")
+        });
+        bars.addEventListener('ownership-lost', e => console.log("Bars ownership lost"));
+
+        // InterfaceCyls
+        interfaceBars.addEventListener('ownership-gained', e => {
+            console.log("interfaceBars ownership gained")
+        });
+        interfaceBars.addEventListener('ownership-lost', e => console.log("interfaceBars ownership lost"));
+
+        /* Other methods */
+
+        // Get Server
+        function getValueFromQueryString(string) {
+            string = string.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + string + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+
+    </script>
+
+    <script>
+        // Schemas with components and attributes for syncronization
+        NAF.schemas.add({
+            template: '#mov-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#avatar-template',
+            components: [
+                'position',
+                'rotation',
+                'color',
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#username-tag-template',
+            components: [
+                'value',
+                'color',
+                'width',
+                'position',
+                'rotation'
+            ]
+        });
+
+        // Important to add here the graph component
+        NAF.schemas.add({
+            template: '#cyls-template',
+            components: [
+                //'babia-queryjson',
+                'position',
+                'rotation',
+                'scale',
+                'babia-cyls'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#bars-template',
+            components: [
+                //'babia-queryjson',
+                'position',
+                'rotation',
+                'scale',
+                'babia-bars'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#querier-template',
+            components: [
+                'babia-queryjson'
+            ]
+        })
+
+        NAF.schemas.add({
+            template: '#interface-template',
+            components: [
+                'babia-ui',
+                'position',
+                'rotation',
+                'scale'
+            ]
+        });
+
+    </script>
+</body>
+
+</html>
