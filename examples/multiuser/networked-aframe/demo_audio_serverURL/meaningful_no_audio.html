@@ -7,7 +7,7 @@
 
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
-    <script src="../../easyrtc.js"></script>
+    <script src="./easyrtc.js"></script>
     <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
 
     <script
@@ -22,7 +22,6 @@
       room: room_demo;
       adapter: easyrtc;
       debug: true;
-      audio: true;
       serverURL: empty_server;
     ">
         <!-- serverURL:http://10.1.130.131:8080/; -->
@@ -64,10 +63,6 @@
 
 
         <!--Not sync entities-->
-        <a-plane id="audio_button" position="-5 1 5" rotation="0 45 0" height="0.5" width="1.5" color="#E44B00">
-            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
-            </a-text>
-        </a-plane>
         <a-plane id="color_button" position="-5 0.5 5" rotation="0 45 0" height="0.5" width="3.5" color="#66FFFF">
             <a-text id="color_label" value="Light Blue Player. Click to change player" color="black" width="4"
                 position="-1.5 0 0" rotation="0 0 0">
@@ -79,7 +74,7 @@
         <!--Sync entities, not persistent-->
         <a-entity id="mov" movement-controls="fly: true" position="0 2 10"
             networked="template:#mov-template; attachTemplateToLocal:false">
-            <a-sphere id="avatar" camera color="#66FFFF" look-controls networked-audio-source scale="0.2 0.2 0.2"
+            <a-sphere id="avatar" camera color="#66FFFF" look-controls scale="0.2 0.2 0.2"
                 networked="template:#avatar-template;attachTemplateToLocal:false;"></a-sphere>
             <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
                 position="-0.5 3 0" width="5" color="black" value="Light Blue Player"></a-text>
@@ -120,8 +115,6 @@
         let scene = document.getElementById('AframeScene')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
-        let audioButton = document.getElementById('audio_button')
-        let audioLabel = document.getElementById('audio_label')
         let colorButton = document.getElementById('color_button')
         let colorLabel = document.getElementById('color_label')
         let cyls = document.getElementById('cyls')
@@ -149,15 +142,6 @@
         ]
 
         /* UI Event Listeners */
-
-        // AudioButton
-        audioButton.addEventListener('click', function (event) {
-            if (audioLabel.getAttribute('value') === 'Stop Audio') {
-                stopAudio();
-            } else {
-                turnOnAudio();
-            }
-        });
 
         // ColorButton
         colorButton.addEventListener('click', function (event) {
@@ -276,18 +260,6 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        // Audio
-        function turnOnAudio() {
-            NAF.connection.adapter.enableMicrophone(true)
-            audioButton.setAttribute('color', '#E44B00')
-            audioLabel.setAttribute('value', 'Stop Audio')
-        }
-
-        function stopAudio() {
-            NAF.connection.adapter.enableMicrophone(false)
-            audioButton.setAttribute('color', '#F8F6F2')
-            audioLabel.setAttribute('value', 'Turn on Audio')
-        }
 
     </script>
 

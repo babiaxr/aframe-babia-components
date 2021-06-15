@@ -2,38 +2,96 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Basic Example — Networked-Aframe</title>
-    <meta name="description" content="Basic Example — Networked-Aframe" />
+    <title>Examples — Networked-Aframe, Babia multiuser</title>
+    <meta name="description" content="Examples — Networked-Aframe, Baba multiuser" />
 </head>
 
 <body>
-    <h1>Welcome to the Multiuser Demo</h1>
+    <h1>Multiuser Team Demo</h1>
     <h2>Choose a server URL to connect to:</h2>
     <label for="server_url">Server URL:</label>
     <input type="text" id="server_url" name="server_url" value="https://f-l2108-pc02.aulas.etsit.urjc.es:49153/"><br><br>
-    <h2>Choose a username:</h2>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br><br>
-    <h2>Choose a color:</h2>
-    <label for="color">Color:</label>
-    <input type="color" id="color" name="color"><br><br>
-    <input type="button" id="start_button" value="Start">
+    <ul>
+    
+        <li>
+            <h3>Old Demo</h3>
+            <h4>Choose a username:</h4>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br><br>
+            <h4>Choose a color:</h4>
+            <label for="color">Color:</label>
+            <input type="color" id="color" name="color"><br><br>
+            <input type="button" id="start_button_old" value="Start">
+            </li>
+            <li>
+                <h3>Demo 1: NO PERSISTENCE WITH AUDIO</h3>
+                <p>Demo with no persistent avatars and audio</p>
+                <input type="button" id="start_button_1" value="Start">
+            </li>
+            <li>
+                <h3>Demo 2: NO PERSISTENCE NO AUDIO</h3>
+                <p>Demo with no persistent avatars and no audio</p>
+                <input type="button" id="start_button_4" value="Start">
+            </li>
+            <li>
+                <h3>Demo 3: PERSISTENCE</h3>
+                <p>Demo with persistent entities</p>
+                <input type="button" id="start_button_2" value="Start">
+            </li>
+            <li>
+                <h3>Demo 4: MEANINGFUL DEMO</h3>
+                <p>Demo with persistent and no persistent entities. It contains avatars,
+                    direct messages, broadcasted messages, audio and graphs relating
+                    vaccination percentages in 20 countries</p>
+                <input type="button" id="start_button_3" value="Start">
+            </li>
+            <h3>Demo 5: MEANINGFUL DEMO NO AUDIO</h3>
+            <p>Demo with persistent and no persistent entities. It contains avatars,
+                direct messages, broadcasted messages and graphs relating
+                vaccination percentages in 20 countries No audio</p>
+            <input type="button" id="start_button_5" value="Start">
+            </li>
+            </ul>
+            <script>
+                let startButtonOld = document.getElementById("start_button_old")
+                let startButtonOne = document.getElementById("start_button_1");
+                let startButtonTwo = document.getElementById("start_button_2");
+                let startButtonThree = document.getElementById("start_button_3");
+                let startButtonFour = document.getElementById("start_button_4");
+                let startButtonFive = document.getElementById("start_button_5");
+
+            let serverUrlInput = document.getElementById("server_url");
+            let serverURL = serverUrlInput.value;
+
+            startButtonOld.addEventListener('click', function (event) {
+            let colorInput = document.getElementById("color");
+            let usernameInput = document.getElementById("username");
+            let username = usernameInput.value;
+            let color = colorInput.value.split("#")[1];
+            let url = "./scene.html" + "?serverURL=" + serverURL + "&username=" + username + "&color=" + color;
+            window.location.href = url;
+        })
+                startButtonOne.addEventListener('click', function (event) {
+                    let url = "./no_persistence.html" + "?serverURL=" + serverURL;
+                    window.location.href = url;
+                });
+                startButtonTwo.addEventListener('click', function (event) {
+                    let url = "./persistence.html" + "?serverURL=" + serverURL;
+                    window.location.href = url;
+                });
+                startButtonThree.addEventListener('click', function (event) {
+                    let url = "./meaningful.html" + "?serverURL=" + serverURL;
+                    window.location.href = url;
+                });
+                startButtonFour.addEventListener('click', function (event) {
+                    let url = "./no_persistence_no_audio.html" + "?serverURL=" + serverURL;
+                    window.location.href = url;
+                });
+                startButtonFive.addEventListener('click', function (event) {
+                    let url = "./meaningful_no_audio.html" + "?serverURL=" + serverURL;
+                    window.location.href = url;
+                });
+            </script>
 </body>
-
-<script>
-    let startButton = document.getElementById("start_button");
-    let serverUrlInput = document.getElementById("server_url");
-    let colorInput = document.getElementById("color");
-    let usernameInput = document.getElementById("username");
-    startButton.addEventListener('click', function (event) {
-        let serverURL = serverUrlInput.value;
-        let username = usernameInput.value;
-        let color = colorInput.value.split("#")[1];
-
-        let url = "./scene.html" + "?serverURL=" + serverURL + "&username=" + username + "&color=" + color;
-        console.log(url)
-        window.location.href = url;
-    });
-</script>
 
 </html>
