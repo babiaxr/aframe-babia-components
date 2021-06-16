@@ -75,7 +75,7 @@
             <a-sphere id="avatar" camera color="#66FFFF" look-controls scale="0.2 0.2 0.2"
                 networked="template:#avatar-template;attachTemplateToLocal:false;"></a-sphere>
             <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
-                position="-0.5 2 0" width="5" color="black" value="Light Blue Player"></a-text>
+                position="-0.5 0.5 0" width="5" color="black" value="Light Blue Player"></a-text>
             </a-sphere>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
             <a-entity laser-controls="hand: right"></a-entity>
@@ -227,7 +227,7 @@
         cyl.addEventListener('ownership-gained', e => {
             console.log("Cyl ownership gained")
         });
-        cyl.addEventListener('ownership-lost', e => console.log("Cyl ownership lost"));
+                cyl.addEventListener('ownership-lost', e => console.log("Cyl ownership lost"));
 
         // CylLabel
         cylLabel.addEventListener('ownership-gained', e => {

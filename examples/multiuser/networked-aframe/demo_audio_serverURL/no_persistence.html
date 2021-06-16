@@ -22,7 +22,7 @@
       room: room_no_persistance;
       adapter: easyrtc;
       debug: true;
-      audio: true;
+      audio: false;
       serverURL: empty_server;
     ">
         <!-- serverURL:http://10.1.130.131:8080/; -->
@@ -37,7 +37,7 @@
                 <a-entity class="mov"></a-entity>
             </template>
             <template id="avatar-template">
-                <a-sphere class="avatar"></a-sphere>
+                <a-sphere class="avatar" networked-audio-source></a-sphere>
             </template>
             <template id="username-tag-template">
                 <a-text class="username-tag"></a-text>
@@ -47,11 +47,11 @@
         <!--Sync entities, not persistent-->
         <a-entity id="mov" movement-controls="fly: true" position="0 1 3"
             networked="template:#mov-template; attachTemplateToLocal:false">
-            <a-sphere id="avatar" camera color="#66FFFF" scale="0.2 0.2 0.2" look-controls networked-audio-source
+            <a-sphere id="avatar" camera color="#66FFFF" scale="0.2 0.2 0.2" look-controls
                 networked="template:#avatar-template;attachTemplateToLocal:false;">
             </a-sphere>
             <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
-                position="-0.5 2 0" width="5" color="black" value="Light Blue Player"></a-text>
+                position="-0.5 0.5 0" width="5" color="black" value="Light Blue Player"></a-text>
             </a-sphere>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
             <a-entity laser-controls="hand: right"></a-entity>
@@ -84,7 +84,10 @@
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
         console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
-        if (serverURL) { scene.setAttribute('networked-scene', 'serverURL', serverURL) }
+                                            if (serverURL) {
+                                                scene.setAttribute('networked-scene', 'serverURL', serverURL);
+                                                scene.setAttribute('networked-scene', 'audio', 'true');
+                                            }
 
         /* LIST OF USERNAMES AND AVATAR COLORS */
         let players = [
@@ -158,7 +161,8 @@
             NAF.connection.adapter.enableMicrophone(true)
             audioButton.setAttribute('color', '#E44B00')
             audioLabel.setAttribute('value', 'Stop Audio')
-        }
+                    }
+                
 
         function stopAudio() {
             NAF.connection.adapter.enableMicrophone(false)

@@ -22,7 +22,7 @@
       room: room_demo;
       adapter: easyrtc;
       debug: true;
-      audio: true;
+      audio: false;
       serverURL: empty_server;
     ">
         <!-- serverURL:http://10.1.130.131:8080/; -->
@@ -37,7 +37,7 @@
                 <a-entity class="mov"></a-entity>
             </template>
             <template id="avatar-template">
-                <a-sphere class="avatar"></a-sphere>
+                <a-sphere class="avatar" networked-audio-source></a-sphere>
             </template>
             <template id="username-tag-template">
                 <a-text class="username-tag"></a-text>
@@ -77,12 +77,12 @@
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
         <!--Sync entities, not persistent-->
-        <a-entity id="mov" movement-controls="fly: true" position="0 2 10"
+        <a-entity id="mov" movement-controls="fly: true" position="0 0 10"
             networked="template:#mov-template; attachTemplateToLocal:false">
-            <a-sphere id="avatar" camera color="#66FFFF" look-controls networked-audio-source scale="0.2 0.2 0.2"
+            <a-sphere id="avatar" camera color="#66FFFF" position="0 2 0" look-controls scale="0.45 0.5 0.4"
                 networked="template:#avatar-template;attachTemplateToLocal:false;"></a-sphere>
             <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
-                position="-0.5 3 0" width="5" color="black" value="Light Blue Player"></a-text>
+                position="-0.5 0.5 0" width="5" color="black" value="Light Blue Player"></a-text>
             </a-sphere>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
             <a-entity laser-controls="hand: right"></a-entity>
@@ -103,7 +103,8 @@
             networked="template:#interface-template; networkId:interface_cyls; persistent: true; owner: scene"
             position="22 1 -5" rotation="0 -45 0" scale="0.5 0.5 0.5"></a-entity>
 
-        <a-entity id="bars" babia-bars='index: country; height: partial; legend: true; axis: true; palette: foxy;  title: babia-bars;
+        <a-entity id="bars"
+            babia-bars='index: country; height: partial; legend: true; axis: true; palette: foxy;  title: babia-bars;
         titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 100; animation: true;
            from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
             position="-10 1 -15" rotation="0 0 0" scale="0.5 1 0.5"></a-entity>
@@ -132,7 +133,10 @@
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
         console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
-        if (serverURL) { scene.setAttribute('networked-scene', 'serverURL', serverURL) }
+                                        if (serverURL) {
+                                            scene.setAttribute('networked-scene', 'serverURL', serverURL);
+                                            scene.setAttribute('networked-scene', 'audio', 'true');
+                                        }
 
         /* LIST OF USERNAMES AND AVATAR COLORS */
         let players = [
@@ -177,7 +181,7 @@
             if (!NAF.utils.isMine(cyls)) {
                 NAF.utils.takeOwnership(cyls)
             }
-            if (!NAF.isMine(interfaceCyls)) {
+            if (!NAF.utils.isMine(interfaceCyls)) {
                 NAF.utils.takeOwnership(interfaceCyls)
             }
         });
@@ -200,7 +204,7 @@
             console.log('Message received: ', data)
         })
 
-        // Senders
+    // Senders
 
         // One client
         function sendMessage(client, dataType, data) {

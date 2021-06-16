@@ -22,7 +22,7 @@
       room: room_demo;
       adapter: easyrtc;
       debug: true;
-      audio: true;
+      audio: false;
       serverURL: empty_server;
     ">
         <!-- serverURL:http://10.1.130.131:8080/; -->
@@ -73,7 +73,7 @@
                 <a-entity class="mov"></a-entity>
             </template>
             <template id="avatar-template">
-                <a-sphere class="avatar"></a-sphere>
+                <a-sphere class="avatar" networked-audio-source></a-sphere>
             </template>
             <template id="username-tag-template">
                 <a-text class="username-tag"></a-text>
@@ -85,11 +85,11 @@
 
         <a-entity id="mov" movement-controls="fly: true" position="0 1 3"
             networked="template:#mov-template; attachTemplateToLocal:false">
-            <a-sphere id="avatar" camera color="#D3FFE4" scale="0.2 0.2 0.2" look-controls wasd-controls networked-audio-source
+            <a-sphere id="avatar" camera color="#D3FFE4" scale="0.2 0.2 0.2" look-controls wasd-controls
                 networked="template:#avatar-template;attachTemplateToLocal:false;">
             </a-sphere>
             <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
-                position="-0.5 2 0" width="5" color="black" value="username"></a-text>
+                position="-0.5 0.5 0" width="5" color="black" value="username"></a-text>
             </a-sphere>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
             <a-entity laser-controls="hand: right" oculus-touch-controls="hand: right"></a-entity>
@@ -108,7 +108,7 @@
         </a-plane>
 
         <a-entity id="cyls" babia-queryjson="url: ./data.json;" babia-cyls='x_axis:city; height: population; radius: size; legend: true; palette: flat;
-        radiusMax: 2; heightMax: 45; animation: true;'
+                                                        radiusMax: 2; heightMax: 45; animation: true;'
             networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" position="0 1 -10"
             rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
 
@@ -158,7 +158,10 @@
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
         console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
-        if (serverURL) { scene.setAttribute('networked-scene', 'serverURL', serverURL) }
+                                if (serverURL) {
+                                    scene.setAttribute('networked-scene', 'serverURL', serverURL);
+                                    scene.setAttribute('networked-scene', 'audio', 'true')
+                                }
 
         /* SET USERNAME AND AVATAR COLOR FROM QUERY STRING*/
         let username = getValueFromQueryString('username');
@@ -483,13 +486,13 @@
             ]
         });
 
-            NAF.schemas.add({
-                template: '#mov-template',
+                    NAF.schemas.add({
+                        template: '#mov-template',
             components: [
                 'position',
                 'rotation'
             ]
-        });
+                });
 
         NAF.schemas.add({
             template: '#avatar-template',
