@@ -19,7 +19,7 @@
 
 <body>
     <a-scene id="AframeScene" networked-scene="
-      room: room_demo;
+      room: room_meaningful_no_audio;
       adapter: easyrtc;
       debug: true;
       serverURL: empty_server;
@@ -242,7 +242,7 @@
         });
         bars.addEventListener('ownership-lost', e => console.log("Bars ownership lost"));
 
-        // InterfaceCyls
+        // InterfaceBars
         interfaceBars.addEventListener('ownership-gained', e => {
             console.log("interfaceBars ownership gained")
         });
