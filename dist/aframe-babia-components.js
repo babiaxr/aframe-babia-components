@@ -8663,33 +8663,33 @@ AFRAME.registerComponent('babia-controls', {
         let inverse = false
 
         if (type === 'play'){
-            url = '/components/others/models/play_button.gltf'
+            url = '../../components/others/models/play_button.gltf'
             pos_x = 0.2
             class_name = 'babiaPlay'
             event = 'babiaContinue'
         } else if (type === 'pause') {
-            url = '/components/others/models/pause_button.gltf'
+            url = '../../components/others/models/pause_button.gltf'
             pos_x = 0
             class_name = 'babiaPause'
             event = 'babiaStop'
         } else if (type === 'skipNext') {
-            url = '/components/others/models/skip_button.gltf'
+            url = '../../components/others/models/skip_button.gltf'
             pos_x = 3
             class_name = 'babiaSkipNext'
             event = class_name
             inverse = true
         } else if (type === "skipPrev") {
-            url = '/components/others/models/skip_button.gltf'
+            url = '../../components/others/models/skip_button.gltf'
             pos_x = -3
             class_name = 'babiaSkipPrev'
             event = class_name
         } else if (type === "rewind") {
-            url = '/components/others/models/rewind_button.gltf'
+            url = '../../components/others/models/rewind_button.gltf'
             pos_x = -6
             class_name = 'babiaRewind'
             event = 'babiaToPast'
         } else if ( type === "forward"){
-            url = '/components/others/models/rewind_button.gltf'
+            url = '../../components/others/models/rewind_button.gltf'
             pos_x = 6
             class_name = 'babiaForward'
             event = 'babiaToPresent'
