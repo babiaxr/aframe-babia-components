@@ -51,9 +51,13 @@
                 vaccination percentages in 20 countries No audio</p>
             <input type="button" id="start_button_5" value="Start">
             </li>
-            <h3>Demo 6: BIG DATA NO AUDIO</h3>
-            <p>Demo with bigger data (+1000 bars). No audio</p>
+            <h3>Demo 6: MEDIUM DATA NO AUDIO</h3>
+            <p>Demo with bigger data (500 bars). No audio</p>
             <input type="button" id="start_button_6" value="Start">
+            </li>
+            <h3>Demo 7: BIG DATA NO AUDIO</h3>
+            <p>Demo with even bigger data (+1400 bars). No audio</p>
+            <input type="button" id="start_button_7" value="Start">
             </li>
             </ul>
             <script>
@@ -64,7 +68,7 @@
                 let startButtonFour = document.getElementById("start_button_4");
                 let startButtonFive = document.getElementById("start_button_5");
                     let startButtonSix = document.getElementById("start_button_6");
-
+                    let startButtonSeven = document.getElementById("start_button_7");
 
             let serverUrlInput = document.getElementById("server_url");
             let serverURL = serverUrlInput.value;
@@ -98,9 +102,14 @@
                     window.location.href = url;
                 });
                     startButtonSix.addEventListener('click', function (event) {
+                        let url = "./medium_data.html" + "?serverURL=" + serverURL;
+                        window.location.href = url;
+                    });
+                            startButtonSeven.addEventListener('click', function (event) {
                         let url = "./big_data.html" + "?serverURL=" + serverURL;
                         window.location.href = url;
                     });
+            </script>
             </script>
 </body>
 
