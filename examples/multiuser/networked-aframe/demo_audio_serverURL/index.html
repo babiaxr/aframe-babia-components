@@ -13,15 +13,15 @@
     <input type="text" id="server_url" name="server_url" value="https://f-l2108-pc02.aulas.etsit.urjc.es:49153/"><br><br>
     <ul>
     
-        <li>
-            <h3>Old Demo</h3>
-            <h4>Choose a username:</h4>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"><br><br>
-            <h4>Choose a color:</h4>
-            <label for="color">Color:</label>
-            <input type="color" id="color" name="color"><br><br>
-            <input type="button" id="start_button_old" value="Start">
+            <li>
+                <h3>Demo 0: Old Demo</h3>
+                <h4>Choose a username:</h4>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <h4>Choose a color:</h4>
+                <label for="color">Color:</label>
+                <input type="color" id="color" name="color"><br><br>
+                <input type="button" id="start_button_old" value="Start">
             </li>
             <li>
                 <h3>Demo 1: NO PERSISTENCE WITH AUDIO</h3>
@@ -51,6 +51,10 @@
                 vaccination percentages in 20 countries No audio</p>
             <input type="button" id="start_button_5" value="Start">
             </li>
+            <h3>Demo 6: BIG DATA NO AUDIO</h3>
+            <p>Demo with bigger data (+1000 bars). No audio</p>
+            <input type="button" id="start_button_6" value="Start">
+            </li>
             </ul>
             <script>
                 let startButtonOld = document.getElementById("start_button_old")
@@ -59,6 +63,8 @@
                 let startButtonThree = document.getElementById("start_button_3");
                 let startButtonFour = document.getElementById("start_button_4");
                 let startButtonFive = document.getElementById("start_button_5");
+                    let startButtonSix = document.getElementById("start_button_6");
+
 
             let serverUrlInput = document.getElementById("server_url");
             let serverURL = serverUrlInput.value;
@@ -91,6 +97,10 @@
                     let url = "./meaningful_no_audio.html" + "?serverURL=" + serverURL;
                     window.location.href = url;
                 });
+                    startButtonSix.addEventListener('click', function (event) {
+                        let url = "./big_data.html" + "?serverURL=" + serverURL;
+                        window.location.href = url;
+                    });
             </script>
 </body>
 
