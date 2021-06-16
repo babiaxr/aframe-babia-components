@@ -25,6 +25,12 @@ class Selectable {
         this.current = (this.current + 1) % this.length;
         return(selected);
     }
+
+    prev() {
+        let selected = this.data[this.selectors[this.current]];
+        this.current = (this.current - 1) % this.length;
+        return(selected);
+    }
 };
 
 /* global AFRAME */
@@ -39,6 +45,8 @@ AFRAME.registerComponent('babia-selector', {
     schema: {
         // Id of the querier where the data comes from
         from: { type: 'string' },
+        // Id of the querier where the data comes from
+        controller: { type: 'string' },
         // Field to use as selector
         select: { type: 'string', default: 'date'},
         // Timeout for moving to the next selection
@@ -49,10 +57,35 @@ AFRAME.registerComponent('babia-selector', {
 
     multiple: false,
 
+    isPaused: undefined,
+    toPresent: undefined,
+
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { },
+    init: function () { 
+
+        this.isPaused = false
+        this.toPresent = true
+
+        this.el.addEventListener('babiaStop',  _listener = (e) => {
+            this.isPaused = true
+        })
+
+        this.el.addEventListener('babiaContinue',  _listener = (e) => {
+            this.isPaused = false
+        })
+
+        this.el.addEventListener('babiaToPresent',  _listener = (e) => {
+            this.toPresent = true
+        })
+
+        this.el.addEventListener('babiaToPast',  _listener = (e) => {
+            this.toPresent = false
+        })
+        
+
+    },
 
     /**
     * Called when component is attached and when component data changes.
@@ -66,16 +99,26 @@ AFRAME.registerComponent('babia-selector', {
         let el = this.el;
         let self = this;
     
-
+        // find controller
+        if (data.controller){
+            this.selectorController = document.querySelector('#' + data.controller)
+        }
+        
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
             let rawData = JSON.parse(data.data);
             this.selectable = new Selectable(rawData, data.select);
 
+            if (this.selectorController){
+                console.log('Mandando init a navigator')
+                this.selectorController.emit("babiaSelectorDataReady")
+            }
+
             window.setInterval(function () {
                 self.nextSelect();
             }, data.timeout);
             this.nextSelect();
+            
         } else {
             if (data.from !== oldData.from) {
                 // Unregister for old querier
@@ -99,8 +142,26 @@ AFRAME.registerComponent('babia-selector', {
                     // Create a Selectable object, and set the updating interval
                     self.selectable = new Selectable(rawData, data.select);
 
+                    if (this.selectorController){
+                        this.selectorController.emit("babiaSelectorDataReady", self)
+                    }
+
                     window.setInterval(function () {
-                        self.nextSelect();
+                        console.log('Esta pausado? ', self.isPaused)
+                        if (!self.isPaused){
+                            console.log('hacia presente? ', self.toPresent)
+                            if(self.toPresent){
+                                self.nextSelect();
+                            } else {
+                                self.prevSelect();
+                            }
+
+                            console.log('Estamos en: ', self.selectable.current)
+                            
+                            if (self.selectorController){
+                                self.selectorController.emit("babiaSelectorDataUpdated", self)
+                            }
+                        }
                     }, data.timeout);
                     self.nextSelect();
     
@@ -129,10 +190,28 @@ AFRAME.registerComponent('babia-selector', {
     },
 
     nextSelect: function() {
-        this.babiaData = this.selectable.next();
-        this.babiaMetadata = { id: this.babiaMetadata.id++ };
-        // Dispatch interested events
-        dataReadyToSend("babiaData", this);
+        if (this.selectable.current < this.selectable.length){
+            this.babiaData = this.selectable.next();
+            this.babiaMetadata = { id: this.babiaMetadata.id++ };
+            // Dispatch interested events
+            dataReadyToSend("babiaData", this);
+        } else {
+            this.isPaused = true
+            this.selectorController.emit('babiaStop')
+        }
+    },
+
+    prevSelect: function() {
+        if (this.selectable.current >= 0){
+            this.babiaData = this.selectable.prev();
+            this.babiaMetadata = { id: this.babiaMetadata.id-- };
+            // Dispatch interested events
+            dataReadyToSend("babiaData", this);  
+        } else {
+            this.isPaused = true
+            this.selectorController.emit('babiaStop')
+        }
+
     },
 
     /**
@@ -164,6 +243,11 @@ AFRAME.registerComponent('babia-selector', {
      * Interested elements
      */
     interestedElements: [],
+
+    /**
+     * Selector Controller
+     */
+    selectorController: undefined,
 
 });
 

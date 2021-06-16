@@ -1,0 +1,96 @@
+<html>
+
+<head>
+  <title>Example Timeline Controller</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+  <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
+  <script src="https://unpkg.com/aframe-tooltip-component/dist/aframe-tooltip-component.min.js"></script>
+  <script src="../../../dist/aframe-babia-components.min.js"></script>
+  <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+</head>
+
+<body>
+    <a-scene background="color: #000000">
+        <a-entity environment></a-entity>
+
+        <a-assets>
+          <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
+        </a-assets>
+
+        <!-- Data -->
+        <a-entity id="mjson" babia-queryjson="url: commits.json"></a-entity>
+
+        <!-- Visualizer -->
+        <a-entity id="mid"
+          babia-selector="from: mjson; controller: nav"
+          babia-bars='legend: true; axis: true; palette: commerce;
+              height: commits; index: author;
+              title: babia-selector; titleColor: #FFFFFF; titleFont: #optimerBoldFont;
+              titlePosition: -6 0.3 0.5; animation: true; chartHeight: 10;'
+          position="-3 0 -8" rotation="0 0 0"></a-entity>
+
+
+        <!-- Slider -->
+        <a-entity id="nav" babia-navigator position="0 1 3" scale="0.5 0.5 0.5"></a-entity>
+
+        <!-- Controllers -->
+        <a-entity id ="cameraRig" position="0 2 5">
+            <a-entity id="head" camera look-controls
+            wasd-controls="fly: false">
+            </a-entity>
+            <!-- Hand Controls --> 
+            <a-entity id="leftHand" interaction-hands aabb-collider="objects: .grabbable" 
+                hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"
+                teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: .environmentGround;
+                hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: grip">
+                <a-entity id="tooltip_trigger_L" class="tips" tooltip="text: Grab; width: 0.07; height: 0.03; targetPosition: 0.002 -0.02 -0.014; lineHorizontalAlign: right; rotation: -90 0 0; src:assets/tooltip.png"
+                position="-0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_L" class="tips" tooltip="text: Teleport; width: 0.08; height: 0.04; targetPosition: 0.006 -0.008 0.033; rotation: -90 0 0; src:assets/tooltip.png"
+                position="0.085 -0.01 0.07"></a-entity>
+            </a-entity>
+            <a-entity id="rightHand" interaction-hands aabb-collider="objects: .grabbable" 
+                hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"
+                laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass">
+                <a-entity id="tooltip_trigger_R" class="tips" tooltip="text: Click/Grab ; width: 0.07; height: 0.03; targetPosition: 0.005 -0.02 -0.014; lineHorizontalAlign: left; rotation: -90 0 0; src:assets/tooltip.png"
+                position="0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_R" class="tips" tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
+                position="-0.085 -0.01 0.07"></a-entity>
+            </a-entity>
+            <a-entity id ="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+        </a-entity>
+    </a-scene>
+
+    <script>
+      let tips_opened = false;
+      let tooltips = document.querySelectorAll('.tips')
+      tooltips.forEach(tip => {
+              tip.setAttribute('visible', false)
+          });
+      let hand_right = document.getElementById('rightHand')
+      document.addEventListener('controllerconnected', (event) => { 
+          document.querySelector('#cameraRig').setAttribute('position', {x: 0, y: 0, z: 0})
+          tips_opened = true; 
+          tooltips.forEach(tip => {
+              tip.setAttribute('visible', true)
+          });
+      });
+      // presionar boton para ocultar tips
+      hand_right.addEventListener('gripdown', function(evt){
+          if (tips_opened){
+              tips_opened = false
+              tooltips.forEach(tip => {
+                  tip.setAttribute('visible', false)
+              });
+          } else {
+              tips_opened = true
+              tooltips.forEach(tip => {
+                  tip.setAttribute('visible', true)
+              });
+          }
+  })
+  </script>
+</body>
+</html>
