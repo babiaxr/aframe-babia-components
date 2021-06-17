@@ -69,8 +69,11 @@
                 <a-entity class="interface"></a-entity>
             </template>
             <!-- Avatar -->
-            <template id="mov-template">
-                <a-entity class="mov"></a-entity>
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
             </template>
             <template id="avatar-template">
                 <a-sphere class="avatar" networked-audio-source></a-sphere>
@@ -83,17 +86,18 @@
         <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
         <a-entity light="color: #95E0FF; intensity: 1; type: ambient;" visible="true"></a-entity>
 
-        <a-entity id="mov" movement-controls="fly: true" position="0 1 3"
-            networked="template:#mov-template; attachTemplateToLocal:false">
-            <a-sphere id="avatar" camera color="#D3FFE4" scale="0.2 0.2 0.2" look-controls wasd-controls
-                networked="template:#avatar-template;attachTemplateToLocal:false;">
-            </a-sphere>
-            <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
-                position="-0.5 0.5 0" width="5" color="black" value="username"></a-text>
-            </a-sphere>
-            <a-entity cursor="rayOrigin:mouse"></a-entity>
-            <a-entity laser-controls="hand: right" oculus-touch-controls="hand: right"></a-entity>
-            </a-entity>
+<a-entity id="rig" position="0 2 3" networked="template:#rig-template; attachTemplateToLocal:false">
+    <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+        networked="template:#camera-template;attachTemplateToLocal:false;">
+        <a-sphere id="avatar" color="#D3FFE4" scale="0.2 0.2 0.2"
+            networked="template:#avatar-template;attachTemplateToLocal:false;">
+        <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false" position="-0.5 0.5 0"
+            width="5" color="black" value="username"></a-text>
+    </a-entity>
+    <!-- Hand Controls -->
+    <a-entity id="rightHand" laser-controls="hand: right"></a-entity>
+    <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
+    </a-entity>
 
         <a-box id="box" color="#22B8F6"
             networked="template:#box-template; networkId:box; persistent: true; owner: scene" position="-7 1 -5"
@@ -145,6 +149,7 @@
         let scene = document.getElementById('AframeScene')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
+                        let hand_right = document.getElementById('rightHand')
         let box = document.getElementById('box')
         let boxButton = document.getElementById("box_button")
         let boxLabel = document.getElementById("box_label")
@@ -174,6 +179,10 @@
         let users = [];
 
         // UI Event Listeners
+
+                    /* document.addEventListener('controllerconnected', (event) => {
+                         document.querySelector('#rig').setAttribute('position', {x: 0, y: 0, z: 0})
+                     });*/
 
         boxButton.addEventListener('click', function (event) {
             NAF.utils.takeOwnership(boxButton)
@@ -487,12 +496,20 @@
         });
 
             NAF.schemas.add({
-                template: '#mov-template',
+                template: '#rig-template',
             components: [
                 'position',
                 'rotation'
             ]
-                });
+            });
+
+                NAF.schemas.add({
+                    template: '#camera-template',
+                    components: [
+                        'position',
+                        'rotation'
+                    ]
+            });
 
         NAF.schemas.add({
             template: '#avatar-template',
