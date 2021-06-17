@@ -89,7 +89,7 @@
 <a-entity id="rig" position="0 2 3" networked="template:#rig-template; attachTemplateToLocal:false">
     <a-entity id="camera" camera look-controls wasd-controls="fly: false"
         networked="template:#camera-template;attachTemplateToLocal:false;">
-        <a-sphere id="avatar" color="#D3FFE4" scale="0.2 0.2 0.2"
+        <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
             networked="template:#avatar-template;attachTemplateToLocal:false;">
         <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false" position="-0.5 0.5 0"
             width="5" color="black" value="username"></a-text>
@@ -114,11 +114,11 @@
         <a-entity id="cyls" babia-queryjson="url: ./data.json;" babia-cyls='x_axis:city; height: population; radius: size; legend: true; palette: flat;
                                                         radiusMax: 2; heightMax: 45; animation: true;'
             networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" position="0 1 -10"
-            rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+            rotation="0 0 0" scale="0.25 0.25 0.25"></a-entity>
 
         <a-entity id="interface" babia-ui="target: cyls"
             networked="template:#interface-template; networkId:interface; persistent: true; owner: scene"
-            position="10 1 -5" rotation="0 -45 0" scale="0.5 0.5 0.5"></a-entity>
+            position="10 1 -5" rotation="0 -45 0" scale="0.25 0.25 0.25"></a-entity>
 
         <a-plane id="cyls_palette_button"
             networked="template:#cyls-palette-button-template; networkId:cyls_palette_button; persistent: true; owner: scene"
@@ -180,9 +180,9 @@
 
         // UI Event Listeners
 
-                    /* document.addEventListener('controllerconnected', (event) => {
-                         document.querySelector('#rig').setAttribute('position', {x: 0, y: 0, z: 0})
-                     });*/
+            document.addEventListener('controllerconnected', (event) => {
+                document.querySelector('#rig').setAttribute('position', { x: 0, y: 0, z: 0 })
+        });
 
         boxButton.addEventListener('click', function (event) {
             NAF.utils.takeOwnership(boxButton)
@@ -357,9 +357,9 @@
 
         function changeCylsScale() {
             if (cyls.getAttribute('scale').x === 0.5) {
-                cyls.setAttribute('scale', '0.2 0.2 0.2')
+                cyls.setAttribute('scale', '0.15 0.15 0.15')
             } else {
-                cyls.setAttribute('scale', '0.5 0.5 0.5')
+                cyls.setAttribute('scale', '0.25 0.25 0.25')
             }
         }
 
