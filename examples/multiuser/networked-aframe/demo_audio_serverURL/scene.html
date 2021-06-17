@@ -48,22 +48,6 @@
             <template id="cyls-template">
                 <a-entity class="cyls"></a-entity>
             </template>
-            <!-- Cyls Palette Button -->
-            <template id="cyls-palette-button-template">
-                <a-plane class="cyls_palette_button"></a-plane>
-            </template>
-            <!-- Cyls Palette Label-->
-            <template id="cyls-palette-label-template">
-                <a-text class="cyls_palette_label"></a-text>
-            </template>
-            <!-- Cyls Scale Button -->
-            <template id="cyls-scale-button-template">
-                <a-plane class="cyls_scale_button"></a-plane>
-            </template>
-            <!-- Cyls Scale Label-->
-            <template id="cyls-scale-label-template">
-                <a-text class="cyls_scale_label"></a-text>
-            </template>
             <!-- Interface -->
             <template id="interface-template">
                 <a-entity class="interface"></a-entity>
@@ -86,7 +70,7 @@
         <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
         <a-entity light="color: #95E0FF; intensity: 1; type: ambient;" visible="true"></a-entity>
 
-<a-entity id="rig" position="0 2 3" networked="template:#rig-template; attachTemplateToLocal:false">
+<a-entity id="rig" position="0 2.5 3" networked="template:#rig-template; attachTemplateToLocal:false">
     <a-entity id="camera" camera look-controls wasd-controls="fly: false"
         networked="template:#camera-template;attachTemplateToLocal:false;">
         <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
@@ -112,27 +96,22 @@
         </a-plane>
 
         <a-entity id="cyls" babia-queryjson="url: ./data.json;" babia-cyls='x_axis:city; height: population; radius: size; legend: true; palette: flat;
-                                                        radiusMax: 2; heightMax: 45; animation: true;'
-            networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" position="0 1 -10"
-            rotation="0 0 0" scale="0.25 0.25 0.25"></a-entity>
-
+            radiusMax: 2; heightMax: 45; animation: true;'position="0 0.5 -10" scale="0.25 0.25 0.25"
+            networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" ></a-entity>
+ 
         <a-entity id="interface" babia-ui="target: cyls"
             networked="template:#interface-template; networkId:interface; persistent: true; owner: scene"
-            position="10 1 -5" rotation="0 -45 0" scale="0.25 0.25 0.25"></a-entity>
+            position="7 1 -5" rotation="0 -45 0" scale="0.5 0.5 0.5"></a-entity>
 
         <a-plane id="cyls_palette_button"
-            networked="template:#cyls-palette-button-template; networkId:cyls_palette_button; persistent: true; owner: scene"
-            position="10 6 -5" rotation="0 -45 0" height="1" width="4" color="#F8F6F2">
+            position="7 6 -5" rotation="0 -45 0" height="1" width="4" color="#F8F6F2">
             <a-text id="box_label"
-                networked="template:#cyls-palette-label-template; networkId:cyls_palette_label; persistent: true; owner: scene"
                 value="Change palette" color="#0582B5" width="10" position="-1.5 0 0" rotation="0 0 0"></a-text>
         </a-plane>
 
         <a-plane id="cyls_scale_button"
-            networked="template:#cyls-scale-button-template; networkId:cyls_scale_button; persistent: true; owner: scene"
-            position="10 4 -5" rotation="0 -45 0" height="1" width="2" color="#F8F6F2">
+            position="7 4 -5" rotation="0 -45 0" height="1" width="2" color="#F8F6F2">
             <a-text id="box_label"
-                networked="template:#cyls-scale-label-template; networkId:cyls_scale_label; persistent: true; owner: scene"
                 value="Resize" color="#0582B5" width="10" position="-0.75 0 0" rotation="0 0 0"></a-text>
         </a-plane>
 
@@ -149,7 +128,7 @@
         let scene = document.getElementById('AframeScene')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
-                        let hand_right = document.getElementById('rightHand')
+            let hand_right = document.getElementById('rightHand')
         let box = document.getElementById('box')
         let boxButton = document.getElementById("box_button")
         let boxLabel = document.getElementById("box_label")
@@ -181,7 +160,7 @@
         // UI Event Listeners
 
             document.addEventListener('controllerconnected', (event) => {
-                document.querySelector('#rig').setAttribute('position', { x: 0, y: 0, z: 0 })
+                document.querySelector('#rig').setAttribute('position', { x: 0, y: 1.6, z: 0 })
         });
 
         boxButton.addEventListener('click', function (event) {
@@ -438,50 +417,6 @@
                 'rotation',
                 'scale',
                 'babia-cyls'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#cyls-scale-button-template',
-            components: [
-                'position',
-                'rotation',
-                'height',
-                'width',
-                'color'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#cyls-scale-label-template',
-            components: [
-                'value',
-                'color',
-                'width',
-                'position',
-                'rotation'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#cyls-palette-button-template',
-            components: [
-                'position',
-                'rotation',
-                'height',
-                'width',
-                'color'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#cyls-palette-label-template',
-            components: [
-                'value',
-                'color',
-                'width',
-                'position',
-                'rotation'
             ]
         });
 
