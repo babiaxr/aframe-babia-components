@@ -69,20 +69,26 @@
 
         <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
         <a-entity light="color: #95E0FF; intensity: 1; type: ambient;" visible="true"></a-entity>
-
-    <a-entity id="rig" position="0 2.5 3" networked="template:#rig-template; attachTemplateToLocal:false">
-        <a-entity id="camera" camera look-controls wasd-controls="fly: false"
-            networked="template:#camera-template;attachTemplateToLocal:false;">
+        
+        <!-- <a-entity id="rig" movement-controls="fly:false" position="0 2.5 3"
+                                            networked="template:#rig-template; attachTemplateToLocal:false">
+                                            <a-entity id="camera" camera
+                                            networked="template:#camera-template;attachTemplateToLocal:false;"> -->
+        
+        <a-entity id="rig" position="0 2.5 3" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+                networked="template:#camera-template;attachTemplateToLocal:false;">
             <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
                 networked="template:#avatar-template;attachTemplateToLocal:false;">
                 <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false" position="-0.5 1.5 0"
                     width="5" color="black" value="username"></a-text>
-                </a-sphere>
-                </a-entity>
-                <!-- Hand Controls -->
-                <a-entity id="leftHand" laser-controls="hand: left"></a-entity>
-                <a-entity id="rightHand" laser-controls="hand: right"></a-entity>
-                <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
+            </a-sphere>
+            </a-entity>
+            <!-- Hand Controls -->
+            <a-entity id="leftHand" laser-controls="hand: left"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right"
+                raycaster="showLine: true; far: 100; lineColor: white; lineOpacity: 1"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
     </a-entity>
 
         <a-box id="box" color="#22B8F6"
@@ -142,11 +148,11 @@
 
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
-                                            console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
-                                if (serverURL) {
-                                    scene.setAttribute('networked-scene', 'serverURL', serverURL);
-                                    scene.setAttribute('networked-scene', 'audio', 'true')
-                                }
+                        console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
+                        if (serverURL) {
+                            scene.setAttribute('networked-scene', 'serverURL', serverURL);
+                            scene.setAttribute('networked-scene', 'audio', 'true')
+                        }
 
         /* SET USERNAME AND AVATAR COLOR FROM QUERY STRING*/
         let username = getValueFromQueryString('username');
@@ -435,7 +441,7 @@
             ]
             });
 
-                NAF.schemas.add({
+            NAF.schemas.add({
                     template: '#camera-template',
                     components: [
                         'position',
