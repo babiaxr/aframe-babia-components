@@ -19,12 +19,12 @@
 
 <body>
     <a-scene id="AframeScene" networked-scene="
-      room: room_meaningful_no_audio;
+      room: room_new_demo;
       adapter: easyrtc;
       debug: true;
+      audio: false;
       serverURL: empty_server;
     ">
-        <!-- serverURL:http://10.1.130.131:8080/; -->
 
         <a-assets>
             <!-- Dummy asset to make the scene sync (WIP)-->
@@ -32,18 +32,17 @@
 
             <!-- Templates -->
             <!-- Avatar -->
-            <template id="mov-template">
-                <a-entity class="mov"></a-entity>
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
             </template>
             <template id="avatar-template">
-                <a-sphere class="avatar"></a-sphere>
+                <a-sphere class="avatar" networked-audio-source></a-sphere>
             </template>
             <template id="username-tag-template">
                 <a-text class="username-tag"></a-text>
-            </template>
-            <!-- Cyls -->
-            <template id="cyls-template">
-                <a-entity class="cyls"></a-entity>
             </template>
             <!-- Bars -->
             <template id="bars-template">
@@ -53,17 +52,25 @@
             <template id="querier-template">
                 <a-entity class="querier"></a-entity>
             </template>
-            <!-- Interface, same one for all interfaces -->
-            <template id="interface-template">
-                <a-entity class="interface"></a-entity>
+            <!-- ui, same one for all uis -->
+            <template id="ui-template">
+                <a-entity class="ui"></a-entity>
             </template>
+            <!-- Left hand, to add ui -->
+            <template id="left-hand-template">
+                <a-entity class="left_hand"></a-entity>
+            </template>
+
 
 
         </a-assets>
 
-
         <!--Not sync entities-->
-        <a-plane id="color_button" position="-5 0.5 5" rotation="0 45 0" height="0.5" width="3.5" color="#66FFFF">
+        <a-plane id="audio_button" position="5 1.5 -15" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
+            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+        <a-plane id="color_button" position="5 1 -15" rotation="0 -45 0" height="0.5" width="3.5" color="#66FFFF">
             <a-text id="color_label" value="Light Blue Player. Click to change player" color="black" width="4"
                 position="-1.5 0 0" rotation="0 0 0">
             </a-text>
@@ -72,40 +79,34 @@
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
         <!--Sync entities, not persistent-->
-        <a-entity id="mov" movement-controls="fly: true" position="0 2 10"
-            networked="template:#mov-template; attachTemplateToLocal:false">
-            <a-sphere id="avatar" camera color="#66FFFF" look-controls scale="0.2 0.2 0.2"
-                networked="template:#avatar-template;attachTemplateToLocal:false;"></a-sphere>
-            <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
-                position="-0.5 0.5 0" width="5" color="black" value="Light Blue Player"></a-text>
-            </a-sphere>
-            <a-entity cursor="rayOrigin:mouse"></a-entity>
-            <a-entity laser-controls="hand: right"></a-entity>
+        <a-entity id="rig" position="-5 2.5 0"
+            networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+                networked="template:#camera-template;attachTemplateToLocal:false;">
+                <a-sphere id="avatar" color="#66FFFF" scale="0.25 0.25 0.25"
+                    networked="template:#avatar-template;attachTemplateToLocal:false;">
+                    <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
+                        position="-0.5 1.5 0" width="5" color="black" value="Light Blue Player"></a-text>
+                </a-sphere>
+            </a-entity>
+            <!-- Hand Controls -->
+            <a-entity id="leftHand" laser-controls="hand: left"
+                networked="template:#left-hand-template;networkId: left_hand; persistent: true; owner: scene;"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
         </a-entity>
-
 
         <!-- Sync entities, persistent -->
         <a-entity id="querierData" babia-queryjson="url: ./data_vaccination.json;"
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
-
-        <a-entity id="cyls" babia-cyls='from: querierData; x_axis:country; height: partial; radius: population; legend: foxy; palette: foxy;
-            radiusMax: 2; heightMax: 100; animation: true;'
-            networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" position="5 1 -10"
-            rotation="0 0 0" scale="0.25 0.1 0.25">
-        </a-entity>
-
-        <a-entity id="interface_cyls" babia-ui="target: cyls"
-            networked="template:#interface-template; networkId:interface_cyls; persistent: true; owner: scene"
-            position="22 1 -5" rotation="0 -45 0" scale="0.5 0.5 0.5"></a-entity>
 
         <a-entity id="bars" babia-bars='index: country; height: partial; legend: true; axis: true; palette: foxy;  title: babia-bars;
         titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 100; animation: true;
            from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
             position="-10 1 -15" rotation="0 0 0" scale="0.5 1 0.5"></a-entity>
 
-
-        <a-entity id="interface_bars" babia-ui="target: bars"
-            networked="template:#interface-template; networkId: interface_bars; persistent: true; owner: scene"
+        <a-entity id="ui_bars" babia-ui="target: bars"
+            networked="template:#ui-template; networkId: ui_bars; persistent: true; owner: scene, attachTemplateToLocal: false"
             position="-15 1 -5" rotation="0 45 0" scale="0.5 0.5 0.5"></a-entity>
 
     </a-scene>
@@ -115,17 +116,22 @@
         let scene = document.getElementById('AframeScene')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
+        let hand_right = document.getElementById('rightHand')
+            let hand_left = document.getElementById('leftHand')
+        let audioButton = document.getElementById('audio_button')
+        let audioLabel = document.getElementById('audio_label')
         let colorButton = document.getElementById('color_button')
         let colorLabel = document.getElementById('color_label')
-        let cyls = document.getElementById('cyls')
-        let interfaceCyls = document.getElementById('interface_cyls')
         let bars = document.getElementById('bars')
-        let interfaceBars = document.getElementById('interface_bars')
+            let uiDesktop = document.getElementById('ui_bars')
 
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
         console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
-        if (serverURL) { scene.setAttribute('networked-scene', 'serverURL', serverURL) }
+        if (serverURL) {
+            scene.setAttribute('networked-scene', 'serverURL', serverURL);
+            scene.setAttribute('networked-scene', 'audio', 'true');
+        }
 
         /* LIST OF USERNAMES AND AVATAR COLORS */
         let players = [
@@ -143,6 +149,20 @@
 
         /* UI Event Listeners */
 
+        // VR started
+        document.addEventListener('controllerconnected', (event) => {
+            document.querySelector('#rig').setAttribute('position', { x: 0, y: 1.6, z: 0 })
+        });
+
+        // AudioButton
+        audioButton.addEventListener('click', function (event) {
+            if (audioLabel.getAttribute('value') === 'Stop Audio') {
+                stopAudio();
+            } else {
+                turnOnAudio();
+            }
+        });
+
         // ColorButton
         colorButton.addEventListener('click', function (event) {
             let _players = players.filter(player => player.color === colorButton.getAttribute('color'))
@@ -156,26 +176,59 @@
             avatar.setAttribute('color', players[index].color)
         })
 
-        // InterfaceCyls
-        interfaceCyls.addEventListener('click', function (event) {
-            if (!NAF.utils.isMine(cyls)) {
-                NAF.utils.takeOwnership(cyls)
-            }
-            if (!NAF.utils.isMine(interfaceCyls)) {
-                NAF.utils.takeOwnership(interfaceCyls)
-            }
-        });
-
-        // InterfacebBars
-        interfaceBars.addEventListener('click', function (event) {
+        // uiDesktop
+            uiDesktop.addEventListener('click', function (event) {
             if (!NAF.utils.isMine(bars)) {
                 NAF.utils.takeOwnership(bars)
             }
-            if (!NAF.utils.isMine(interfaceBars)) {
-                NAF.utils.takeOwnership(interfaceBars)
+            /*if (!NAF.utils.isMine(uiDesktop)) {
+                NAF.utils.takeOwnership(uiDesktop)
+            }*/
+
+            if (!NAF.utils.isMine(NAF.entities.entities.ui_bars)) {
+                NAF.utils.takeOwnership(NAF.entities.entities.ui_bars)
             }
+
         });
 
+        document.addEventListener('controllerconnected', (event) => {
+            console.log("controller connected")
+            setTimeout(function () {
+                console.log("inside timeout")
+                let uiVR = document.querySelector('#babia-menu-hand')
+                uiVR.setAttribute('networked', {
+                    'template': '#ui-template',
+                    'networkId': 'ui_bars',
+                    'persistent': 'true',
+                    'attachTemplateToLocal': 'false',
+                    'owner': 'scene'
+                });
+                uiVR.addEventListener('click', function (event) {
+                    if (!NAF.utils.isMine(bars)) {
+                        NAF.utils.takeOwnership(bars)
+                    };
+                    /*if (!NAF.utils.isMine(uiDesktop)) {
+                        NAF.utils.takeOwnership(uiDesktop)
+                    };
+                    if (!NAF.utils.isMine(uiVR)) {
+                        NAF.utils.takeOwnership(uiVR)
+                    };*/
+
+                    if (!NAF.utils.isMine(NAF.entities.entities.ui_bars)) {
+                        NAF.utils.takeOwnership(NAF.entities.entities.ui_bars)
+                    }
+                });
+                // uiDesktop
+                uiVR.addEventListener('ownership-gained', e => {
+                    console.log("uiVR ownership gained")
+                });
+                uiVR.addEventListener('ownership-lost', e => console.log("uiVR ownership lost"));
+                uiVR.addEventListener('ownership-changed', e => console.log(`uiBars ownership changed. Old owner: ${e.detail.oldOwner}. New owner: ${e.detail.newOwner}`))
+
+            }, 1000);
+
+
+        });
 
         /* NAF Messages */
 
@@ -224,29 +277,18 @@
 
         /* Ownership Event Listeners */
 
-        // Cyls
-        cyls.addEventListener('ownership-gained', e => {
-            console.log("Cyls ownership gained")
-        });
-        cyls.addEventListener('ownership-lost', e => console.log("Cyls ownership lost"));
-
-        // InterfaceCyls
-        interfaceCyls.addEventListener('ownership-gained', e => {
-            console.log("InterfaceCyls ownership gained")
-        });
-        interfaceCyls.addEventListener('ownership-lost', e => console.log("InterfaceCyls ownership lost"));
-
         // Bars
         bars.addEventListener('ownership-gained', e => {
             console.log("Bars ownership gained")
         });
         bars.addEventListener('ownership-lost', e => console.log("Bars ownership lost"));
 
-        // InterfaceBars
-        interfaceBars.addEventListener('ownership-gained', e => {
-            console.log("interfaceBars ownership gained")
+            // uiDesktop
+            uiDesktop.addEventListener('ownership-gained', e => {
+                console.log("uiDesktop ownership gained")
         });
-        interfaceBars.addEventListener('ownership-lost', e => console.log("interfaceBars ownership lost"));
+            uiDesktop.addEventListener('ownership-lost', e => console.log("uiDesktop ownership lost"));
+
 
         /* Other methods */
 
@@ -260,13 +302,33 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
+        // Audio
+        function turnOnAudio() {
+            NAF.connection.adapter.enableMicrophone(true)
+            audioButton.setAttribute('color', '#E44B00')
+            audioLabel.setAttribute('value', 'Stop Audio')
+        }
+
+        function stopAudio() {
+            NAF.connection.adapter.enableMicrophone(false)
+            audioButton.setAttribute('color', '#F8F6F2')
+            audioLabel.setAttribute('value', 'Turn on Audio')
+        }
 
     </script>
 
     <script>
         // Schemas with components and attributes for syncronization
         NAF.schemas.add({
-            template: '#mov-template',
+            template: '#rig-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#camera-template',
             components: [
                 'position',
                 'rotation'
@@ -295,21 +357,10 @@
         });
 
         // Important to add here the graph component
-        NAF.schemas.add({
-            template: '#cyls-template',
-            components: [
-                //'babia-queryjson',
-                'position',
-                'rotation',
-                'scale',
-                'babia-cyls'
-            ]
-        });
 
         NAF.schemas.add({
             template: '#bars-template',
             components: [
-                //'babia-queryjson',
                 'position',
                 'rotation',
                 'scale',
@@ -325,14 +376,16 @@
         })
 
         NAF.schemas.add({
-            template: '#interface-template',
+            template: '#ui-template',
             components: [
                 'babia-ui',
-                'position',
-                'rotation',
-                'scale'
             ]
         });
+
+            NAF.schemas.add({
+                template: '#left-hand-template',
+                components: []
+            });
 
     </script>
 </body>
