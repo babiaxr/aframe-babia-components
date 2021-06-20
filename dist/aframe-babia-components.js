@@ -7579,13 +7579,19 @@ let dispatchEventOnElement = (element, propertyName) => {
 
     next() {
         let selected = this.data[this.selectors[this.current]];
-        this.current = (this.current + 1) % this.length;
+        this.current++;
         return(selected);
     }
 
     prev() {
         let selected = this.data[this.selectors[this.current]];
-        this.current = (this.current - 1) % this.length;
+        this.current--;
+        return(selected);
+    }
+
+    setValue(value)  {
+        let selected = this.data[this.selectors[value]];
+        this.current = value + 1;
         return(selected);
     }
 };
@@ -7638,7 +7644,12 @@ AFRAME.registerComponent('babia-selector', {
         this.el.addEventListener('babiaToPast',  _listener = (e) => {
             this.toPresent = false
         })
-        
+
+        this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
+            this.isPaused = true
+            //console.log(e.detail)
+            this.setSelect(e.detail)
+        })
 
     },
 
@@ -7665,14 +7676,13 @@ AFRAME.registerComponent('babia-selector', {
             this.selectable = new Selectable(rawData, data.select);
 
             if (this.selectorController){
-                console.log('Mandando init a navigator')
                 this.selectorController.emit("babiaSelectorDataReady")
             }
 
             window.setInterval(function () {
                 self.nextSelect();
             }, data.timeout);
-            this.nextSelect();
+            //this.nextSelect();
             
         } else {
             if (data.from !== oldData.from) {
@@ -7701,24 +7711,23 @@ AFRAME.registerComponent('babia-selector', {
                         this.selectorController.emit("babiaSelectorDataReady", self)
                     }
 
+                    self.nextSelect();
                     window.setInterval(function () {
-                        console.log('Esta pausado? ', self.isPaused)
+                        //console.log('Esta pausado? ', self.isPaused)
                         if (!self.isPaused){
-                            console.log('hacia presente? ', self.toPresent)
+                            //console.log('hacia presente? ', self.toPresent)
+                            //console.log('Estamos en: ', self.selectable.current)
+                            if (self.selectorController){
+                                self.selectorController.emit("babiaSelectorDataUpdated", self)
+                            }
+
                             if(self.toPresent){
                                 self.nextSelect();
                             } else {
                                 self.prevSelect();
                             }
-
-                            console.log('Estamos en: ', self.selectable.current)
-                            
-                            if (self.selectorController){
-                                self.selectorController.emit("babiaSelectorDataUpdated", self)
-                            }
                         }
                     }, data.timeout);
-                    self.nextSelect();
     
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -7767,6 +7776,13 @@ AFRAME.registerComponent('babia-selector', {
             this.selectorController.emit('babiaStop')
         }
 
+    },
+
+    setSelect: function(value) {
+        this.babiaData = this.selectable.setValue(value);
+        this.babiaMetadata = { id: value++ };
+        // Dispatch interested events
+        dataReadyToSend("babiaData", this);
     },
 
     /**
@@ -8754,8 +8770,8 @@ AFRAME.registerComponent('babia-controls', {
                 forward.color = 'white'
                 changeMaterial(forward, forward.color)
             }
-            console.log('Emit... ' + event)
-            //console.log(self)
+            //console.log('Emit... ' + event)
+            console.log(self)
             self.el.parentEl.emit(event)
         });
     }
@@ -9000,7 +9016,6 @@ AFRAME.registerComponent('babia-navigator', {
         this.el.addEventListener('babiaSelectorDataReady', _listener = (e) => {
             this.selector = e.detail
             this.initializeControls();
-            //toTest(this)
         });
 
         this.el.addEventListener('babiaSelectorDataUpdated', _listener = (e) => {
@@ -9016,14 +9031,15 @@ AFRAME.registerComponent('babia-navigator', {
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
                 // Re-send event
-                console.log('Re-emit... ', evt)
-                this.selector.el.emit(evt)
+                //console.log('Re-emit... ', evt)
+                this.selector.el.emit(evt, e.detail)
 
                 // TO TEST FUNCIONALITIES
                 if(evt === 'babiaContinue'){
                     this.isPaused = false
                 } else if (evt === 'babiaStop'){
                     this.isPaused = true
+                    this.controlsEl.querySelector('.babiaPause').emit('click')
                 }
 
                 if(evt === 'babiaToPresent'){
@@ -9049,19 +9065,13 @@ AFRAME.registerComponent('babia-navigator', {
     * Generally modifies the entity based on the data.
     */
 
-    update: function (oldData) {
-        // To Test
-        //this.el.emit('babiaSelectorDataReady')
-    },
+    update: function (oldData) {},
 
     initializeControls: function(){
-        //console.log(e.detail)
-        // Get selector data
-
         // Initialize Slider
         this.sliderEl = document.createElement('a-entity');
         this.sliderEl.min = 0
-        this.sliderEl.max = this.selector.selectable.length
+        this.sliderEl.max = this.selector.selectable.length - 1
         this.current = this.selector.selectable.current
         this.sliderEl.setAttribute('babia-slider', {
             size: 1.5,
@@ -9075,12 +9085,12 @@ AFRAME.registerComponent('babia-navigator', {
         this.el.appendChild(this.sliderEl);
 
         // Initialize Controls
-        let controlsEl = document.createElement('a-entity');
-        controlsEl.setAttribute('babia-controls', ""); 
-        controlsEl.classList.add("babiaxraycasterclass");
-        controlsEl.setAttribute('scale', {x:0.15, y:0.15, z:0.3})
-        controlsEl.object3D.position.y = -0.5;
-        this.el.appendChild(controlsEl);
+        this.controlsEl = document.createElement('a-entity');
+        this.controlsEl.setAttribute('babia-controls', ""); 
+        this.controlsEl.classList.add("babiaxraycasterclass");
+        this.controlsEl.setAttribute('scale', {x:0.15, y:0.15, z:0.3})
+        this.controlsEl.object3D.position.y = -0.5;
+        this.el.appendChild(this.controlsEl);
 
         // Initialize Speed Controller
 
@@ -9094,30 +9104,16 @@ AFRAME.registerComponent('babia-navigator', {
             value--
         }
         // Out of range
-        if ((value >= 0) && (value <= 10)){
+        if ((value >= 0) && (value <= this.sliderEl.max)){
             this.sliderEl.setAttribute('babia-slider', 'value', value)
         } else {
             this.el.querySelector('.babiaPause').emit('click')
         }
+
+        this.selector.el.emit('babiaSetPosition', value)
     },
 
 })
-
-function toTest(self){
-    setInterval(() => {
-        let evt
-        if (self.sliderEl) {
-            if (!self.isPaused){
-                if(self.toPresent){
-                    evt = 'babiaSkipNext'
-                } else {
-                    evt = 'babiaSkipPrev'
-                }
-                self.updateSlider(evt)
-            }
-        }
-    }, 3000);
-}
 
 /***/ }),
 /* 110 */
@@ -9191,7 +9187,7 @@ AFRAME.registerComponent('babia-slider', {
 
       setTextGeometry: function(text) {
         if (this.textmesh) {
-          this.lever.remove(this.textmesh)
+          this.lever.children = []
         }
         this.loader.load(this.fontURL, (font) => { 
             this.font = font
@@ -9310,11 +9306,17 @@ AFRAME.registerComponent('babia-slider', {
       mousePositionToValue: function(x){
         let sliderCenter = this.el.object3D.position.x
         let sliderWidth = this.data.size * this.data.innerSize
-        console.log('ancho:', sliderWidth)
         let sliderRange = Math.abs(this.data.max - this.data.min)
         let sliderMin = sliderCenter - (sliderWidth / 2)
 
-        return (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
+        let value = (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
+        if (value < this.data.min){
+          return this.data.min
+        } else if (value > this.data.max){
+          return this.data.max
+        } else {
+          return value
+        }
       },
     
       update: function(old) {
@@ -9323,9 +9325,9 @@ AFRAME.registerComponent('babia-slider', {
         }
         this.el.addEventListener('click', _listener = (e) => {
           let mouse = e.detail.intersection.point
-          console.log(mouse.x)
           var value = this.mousePositionToValue(mouse.x);
           this.setValue(Math.round(value));
+          this.el.parentEl.emit('babiaSetPosition', Math.round(value))
         })
       }
 })

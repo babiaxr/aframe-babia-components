@@ -25,7 +25,6 @@ AFRAME.registerComponent('babia-navigator', {
         this.el.addEventListener('babiaSelectorDataReady', _listener = (e) => {
             this.selector = e.detail
             this.initializeControls();
-            //toTest(this)
         });
 
         this.el.addEventListener('babiaSelectorDataUpdated', _listener = (e) => {
@@ -41,14 +40,15 @@ AFRAME.registerComponent('babia-navigator', {
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
                 // Re-send event
-                console.log('Re-emit... ', evt)
-                this.selector.el.emit(evt)
+                //console.log('Re-emit... ', evt)
+                this.selector.el.emit(evt, e.detail)
 
                 // TO TEST FUNCIONALITIES
                 if(evt === 'babiaContinue'){
                     this.isPaused = false
                 } else if (evt === 'babiaStop'){
                     this.isPaused = true
+                    this.controlsEl.querySelector('.babiaPause').emit('click')
                 }
 
                 if(evt === 'babiaToPresent'){
@@ -74,19 +74,13 @@ AFRAME.registerComponent('babia-navigator', {
     * Generally modifies the entity based on the data.
     */
 
-    update: function (oldData) {
-        // To Test
-        //this.el.emit('babiaSelectorDataReady')
-    },
+    update: function (oldData) {},
 
     initializeControls: function(){
-        //console.log(e.detail)
-        // Get selector data
-
         // Initialize Slider
         this.sliderEl = document.createElement('a-entity');
         this.sliderEl.min = 0
-        this.sliderEl.max = this.selector.selectable.length
+        this.sliderEl.max = this.selector.selectable.length - 1
         this.current = this.selector.selectable.current
         this.sliderEl.setAttribute('babia-slider', {
             size: 1.5,
@@ -100,12 +94,12 @@ AFRAME.registerComponent('babia-navigator', {
         this.el.appendChild(this.sliderEl);
 
         // Initialize Controls
-        let controlsEl = document.createElement('a-entity');
-        controlsEl.setAttribute('babia-controls', ""); 
-        controlsEl.classList.add("babiaxraycasterclass");
-        controlsEl.setAttribute('scale', {x:0.15, y:0.15, z:0.3})
-        controlsEl.object3D.position.y = -0.5;
-        this.el.appendChild(controlsEl);
+        this.controlsEl = document.createElement('a-entity');
+        this.controlsEl.setAttribute('babia-controls', ""); 
+        this.controlsEl.classList.add("babiaxraycasterclass");
+        this.controlsEl.setAttribute('scale', {x:0.15, y:0.15, z:0.3})
+        this.controlsEl.object3D.position.y = -0.5;
+        this.el.appendChild(this.controlsEl);
 
         // Initialize Speed Controller
 
@@ -119,27 +113,13 @@ AFRAME.registerComponent('babia-navigator', {
             value--
         }
         // Out of range
-        if ((value >= 0) && (value <= 10)){
+        if ((value >= 0) && (value <= this.sliderEl.max)){
             this.sliderEl.setAttribute('babia-slider', 'value', value)
         } else {
             this.el.querySelector('.babiaPause').emit('click')
         }
+
+        this.selector.el.emit('babiaSetPosition', value)
     },
 
 })
-
-function toTest(self){
-    setInterval(() => {
-        let evt
-        if (self.sliderEl) {
-            if (!self.isPaused){
-                if(self.toPresent){
-                    evt = 'babiaSkipNext'
-                } else {
-                    evt = 'babiaSkipPrev'
-                }
-                self.updateSlider(evt)
-            }
-        }
-    }, 3000);
-}

@@ -22,13 +22,19 @@ class Selectable {
 
     next() {
         let selected = this.data[this.selectors[this.current]];
-        this.current = (this.current + 1) % this.length;
+        this.current++;
         return(selected);
     }
 
     prev() {
         let selected = this.data[this.selectors[this.current]];
-        this.current = (this.current - 1) % this.length;
+        this.current--;
+        return(selected);
+    }
+
+    setValue(value)  {
+        let selected = this.data[this.selectors[value]];
+        this.current = value + 1;
         return(selected);
     }
 };
@@ -83,7 +89,12 @@ AFRAME.registerComponent('babia-selector', {
         this.el.addEventListener('babiaToPast',  _listener = (e) => {
             this.toPresent = false
         })
-        
+
+        this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
+            this.isPaused = true
+            //console.log(e.detail)
+            this.setSelect(e.detail)
+        })
 
     },
 
@@ -110,14 +121,13 @@ AFRAME.registerComponent('babia-selector', {
             this.selectable = new Selectable(rawData, data.select);
 
             if (this.selectorController){
-                console.log('Mandando init a navigator')
                 this.selectorController.emit("babiaSelectorDataReady")
             }
 
             window.setInterval(function () {
                 self.nextSelect();
             }, data.timeout);
-            this.nextSelect();
+            //this.nextSelect();
             
         } else {
             if (data.from !== oldData.from) {
@@ -146,24 +156,23 @@ AFRAME.registerComponent('babia-selector', {
                         this.selectorController.emit("babiaSelectorDataReady", self)
                     }
 
+                    self.nextSelect();
                     window.setInterval(function () {
-                        console.log('Esta pausado? ', self.isPaused)
+                        //console.log('Esta pausado? ', self.isPaused)
                         if (!self.isPaused){
-                            console.log('hacia presente? ', self.toPresent)
+                            //console.log('hacia presente? ', self.toPresent)
+                            //console.log('Estamos en: ', self.selectable.current)
+                            if (self.selectorController){
+                                self.selectorController.emit("babiaSelectorDataUpdated", self)
+                            }
+
                             if(self.toPresent){
                                 self.nextSelect();
                             } else {
                                 self.prevSelect();
                             }
-
-                            console.log('Estamos en: ', self.selectable.current)
-                            
-                            if (self.selectorController){
-                                self.selectorController.emit("babiaSelectorDataUpdated", self)
-                            }
                         }
                     }, data.timeout);
-                    self.nextSelect();
     
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -212,6 +221,13 @@ AFRAME.registerComponent('babia-selector', {
             this.selectorController.emit('babiaStop')
         }
 
+    },
+
+    setSelect: function(value) {
+        this.babiaData = this.selectable.setValue(value);
+        this.babiaMetadata = { id: value++ };
+        // Dispatch interested events
+        dataReadyToSend("babiaData", this);
     },
 
     /**

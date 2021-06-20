@@ -66,7 +66,7 @@ AFRAME.registerComponent('babia-slider', {
 
       setTextGeometry: function(text) {
         if (this.textmesh) {
-          this.lever.remove(this.textmesh)
+          this.lever.children = []
         }
         this.loader.load(this.fontURL, (font) => { 
             this.font = font
@@ -185,11 +185,17 @@ AFRAME.registerComponent('babia-slider', {
       mousePositionToValue: function(x){
         let sliderCenter = this.el.object3D.position.x
         let sliderWidth = this.data.size * this.data.innerSize
-        console.log('ancho:', sliderWidth)
         let sliderRange = Math.abs(this.data.max - this.data.min)
         let sliderMin = sliderCenter - (sliderWidth / 2)
 
-        return (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
+        let value = (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
+        if (value < this.data.min){
+          return this.data.min
+        } else if (value > this.data.max){
+          return this.data.max
+        } else {
+          return value
+        }
       },
     
       update: function(old) {
@@ -198,9 +204,9 @@ AFRAME.registerComponent('babia-slider', {
         }
         this.el.addEventListener('click', _listener = (e) => {
           let mouse = e.detail.intersection.point
-          console.log(mouse.x)
           var value = this.mousePositionToValue(mouse.x);
           this.setValue(Math.round(value));
+          this.el.parentEl.emit('babiaSetPosition', Math.round(value))
         })
       }
 })
