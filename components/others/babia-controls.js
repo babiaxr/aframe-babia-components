@@ -142,7 +142,6 @@ AFRAME.registerComponent('babia-controls', {
                 changeMaterial(forward, forward.color)
             }
             //console.log('Emit... ' + event)
-            console.log(self)
             self.el.parentEl.emit(event)
         });
     }

@@ -7579,13 +7579,17 @@ let dispatchEventOnElement = (element, propertyName) => {
 
     next() {
         let selected = this.data[this.selectors[this.current]];
-        this.current++;
+        if(this.current <= this.length - 1){
+            this.current++;
+        }
         return(selected);
     }
 
     prev() {
         let selected = this.data[this.selectors[this.current]];
-        this.current--;
+        if (this.current >= 0 ){
+            this.current--;
+        }
         return(selected);
     }
 
@@ -7639,16 +7643,18 @@ AFRAME.registerComponent('babia-selector', {
 
         this.el.addEventListener('babiaToPresent',  _listener = (e) => {
             this.toPresent = true
+            this.selectable.current += 2
         })
 
         this.el.addEventListener('babiaToPast',  _listener = (e) => {
             this.toPresent = false
+            this.selectable.current -= 2
         })
 
         this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
             this.isPaused = true
-            //console.log(e.detail)
             this.setSelect(e.detail)
+            this.selectorController.emit('babiaStop')
         })
 
     },
@@ -7679,10 +7685,20 @@ AFRAME.registerComponent('babia-selector', {
                 this.selectorController.emit("babiaSelectorDataReady")
             }
 
+            self.nextSelect();
             window.setInterval(function () {
-                self.nextSelect();
+                if (!self.isPaused){
+                    if (self.selectorController){
+                        self.selectorController.emit("babiaSelectorDataUpdated", self)
+                    }
+
+                    if(self.toPresent){
+                        self.nextSelect();
+                    } else {
+                        self.prevSelect();
+                    }
+                }
             }, data.timeout);
-            //this.nextSelect();
             
         } else {
             if (data.from !== oldData.from) {
@@ -7713,10 +7729,7 @@ AFRAME.registerComponent('babia-selector', {
 
                     self.nextSelect();
                     window.setInterval(function () {
-                        //console.log('Esta pausado? ', self.isPaused)
                         if (!self.isPaused){
-                            //console.log('hacia presente? ', self.toPresent)
-                            //console.log('Estamos en: ', self.selectable.current)
                             if (self.selectorController){
                                 self.selectorController.emit("babiaSelectorDataUpdated", self)
                             }
@@ -7754,12 +7767,13 @@ AFRAME.registerComponent('babia-selector', {
     },
 
     nextSelect: function() {
-        if (this.selectable.current < this.selectable.length){
+        if (this.selectable.current <= this.selectable.length - 1){
             this.babiaData = this.selectable.next();
             this.babiaMetadata = { id: this.babiaMetadata.id++ };
             // Dispatch interested events
             dataReadyToSend("babiaData", this);
         } else {
+            this.selectable.current = this.selectable.length - 1
             this.isPaused = true
             this.selectorController.emit('babiaStop')
         }
@@ -7772,6 +7786,7 @@ AFRAME.registerComponent('babia-selector', {
             // Dispatch interested events
             dataReadyToSend("babiaData", this);  
         } else {
+            this.selectable.current = 0
             this.isPaused = true
             this.selectorController.emit('babiaStop')
         }
@@ -7780,7 +7795,12 @@ AFRAME.registerComponent('babia-selector', {
 
     setSelect: function(value) {
         this.babiaData = this.selectable.setValue(value);
-        this.babiaMetadata = { id: value++ };
+        if (this.toPresent) {
+            this.babiaMetadata = { id: value++ };
+        } else {
+            this.babiaMetadata = { id: value-- };
+            this.selectable.current -=2
+        }
         // Dispatch interested events
         dataReadyToSend("babiaData", this);
     },
@@ -8771,7 +8791,6 @@ AFRAME.registerComponent('babia-controls', {
                 changeMaterial(forward, forward.color)
             }
             //console.log('Emit... ' + event)
-            console.log(self)
             self.el.parentEl.emit(event)
         });
     }
