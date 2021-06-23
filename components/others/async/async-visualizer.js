@@ -20,6 +20,21 @@ AFRAME.registerComponent('async-visualizer', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
+        let plane = document.createElement("a-plane");
+        plane.setAttribute('id', 'info_plane');
+        plane.setAttribute('position', '0 7 10');
+        plane.setAttribute('rotation', '0 180 0')
+        plane.setAttribute('height', '5');
+        plane.setAttribute('width', '10');
+        plane.setAttribute('color', 'white');
+        let label = document.createElement("a-text");
+        label.setAttribute('id', 'info_label');
+        label.setAttribute('value', 'No info');
+        label.setAttribute('color', '#000');
+        label.setAttribute('width', '9');
+        label.setAttribute('position', '-4.5 0 0')
+        plane.appendChild(label);
+        this.el.appendChild(plane);
     },
 
     /**
@@ -34,24 +49,7 @@ AFRAME.registerComponent('async-visualizer', {
 
         if (oldData.from !== data.from) {
             let fromComponent = findFrom(data, el, self);
-            //let dataToPrint = getDataFrom(fromComponent);
-            fromComponent.register.updateMe()
-            getDataFrom(fromComponent)
-            //console.log(dataToPrint.toString())
-
-            let plane = document.createElement("a-plane");
-            plane.setAttribute('id', 'info_plane');
-            plane.setAttribute('position', '0 7 10');
-            plane.setAttribute('rotation', '0 180 0')
-            plane.setAttribute('height', '10');
-            plane.setAttribute('width', '10');
-            plane.setAttribute('color', '#ffff');
-            let label = document.createElement("a-text");
-            label.setAttribute('id', 'info_label');
-            label.setAttribute('value', 'No info');
-            label.setAttribute('color', '#000');
-            plane.appendChild(label);
-            el.appendChild(plane);
+            getDataFrom(fromComponent, el);
         }
     },
     /**
@@ -110,14 +108,25 @@ let findFrom = (data, el, self) => {
   }
 
   let getDataFrom = (fromComponent) => {
-    let dataToPrint = "";
+    let data = [];
     setInterval(() => {
-        fromComponent.register.waitForData().then( data => {
-            dataToPrint = data;
-            console.log(dataToPrint)});
-            listen = false;
-        
+        fromComponent.register.
+        waitForData().then( _data => {
+            data = _data;
+            console.log(data)
+            if(data){
+                let dataToPrint = data.reduce((accumulator, currentValue) => {
+                    if (data.indexOf(currentValue) == data.length -1){
+                        return accumulator + currentValue['country'] + '.'
+                    } else if (data.indexOf(currentValue) == data.length -2) {
+                        return accumulator + currentValue['country'] + ' and '
+                    } else {
+                        return accumulator + currentValue['country'] + ', '
+                    }
+                }, "New data: ")
+                document.getElementById("info_label").setAttribute('value', dataToPrint)
+            }
+        });        
     }, 1000);
-    return dataToPrint;
   }
   

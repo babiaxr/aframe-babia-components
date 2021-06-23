@@ -62,7 +62,8 @@ AFRAME.registerComponent('babia-async-querier', {
 
 function waitForFetch(self, url){
     console.log("Wait for fetch")
-    self.register.p = requestJSONDataFromURL(url);
+    //self.register.p = requestJSONDataFromURL(url);
+    self.register.senderPromise(requestJSONDataFromURL(url))
   }
 
 async function requestJSONDataFromURL(url) { 
@@ -81,35 +82,16 @@ async function requestJSONDataFromURL(url) {
  class Register {
     constructor(){
         this.p = null;
-        this.pReady = null;
     }
-
-    /*register(){
-        while (this.p == null){
-            waitForP().then((r) => {
-                this.pReady = r;
-                this.p = null;
-            })
-        }
-    }
-
-    async waitForP(){
-        await this.p
-    }*/
 
     async waitForData() {
-        this.pReady = await this.p
+        let pReady = await this.p
         this.p = null;
-        return this.pReady; 
+        return pReady; 
     }
 
-    async updateMe(){
-        let _isReady = await this.avisame
-    }
-
-
-   /* async senderPromise(pq){
-        this.p = await pq;
-    };*/
+    async senderPromise(sp){
+        this.p = await sp;
+    };
 
 }
