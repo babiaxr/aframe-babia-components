@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Async-Await</title>
+    <meta name="description" content="Async-Await test" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <a-entity id="querier" babia-async-querier="url: ./data_vaccination_2.json"></a-entity>
+
+        <a-entity id="vis" async-visualizer="from: querier">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="0 5 0" rotation="0 180 0">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+    </a-scene>
+
+
+    <script>
+        let querier = document.getElementById("querier");
+        changeFrom();
+
+        async function changeFrom() {
+            for (let i = 0; i < 10; i++) {
+                await delay()
+                if (i == 0 || i % 2 == 0) {
+                    querier.setAttribute('babia-async-querier', { 'url': './data_vaccination_1.json' });
+                    console.log(querier.getAttribute('babia-async-querier')['url'])
+                } else {
+                    querier.setAttribute('babia-async-querier', { 'url': './data_vaccination_2.json' });
+                    console.log(querier.getAttribute('babia-async-querier')['url'])
+                }
+            }
+        }
+
+        function delay() {
+            return new Promise(resolve => setTimeout(resolve, 3000));
+        }
+    </script>
+</body>
+
+</html>
