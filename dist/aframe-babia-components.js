@@ -6262,15 +6262,19 @@ AFRAME.registerComponent('babia-async-querier', {
     register: undefined,
 })
 
-async function waitForFetch(self, url){
-    self.register.p = await requestJSONDataFromURL(url);
+function waitForFetch(self, url){
+    console.log("Wait for fetch")
+    //self.register.p = requestJSONDataFromURL(url);
+    self.register.senderPromise(requestJSONDataFromURL(url))
   }
 
 async function requestJSONDataFromURL(url) { 
     let response = await fetch(url);
+    console.log(response)
 
     if (response.status == 200) {
-       let json = await response.json(); 
+       let json = await response.json();
+       console.log(json)
        return json;
     }
  
@@ -6281,15 +6285,16 @@ async function requestJSONDataFromURL(url) {
     constructor(){
         this.p = null;
     }
+
     async waitForData() {
-        let pr = await this.p;
+        let pReady = await this.p
         this.p = null;
-        return pr;
+        return pReady; 
     }
 
-   /* async senderPromise(pq){
-        this.p = await pq;
-    };*/
+    async senderPromise(sp){
+        this.p = await sp;
+    };
 
 }
 
@@ -6320,6 +6325,21 @@ AFRAME.registerComponent('async-visualizer', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
+        let plane = document.createElement("a-plane");
+        plane.setAttribute('id', 'info_plane');
+        plane.setAttribute('position', '0 7 10');
+        plane.setAttribute('rotation', '0 180 0')
+        plane.setAttribute('height', '5');
+        plane.setAttribute('width', '10');
+        plane.setAttribute('color', 'white');
+        let label = document.createElement("a-text");
+        label.setAttribute('id', 'info_label');
+        label.setAttribute('value', 'No info');
+        label.setAttribute('color', '#000');
+        label.setAttribute('width', '9');
+        label.setAttribute('position', '-4.5 0 0')
+        plane.appendChild(label);
+        this.el.appendChild(plane);
     },
 
     /**
@@ -6330,15 +6350,11 @@ AFRAME.registerComponent('async-visualizer', {
     update: function (oldData) {
         const self = this;
         let data = this.data;
+        let el = this.el;
 
         if (oldData.from !== data.from) {
-           // let from = findFrom();
-            let fromComponent = findFrom();
-            let dataToPrint = fromComponent.register.waitForData();
-            console.log(dataToPrint);
-            /*let element = document.createElement("p");
-            element.innerText = data_to_show;
-            document.getElementById("scene").appendChild(element);*/
+            let fromComponent = findFrom(data, el, self);
+            getDataFrom(fromComponent, el);
         }
     },
     /**
@@ -6360,40 +6376,31 @@ AFRAME.registerComponent('async-visualizer', {
     */
     play: function () { },
 
-    /**
-    * Querier component target
-    */
-    //fromComponent: undefined,
-
 })
 
 let findFrom = (data, el, self) => {
-    //let _from = "babiaAsyncQuerier"
     let fromComponent;
     if (data.from) {
-      // Save the reference to the querier or filterdata
+      // Save the reference to the querier or filter
       let fromElement = document.getElementById(data.from)
       if (fromElement.components['babia-async-filter']) {
         fromComponent = fromElement.components['babia-async-filter']
-        //_from = "babiaAsyncFilter"
       } else if (fromElement.components['babia-async-querier']) {
         fromComponent = fromElement.components['babia-async-querier']
       } else {
-        console.error("Problem registering to the querier")
+        console.error("Problem getting the querier")
         return
       }
     } else {
-      // Look for a querier or filterdata in the same element and register
+      // Look for a querier or filter in the same element
       if (el.components['babia-async-filter']) {
         fromComponent = el.components['babia-async-filter']
-        //_from = "babiaAsyncFilter"
       } else if (el.components['babia-async-querier']) {
         fromComponent = el.components['babia-async-querier']
       } else {
-        // Look for a querier or filterdata in the scene
+        // Look for a querier or filter in the scene
         if (document.querySelectorAll("[babia-async-filter]").length > 0) {
           fromComponent = document.querySelectorAll("[babia-async-filter]")[0].components['babia-async-filter']
-         // _from = "babiaAsyncFilter"
         } else if (document.querySelectorAll("[babia-async-querier]").length > 0) {
           fromComponent = document.querySelectorAll("[babia-async-querier]")[0].components['babia-async-querier']
         } else {
@@ -6403,6 +6410,29 @@ let findFrom = (data, el, self) => {
       }
     }
     return fromComponent
+  }
+
+  let getDataFrom = (fromComponent) => {
+    let data = [];
+    setInterval(() => {
+        fromComponent.register.
+        waitForData().then( _data => {
+            data = _data;
+            console.log(data)
+            if(data){
+                let dataToPrint = data.reduce((accumulator, currentValue) => {
+                    if (data.indexOf(currentValue) == data.length -1){
+                        return accumulator + currentValue['country'] + '.'
+                    } else if (data.indexOf(currentValue) == data.length -2) {
+                        return accumulator + currentValue['country'] + ' and '
+                    } else {
+                        return accumulator + currentValue['country'] + ', '
+                    }
+                }, "New data: ")
+                document.getElementById("info_label").setAttribute('value', dataToPrint)
+            }
+        });        
+    }, 1000);
   }
   
 
