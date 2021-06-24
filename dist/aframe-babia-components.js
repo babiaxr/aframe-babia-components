@@ -6284,13 +6284,12 @@ async function requestJSONDataFromURL(url) {
  class Register {
     constructor(){
         this.p = null;
-        this.pReady = null;
     }
 
     async waitForData() {
-        this.pReady = await this.p
+        let pReady = await this.p
         this.p = null;
-        return this.pReady; 
+        return pReady; 
     }
 
     async senderPromise(sp){
