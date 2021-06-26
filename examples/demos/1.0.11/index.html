@@ -72,6 +72,7 @@
                         position = "0 2.5 0" rotation = "90 -45 0" scale = "1.5 1.5 1.5"></a-entity> 
             </a-entity>
             <a-entity position="2 0 -8" lounge-plinth="width: 6.5; depth: 4" lounge-staydown>
+                <!-- AQUI FALTA ALGO -->
                 <a-entity id = "bar" babia-bars='legend: true; axis: true; heightMax: 15; from: simplebardata; x_axis: date; height: deaths' 
                         position="-2.25 0.275 0" rotation="0 0 0" scale = "0.5 0.5 0.5"></a-entity>
             </a-entity>
@@ -91,27 +92,19 @@
                         position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.1 0.09"></a-entity>
             </a-entity>
             <a-entity position="-12 0 20" lounge-plinth="width: 4; depth: 8" lounge-staydown>
-                <a-entity id = "3dbar" babia-barsmap='legend: true; palette: foxy; heightMax: 15; from: 3dbardata; x_axis: date; z_axis: list; height: cases'
-                        position="0.6 0.275 1.8" rotation="0 90 0" scale = "0.5 0.5 0.5"></a-entity>
+                <a-entity id = "3dbar" babia-barsmap='x_axis: key; z_axis: key2; height: size; legend: true; palette: bussiness; animation: true;
+                        heightMax:35; data:[{"key":"David","key2":"2019","size":90},{"key":"David","key2":"2018","size":8},{"key":"David","key2":"2017","size":70},{"key":"David","key2":"2016","size":65},{"key":"David","key2":"2015","size":5},{"key":"Pete","key2":"2011","size":80},{"key":"Pete","key2":"2014","size":7},{"key":"Josh","key2":"2016","size":65},{"key":"Josh","key2":"2015","size":55},{"key":"Jesus","key2":"2016","size":90},{"key":"Jesus","key2":"2011","size":80},{"key":"Jesus","key2":"2014","size":75},{"key":"Jesus","key2":"2016","size":60},{"key":"Jesus","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":95},{"key":"Steve","key2":"2016","size":90},{"key":"Steve","key2":"2017","size":8},{"key":"Steve","key2":"2014","size":7},{"key":"Steve","key2":"2013","size":60},{"key":"Moreno","key2":"2015","size":45},{"key":"Jesus","key2":"2019","size":100},{"key":"Pete","key2":"2019","size":10}]' 
+                        position="-1.062 0.275 -1.887" rotation="0 0 0" scale = "0.4 0.4 0.4"></a-entity>
             </a-entity>
 
             <!-- CodeCity Component-->
             <a-entity position="16 3 20" lounge-plinth="width: 6; depth: 6" lounge-staydown>
                 <a-entity position="0 0.25 0" id="codecity" babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
                 extra: 1.5; base_thick: 0.3; split: pivot; titles: true; time_evolution_delta: 3000;
-                data: main_data.json; ui_navbar: navigationbar' scale="0.3 0.3 0.3" rotation="0 180 0"></a-entity>
+                data: main_data.json' scale="0.3 0.3 0.3" rotation="0 180 0"></a-entity>
             </a-entity>
 
         </a-entity>
-
-        <!-- Codecity Navigation Bar -->
-        <a-entity id="navigationbar" babiaxr-navigation-bar= 'to: left; start_point: 5; points_by_line: 6' position='20 -2 24.8' scale="1.5 1.5 1.5"
-                rotation="0 180 0"></a-entity>
-
-        <!-- Totem Component -->
-        <a-entity id="totem1" babiaxr-totem='legend: true; axis: true; charts_id: [{"id": "pie", "type": "babiaxr-vismapper"}, {"id": "doughnut", "type": "babiaxr-vismapper"}];
-                data_list: [{"data":"Europe", "from_querier": "piedata1"}, {"data": "America", "from_querier": "piedata2"}]'
-                position="30.8 -6 -4" rotation="0 -90 0"></a-entity>
 
         <!-- Component's Descriptions -->
         <a-entity id="piedescription" position="18.2 -4.1 -18" rotation="-30 -90 0" >
@@ -168,7 +161,7 @@
                 <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
                 <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
                 <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
-                        <h1>babiaxr-3dcylinderchart Component</h1>
+                        <h1>babia-cylsmap Component</h1>
                         <p>This component shows a 3 axis cylinder chart.
                         <p>Raycaster: </br>Get intersection with a cylinder to show the keys and values.</p>
                         </p>
@@ -184,36 +177,18 @@
                         </p>
                 </a-entity>
         </a-entity>
-        <a-entity id="totemdescription" position="24.8 -3 -7.25" rotation="0 -90 0">
-                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
-                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
-                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
-                        <h1>babiaxr-totem Component</h1>
-                        <p>This component shows a totem in order to change the data of the visualization that it's targeting.
-                        <p>Raycaster: </br>Select data to change pie and doughnut charts.</p>
-                        </p>
-                </a-entity>
-        </a-entity>
+
         <a-entity id="codecitydescription" position="17.5 -4.1 16.5" rotation="-30 -135 0">
                 <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
                 <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
                 <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
-                        <h1>babiaxr-codecity Component</h1>
+                        <h1>babia-city Component</h1>
                         <p>This component shows a city created using repository data.
                         <p>Raycaster: </br>Get intersection with a building to show the path.</p>
                         </p>
                 </a-entity>
         </a-entity>
-        <a-entity id="navigationbardescription" position="11.5 -3.5 24.8" rotation="0 -180 0">
-                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
-                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
-                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
-                        <h1>babiaxr-navigation-bar Component</h1>
-                        <p>This component manages the codecity component's timeline.
-                        <p>Raycaster: </br>Get intersection with the buttons to manage it.</p>
-                        </p>
-                </a-entity>
-        </a-entity>
+
   
         <!-- Lights -->
         <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
