@@ -41,10 +41,10 @@
                 await delay()
                 if (i == 0 || i % 2 == 0) {
                     querier.setAttribute('babia-async-querier', { 'url': './data_vaccination_1.json' });
-                    console.log(querier.getAttribute('babia-async-querier')['url'])
+                    console.log("Url: " + querier.getAttribute('babia-async-querier')['url'])
                 } else {
                     querier.setAttribute('babia-async-querier', { 'url': './data_vaccination_2.json' });
-                    console.log(querier.getAttribute('babia-async-querier')['url'])
+                    console.log("Url: " + querier.getAttribute('babia-async-querier')['url'])
                 }
             }
         }

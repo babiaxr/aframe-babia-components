@@ -33,9 +33,8 @@ AFRAME.registerComponent('babia-async-querier', {
         let self = this;
         
         if (oldData.url !== data.url) {
-            waitForFetch(self, data.url)
+            requestJSONDataFromURL(data.url).then((json) => self.register.data = json);
         }
-        
     },
     /**
     * Called when a component is removed (e.g., via removeAttribute).
@@ -60,19 +59,13 @@ AFRAME.registerComponent('babia-async-querier', {
     register: undefined,
 })
 
-function waitForFetch(self, url){
-    console.log("Wait for fetch")
-    //self.register.p = requestJSONDataFromURL(url);
-    self.register.senderPromise(requestJSONDataFromURL(url))
-  }
-
 async function requestJSONDataFromURL(url) { 
     let response = await fetch(url);
-    console.log(response)
+    console.log("Response: " + response)
 
     if (response.status == 200) {
        let json = await response.json();
-       console.log(json)
+       console.log("Json: " +json)
        return json;
     }
  
@@ -81,17 +74,11 @@ async function requestJSONDataFromURL(url) {
 
  class Register {
     constructor(){
-        this.p = null;
+        this.data = null;
     }
 
-    async waitForData() {
-        let pReady = await this.p
-        this.p = null;
-        return pReady; 
+    async getData() {
+        let dataReady = await this.data
+        return dataReady; 
     }
-
-    async senderPromise(sp){
-        this.p = await sp;
-    };
-
 }

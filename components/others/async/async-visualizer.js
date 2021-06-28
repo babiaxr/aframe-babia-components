@@ -73,7 +73,7 @@ AFRAME.registerComponent('async-visualizer', {
 
 })
 
-let findFrom = (data, el, self) => {
+let findFrom = (data, el) => {
     let fromComponent;
     if (data.from) {
       // Save the reference to the querier or filter
@@ -92,16 +92,6 @@ let findFrom = (data, el, self) => {
         fromComponent = el.components['babia-async-filter']
       } else if (el.components['babia-async-querier']) {
         fromComponent = el.components['babia-async-querier']
-      } else {
-        // Look for a querier or filter in the scene
-        if (document.querySelectorAll("[babia-async-filter]").length > 0) {
-          fromComponent = document.querySelectorAll("[babia-async-filter]")[0].components['babia-async-filter']
-        } else if (document.querySelectorAll("[babia-async-querier]").length > 0) {
-          fromComponent = document.querySelectorAll("[babia-async-querier]")[0].components['babia-async-querier']
-        } else {
-          console.error("Error, querier not found")
-          return
-        }
       }
     }
     return fromComponent
@@ -110,11 +100,9 @@ let findFrom = (data, el, self) => {
   let getDataFrom = (fromComponent) => {
     let data = [];
     setInterval(() => {
-        fromComponent.register.
-        waitForData().then( _data => {
+        fromComponent.register.getData().then( _data => {
             data = _data;
-            console.log(data)
-            if(data){
+            console.log("Data: " + data)
                 let dataToPrint = data.reduce((accumulator, currentValue) => {
                     if (data.indexOf(currentValue) == data.length -1){
                         return accumulator + currentValue['country'] + '.'
@@ -125,8 +113,8 @@ let findFrom = (data, el, self) => {
                     }
                 }, "New data: ")
                 document.getElementById("info_label").setAttribute('value', dataToPrint)
-            }
         });        
-    }, 1000);
+    }, 500);
   }
+  
   
