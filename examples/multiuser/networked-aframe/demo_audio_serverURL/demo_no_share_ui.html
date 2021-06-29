@@ -2,13 +2,15 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Basic Example — Networked-Aframe</title>
-    <meta name="description" content="Basic Example — Networked-Aframe" />
+    <title>New Demo NO sharing UI — Networked-Aframe</title>
+    <meta name="description" content="New Demo NO sharing UI — Networked-Aframe" />
 
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
     <script src="./easyrtc.js"></script>
     <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+
+    <script src="https://unpkg.com/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
 
     <script
         src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
@@ -19,7 +21,7 @@
 
 <body>
     <a-scene id="AframeScene" networked-scene="
-      room: room_new_demo;
+      room: demo_no_ui;
       adapter: easyrtc;
       debug: true;
       audio: false;
@@ -52,35 +54,11 @@
             <template id="querier-template">
                 <a-entity class="querier"></a-entity>
             </template>
-            <!-- ui, same one for all uis -->
-            <template id="ui-template">
-                <a-entity class="ui"></a-entity>
-            </template>
-            <!-- Left hand, to add ui -->
-            <template id="left-hand-template">
-                <a-entity class="left_hand"></a-entity>
-            </template>
-
-
 
         </a-assets>
 
-        <!--Not sync entities-->
-        <a-plane id="audio_button" position="5 1.5 -15" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
-            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
-            </a-text>
-        </a-plane>
-        <a-plane id="color_button" position="5 1 -15" rotation="0 -45 0" height="0.5" width="3.5" color="#66FFFF">
-            <a-text id="color_label" value="Light Blue Player. Click to change player" color="black" width="4"
-                position="-1.5 0 0" rotation="0 0 0">
-            </a-text>
-        </a-plane>
-        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
-        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
-
         <!--Sync entities, not persistent-->
-        <a-entity id="rig" position="-5 2.5 0"
-            networked="template:#rig-template; attachTemplateToLocal:false">
+        <a-entity id="rig" position="-5 2.5 0" networked="template:#rig-template; attachTemplateToLocal:false">
             <a-entity id="camera" camera look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
                 <a-sphere id="avatar" color="#66FFFF" scale="0.25 0.25 0.25"
@@ -90,10 +68,13 @@
                 </a-sphere>
             </a-entity>
             <!-- Hand Controls -->
-            <a-entity id="leftHand" laser-controls="hand: left"
-                networked="template:#left-hand-template;networkId: left_hand; persistent: true; owner: scene;"></a-entity>
-            <a-entity id="rightHand" laser-controls="hand: right"></a-entity>
-            <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
+            <a-entity id="leftHand" oculus-touch-controls="hand: left"
+                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+                        hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
+                raycaster="objects: .babiaxraycasterclass, #audio_button, #color_button"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button, #color_button">
+            </a-entity>
         </a-entity>
 
         <!-- Sync entities, persistent -->
@@ -105,10 +86,21 @@
            from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
             position="-10 1 -15" rotation="0 0 0" scale="0.5 1 0.5"></a-entity>
 
-        <a-entity id="ui_bars" babia-ui="target: bars"
-            networked="template:#ui-template; networkId: ui_bars; persistent: true; owner: scene, attachTemplateToLocal: false"
-            position="-15 1 -5" rotation="0 45 0" scale="0.5 0.5 0.5"></a-entity>
+        <!--Not sync entities-->
+        <a-plane id="audio_button" position="5 1.5 -15" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
+            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+        <a-plane id="color_button" position="5 1 -15" rotation="0 -45 0" height="0.5" width="3.5" color="#66FFFF">
+            <a-text id="color_label" value="Light Blue Player. Click to change player" color="black" width="4"
+                position="-1.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+        <a-entity id="ui_bars" babia-ui="target: bars" position="-15 1 -5" rotation="0 45 0" scale="0.5 0.5 0.5">
+        </a-entity>
 
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
     </a-scene>
 
     <script>
@@ -116,14 +108,13 @@
         let scene = document.getElementById('AframeScene')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
-        let hand_right = document.getElementById('rightHand')
-            let hand_left = document.getElementById('leftHand')
+                let hand_right = document.getElementById('rightHand')
         let audioButton = document.getElementById('audio_button')
         let audioLabel = document.getElementById('audio_label')
         let colorButton = document.getElementById('color_button')
         let colorLabel = document.getElementById('color_label')
         let bars = document.getElementById('bars')
-            let uiDesktop = document.getElementById('ui_bars')
+        let uiDesktop = document.getElementById('ui_bars')
 
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
@@ -177,18 +168,10 @@
         })
 
         // uiDesktop
-            uiDesktop.addEventListener('click', function (event) {
+        uiDesktop.addEventListener('click', function (event) {
             if (!NAF.utils.isMine(bars)) {
                 NAF.utils.takeOwnership(bars)
             }
-                /*if (!NAF.utils.isMine(uiDesktop)) {
-                NAF.utils.takeOwnership(uiDesktop)
-            }*/
-
-                if (!NAF.utils.isMine(NAF.entities.entities.ui_bars)) {
-                NAF.utils.takeOwnership(NAF.entities.entities.ui_bars)
-            }
-
         });
 
         document.addEventListener('controllerconnected', (event) => {
@@ -200,36 +183,13 @@
                 if (event.detail.el.id === 'babia-menu-hand') {
                     console.log('uiVR has been added: ', event.target.children["babia-menu-hand"])
                 let uiVR = document.querySelector('#babia-menu-hand')
-                uiVR.setAttribute('networked', {
-                    'template': '#ui-template',
-                    'networkId': 'ui_bars',
-                    'persistent': 'true',
-                    'attachTemplateToLocal': 'false',
-                    'owner': 'scene'
-                });
                 uiVR.addEventListener('click', function (event) {
                     if (!NAF.utils.isMine(bars)) {
                         NAF.utils.takeOwnership(bars)
                     };
-                    /*if (!NAF.utils.isMine(uiDesktop)) {
-                        NAF.utils.takeOwnership(uiDesktop)
-                    };
-                    if (!NAF.utils.isMine(uiVR)) {
-                        NAF.utils.takeOwnership(uiVR)
-                    };*/
-
-                    if (!NAF.utils.isMine(NAF.entities.entities.ui_bars)) {
-                        NAF.utils.takeOwnership(NAF.entities.entities.ui_bars)
-                    };
-                    uiVR.addEventListener('ownership-gained', e => {
-                    console.log("uiVR ownership gained")
-                    });
-                    uiVR.addEventListener('ownership-lost', e => console.log("uiVR ownership lost"));
-                    uiVR.addEventListener('ownership-changed', e => console.log(`uiBars ownership changed. Old owner: ${e.detail.oldOwner}. New owner: ${e.detail.newOwner}`))
                 });
-                }
-            })
-
+            }
+        })
         /* NAF Messages */
 
         // Subscriptions
@@ -282,13 +242,6 @@
             console.log("Bars ownership gained")
         });
         bars.addEventListener('ownership-lost', e => console.log("Bars ownership lost"));
-
-            // uiDesktop
-            uiDesktop.addEventListener('ownership-gained', e => {
-                console.log("uiDesktop ownership gained")
-        });
-            uiDesktop.addEventListener('ownership-lost', e => console.log("uiDesktop ownership lost"));
-
 
         /* Other methods */
 
@@ -373,19 +326,7 @@
             components: [
                 'babia-queryjson'
             ]
-        })
-
-        NAF.schemas.add({
-            template: '#ui-template',
-            components: [
-                'babia-ui',
-            ]
         });
-
-            NAF.schemas.add({
-                template: '#left-hand-template',
-                components: []
-            });
 
     </script>
 </body>
