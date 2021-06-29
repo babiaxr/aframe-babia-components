@@ -13,7 +13,8 @@ AFRAME.registerComponent('babia-slider', {
         max: { type: 'number', default: -4 },
         value: { type: 'number', default: -5 },
         innerSize: { type: 'number', default: 0.8 },
-        precision: { type: 'number', default: 2 }
+        precision: { type: 'number', default: 2 },
+        vertical: {type: 'boolean', default: false}
       },
     
       multiple: true,
@@ -32,6 +33,10 @@ AFRAME.registerComponent('babia-slider', {
         chassis.add(track);
         chassis.add(lever);
 
+        if (this.data.vertical){
+          chassis.rotateZ(Math.PI / 2)
+        }
+
         this.el.setObject3D('mesh', chassis);
         this.el.classList.add("babiaxraycasterclass");
     
@@ -40,8 +45,8 @@ AFRAME.registerComponent('babia-slider', {
         this.fontURL = 'https://threejsfundamentals.org/threejs/resources/threejs/fonts/helvetiker_regular.typeface.json'
         this.loader.load(this.fontURL, (font) => { 
             this.font = font
-            let minText = this.createTextGeometry(this.data.min, -this.data.size / 2 - .1, -.025)
-            let maxText = this.createTextGeometry(this.data.max, this.data.size / 2 + .05, -.025)
+            let minText = this.createTextGeometry(this.data.min, -this.data.size / 2 - .15, -.025)
+            let maxText = this.createTextGeometry(this.data.max, this.data.size / 2 + .08, -.025)
             chassis.add(minText)
             chassis.add(maxText) 
             //this.setTextGeometry(this.data.value)
@@ -53,7 +58,7 @@ AFRAME.registerComponent('babia-slider', {
       createTextGeometry: function(text, x, y) {
         let textGeometry = new THREE.TextGeometry(text.toString(), {
             font: this.font,
-            size: .06,
+            size: .07,
             height: .01,
             curveSegments: 12,
             bevelEnabled: false,
@@ -61,6 +66,10 @@ AFRAME.registerComponent('babia-slider', {
         let textMesh = new THREE.Mesh(textGeometry, this.material)
         textMesh.position.x = x
         textMesh.position.y = y
+        if (this.data.vertical){
+          textMesh.rotation.z = - Math.PI / 2
+          textMesh.position.y += .05
+        }
         return textMesh
       },
 
@@ -70,7 +79,11 @@ AFRAME.registerComponent('babia-slider', {
         }
         this.loader.load(this.fontURL, (font) => { 
             this.font = font
-            this.textmesh = this.createTextGeometry(text, -.025, .15)
+            if (!this.data.vertical){
+              this.textmesh = this.createTextGeometry(text, -.025, .15)
+            } else {
+              this.textmesh = this.createTextGeometry(text, -.025, -.2)
+            }
             this.lever.add(this.textmesh)
         })
       },
@@ -178,17 +191,34 @@ AFRAME.registerComponent('babia-slider', {
                 value = Math.round(value)
                 this.value = value;
                 this.setTextGeometry(value)
+                this.el.parentEl.emit('babiaSetPosition', this.value)
             }
         }
       },
 
-      mousePositionToValue: function(x){
-        let sliderCenter = this.el.object3D.position.x
-        let sliderWidth = this.data.size * this.data.innerSize
+      mousexPositionToValue: function(x){
+        let sliderCenter = this.el.object3D.getWorldPosition().x
+        let sliderWidth = this.data.size * this.data.innerSize * this.el.object3D.getWorldScale().x
         let sliderRange = Math.abs(this.data.max - this.data.min)
         let sliderMin = sliderCenter - (sliderWidth / 2)
 
         let value = (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
+        if (value < this.data.min){
+          return this.data.min
+        } else if (value > this.data.max){
+          return this.data.max
+        } else {
+          return value
+        }
+      },
+
+      mouseyPositionToValue: function(y){
+        let sliderCenter = this.el.object3D.getWorldPosition().y
+        let sliderWidth = this.data.size * this.data.innerSize * this.el.object3D.getWorldScale().y
+        let sliderRange = Math.abs(this.data.max - this.data.min)
+        let sliderMin = sliderCenter - (sliderWidth / 2)
+
+        let value = (((y - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
         if (value < this.data.min){
           return this.data.min
         } else if (value > this.data.max){
@@ -204,9 +234,83 @@ AFRAME.registerComponent('babia-slider', {
         }
         this.el.addEventListener('click', _listener = (e) => {
           let mouse = e.detail.intersection.point
-          var value = this.mousePositionToValue(mouse.x);
+          let value
+          if (!this.data.vertical){
+            value = this.mousexPositionToValue(mouse.x);
+          } else {
+            value = this.mouseyPositionToValue(mouse.y);
+          }
           this.setValue(Math.round(value));
           this.el.parentEl.emit('babiaSetPosition', Math.round(value))
         })
       }
+})
+
+AFRAME.registerComponent('babia-step-controller', {
+      schema: {},
+
+      multiple: true,
+
+      sliderEl: undefined,
+      step: undefined,
+    
+      init: function () {
+        this.createSlider()
+
+        this.el.addEventListener('babiaSetPosition', _listener = (e) => {
+          this.step = e.detail
+          this.el.parentEl.emit('babiaSetStep', this.step)
+        });
+      },
+
+      createSlider: function(){
+        this.sliderEl = document.createElement('a-entity');
+        this.sliderEl.setAttribute('babia-slider', {
+            size: 1,
+            min: 1,
+            max: 10,
+            value: 1,
+            vertical: true
+        }); // When implement with selector, add the attributes
+        this.sliderEl.classList.add("babiaxraycasterclass");
+        this.sliderEl.id = "step-controller"
+        this.el.appendChild(this.sliderEl);
+      }
+
+
+})
+
+
+AFRAME.registerComponent('babia-speed-controller', {
+  schema: {},
+
+  multiple: true,
+
+  sliderEl: undefined,
+  speed: undefined,
+
+  init: function () {
+    this.createSlider()
+
+    this.el.addEventListener('babiaSetPosition', _listener = (e) => {
+      this.speed = e.detail
+      this.el.parentEl.emit('babiaSetSpeed', this.speed)
+    });
+  },
+
+  createSlider: function(){
+    this.sliderEl = document.createElement('a-entity');
+    this.sliderEl.setAttribute('babia-slider', {
+        size: 1,
+        min: 1,
+        max: 10,
+        value: 1,
+        vertical: true
+    }); // When implement with selector, add the attributes
+    this.sliderEl.classList.add("babiaxraycasterclass");
+    this.sliderEl.id = "speed-controller"
+    this.el.appendChild(this.sliderEl);
+  }
+
+
 })

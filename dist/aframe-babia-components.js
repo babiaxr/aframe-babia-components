@@ -7575,20 +7575,27 @@ let dispatchEventOnElement = (element, propertyName) => {
         this.selectors = Object.keys(this.data).sort();
         this.length = this.selectors.length;
         this.current = 0;
+        this.step = 1
     }
 
     next() {
         let selected = this.data[this.selectors[this.current]];
-        if(this.current <= this.length - 1){
-            this.current++;
+        if (this.current + this.step < this.length - 1){
+            this.current += this.step;
+        } else if (this.current = this.length - 1) {
+            this.current = this.length
+        } else {
+            this.current = this.length - 1
         }
         return(selected);
     }
 
     prev() {
         let selected = this.data[this.selectors[this.current]];
-        if (this.current >= 0 ){
-            this.current--;
+        if (this.current + this.step > 0){
+            this.current -= this.step;
+        } else {
+            this.current = 0
         }
         return(selected);
     }
@@ -7624,6 +7631,8 @@ AFRAME.registerComponent('babia-selector', {
 
     isPaused: undefined,
     toPresent: undefined,
+    speed: undefined,
+    interval: undefined,
 
     /**
     * Called once when component is attached. Generally for initial setup.
@@ -7632,6 +7641,7 @@ AFRAME.registerComponent('babia-selector', {
 
         this.isPaused = false
         this.toPresent = true
+        this.speed = 1
 
         this.el.addEventListener('babiaStop',  _listener = (e) => {
             this.isPaused = true
@@ -7656,6 +7666,34 @@ AFRAME.registerComponent('babia-selector', {
             this.setSelect(e.detail)
             this.selectorController.emit('babiaStop')
         })
+
+        this.el.addEventListener('babiaSetStep',  _listener = (e) => {
+            this.selectable.step = e.detail
+            if (this.toPresent){
+                if (this.current + this.selectable.step > this.selectable.length){
+                    this.current = this.selectable.length - 1
+                } else {
+                    this.current += this.selectable.step - 1
+                }
+            } else {
+                if (this.current - this.selectable.step < 0){
+                    this.current = 0
+                } else {
+                    this.current -= this.selectable.step + 1
+                }
+                
+            }
+        })
+
+        /*this.el.addEventListener('babiaSetSpeed',  _listener = (e) => {
+            this.speed = e.detail
+            let timeout = this.data.timeout * this.speed
+            clearInterval(this.interval);
+            this.interval = window.setInterval(function () {
+                this.loop(this)
+            }, timeout);
+            console.log(this.interval)
+        })*/
 
     },
 
@@ -7686,19 +7724,9 @@ AFRAME.registerComponent('babia-selector', {
             }
 
             self.nextSelect();
-            window.setInterval(function () {
-                if (!self.isPaused){
-                    if (self.selectorController){
-                        self.selectorController.emit("babiaSelectorDataUpdated", self)
-                    }
-
-                    if(self.toPresent){
-                        self.nextSelect();
-                    } else {
-                        self.prevSelect();
-                    }
-                }
-            }, data.timeout);
+            self.interval = window.setInterval(function () {
+                self.loop(self)
+            }, data.timeout * self.speed);
             
         } else {
             if (data.from !== oldData.from) {
@@ -7728,19 +7756,9 @@ AFRAME.registerComponent('babia-selector', {
                     }
 
                     self.nextSelect();
-                    window.setInterval(function () {
-                        if (!self.isPaused){
-                            if (self.selectorController){
-                                self.selectorController.emit("babiaSelectorDataUpdated", self)
-                            }
-
-                            if(self.toPresent){
-                                self.nextSelect();
-                            } else {
-                                self.prevSelect();
-                            }
-                        }
-                    }, data.timeout);
+                    self.interval = window.setInterval(function () {
+                        self.loop(self)
+                    }, data.timeout * self.speed);
     
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -7767,22 +7785,23 @@ AFRAME.registerComponent('babia-selector', {
     },
 
     nextSelect: function() {
-        if (this.selectable.current <= this.selectable.length - 1){
-            this.babiaData = this.selectable.next();
-            this.babiaMetadata = { id: this.babiaMetadata.id++ };
-            // Dispatch interested events
-            dataReadyToSend("babiaData", this);
-        } else {
+        console.log(this.selectable.current)
+        if (this.selectable.current > this.selectable.length - 1){
             this.selectable.current = this.selectable.length - 1
             this.isPaused = true
             this.selectorController.emit('babiaStop')
+            this.selectorController.emit("babiaSelectorDataUpdated", this)
         }
+        this.babiaData = this.selectable.next();
+        this.babiaMetadata = { id: this.selectable.current };
+        // Dispatch interested events
+        dataReadyToSend("babiaData", this);
     },
 
     prevSelect: function() {
         if (this.selectable.current >= 0){
             this.babiaData = this.selectable.prev();
-            this.babiaMetadata = { id: this.babiaMetadata.id-- };
+            this.babiaMetadata = { id: this.selectable.current };
             // Dispatch interested events
             dataReadyToSend("babiaData", this);  
         } else {
@@ -7840,6 +7859,20 @@ AFRAME.registerComponent('babia-selector', {
      */
     selectorController: undefined,
 
+    loop: function(self) {
+        if (!self.isPaused){
+            if (self.selectorController){
+                self.selectorController.emit("babiaSelectorDataUpdated", self)
+            }
+
+            if(self.toPresent){
+                self.nextSelect();
+            } else {
+                self.prevSelect();
+            }
+        }
+    },
+
 });
 
 let dataReadyToSend = (propertyName, self) => {
@@ -7851,6 +7884,7 @@ let dataReadyToSend = (propertyName, self) => {
 let dispatchEventOnElement = (element, propertyName) => {
     element.emit("babiaSelectorDataReady", propertyName)
 }
+
 
 /***/ }),
 /* 103 */
@@ -9046,19 +9080,21 @@ AFRAME.registerComponent('babia-navigator', {
 
 
         // Listener of the other events (should be re-sended to selector)
-        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition']
+        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep']
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
                 // Re-send event
-                //console.log('Re-emit... ', evt)
-                this.selector.el.emit(evt, e.detail)
+                if (e.target != this){
+                    this.selector.el.emit(evt, e.detail)
+                }
 
-                // TO TEST FUNCIONALITIES
                 if(evt === 'babiaContinue'){
                     this.isPaused = false
                 } else if (evt === 'babiaStop'){
                     this.isPaused = true
-                    this.controlsEl.querySelector('.babiaPause').emit('click')
+                    if (this.controlsEl.querySelector('.babiaPause')){
+                        this.controlsEl.querySelector('.babiaPause').emit('click')
+                    }
                 }
 
                 if(evt === 'babiaToPresent'){
@@ -9111,7 +9147,19 @@ AFRAME.registerComponent('babia-navigator', {
         this.controlsEl.object3D.position.y = -0.5;
         this.el.appendChild(this.controlsEl);
 
+        // Initialize Step Controller
+        this.stepControllerEl = document.createElement('a-entity');
+        this.stepControllerEl.setAttribute('babia-step-controller', ""); 
+        this.stepControllerEl.classList.add("babiaxraycasterclass");
+        this.stepControllerEl.object3D.position.x = 2.5;
+        this.el.appendChild(this.stepControllerEl);
+
         // Initialize Speed Controller
+        this.speedControllerEl = document.createElement('a-entity');
+        this.speedControllerEl.setAttribute('babia-speed-controller', ""); 
+        this.speedControllerEl.classList.add("babiaxraycasterclass");
+        this.speedControllerEl.object3D.position.x = 3;
+        this.el.appendChild(this.speedControllerEl);
 
     },
 
@@ -9153,7 +9201,8 @@ AFRAME.registerComponent('babia-slider', {
         max: { type: 'number', default: -4 },
         value: { type: 'number', default: -5 },
         innerSize: { type: 'number', default: 0.8 },
-        precision: { type: 'number', default: 2 }
+        precision: { type: 'number', default: 2 },
+        vertical: {type: 'boolean', default: false}
       },
     
       multiple: true,
@@ -9172,6 +9221,10 @@ AFRAME.registerComponent('babia-slider', {
         chassis.add(track);
         chassis.add(lever);
 
+        if (this.data.vertical){
+          chassis.rotateZ(Math.PI / 2)
+        }
+
         this.el.setObject3D('mesh', chassis);
         this.el.classList.add("babiaxraycasterclass");
     
@@ -9180,8 +9233,8 @@ AFRAME.registerComponent('babia-slider', {
         this.fontURL = 'https://threejsfundamentals.org/threejs/resources/threejs/fonts/helvetiker_regular.typeface.json'
         this.loader.load(this.fontURL, (font) => { 
             this.font = font
-            let minText = this.createTextGeometry(this.data.min, -this.data.size / 2 - .1, -.025)
-            let maxText = this.createTextGeometry(this.data.max, this.data.size / 2 + .05, -.025)
+            let minText = this.createTextGeometry(this.data.min, -this.data.size / 2 - .15, -.025)
+            let maxText = this.createTextGeometry(this.data.max, this.data.size / 2 + .08, -.025)
             chassis.add(minText)
             chassis.add(maxText) 
             //this.setTextGeometry(this.data.value)
@@ -9193,7 +9246,7 @@ AFRAME.registerComponent('babia-slider', {
       createTextGeometry: function(text, x, y) {
         let textGeometry = new THREE.TextGeometry(text.toString(), {
             font: this.font,
-            size: .06,
+            size: .07,
             height: .01,
             curveSegments: 12,
             bevelEnabled: false,
@@ -9201,6 +9254,10 @@ AFRAME.registerComponent('babia-slider', {
         let textMesh = new THREE.Mesh(textGeometry, this.material)
         textMesh.position.x = x
         textMesh.position.y = y
+        if (this.data.vertical){
+          textMesh.rotation.z = - Math.PI / 2
+          textMesh.position.y += .05
+        }
         return textMesh
       },
 
@@ -9210,7 +9267,11 @@ AFRAME.registerComponent('babia-slider', {
         }
         this.loader.load(this.fontURL, (font) => { 
             this.font = font
-            this.textmesh = this.createTextGeometry(text, -.025, .15)
+            if (!this.data.vertical){
+              this.textmesh = this.createTextGeometry(text, -.025, .15)
+            } else {
+              this.textmesh = this.createTextGeometry(text, -.025, -.2)
+            }
             this.lever.add(this.textmesh)
         })
       },
@@ -9318,17 +9379,34 @@ AFRAME.registerComponent('babia-slider', {
                 value = Math.round(value)
                 this.value = value;
                 this.setTextGeometry(value)
+                this.el.parentEl.emit('babiaSetPosition', this.value)
             }
         }
       },
 
-      mousePositionToValue: function(x){
-        let sliderCenter = this.el.object3D.position.x
-        let sliderWidth = this.data.size * this.data.innerSize
+      mousexPositionToValue: function(x){
+        let sliderCenter = this.el.object3D.getWorldPosition().x
+        let sliderWidth = this.data.size * this.data.innerSize * this.el.object3D.getWorldScale().x
         let sliderRange = Math.abs(this.data.max - this.data.min)
         let sliderMin = sliderCenter - (sliderWidth / 2)
 
         let value = (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
+        if (value < this.data.min){
+          return this.data.min
+        } else if (value > this.data.max){
+          return this.data.max
+        } else {
+          return value
+        }
+      },
+
+      mouseyPositionToValue: function(y){
+        let sliderCenter = this.el.object3D.getWorldPosition().y
+        let sliderWidth = this.data.size * this.data.innerSize * this.el.object3D.getWorldScale().y
+        let sliderRange = Math.abs(this.data.max - this.data.min)
+        let sliderMin = sliderCenter - (sliderWidth / 2)
+
+        let value = (((y - sliderMin) * sliderRange) / sliderWidth) + this.data.min 
         if (value < this.data.min){
           return this.data.min
         } else if (value > this.data.max){
@@ -9344,11 +9422,85 @@ AFRAME.registerComponent('babia-slider', {
         }
         this.el.addEventListener('click', _listener = (e) => {
           let mouse = e.detail.intersection.point
-          var value = this.mousePositionToValue(mouse.x);
+          let value
+          if (!this.data.vertical){
+            value = this.mousexPositionToValue(mouse.x);
+          } else {
+            value = this.mouseyPositionToValue(mouse.y);
+          }
           this.setValue(Math.round(value));
           this.el.parentEl.emit('babiaSetPosition', Math.round(value))
         })
       }
+})
+
+AFRAME.registerComponent('babia-step-controller', {
+      schema: {},
+
+      multiple: true,
+
+      sliderEl: undefined,
+      step: undefined,
+    
+      init: function () {
+        this.createSlider()
+
+        this.el.addEventListener('babiaSetPosition', _listener = (e) => {
+          this.step = e.detail
+          this.el.parentEl.emit('babiaSetStep', this.step)
+        });
+      },
+
+      createSlider: function(){
+        this.sliderEl = document.createElement('a-entity');
+        this.sliderEl.setAttribute('babia-slider', {
+            size: 1,
+            min: 1,
+            max: 10,
+            value: 1,
+            vertical: true
+        }); // When implement with selector, add the attributes
+        this.sliderEl.classList.add("babiaxraycasterclass");
+        this.sliderEl.id = "step-controller"
+        this.el.appendChild(this.sliderEl);
+      }
+
+
+})
+
+
+AFRAME.registerComponent('babia-speed-controller', {
+  schema: {},
+
+  multiple: true,
+
+  sliderEl: undefined,
+  speed: undefined,
+
+  init: function () {
+    this.createSlider()
+
+    this.el.addEventListener('babiaSetPosition', _listener = (e) => {
+      this.speed = e.detail
+      this.el.parentEl.emit('babiaSetSpeed', this.speed)
+    });
+  },
+
+  createSlider: function(){
+    this.sliderEl = document.createElement('a-entity');
+    this.sliderEl.setAttribute('babia-slider', {
+        size: 1,
+        min: 1,
+        max: 10,
+        value: 1,
+        vertical: true
+    }); // When implement with selector, add the attributes
+    this.sliderEl.classList.add("babiaxraycasterclass");
+    this.sliderEl.id = "speed-controller"
+    this.el.appendChild(this.sliderEl);
+  }
+
+
 })
 
 /***/ }),

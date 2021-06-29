@@ -36,19 +36,21 @@ AFRAME.registerComponent('babia-navigator', {
 
 
         // Listener of the other events (should be re-sended to selector)
-        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition']
+        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep']
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
                 // Re-send event
-                //console.log('Re-emit... ', evt)
-                this.selector.el.emit(evt, e.detail)
+                if (e.target != this){
+                    this.selector.el.emit(evt, e.detail)
+                }
 
-                // TO TEST FUNCIONALITIES
                 if(evt === 'babiaContinue'){
                     this.isPaused = false
                 } else if (evt === 'babiaStop'){
                     this.isPaused = true
-                    this.controlsEl.querySelector('.babiaPause').emit('click')
+                    if (this.controlsEl.querySelector('.babiaPause')){
+                        this.controlsEl.querySelector('.babiaPause').emit('click')
+                    }
                 }
 
                 if(evt === 'babiaToPresent'){
@@ -101,7 +103,19 @@ AFRAME.registerComponent('babia-navigator', {
         this.controlsEl.object3D.position.y = -0.5;
         this.el.appendChild(this.controlsEl);
 
+        // Initialize Step Controller
+        this.stepControllerEl = document.createElement('a-entity');
+        this.stepControllerEl.setAttribute('babia-step-controller', ""); 
+        this.stepControllerEl.classList.add("babiaxraycasterclass");
+        this.stepControllerEl.object3D.position.x = 2.5;
+        this.el.appendChild(this.stepControllerEl);
+
         // Initialize Speed Controller
+        this.speedControllerEl = document.createElement('a-entity');
+        this.speedControllerEl.setAttribute('babia-speed-controller', ""); 
+        this.speedControllerEl.classList.add("babiaxraycasterclass");
+        this.speedControllerEl.object3D.position.x = 3;
+        this.el.appendChild(this.speedControllerEl);
 
     },
 
