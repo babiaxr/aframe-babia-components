@@ -350,7 +350,6 @@ AFRAME.registerComponent('babia-bars', {
             } else {
                 barEl = document.createElement('a-entity');
                 barEl.setAttribute('babia-name', xLabel);
-                barEl.classList.add("babiaxraycasterclass");
                 barEl.object3D.position.x = posX;
                 chartEl.appendChild(barEl);
             }
@@ -489,6 +488,5 @@ let generateBar = (self, data, item, maxValue, widthBars, colorId, palette, step
     };
     bar.setAttribute('position', { x: stepX, y: 0, z: 0 }); 
     bar.id = item[self.data.index]
-    bar.classList.add("babiaxraycasterclass");
     return bar
 }

@@ -29,6 +29,7 @@ AFRAME.registerComponent('babia-bar', {
         console.log("Starting bar:", this.data.height, this.data.color);
         let data = this.data;
         this.box = document.createElement('a-entity');
+        this.box.classList.add("babiaxraycasterclass");
         this.el.appendChild(this.box);
         let props = {}
         if (data.animation) {
