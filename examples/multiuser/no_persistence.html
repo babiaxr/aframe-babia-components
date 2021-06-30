@@ -13,7 +13,7 @@
     <script
         src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
 
-    <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
+    <script src="../../dist/aframe-babia-components.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
 </head>
 
@@ -84,10 +84,10 @@
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
         console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'))
-                                            if (serverURL) {
-                                                scene.setAttribute('networked-scene', 'serverURL', serverURL);
-                                                scene.setAttribute('networked-scene', 'audio', 'true');
-                                            }
+        if (serverURL) {
+            scene.setAttribute('networked-scene', 'serverURL', serverURL);
+            scene.setAttribute('networked-scene', 'audio', 'true');
+        }
 
         /* LIST OF USERNAMES AND AVATAR COLORS */
         let players = [
@@ -161,8 +161,8 @@
             NAF.connection.adapter.enableMicrophone(true)
             audioButton.setAttribute('color', '#E44B00')
             audioLabel.setAttribute('value', 'Stop Audio')
-                    }
-                
+        }
+
 
         function stopAudio() {
             NAF.connection.adapter.enableMicrophone(false)

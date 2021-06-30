@@ -13,7 +13,7 @@
     <script
         src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
 
-    <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
+    <script src="../../dist/aframe-babia-components.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
 </head>
 
@@ -69,21 +69,21 @@
 
         <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
         <a-entity light="color: #95E0FF; intensity: 1; type: ambient;" visible="true"></a-entity>
-        
+
         <a-entity id="rig" position="0 2.5 3" networked="template:#rig-template; attachTemplateToLocal:false">
             <a-entity id="camera" camera look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
-            <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
-                networked="template:#avatar-template;attachTemplateToLocal:false;">
-                <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false" position="-0.5 1.5 0"
-                    width="5" color="black" value="username"></a-text>
-            </a-sphere>
+                <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
+                    networked="template:#avatar-template;attachTemplateToLocal:false;">
+                    <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
+                        position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
+                </a-sphere>
             </a-entity>
             <!-- Hand Controls -->
             <a-entity id="leftHand" laser-controls="hand: left"></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right"></a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
-    </a-entity>
+        </a-entity>
 
         <a-box id="box" color="#22B8F6"
             networked="template:#box-template; networkId:box; persistent: true; owner: scene" position="-7 1 -5"
@@ -98,25 +98,23 @@
         </a-plane>
 
         <a-entity id="cyls" babia-queryjson="url: ./data.json;" babia-cyls='x_axis:city; height: population; radius: size; legend: true; palette: flat;
-            radiusMax: 2; heightMax: 45; animation: true;'position="0 0.5 -10" scale="0.25 0.25 0.25"
-            networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene" ></a-entity>
- 
+            radiusMax: 2; heightMax: 45; animation: true;' position="0 0.5 -10" scale="0.25 0.25 0.25"
+            networked="template:#cyls-template; networkId:cyls; persistent: true; owner: scene"></a-entity>
+
         <a-entity id="interface" babia-ui="target: cyls"
             networked="template:#interface-template; networkId:interface; persistent: true; owner: scene"
             position="7 1 -5" rotation="0 -45 0" scale="0.5 0.5 0.5"></a-entity>
 
-        <a-plane id="cyls_palette_button"
-            position="7 6 -5" rotation="0 -45 0" height="1" width="4" color="#F8F6F2">
-            <a-text id="cyls_palette_label"
-                value="Change palette" color="#0582B5" width="10" position="-1.5 0 0" rotation="0 0 0"></a-text>
+        <a-plane id="cyls_palette_button" position="7 6 -5" rotation="0 -45 0" height="1" width="4" color="#F8F6F2">
+            <a-text id="cyls_palette_label" value="Change palette" color="#0582B5" width="10" position="-1.5 0 0"
+                rotation="0 0 0"></a-text>
         </a-plane>
 
-        <a-plane id="cyls_scale_button"
-            position="7 4 -5" rotation="0 -45 0" height="1" width="2" color="#F8F6F2">
-            <a-text id="cyls_scale_label"
-                value="Resize" color="#0582B5" width="10" position="-0.75 0 0" rotation="0 0 0"></a-text>
+        <a-plane id="cyls_scale_button" position="7 4 -5" rotation="0 -45 0" height="1" width="2" color="#F8F6F2">
+            <a-text id="cyls_scale_label" value="Resize" color="#0582B5" width="10" position="-0.75 0 0"
+                rotation="0 0 0"></a-text>
         </a-plane>
-        
+
         <a-plane id="audio_button" position="-2.5 1 -5" rotation="0 45 0" height="1" width="2" color="#E44B00">
             <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="6" position="-0.75 0 0" rotation="0 0 0">
             </a-text>
@@ -129,7 +127,7 @@
         let scene = document.getElementById('AframeScene')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
-            let hand_right = document.getElementById('rightHand')
+        let hand_right = document.getElementById('rightHand')
         let box = document.getElementById('box')
         let boxButton = document.getElementById("box_button")
         let boxLabel = document.getElementById("box_label")
@@ -142,11 +140,11 @@
 
         /* SET SERVER URL FROM QUERY STRING */
         let serverURL = getValueFromQueryString('serverURL');
-                        console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
-                        if (serverURL) {
-                            scene.setAttribute('networked-scene', 'serverURL', serverURL);
-                            scene.setAttribute('networked-scene', 'audio', 'true')
-                        }
+        console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
+        if (serverURL) {
+            scene.setAttribute('networked-scene', 'serverURL', serverURL);
+            scene.setAttribute('networked-scene', 'audio', 'true')
+        }
 
         /* SET USERNAME AND AVATAR COLOR FROM QUERY STRING*/
         let username = getValueFromQueryString('username');
@@ -159,8 +157,8 @@
         let users = [];
 
         // UI Event Listeners
-            document.addEventListener('controllerconnected', (event) => {
-                document.querySelector('#rig').setAttribute('position', { x: 0, y: 1.6, z: 0 })
+        document.addEventListener('controllerconnected', (event) => {
+            document.querySelector('#rig').setAttribute('position', { x: 0, y: 1.6, z: 0 })
         });
 
         boxButton.addEventListener('click', function (event) {
@@ -427,21 +425,21 @@
             ]
         });
 
-            NAF.schemas.add({
-                template: '#rig-template',
+        NAF.schemas.add({
+            template: '#rig-template',
             components: [
                 'position',
                 'rotation'
             ]
-            });
+        });
 
-            NAF.schemas.add({
-                    template: '#camera-template',
-                    components: [
-                        'position',
-                        'rotation'
-                    ]
-            });
+        NAF.schemas.add({
+            template: '#camera-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
 
         NAF.schemas.add({
             template: '#avatar-template',
