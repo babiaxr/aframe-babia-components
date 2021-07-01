@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 132);
+/******/ 	return __webpack_require__(__webpack_require__.s = 134);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -316,31 +316,35 @@ module.exports.colors = colors;
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_2__bisector_js__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__count_js__ = __webpack_require__(15);
 /* unused harmony reexport count */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cross_js__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cross_js__ = __webpack_require__(138);
 /* unused harmony reexport cross */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__cumsum_js__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__cumsum_js__ = __webpack_require__(139);
 /* unused harmony reexport cumsum */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__descending_js__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__descending_js__ = __webpack_require__(140);
 /* unused harmony reexport descending */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__deviation_js__ = __webpack_require__(42);
 /* unused harmony reexport deviation */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__extent_js__ = __webpack_require__(43);
 /* unused harmony reexport extent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__fsum_js__ = __webpack_require__(143);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__fsum_js__ = __webpack_require__(145);
 /* unused harmony reexport Adder */
 /* unused harmony reexport fsum */
 /* unused harmony reexport fcumsum */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__group_js__ = __webpack_require__(44);
+/* unused harmony reexport group */
+/* unused harmony reexport groups */
 /* unused harmony reexport index */
+/* unused harmony reexport indexes */
 /* unused harmony reexport rollup */
 /* unused harmony reexport rollups */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__groupSort_js__ = __webpack_require__(146);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__groupSort_js__ = __webpack_require__(148);
 /* unused harmony reexport groupSort */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__bin_js__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__bin_js__ = __webpack_require__(136);
 /* unused harmony reexport bin */
 /* unused harmony reexport histogram */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__threshold_freedmanDiaconis_js__ = __webpack_require__(163);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__threshold_freedmanDiaconis_js__ = __webpack_require__(165);
 /* unused harmony reexport thresholdFreedmanDiaconis */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__threshold_scott_js__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__threshold_scott_js__ = __webpack_require__(166);
 /* unused harmony reexport thresholdScott */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__threshold_sturges_js__ = __webpack_require__(56);
 /* unused harmony reexport thresholdSturges */
@@ -348,11 +352,11 @@ module.exports.colors = colors;
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_16__max_js__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__maxIndex_js__ = __webpack_require__(48);
 /* unused harmony reexport maxIndex */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__mean_js__ = __webpack_require__(150);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__mean_js__ = __webpack_require__(152);
 /* unused harmony reexport mean */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__median_js__ = __webpack_require__(151);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__median_js__ = __webpack_require__(153);
 /* unused harmony reexport median */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__merge_js__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__merge_js__ = __webpack_require__(154);
 /* unused harmony reexport merge */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__min_js__ = __webpack_require__(20);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_21__min_js__["a"]; });
@@ -360,7 +364,7 @@ module.exports.colors = colors;
 /* unused harmony reexport minIndex */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__nice_js__ = __webpack_require__(50);
 /* unused harmony reexport nice */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__pairs_js__ = __webpack_require__(153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__pairs_js__ = __webpack_require__(155);
 /* unused harmony reexport pairs */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__permute_js__ = __webpack_require__(52);
 /* unused harmony reexport permute */
@@ -369,22 +373,22 @@ module.exports.colors = colors;
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_26__quantile_js__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__quickselect_js__ = __webpack_require__(53);
 /* unused harmony reexport quickselect */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__range_js__ = __webpack_require__(154);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__range_js__ = __webpack_require__(156);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_28__range_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__least_js__ = __webpack_require__(148);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__least_js__ = __webpack_require__(150);
 /* unused harmony reexport least */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__leastIndex_js__ = __webpack_require__(46);
 /* unused harmony reexport leastIndex */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__greatest_js__ = __webpack_require__(144);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__greatest_js__ = __webpack_require__(146);
 /* unused harmony reexport greatest */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__greatestIndex_js__ = __webpack_require__(145);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__greatestIndex_js__ = __webpack_require__(147);
 /* unused harmony reexport greatestIndex */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__scan_js__ = __webpack_require__(157);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__scan_js__ = __webpack_require__(159);
 /* unused harmony reexport scan */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__shuffle_js__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__shuffle_js__ = __webpack_require__(161);
 /* unused harmony reexport shuffle */
 /* unused harmony reexport shuffler */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__sum_js__ = __webpack_require__(162);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__sum_js__ = __webpack_require__(164);
 /* unused harmony reexport sum */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__ticks_js__ = __webpack_require__(22);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_36__ticks_js__["b"]; });
@@ -394,33 +398,33 @@ module.exports.colors = colors;
 /* unused harmony reexport transpose */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__variance_js__ = __webpack_require__(58);
 /* unused harmony reexport variance */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__zip_js__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__zip_js__ = __webpack_require__(168);
 /* unused harmony reexport zip */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__every_js__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__every_js__ = __webpack_require__(143);
 /* unused harmony reexport every */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__some_js__ = __webpack_require__(160);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__some_js__ = __webpack_require__(162);
 /* unused harmony reexport some */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__filter_js__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__filter_js__ = __webpack_require__(144);
 /* unused harmony reexport filter */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__map_js__ = __webpack_require__(149);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_43__map_js__ = __webpack_require__(151);
 /* unused harmony reexport map */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__reduce_js__ = __webpack_require__(155);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_44__reduce_js__ = __webpack_require__(157);
 /* unused harmony reexport reduce */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__reverse_js__ = __webpack_require__(156);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_45__reverse_js__ = __webpack_require__(158);
 /* unused harmony reexport reverse */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_46__sort_js__ = __webpack_require__(54);
 /* unused harmony reexport sort */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__difference_js__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_47__difference_js__ = __webpack_require__(141);
 /* unused harmony reexport difference */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__disjoint_js__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_48__disjoint_js__ = __webpack_require__(142);
 /* unused harmony reexport disjoint */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_49__intersection_js__ = __webpack_require__(147);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_49__intersection_js__ = __webpack_require__(149);
 /* unused harmony reexport intersection */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__subset_js__ = __webpack_require__(161);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__subset_js__ = __webpack_require__(163);
 /* unused harmony reexport subset */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__superset_js__ = __webpack_require__(55);
 /* unused harmony reexport superset */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__union_js__ = __webpack_require__(165);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_52__union_js__ = __webpack_require__(167);
 /* unused harmony reexport union */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53_internmap__ = __webpack_require__(97);
 /* unused harmony reexport InternMap */
@@ -528,12 +532,12 @@ const durationYear = durationDay * 365;
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__color_js__["g"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__color_js__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_0__color_js__["h"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lab_js__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lab_js__ = __webpack_require__(182);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_1__lab_js__["b"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__lab_js__["a"]; });
 /* unused harmony reexport lch */
 /* unused harmony reexport gray */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__cubehelix_js__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__cubehelix_js__ = __webpack_require__(181);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__cubehelix_js__["a"]; });
 
 
@@ -551,7 +555,7 @@ const durationYear = durationDay * 365;
 /* harmony export (immutable) */ __webpack_exports__["d"] = continuous;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant_js__ = __webpack_require__(288);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant_js__ = __webpack_require__(290);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__number_js__ = __webpack_require__(32);
 
 
@@ -830,9 +834,9 @@ function nogamma(a, b) {
 /* unused harmony reexport interpolateBasisClosed */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__date_js__ = __webpack_require__(69);
 /* unused harmony reexport interpolateDate */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__discrete_js__ = __webpack_require__(204);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__discrete_js__ = __webpack_require__(206);
 /* unused harmony reexport interpolateDiscrete */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__hue_js__ = __webpack_require__(207);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__hue_js__ = __webpack_require__(209);
 /* unused harmony reexport interpolateHue */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__number_js__ = __webpack_require__(18);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_7__number_js__["a"]; });
@@ -840,33 +844,33 @@ function nogamma(a, b) {
 /* unused harmony reexport interpolateNumberArray */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__object_js__ = __webpack_require__(70);
 /* unused harmony reexport interpolateObject */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__round_js__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__round_js__ = __webpack_require__(213);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_10__round_js__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__string_js__ = __webpack_require__(72);
 /* unused harmony reexport interpolateString */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__transform_index_js__ = __webpack_require__(213);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__transform_index_js__ = __webpack_require__(215);
 /* unused harmony reexport interpolateTransformCss */
 /* unused harmony reexport interpolateTransformSvg */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__zoom_js__ = __webpack_require__(215);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__zoom_js__ = __webpack_require__(217);
 /* unused harmony reexport interpolateZoom */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__rgb_js__ = __webpack_require__(71);
 /* unused harmony reexport interpolateRgb */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_14__rgb_js__["b"]; });
 /* unused harmony reexport interpolateRgbBasisClosed */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__hsl_js__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__hsl_js__ = __webpack_require__(208);
 /* unused harmony reexport interpolateHsl */
 /* unused harmony reexport interpolateHslLong */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__lab_js__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__lab_js__ = __webpack_require__(210);
 /* unused harmony reexport interpolateLab */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__hcl_js__ = __webpack_require__(205);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__hcl_js__ = __webpack_require__(207);
 /* unused harmony reexport interpolateHcl */
 /* unused harmony reexport interpolateHclLong */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__cubehelix_js__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__cubehelix_js__ = __webpack_require__(205);
 /* unused harmony reexport interpolateCubehelix */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_18__cubehelix_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__piecewise_js__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__piecewise_js__ = __webpack_require__(211);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_19__piecewise_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__quantize_js__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__quantize_js__ = __webpack_require__(212);
 /* unused harmony reexport quantize */
 
 
@@ -2075,7 +2079,7 @@ function defaultLocale(definition) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__utcYear_js__ = __webpack_require__(94);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_14__utcYear_js__["a"]; });
 /* unused harmony reexport utcYears */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ticks_js__ = __webpack_require__(299);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ticks_js__ = __webpack_require__(301);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_15__ticks_js__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_15__ticks_js__["b"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "r", function() { return __WEBPACK_IMPORTED_MODULE_15__ticks_js__["c"]; });
@@ -2917,7 +2921,7 @@ function variance(values, valueof) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__binarytree__ = __webpack_require__(168);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__binarytree__ = __webpack_require__(170);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__binarytree__["a"]; });
 
 
@@ -2943,9 +2947,9 @@ const degrees = 180 / Math.PI;
 /* harmony export (immutable) */ __webpack_exports__["b"] = x;
 /* harmony export (immutable) */ __webpack_exports__["c"] = y;
 /* harmony export (immutable) */ __webpack_exports__["d"] = z;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_dispatch__ = __webpack_require__(182);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_timer__ = __webpack_require__(300);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lcg_js__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_dispatch__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_timer__ = __webpack_require__(302);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lcg_js__ = __webpack_require__(188);
 
 
 
@@ -3233,7 +3237,7 @@ FormatSpecifier.prototype.toString = function() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__defaultLocale_js__ = __webpack_require__(193);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__defaultLocale_js__ = __webpack_require__(195);
 /* unused harmony reexport formatDefaultLocale */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_0__defaultLocale_js__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__defaultLocale_js__["b"]; });
@@ -3242,11 +3246,11 @@ FormatSpecifier.prototype.toString = function() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formatSpecifier_js__ = __webpack_require__(63);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__formatSpecifier_js__["a"]; });
 /* unused harmony reexport FormatSpecifier */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__precisionFixed_js__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__precisionFixed_js__ = __webpack_require__(202);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_3__precisionFixed_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__precisionPrefix_js__ = __webpack_require__(201);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__precisionPrefix_js__ = __webpack_require__(203);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_4__precisionPrefix_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__precisionRound_js__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__precisionRound_js__ = __webpack_require__(204);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_5__precisionRound_js__["a"]; });
 
 
@@ -3262,13 +3266,13 @@ FormatSpecifier.prototype.toString = function() {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__exponent_js__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__formatGroup_js__ = __webpack_require__(194);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formatNumerals_js__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__formatGroup_js__ = __webpack_require__(196);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formatNumerals_js__ = __webpack_require__(197);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__formatSpecifier_js__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__formatTrim_js__ = __webpack_require__(197);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__formatTypes_js__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__formatTrim_js__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__formatTypes_js__ = __webpack_require__(200);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__formatPrefixAuto_js__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__identity_js__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__identity_js__ = __webpack_require__(201);
 
 
 
@@ -3669,7 +3673,7 @@ function one(b) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__octree__ = __webpack_require__(221);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__octree__ = __webpack_require__(223);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__octree__["a"]; });
 
 
@@ -3678,7 +3682,7 @@ function one(b) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__quadtree_js__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__quadtree_js__ = __webpack_require__(237);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__quadtree_js__["a"]; });
 
 
@@ -4032,7 +4036,7 @@ function time() {
 /* unused harmony reexport timeFormatLocale */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isoFormat_js__ = __webpack_require__(81);
 /* unused harmony reexport isoFormat */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__isoParse_js__ = __webpack_require__(298);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__isoParse_js__ = __webpack_require__(300);
 /* unused harmony reexport isoParse */
 
 
@@ -5279,18 +5283,18 @@ module.exports = function getVariableName(index) {
  */
 module.exports = createPhysicsSimulator;
 
-var generateCreateBodyFunction = __webpack_require__(309);
-var generateQuadTreeFunction = __webpack_require__(313);
-var generateBoundsFunction = __webpack_require__(308);
-var generateCreateDragForceFunction = __webpack_require__(310);
-var generateCreateSpringForceFunction = __webpack_require__(311);
-var generateIntegratorFunction = __webpack_require__(312);
+var generateCreateBodyFunction = __webpack_require__(311);
+var generateQuadTreeFunction = __webpack_require__(315);
+var generateBoundsFunction = __webpack_require__(310);
+var generateCreateDragForceFunction = __webpack_require__(312);
+var generateCreateSpringForceFunction = __webpack_require__(313);
+var generateIntegratorFunction = __webpack_require__(314);
 
 var dimensionalCache = {};
 
 function createPhysicsSimulator(settings) {
-  var Spring = __webpack_require__(314);
-  var merge = __webpack_require__(316);
+  var Spring = __webpack_require__(316);
+  var merge = __webpack_require__(318);
   var eventify = __webpack_require__(38);
   if (settings) {
     // Check for names from older versions of the layout
@@ -5376,7 +5380,7 @@ function createPhysicsSimulator(settings) {
   var integrate = factory.integrate;
   var createBody = pos => new Body(pos);
 
-  var random = __webpack_require__(317).random(42);
+  var random = __webpack_require__(319).random(42);
   var bodies = []; // Bodies in this simulation.
   var springs = []; // Springs in this simulation.
 
@@ -5681,19 +5685,19 @@ function augment(source, target, key) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(318);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_force_3d__ = __webpack_require__(185);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngraph_graph__ = __webpack_require__(315);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_force_3d__ = __webpack_require__(187);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngraph_graph__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngraph_graph___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_ngraph_graph__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout__ = __webpack_require__(309);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_kapsule__ = __webpack_require__(306);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_kapsule__ = __webpack_require__(308);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_accessor_fn__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_d3_array__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_data_joint__ = __webpack_require__(303);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_d3_scale__ = __webpack_require__(291);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_d3_scale_chromatic__ = __webpack_require__(262);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_tinycolor2__ = __webpack_require__(319);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_data_joint__ = __webpack_require__(305);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_d3_scale__ = __webpack_require__(293);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_d3_scale_chromatic__ = __webpack_require__(264);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_tinycolor2__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_tinycolor2___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_tinycolor2__);
 
 
@@ -6989,6 +6993,11 @@ var ForceGraph = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_kapsule__["a"
           var obj;
 
           if (!customObj) {
+            obj = defaultObj;
+            obj.__graphDefaultObj = true;
+          } else {
+            if (!extendObj) {
+              // use custom object
               obj = customObj;
             } else {
               // extend default with custom in a group
@@ -7003,6 +7012,7 @@ var ForceGraph = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_kapsule__["a"
 
           obj.__graphObjType = 'link'; // Add object type
 
+          return obj;
         },
         updateObj: function updateObj(updObj, link) {
           if (updObj.__graphDefaultObj) {
@@ -7560,6 +7570,14 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+let findDataComponent = __webpack_require__(4).findDataComponent;
+
+class Selectable {
+    /*
+     * @param list {array} List of items to select from
      * @param field {string} Field name used to select (present in all items)
      */
     constructor(list, field) {
@@ -7606,10 +7624,12 @@ let dispatchEventOnElement = (element, propertyName) => {
         return(selected);
     }
 };
->>>>>>> Add babia-navigator
 
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
 /**
 * Selector component for BabiaXR.
 */
@@ -7662,9 +7682,12 @@ AFRAME.registerComponent('babia-selector', {
         })
 
         this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
-            this.isPaused = true
-            this.setSelect(e.detail)
-            this.selectorController.emit('babiaStop')
+            console.log('setPosition')
+            if (e.target = this.selectorController){
+                this.isPaused = true
+                this.setSelect(e.detail)
+                this.selectorController.emit('babiaStop')
+            }
         })
 
         this.el.addEventListener('babiaSetStep',  _listener = (e) => {
@@ -7685,15 +7708,15 @@ AFRAME.registerComponent('babia-selector', {
             }
         })
 
-        /*this.el.addEventListener('babiaSetSpeed',  _listener = (e) => {
+        this.el.addEventListener('babiaSetSpeed',  _listener = (e) => {
             this.speed = e.detail
-            let timeout = this.data.timeout * this.speed
+            let timeout = this.data.timeout / this.speed
+            let self = this
             clearInterval(this.interval);
             this.interval = window.setInterval(function () {
-                this.loop(this)
+                self.loop(self)
             }, timeout);
-            console.log(this.interval)
-        })*/
+        })
 
     },
 
@@ -8224,6 +8247,7 @@ AFRAME.registerComponent('babia-bar', {
         console.log("Starting bar:", this.data.height, this.data.color);
         let data = this.data;
         this.box = document.createElement('a-entity');
+        this.box.classList.add("babiaxraycasterclass");
         this.el.appendChild(this.box);
         let props = {}
         if (data.animation) {
@@ -8363,6 +8387,222 @@ AFRAME.registerComponent('babia-bar', {
 
 /***/ }),
 /* 105 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('babia-async-querier', {
+    schema: {
+        url: { type: 'string' },
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        this.register = new Register();
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        let data = this.data;
+        let self = this;
+        
+        if (oldData.url !== data.url) {
+            requestJSONDataFromURL(data.url).then((json) => self.register.data = json);
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+    /**
+     * Register variable
+    */
+    register: undefined,
+})
+
+async function requestJSONDataFromURL(url) { 
+    let response = await fetch(url);
+    console.log("Response: " + response)
+
+    if (response.status == 200) {
+       let json = await response.json();
+       console.log("Json: " +json)
+       return json;
+    }
+ 
+    throw new Error(response.status);
+ }
+
+ class Register {
+    constructor(){
+        this.data = null;
+    }
+
+    async getData() {
+        let dataReady = await this.data
+        return dataReady; 
+    }
+}
+
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports) {
+
+/* global AFRAME */
+if (typeof AFRAME === 'undefined') {
+    throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+/**
+* A-Charts component for A-Frame.
+*/
+AFRAME.registerComponent('async-visualizer', {
+    schema: {
+        from: { type: 'string' },
+    },
+
+    /**
+    * Set if component needs multiple instancing.
+    */
+    multiple: false,
+
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        let plane = document.createElement("a-plane");
+        plane.setAttribute('id', 'info_plane');
+        plane.setAttribute('position', '0 7 10');
+        plane.setAttribute('rotation', '0 180 0')
+        plane.setAttribute('height', '5');
+        plane.setAttribute('width', '10');
+        plane.setAttribute('color', 'white');
+        let label = document.createElement("a-text");
+        label.setAttribute('id', 'info_label');
+        label.setAttribute('value', 'No info');
+        label.setAttribute('color', '#000');
+        label.setAttribute('width', '9');
+        label.setAttribute('position', '-4.5 0 0')
+        plane.appendChild(label);
+        this.el.appendChild(plane);
+    },
+
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    update: function (oldData) {
+        const self = this;
+        let data = this.data;
+        let el = this.el;
+
+        if (oldData.from !== data.from) {
+            let fromComponent = findFrom(data, el, self);
+            getDataFrom(fromComponent, el);
+        }
+    },
+    /**
+    * Called when a component is removed (e.g., via removeAttribute).
+    * Generally undoes all modifications to the entity.
+    */
+    remove: function () { },
+
+  
+    /**
+    * Called when entity pauses.
+    * Use to stop or remove any dynamic or background behavior such as events.
+    */
+    pause: function () { },
+
+    /**
+    * Called when entity resumes.
+    * Use to continue or add any dynamic or background behavior such as events.
+    */
+    play: function () { },
+
+})
+
+let findFrom = (data, el) => {
+    let fromComponent;
+    if (data.from) {
+      // Save the reference to the querier or filter
+      let fromElement = document.getElementById(data.from)
+      if (fromElement.components['babia-async-filter']) {
+        fromComponent = fromElement.components['babia-async-filter']
+      } else if (fromElement.components['babia-async-querier']) {
+        fromComponent = fromElement.components['babia-async-querier']
+      } else {
+        console.error("Problem getting the querier")
+        return
+      }
+    } else {
+      // Look for a querier or filter in the same element
+      if (el.components['babia-async-filter']) {
+        fromComponent = el.components['babia-async-filter']
+      } else if (el.components['babia-async-querier']) {
+        fromComponent = el.components['babia-async-querier']
+      }
+    }
+    return fromComponent
+  }
+
+  let getDataFrom = (fromComponent) => {
+    let data = [];
+    setInterval(() => {
+        fromComponent.register.getData().then( _data => {
+            data = _data;
+            console.log("Data: " + data)
+                let dataToPrint = data.reduce((accumulator, currentValue) => {
+                    if (data.indexOf(currentValue) == data.length -1){
+                        return accumulator + currentValue['country'] + '.'
+                    } else if (data.indexOf(currentValue) == data.length -2) {
+                        return accumulator + currentValue['country'] + ' and '
+                    } else {
+                        return accumulator + currentValue['country'] + ', '
+                    }
+                }, "New data: ")
+                document.getElementById("info_label").setAttribute('value', dataToPrint)
+        });        
+    }, 500);
+  }
+  
+  
+
+
+/***/ }),
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const colors = __webpack_require__(4).colors;
@@ -8378,7 +8618,7 @@ if (typeof AFRAME === 'undefined') {
 class Axis {
     /*
     * @param el Element
-    * @param axis Axis ('x´, 'y', 'z')
+    * @param axis Axis ('x', 'y', 'z')
     * @param anim Is done with animation?
     * @param dur Duration of the animation
     */
@@ -8519,6 +8759,63 @@ class Axis {
             el.appendChild(label);
         };
     };
+
+    updateName(name, align, length){
+        const axis = this.axis;
+        let el = this.el;
+        const anim = this.anim;
+        const dur = this.dur;
+
+       // for (let i = 0; i < ticks.length; ++i) {
+            let label = document.createElement('a-entity');
+            label.setAttribute('text', {
+                'value': name,
+                'align': 'right',
+                'width': 10,
+                'color': '#000',
+                'opacity': 0
+            });
+            if (align == "behind" || align == "right"){
+                label.setAttribute('text', {'align': 'left'})
+            }
+            let pos;
+            if (axis === 'x') {
+                if (align == 'behind'){
+                    pos = { x: length + 0.5, y: 0, z: -5.15 };
+                } else {
+                    pos = { x: length + 0.5, y: 0, z: 5.25 };
+                }
+            } else if (axis === 'y') {
+                if (align == "right"){
+                    pos = { x: 5.2, y: length + 0.5, z: 0 };
+                } else {
+                    pos = { x: - 5.2, y: length + 0.5, z: 0 };
+                }
+            } else if (axis === 'z'){
+                if (align == "right"){
+                    pos = { x: 5.2, y: 0, z: length + 0.5 };
+                } else {
+                    pos = { x: - 5.2, y: 0, z: length + 0.5};
+                }
+            }
+            label.setAttribute('position', pos);
+            if (axis === 'x') {
+                label.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+            } else if (axis === 'z'){
+                label.setAttribute('rotation', { x: -90, y: 0, z: 0 });
+            }
+            if (anim) {
+                label.setAttribute('animation', {
+                    'property': 'text.opacity',
+                    'to': 1,
+                    'dur': dur
+                });
+            } else {
+                label.setAttribute('text', {'opacity': 1})
+            };
+            el.appendChild(label);
+       // };
+    }
 }
 
  /*
@@ -8541,7 +8838,9 @@ AFRAME.registerComponent('babia-axis-y', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels behind to axis.
-        align: { type: 'string', defautl: 'left'}
+        align: { type: 'string', defautl: 'left'},
+        // Name to show on label
+        name: { type: 'string', default: null}
     },
  
     init: function() {
@@ -8588,6 +8887,9 @@ AFRAME.registerComponent('babia-axis-y', {
             };
             this.axis.updateLabels(ticks, labels, data.color, data.palette, data.align);
         };
+        // Update name in axis label
+        if (data.name) this.axis.updateName(data.name, data.align, data.length);
+        
     }
 });      
 
@@ -8613,7 +8915,9 @@ AFRAME.registerComponent('babia-axis-x', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels behind of the axis.
-        align: { type: 'string', defautl: 'front'}
+        align: { type: 'string', defautl: 'front'},
+        // Name to show on label
+        name: { type: 'string', default: null}
     },
 
     init: function() {
@@ -8630,6 +8934,8 @@ AFRAME.registerComponent('babia-axis-x', {
         this.axis.removeLabels();
         // Update labels with new values
         this.axis.updateLabels(data.ticks, data.labels, data.color, data.palette, data.align);
+        // Update name in axis label
+        if (data.name) this.axis.updateName(data.name, data.align, data.length);
      }
 
 });
@@ -8656,7 +8962,9 @@ AFRAME.registerComponent('babia-axis-z', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels on the right of the axis.
-        align: { type: 'string', defautl: 'left'}
+        align: { type: 'string', defautl: 'left'},
+        // Name to show on label
+        name: { type: 'string', default: null}
     },
 
     init: function() {
@@ -8673,12 +8981,14 @@ AFRAME.registerComponent('babia-axis-z', {
         this.axis.removeLabels();
         // Update labels with new values
         this.axis.updateLabels(data.ticks, data.labels, data.color, data.palette, data.align);
+        // Update name in axis label
+        if (data.name) this.axis.updateName(data.name, data.align, data.length);
      }
 
 });
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -8853,7 +9163,7 @@ function changeColor(entity, color){
 }
 
 /***/ }),
-/* 107 */
+/* 109 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -8907,7 +9217,7 @@ AFRAME.registerComponent('babia-label', {
 });
 
 /***/ }),
-/* 108 */
+/* 110 */
 /***/ (function(module, exports) {
 
 
@@ -9039,7 +9349,7 @@ AFRAME.registerComponent('babia-lookat', {
 });
 
 /***/ }),
-/* 109 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -9080,11 +9390,11 @@ AFRAME.registerComponent('babia-navigator', {
 
 
         // Listener of the other events (should be re-sended to selector)
-        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep']
+        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep', 'babiaSetSpeed']
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
                 // Re-send event
-                if (e.target != this){
+                if (e.target = this){
                     this.selector.el.emit(evt, e.detail)
                 }
 
@@ -9183,7 +9493,7 @@ AFRAME.registerComponent('babia-navigator', {
 })
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { ThreeForceGraphGeneric } = __webpack_require__(100);
@@ -9504,7 +9814,7 @@ AFRAME.registerComponent('babia-speed-controller', {
 })
 
 /***/ }),
-/* 111 */
+/* 113 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -9929,7 +10239,7 @@ let openCloseMenu = (hand_id, entity_menu) =>{
 }
 
 /***/ }),
-/* 112 */
+/* 114 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -10061,7 +10371,7 @@ function generateDebugPanel(data, el, dataToShow) {
 }
 
 /***/ }),
-/* 113 */
+/* 115 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -10198,45 +10508,6 @@ function play(array){
     }, 3000)
 }
 
-        // Add or modify bars for new data
-        for (let i = 0; i < babiaData.length; i++) {
-            let item = babiaData[i]
- 
-            // Build bar
-            xLabel = item[data.x_axis];
-            let posX = i * widthBars * 1.25;
-            if ( currentBars[xLabel] && !item['_not'] ) {
-                barEl = currentBars[xLabel].el;
-                currentBars[xLabel].found = true;
-            } else {
-                barEl = document.createElement('a-entity');
-                barEl.setAttribute('babia-name', xLabel);
-                barEl.object3D.position.x = posX;
-                chartEl.appendChild(barEl);
-            }
-            barEl.setAttribute('babia-bar', {
-                'height': item[data.height] * this.lengthY / maxValue,
-                'width': widthBars,
-                'depth': widthBars,
-                'color': colors.get(colorId, palette),
-                'label': 'events'
-            });
-            if (data.legend) {
-                barEl.setAttribute('babia-bar', {
-                    'labelText': xLabel + ': ' + item[data.height]
-                });
-            };
-            if (posX !== barEl.object3D.position.x) {
-                if (data.animation) {
-                    barEl.setAttribute('animation', {
-                        'property': 'object3D.position.x',
-                        'to': posX,
-                        'dur': data.dur
-                    });
-                } else {
-                    barEl.object3D.position.x = posX;
-                };
-
 function skip(destination){
     for ( let x in data_array ) {
         if (data_array[x] == current){
@@ -10244,7 +10515,6 @@ function skip(destination){
                 x++
             } else if ((destination == 'prev') && (x >= 1)){
                 x--
-
             }
             current = data_array[x]
             showDate(x)
@@ -10336,7 +10606,7 @@ function showDate(i){
 }
 
 /***/ }),
-/* 114 */
+/* 116 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -10426,7 +10696,7 @@ let mapEvents = (data, el) => {
 }
 
 /***/ }),
-/* 115 */
+/* 117 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -10909,7 +11179,7 @@ function emitEvents(element, event_name){
 
 
 /***/ }),
-/* 116 */
+/* 118 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -11201,7 +11471,7 @@ function getEntity(id) {
 
 
 /***/ }),
-/* 117 */
+/* 119 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -11401,7 +11671,7 @@ let dispatchEventOnElement = (element, propertyName) => {
 
 
 /***/ }),
-/* 118 */
+/* 120 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -11834,7 +12104,6 @@ let dispatchEventOnElement = (element, propertyName) => {
     element.emit("babiaQuerierDataReady", propertyName)
 }
 
-
 /***/ }),
 /* 122 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -11860,6 +12129,8 @@ AFRAME.registerComponent('babia-bars', {
         from: { type: 'string' },
         legend: { type: 'boolean', default: false },
         axis: { type: 'boolean', default: true },
+        // Name for axis
+        axis_name: {type: 'boolean', default: false},
         palette: { type: 'string', default: 'ubuntu' },
         title: { type: 'string' },
         titleFont: { type: 'string' },
@@ -12129,6 +12400,14 @@ AFRAME.registerComponent('babia-bars', {
             this.yAxisEl.setAttribute('position', {
                 x: -this.widthBars/2, y: 0, z: this.widthBars/2
             });
+            if (data.axis_name){
+                if (data.index) {
+                    this.xAxisEl.setAttribute('babia-axis-x', 'name', data.index);
+                } else {
+                    this.xAxisEl.setAttribute('babia-axis-x', 'name', data.x_axis);
+                }
+                this.yAxisEl.setAttribute('babia-axis-y', 'name', data.height);
+            }
         }
     },
 
@@ -12191,7 +12470,6 @@ AFRAME.registerComponent('babia-bars', {
             } else {
                 barEl = document.createElement('a-entity');
                 barEl.setAttribute('babia-name', xLabel);
-                barEl.classList.add("babiaxraycasterclass");
                 barEl.object3D.position.x = posX;
                 chartEl.appendChild(barEl);
             }
@@ -12330,12 +12608,11 @@ let generateBar = (self, data, item, maxValue, widthBars, colorId, palette, step
     };
     bar.setAttribute('position', { x: stepX, y: 0, z: 0 }); 
     bar.id = item[self.data.index]
-    bar.classList.add("babiaxraycasterclass");
     return bar
 }
 
 /***/ }),
-/* 121 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 let dataReadyToSend = __webpack_require__(4).dataReadyToSend;
@@ -12887,7 +13164,7 @@ let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLab
 }
 
 /***/ }),
-/* 122 */
+/* 124 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -14065,7 +14342,7 @@ function heatMapColorforValue(val, max, min) {
 }
 
 /***/ }),
-/* 123 */
+/* 125 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -14711,13 +14988,8 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-<<<<<<< HEAD
-/* 125 */
-/***/ (function(module, exports) {
-=======
-/* 124 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> Add babia-navigator
 
 /* global AFRAME */
 
@@ -15562,11 +15834,6 @@ let Rectangle = class {
         return (longest == this.width);
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 126 */
-/***/ (function(module, exports, __webpack_require__) {
-=======
     /*
      * Add the inner area rectangle, assuming this is the canvas
      * Note: canvas and area are not the real area of canvas and
@@ -15595,7 +15862,6 @@ let Rectangle = class {
             this.idepth = this.depth;
         };
     }
->>>>>>> Add babia-navigator
 
     /*
      * Reflect (change horizontal for vertical dimensions)
@@ -15776,14 +16042,6 @@ let Rectangle = class {
 
 };
 
-<<<<<<< HEAD
-let ThreeForceGraph = __webpack_require__(316);
-if ('default' in ThreeForceGraph) {
-  // unwrap default export
-  ThreeForceGraph = ThreeForceGraph.default;
-}
-=======
->>>>>>> Add babia-navigator
 
 /*
  * Auxiliary function: produce a random data tree for codecity
@@ -17103,63 +17361,6 @@ let dispatchEventOnElement = (element, propertyName) => {
 /* 128 */
 /***/ (function(module, exports) {
 
-<<<<<<< HEAD
-AFRAME.registerComponent('babia-terrain', {
-    schema: {
-      width: {type: 'number', default: 1},
-      height: {type: 'number', default: 1},
-      segmentsHeight: {type: 'number', default: 1},
-      segmentsWidth: {type: 'number', default: 1},
-      data: {type: 'array'},
-      color: {type: 'string', default: '0xdddddd'},
-      filled: {type: 'boolean', default: false}
-    },
-  
-    /**
-     * Initial creation and setting of the mesh.
-     */
-    init: function () {
-        var data = this.data;
-        var el = this.el;
-
-        var vertices = data.data
-        console.log("Vertices:")
-        console.log(vertices)
-
-        // Create geometry.
-        this.geometry = new THREE.PlaneGeometry(data.width, data.height, data.segmentsHeight, data.segmentsWidth);
-        for (var i = 0, l = this.geometry.vertices.length; i < l; i++) {
-            this.geometry.vertices[i].z = vertices[i];
-        }
-  
-      // Create material.
-        var color = data.color
-        if (data.filled){
-          this.material = new THREE.MeshPhongMaterial({
-            color: color,
-            wireframe: false
-          });
-        } else {
-          this.material = new THREE.MeshPhongMaterial({
-            color: color,
-            wireframe: true
-          }); 
-        }
-
-      // Create mesh.
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
-  
-      // Set mesh on entity.
-      el.setObject3D('mesh', this.mesh);
-    }
-  });
-
-/***/ }),
-/* 129 */
-/***/ (function(module, exports, __webpack_require__) {
-
-=======
->>>>>>> Add babia-navigator
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
@@ -17815,7 +18016,7 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-/* 127 */
+/* 129 */
 /***/ (function(module, exports) {
 
 /* global AFRAME */
@@ -18281,7 +18482,7 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-/* 128 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18439,43 +18640,6 @@ AFRAME.registerComponent('babia-network', {
     return this.forceGraph.getGraphBbox();
   },
 
-<<<<<<< HEAD
-/***/ }),
-/* 130 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(116)
-__webpack_require__(117)
-__webpack_require__(115)
-__webpack_require__(109)
-__webpack_require__(100)
-__webpack_require__(102)
-__webpack_require__(101)
-__webpack_require__(112)
-__webpack_require__(110)
-__webpack_require__(127)
-__webpack_require__(118)
-__webpack_require__(119)
-__webpack_require__(121)
-__webpack_require__(129)
-__webpack_require__(122)
-__webpack_require__(123)
-__webpack_require__(124)
-__webpack_require__(125)
-__webpack_require__(114)
-__webpack_require__(128)
-__webpack_require__(113)
-__webpack_require__(111)
-__webpack_require__(120)
-__webpack_require__(108)
-__webpack_require__(126)
-__webpack_require__(107)
-__webpack_require__(106)
-__webpack_require__(4)
-__webpack_require__(103)
-__webpack_require__(104)
-__webpack_require__(105)
-=======
   emitParticle: function () {
     if (!this.forceGraph) {
       // Got here before component init -> initialize forceGraph
@@ -18484,24 +18648,17 @@ __webpack_require__(105)
 
     const forceGraph = this.forceGraph;
     const returnVal = forceGraph.emitParticle.apply(forceGraph, arguments);
->>>>>>> Add babia-navigator
 
     return returnVal === forceGraph
       ? this // return self, not the inner forcegraph component
       : returnVal;
   },
 
-<<<<<<< HEAD
-/***/ }),
-/* 131 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   d3Force: function () {
     if (!this.forceGraph) {
       // Got here before component init -> initialize forceGraph
       this.forceGraph = new ThreeForceGraph();
     }
->>>>>>> Add babia-navigator
 
     const forceGraph = this.forceGraph;
     const returnVal = forceGraph.d3Force.apply(forceGraph, arguments);
@@ -18516,21 +18673,6 @@ __webpack_require__(105)
     return this;
   },
 
-<<<<<<< HEAD
-/***/ }),
-/* 132 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array_js__ = __webpack_require__(131);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bisect_js__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant_js__ = __webpack_require__(133);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent_js__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__identity_js__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nice_js__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ticks_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__threshold_sturges_js__ = __webpack_require__(56);
-=======
   refresh: function () {
     this.forceGraph && this.forceGraph.refresh();
     return this;
@@ -18555,7 +18697,6 @@ __webpack_require__(105)
     // setup FG object
     if (!this.forceGraph) this.forceGraph = new ThreeForceGraph(); // initialize forceGraph if it doesn't exist yet
     this.el.object3D.add(this.forceGraph);
->>>>>>> Add babia-navigator
 
     // setup cursor
     setCursor();
@@ -18717,11 +18858,6 @@ __webpack_require__(105)
       const objType = topObject ? topObject.__graphObjType : null;
       const objData = topObject ? topObject.__data : null;
 
-<<<<<<< HEAD
-/***/ }),
-/* 133 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
       if (prevObjType && prevObjType !== objType) {
         // Hover out
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
@@ -18735,7 +18871,6 @@ __webpack_require__(105)
         // Hover in
         this.data['on' + (objType === 'node' ? 'Node' : 'Link') + 'CenterHover'](objData, prevObjType === objType ? prevObjData : null);
       }
->>>>>>> Add babia-navigator
 
       this.state.hoverObj = topObject;
 
@@ -18750,15 +18885,9 @@ __webpack_require__(105)
       }
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 134 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     // Run force-graph ticker
     this.forceGraph.tickFrame();
   },
->>>>>>> Add babia-navigator
 
   /**
   * Called when entity pauses.
@@ -18817,68 +18946,22 @@ __webpack_require__(105)
    */
   dataComponentEventName: undefined,
 
-<<<<<<< HEAD
-/***/ }),
-/* 135 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
   /**
    * Where the data is gonna be stored
    */
   babiaData: {'nodes': undefined, 'links': undefined},
 
-<<<<<<< HEAD
-/***/ }),
-/* 136 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   /**
    * Where the metaddata is gonna be stored
    */
   babiaMetadata: {
     id: 0
   },
->>>>>>> Add babia-navigator
 
 });
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 137 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-function difference(values, ...others) {
-  values = new Set(values);
-  for (const other of others) {
-    for (const value of other) {
-      values.delete(value);
-    }
-  }
-  return values;
-}
-
-
-/***/ }),
-/* 138 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-function disjoint(values, other) {
-  const iterator = other[Symbol.iterator](), set = new Set();
-  for (const v of values) {
-    if (set.has(v)) return false;
-    let value, done;
-    while (({value, done} = iterator.next())) {
-      if (done) break;
-      if (Object.is(v, value)) return false;
-      set.add(value);
-=======
 let findDataComponent = (data, el, self, from) => {
   let eventName = "babiaQuerierDataReady";
   let dataComponent;
@@ -18923,7 +19006,6 @@ let findDataComponent = (data, el, self, from) => {
       } else {
         error = true
       }
->>>>>>> Add babia-navigator
     }
   }
   if (error) {
@@ -18939,17 +19021,11 @@ let attachNewDataEventCallback = (self, e, oldData) => {
   self.dataComponentDataPropertyName = e.detail
   let rawData = self.dataComponent[self.dataComponentDataPropertyName]
 
-<<<<<<< HEAD
-/***/ }),
-/* 139 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   self.babiaData = rawData
   self.babiaMetadata = { id: self.babiaMetadata.id++ }
   
   let elData = self.data
   elData.data = rawData
->>>>>>> Add babia-navigator
 
   //remove previous chart (TODO)
   elData = elDataFromData(elData)
@@ -18965,17 +19041,11 @@ let attachNewNodesDataEventCallback = (self, e, oldData) => {
   self.nodesDataComponentDataPropertyName = e.detail
   let rawData = self.nodesDataComponent[self.nodesDataComponentDataPropertyName]
 
-<<<<<<< HEAD
-/***/ }),
-/* 140 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   self.babiaData.nodes = rawData
   self.babiaMetadata = { id: self.babiaMetadata.id++ }
   
   let elData = self.data
   elData.nodes = rawData
->>>>>>> Add babia-navigator
 
   //remove previous chart (TODO)
   elData = elDataFromNodesAndLinks(elData)
@@ -18994,18 +19064,12 @@ let attachNewLinksDataEventCallback = (self, e, oldData) => {
   self.linksDataComponentDataPropertyName = e.detail
   let rawData = self.linksDataComponent[self.linksDataComponentDataPropertyName]
 
-<<<<<<< HEAD
-/***/ }),
-/* 141 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   console.log("NewLinksData:", rawData)
   self.babiaData.links = rawData
   self.babiaMetadata = { id: self.babiaMetadata.id++ }
   
   let elData = self.data
   elData.links = rawData
->>>>>>> Add babia-navigator
 
   //remove previous chart (TODO)
   elData = elDataFromNodesAndLinks(elData)
@@ -19098,15 +19162,6 @@ function elDataFromData(elData){
   let nodes = [];
   let links = [];
 
-<<<<<<< HEAD
-/***/ }),
-/* 142 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ascending_js__ = __webpack_require__(6);
-=======
   let data = elData.data;
   let nodeId = elData.nodeId;
   let linkId = elData.linkId;
@@ -19114,7 +19169,6 @@ function elDataFromData(elData){
   let source = elData.linkSource;
   let target = elData.linkTarget;
   let linkLabel = elData.linkLabel;
->>>>>>> Add babia-navigator
 
   data.forEach(element => {
     let node = {};
@@ -19164,14 +19218,8 @@ function elDataFromData(elData){
   elData.nodes = nodes;
   elData.links = links;
 
-<<<<<<< HEAD
-/***/ }),
-/* 143 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   return elData;
 }
->>>>>>> Add babia-navigator
 
 // Format nodes and links
 
@@ -19190,21 +19238,6 @@ function elDataFromNodesAndLinks(elData) {
     // Either nodes or links are not ready yet
     return false
   }
-<<<<<<< HEAD
-  return max;
-}
-
-
-/***/ }),
-/* 144 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ascending_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__group_js__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sort_js__ = __webpack_require__(54);
-=======
   nodes.forEach(node => {
     Object.keys(node).forEach(function (k) {
       if (k === nodeId) {
@@ -19225,7 +19258,6 @@ function elDataFromNodesAndLinks(elData) {
   })
   elData.nodes = nodes;
   elData.links = links;
->>>>>>> Add babia-navigator
 
   return elData;
 } 
@@ -19263,22 +19295,11 @@ function showLegend(nodeThree, node, nodeLabel) {
   sceneEl.appendChild(legend);
 }
 
-<<<<<<< HEAD
-/***/ }),
-/* 145 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__set_js__ = __webpack_require__(156);
-
-=======
 function generateLinkLegend(link, linkLabel, linkPosition, radius) {
   let text = link[linkLabel];
   let width = 2;
   if (text.length > 16)
     width = text.length / 8;
->>>>>>> Add babia-navigator
 
   let entity = document.createElement('a-plane');
   entity.setAttribute('position', {x: linkPosition.x, y: linkPosition.y + radius + 3, z: linkPosition.z})
@@ -19302,18 +19323,8 @@ function showLinkLegend(self, linkThree, link, linkLabel, linkWidth) {
   //linkThree.getWorldPosition(worldPosition);
   let radius = linkThree.geometry.boundingSphere.radius
 
-<<<<<<< HEAD
-/***/ }),
-/* 146 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ascending_js__ = __webpack_require__(6);
-=======
   let sourcePos = new THREE.Vector3();
   let targetPos = new THREE.Vector3();
->>>>>>> Add babia-navigator
 
   let nodes = self.forceGraph.children.filter(element => element.__graphObjType == "node")
 
@@ -19324,58 +19335,21 @@ function showLinkLegend(self, linkThree, link, linkLabel, linkWidth) {
     if(node.__data[self.data.nodeId] == link.target[self.data.nodeId]){
       node.getWorldPosition(targetPos)
     }
-<<<<<<< HEAD
-  }
-  return min;
-}
-
-
-/***/ }),
-/* 147 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   })
   
   worldPosition.x = (sourcePos.x + targetPos.x)/2
   worldPosition.y = (sourcePos.y + targetPos.y)/2
   worldPosition.z = (sourcePos.z + targetPos.z)/2
->>>>>>> Add babia-navigator
 
   let sceneEl = document.querySelector('a-scene');
   legend = generateLinkLegend(link, linkLabel, worldPosition, radius);
   sceneEl.appendChild(legend);
 }
 
-<<<<<<< HEAD
-
-/***/ }),
-/* 148 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-function mean(values, valueof) {
-  let count = 0;
-  let sum = 0;
-  if (valueof === undefined) {
-    for (let value of values) {
-      if (value != null && (value = +value) >= value) {
-        ++count, sum += value;
-      }
-    }
-  } else {
-    let index = -1;
-    for (let value of values) {
-      if ((value = valueof(value, ++index, values)) != null && (value = +value) >= value) {
-        ++count, sum += value;
-      }
-    }
-=======
 function removeLegend(){
   if (legend){
     let sceneEl = document.querySelector('a-scene');
     sceneEl.removeChild(legend)
->>>>>>> Add babia-navigator
   }
   
 }
@@ -19384,36 +19358,10 @@ function setCursor() {
   // When loading, cursor gets entity cursor
   cursor = document.querySelector('[cursor]');
 
-<<<<<<< HEAD
-/***/ }),
-/* 149 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__quantile_js__ = __webpack_require__(21);
-
-
-/* unused harmony default export */ var _unused_webpack_default_export = (function(values, valueof) {
-  return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__quantile_js__["a" /* default */])(values, 0.5, valueof);
-});
-
-
-/***/ }),
-/* 150 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export default */
-function* flatten(arrays) {
-  for (const array of arrays) {
-    yield* array;
-  }
-=======
   // When controllers are connected, change cursor to laser control
   document.addEventListener('controllerconnected', (event) => {
     cursor = document.querySelector('[laser-controls]');
   });
->>>>>>> Add babia-navigator
 }
 
 let dataReadyToSend = (propertyName, self) => {
@@ -19427,13 +19375,8 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-<<<<<<< HEAD
-/* 151 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
-/* 129 */
+/* 131 */
 /***/ (function(module, exports) {
->>>>>>> Add babia-navigator
 
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
@@ -19463,16 +19406,10 @@ AFRAME.registerComponent('babia-pie', {
      */
     visProperties: ['size', 'key'],
 
-<<<<<<< HEAD
-/***/ }),
-/* 152 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
     * Set if component needs multiple instancing.
     */
     multiple: false,
->>>>>>> Add babia-navigator
 
     /**
     * Called once when component is attached. Generally for initial setup.
@@ -19500,33 +19437,21 @@ AFRAME.registerComponent('babia-pie', {
                 id: self.babiaMetadata.id++
             }
 
-<<<<<<< HEAD
-/***/ }),
-/* 153 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
             while (self.el.firstChild)
                 self.el.firstChild.remove();
             console.log("Generating 3Dcylynderchart from data...")
             self.chart = generatePie(self.data, JSON.parse(self.data.data), self.el, self.slice_array, self.total_duration)
             self.loaded = true
->>>>>>> Add babia-navigator
 
             // Dispatch interested events because I updated my visualization
             dataReadyToSend("babiaData", self)
 
         } else {
 
-<<<<<<< HEAD
-/***/ }),
-/* 154 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
             // If changed from, need to re-register to the new data component
             if (data.from !== oldData.from) {
                 // Unregister for old querier
                 if (self.dataComponent) { self.dataComponent.unregister(el) }
->>>>>>> Add babia-navigator
 
                 // Find the component and get if querier or filterdata by the event               
                 let eventName = findDataComponent(data, el, self)
@@ -19548,11 +19473,6 @@ AFRAME.registerComponent('babia-pie', {
                 return
             }
 
-<<<<<<< HEAD
-/***/ }),
-/* 155 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
             // If changed whatever, re-print with the current data
             if (data !== oldData && self.babiaData) {
                 while (self.el.firstChild)
@@ -19561,7 +19481,6 @@ AFRAME.registerComponent('babia-pie', {
                 self.slice_array = []
                 self.chart = generatePie(self.data, self.babiaData, self.el, self.slice_array, self.total_duration)
                 self.loaded = true
->>>>>>> Add babia-navigator
 
                 // Dispatch interested events because I updated my visualization
                 dataReadyToSend("babiaData", self)
@@ -19603,17 +19522,11 @@ AFRAME.registerComponent('babia-pie', {
     */
     pause: function () { },
 
-<<<<<<< HEAD
-/***/ }),
-/* 156 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
     * Called when entity resumes.
     * Use to continue or add any dynamic or background behavior such as events.
     */
     play: function () { },
->>>>>>> Add babia-navigator
 
     /**
     * Register function when I'm updated
@@ -19628,17 +19541,11 @@ AFRAME.registerComponent('babia-pie', {
         }
     },
 
-<<<<<<< HEAD
-/***/ }),
-/* 157 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
      * Unregister function when I'm updated
      */
     unregister: function (interestedElem) {
         const index = this.interestedElements.indexOf(interestedElem)
->>>>>>> Add babia-navigator
 
         // Remove from the interested elements if still there
         if (index > -1) {
@@ -19656,16 +19563,10 @@ AFRAME.registerComponent('babia-pie', {
      */
     loaded: false,
 
-<<<<<<< HEAD
-/***/ }),
-/* 158 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
      * Slice array
      */
     slice_array: [],
->>>>>>> Add babia-navigator
 
     /**
      * Duration of the animation
@@ -19677,16 +19578,10 @@ AFRAME.registerComponent('babia-pie', {
     */
     dataComponent: undefined,
 
-<<<<<<< HEAD
-/***/ }),
-/* 159 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
      * Property of the querier where the data is saved
      */
     dataComponentDataPropertyName: "babiaData",
->>>>>>> Add babia-navigator
 
     /**
      * Event name to difference between querier and filterdata
@@ -19706,13 +19601,7 @@ AFRAME.registerComponent('babia-pie', {
         id: 0
     },
 
-<<<<<<< HEAD
-/***/ }),
-/* 160 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 })
->>>>>>> Add babia-navigator
 
 let findDataComponent = (data, el, self) => {
     let eventName = "babiaQuerierDataReady"
@@ -19768,21 +19657,10 @@ let attachNewDataEventCallback = (self, e) => {
     self.dataComponentDataPropertyName = e.detail
     let rawData = self.dataComponent[self.dataComponentDataPropertyName]
 
-<<<<<<< HEAD
-/***/ }),
-/* 161 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__count_js__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__quantile_js__ = __webpack_require__(21);
-
-=======
     self.babiaData = rawData
     self.babiaMetadata = {
         id: self.babiaMetadata.id++
     }
->>>>>>> Add babia-navigator
 
     //remove previous chart
     while (self.el.firstChild)
@@ -19796,11 +19674,6 @@ let attachNewDataEventCallback = (self, e) => {
 }
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 162 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 let generatePie = (data, dataRetrieved, element, slice_array, total_duration) => {
     if (dataRetrieved) {
         const dataToPrint = dataRetrieved
@@ -19810,7 +19683,6 @@ let generatePie = (data, dataRetrieved, element, slice_array, total_duration) =>
         const color = data.titleColor
         const title_position = data.titlePosition
         let animation = data.animation
->>>>>>> Add babia-navigator
 
         // Change size to degrees
         let totalSize = 0
@@ -19828,16 +19700,10 @@ let generatePie = (data, dataRetrieved, element, slice_array, total_duration) =>
 
         element.appendChild(chart_entity)
 
-<<<<<<< HEAD
-/***/ }),
-/* 163 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
         let prev_delay = 0
         for (let slice of dataToPrint) {
             //Calculate degrees        
             degreeEnd = 360 * slice[data.size] / totalSize;
->>>>>>> Add babia-navigator
 
             let sliceEntity
             if (animation) {
@@ -19857,16 +19723,10 @@ let generatePie = (data, dataRetrieved, element, slice_array, total_duration) =>
             //Move degree offset
             degreeStart += degreeEnd;
 
-<<<<<<< HEAD
-/***/ }),
-/* 164 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
             //Prepare legend
             if (data.legend) {
                 showLegend(data, sliceEntity, slice, element)
             }
->>>>>>> Add babia-navigator
 
             chart_entity.appendChild(sliceEntity);
             colorid++
@@ -19899,14 +19759,8 @@ function getColor(colorid, palette) {
     return color
 }
 
-<<<<<<< HEAD
-/***/ }),
-/* 165 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 function generateLegend(data, slice) {
     let text = slice[data.key] + ': ' + slice[data.size];
->>>>>>> Add babia-navigator
 
     let width = 2;
     if (text.length > 16)
@@ -19986,7 +19840,7 @@ let dispatchEventOnElement = (element, propertyName) => {
 }
 
 /***/ }),
-/* 130 */
+/* 132 */
 /***/ (function(module, exports) {
 
 AFRAME.registerComponent('babia-terrain', {
@@ -20040,29 +19894,10 @@ AFRAME.registerComponent('babia-terrain', {
   });
 
 /***/ }),
-<<<<<<< HEAD
-/* 166 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = binarytree;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add__ = __webpack_require__(165);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover__ = __webpack_require__(167);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data__ = __webpack_require__(168);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent__ = __webpack_require__(169);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find__ = __webpack_require__(170);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove__ = __webpack_require__(171);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root__ = __webpack_require__(172);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size__ = __webpack_require__(173);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit__ = __webpack_require__(174);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter__ = __webpack_require__(175);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x__ = __webpack_require__(176);
-=======
-/* 131 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* global AFRAME */
->>>>>>> Add babia-navigator
 
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -20408,11 +20243,6 @@ let Zone = class {
         };
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 167 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
      * Draw all rectangles for an area tree
      *
@@ -20440,7 +20270,6 @@ let Zone = class {
                 id: area.data['id'],
                 rawarea: 0
             });
->>>>>>> Add babia-navigator
 
             // Titles on quarters
             if (titles) {
@@ -20560,11 +20389,6 @@ let Zone = class {
 };
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 168 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 /**
  * Class for lists (arrays) of values
  */
@@ -20580,7 +20404,6 @@ let Values = class {
             this.total = values.reduce((acc, a) => acc + a, 0);
         };
     }
->>>>>>> Add babia-navigator
 
     imax() {
         let largest = this.items[0];
@@ -20595,11 +20418,6 @@ let Values = class {
         return largest_i;
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 169 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     static range(start, length) {
         var indexes = [];
         for (let i = start; i < start + length; i++) {
@@ -20607,7 +20425,6 @@ let Values = class {
         };
         return indexes;
     }
->>>>>>> Add babia-navigator
 
     /*
      * Return the scaled area, for a rectangle area, of item i
@@ -20632,11 +20449,6 @@ let Values = class {
         return new Values(values);
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 170 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /**
      * Produce pivot and three regions
      *
@@ -20666,7 +20478,6 @@ let Values = class {
                 a2: [], a3: []
             };
         };
->>>>>>> Add babia-navigator
 
         if (this.items.length == pivot_i + 2) {
             // Only one item to the right of pivot. It is a2. a3 is empty.
@@ -20860,11 +20671,6 @@ let Rectangle = class {
         return rects;
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 171 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     /*
      * Split according to data in values (array), with the pivot algorithm
      *
@@ -20890,7 +20696,6 @@ let Rectangle = class {
         let x_a1 = x - width / 2 + width_a1 / 2;
         let x_a2 = x - width / 2 + width_a1 + width_a2 / 2;
         let x_a3 = x - width / 2 + width_a1 + width_a2 + width_a3 / 2;
->>>>>>> Add babia-navigator
 
         let rects = [];
         // Pivot rectangle
@@ -21030,11 +20835,6 @@ let requestJSONDataFromURL = (data) => {
         }
     };
 
-<<<<<<< HEAD
-/***/ }),
-/* 172 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     request.onerror = function () {
         reject({
             status: this.status,
@@ -21042,7 +20842,6 @@ let requestJSONDataFromURL = (data) => {
         });
     };
     request.send();
->>>>>>> Add babia-navigator
 
     // If time evolution
     if (raw_items.time_evolution) {
@@ -21055,11 +20854,6 @@ let requestJSONDataFromURL = (data) => {
         raw_items = first_tree["data_0_tree"]
         initItems = first_tree["data_0"]
 
-<<<<<<< HEAD
-/***/ }),
-/* 173 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
         // Items of the time evolution
         let navbarData = []
         for (let i = 0; i < main_json.data_files.length; i++) {
@@ -21071,7 +20865,6 @@ let requestJSONDataFromURL = (data) => {
                 data: i
             })
         }
->>>>>>> Add babia-navigator
 
         // Navbar if defined
         if (data.ui_navbar) {
@@ -21093,13 +20886,7 @@ let requestJSONDataFromURL = (data) => {
                 key = data.time_evolution_init
             }
 
-<<<<<<< HEAD
-/***/ }),
-/* 174 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
             let leafEntities = findLeafs(raw_items['children'], {})
->>>>>>> Add babia-navigator
 
             timeEvolutionItems[data.time_evolution_init][key].forEach((item) => {
                 if (leafEntities[item.id]) {
@@ -21133,12 +20920,6 @@ let changedItems = []
 let index = 0
 let timeEvolTimeout = undefined
 
-<<<<<<< HEAD
-/***/ }),
-/* 175 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 /**
  *  This function generate a plane with date of files
@@ -21179,14 +20960,8 @@ let dateBar = (data) => {
         value: text,
     });
 
-<<<<<<< HEAD
-/***/ }),
-/* 176 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     dateBarEntity = entity
     component.appendChild(entity)
->>>>>>> Add babia-navigator
 
 }
 
@@ -21200,13 +20975,7 @@ let generateLegend = (text, heightItem, boxPosition, model, rootCodecityEntity) 
 
     let height = heightItem
 
-<<<<<<< HEAD
-/***/ }),
-/* 177 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     let entity = document.createElement('a-plane');
->>>>>>> Add babia-navigator
 
     entity.setAttribute('babia-lookat', "[camera]")
     entity.setAttribute('position', { x: boxPosition.x, y: boxPosition.y + height / 2 + 1, z: boxPosition.z });
@@ -21267,11 +21036,6 @@ function time_evol() {
             i--
             index--
 
-<<<<<<< HEAD
-/***/ }),
-/* 178 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
             changeCity()
         })
         document.addEventListener('babiaxrSkipPrev', function () {
@@ -21292,7 +21056,6 @@ function time_evol() {
             index = i - 1
             changeCity(true)
         })
->>>>>>> Add babia-navigator
 
     }
     let loop = () => {
@@ -21414,11 +21177,6 @@ let changeBuildingLayout = (item) => {
         // Add to changed items
         changedItems.push(item.id)
 
-<<<<<<< HEAD
-/***/ }),
-/* 179 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
         // Get old data in order to do the math
         let prevPos = document.getElementById(item.id).getAttribute("position")
         let oldX = document.getElementById(item.id).getAttribute("position").x
@@ -21428,7 +21186,6 @@ let changeBuildingLayout = (item) => {
         let prevDepth = document.getElementById(item.id).getAttribute("geometry").depth
         let prevHeight = document.getElementById(item.id).getAttribute("geometry").height
         let oldRawArea = parseFloat(document.getElementById(item.id).getAttribute("babiaxr-rawarea"))
->>>>>>> Add babia-navigator
 
         if (prevHeight.toFixed(6) !== item.height.toFixed(6) || oldRawArea.toFixed(6) !== item.area.toFixed(6)) {
             //Change color
@@ -21590,15 +21347,6 @@ function getNewBrightnessColor(rgbcode, brightness) {
         HSL = rgbToHsl(r, g, b),
         RGB;
 
-<<<<<<< HEAD
-/***/ }),
-/* 180 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dispatch_js__ = __webpack_require__(179);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__dispatch_js__["a"]; });
-=======
     RGB = hslToRgb(HSL[0], HSL[1], brightness / 100);
     rgbcode = '#'
         + convertToTwoDigitHexCodeFromDecimal(RGB[0])
@@ -21607,7 +21355,6 @@ function getNewBrightnessColor(rgbcode, brightness) {
 
     return rgbcode;
 }
->>>>>>> Add babia-navigator
 
 function convertToTwoDigitHexCodeFromDecimal(decimal) {
     let code = Math.round(decimal).toString(16);
@@ -21616,11 +21363,6 @@ function convertToTwoDigitHexCodeFromDecimal(decimal) {
     return code;
 }
 
-<<<<<<< HEAD
-/***/ }),
-/* 181 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 /**
  * Converts an RGB color value to HSL. Conversion formula
  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -21636,7 +21378,6 @@ function rgbToHsl(r, g, b) {
     r /= 255, g /= 255, b /= 255;
     let max = Math.max(r, g, b), min = Math.min(r, g, b);
     let h, s, l = (max + min) / 2;
->>>>>>> Add babia-navigator
 
     if (max == min) {
         h = s = 0; // achromatic
@@ -21691,44 +21432,46 @@ function hslToRgb(h, s, l) {
 }
 
 /***/ }),
-/* 132 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(118)
+__webpack_require__(120)
+__webpack_require__(121)
 __webpack_require__(119)
-__webpack_require__(117)
-__webpack_require__(111)
+__webpack_require__(113)
 __webpack_require__(101)
 __webpack_require__(103)
 __webpack_require__(102)
+__webpack_require__(116)
 __webpack_require__(114)
-__webpack_require__(112)
-__webpack_require__(129)
-__webpack_require__(120)
-__webpack_require__(121)
-__webpack_require__(123)
 __webpack_require__(131)
-__webpack_require__(124)
+__webpack_require__(122)
+__webpack_require__(123)
 __webpack_require__(125)
+__webpack_require__(133)
 __webpack_require__(126)
 __webpack_require__(127)
-__webpack_require__(116)
-__webpack_require__(130)
-__webpack_require__(115)
-__webpack_require__(113)
-__webpack_require__(122)
-__webpack_require__(108)
 __webpack_require__(128)
+__webpack_require__(129)
+__webpack_require__(118)
+__webpack_require__(132)
+__webpack_require__(117)
+__webpack_require__(115)
+__webpack_require__(124)
+__webpack_require__(110)
+__webpack_require__(130)
+__webpack_require__(109)
 __webpack_require__(107)
-__webpack_require__(105)
 __webpack_require__(4)
 __webpack_require__(104)
+__webpack_require__(105)
 __webpack_require__(106)
-__webpack_require__(109)
-__webpack_require__(110)
+__webpack_require__(108)
+__webpack_require__(111)
+__webpack_require__(112)
 
 /***/ }),
-/* 133 */
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21741,17 +21484,13 @@ var map = array.map;
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 182 */
-=======
-/* 134 */
->>>>>>> Add babia-navigator
+/* 136 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array_js__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array_js__ = __webpack_require__(135);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bisect_js__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant_js__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant_js__ = __webpack_require__(137);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent_js__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__identity_js__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nice_js__ = __webpack_require__(50);
@@ -21861,32 +21600,7 @@ var map = array.map;
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 183 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__center_js__ = __webpack_require__(181);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_0__center_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__collide_js__ = __webpack_require__(182);
-/* unused harmony reexport forceCollide */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link_js__ = __webpack_require__(185);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__link_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__manyBody_js__ = __webpack_require__(186);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_3__manyBody_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__radial_js__ = __webpack_require__(187);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_4__radial_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simulation_js__ = __webpack_require__(61);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_5__simulation_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__x_js__ = __webpack_require__(188);
-/* unused harmony reexport forceX */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__y_js__ = __webpack_require__(189);
-/* unused harmony reexport forceY */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__z_js__ = __webpack_require__(190);
-/* unused harmony reexport forceZ */
-
-=======
-/* 135 */
+/* 137 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21895,11 +21609,10 @@ var map = array.map;
     return x;
   };
 });
->>>>>>> Add babia-navigator
 
 
 /***/ }),
-/* 136 */
+/* 138 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21940,11 +21653,7 @@ function cross(...values) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 184 */
-=======
-/* 137 */
->>>>>>> Add babia-navigator
+/* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21957,7 +21666,7 @@ function cumsum(values, valueof) {
 }
 
 /***/ }),
-/* 138 */
+/* 140 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21967,11 +21676,7 @@ function cumsum(values, valueof) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 185 */
-=======
-/* 139 */
->>>>>>> Add babia-navigator
+/* 141 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21988,7 +21693,7 @@ function difference(values, ...others) {
 
 
 /***/ }),
-/* 140 */
+/* 142 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22009,7 +21714,7 @@ function disjoint(values, other) {
 
 
 /***/ }),
-/* 141 */
+/* 143 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22027,7 +21732,7 @@ function every(values, test) {
 
 
 /***/ }),
-/* 142 */
+/* 144 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22046,7 +21751,7 @@ function filter(values, test) {
 
 
 /***/ }),
-/* 143 */
+/* 145 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22126,7 +21831,7 @@ function fcumsum(values, valueof) {
 
 
 /***/ }),
-/* 144 */
+/* 146 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22164,7 +21869,7 @@ function greatest(values, compare = __WEBPACK_IMPORTED_MODULE_0__ascending_js__[
 
 
 /***/ }),
-/* 145 */
+/* 147 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22193,11 +21898,7 @@ function greatestIndex(values, compare = __WEBPACK_IMPORTED_MODULE_0__ascending_
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 186 */
-=======
-/* 146 */
->>>>>>> Add babia-navigator
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22218,12 +21919,12 @@ function groupSort(values, reduce, key) {
 
 
 /***/ }),
-/* 147 */
+/* 149 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export default */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__set_js__ = __webpack_require__(158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__set_js__ = __webpack_require__(160);
 
 
 function intersection(values, ...others) {
@@ -22242,7 +21943,7 @@ function intersection(values, ...others) {
 
 
 /***/ }),
-/* 148 */
+/* 150 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22280,7 +21981,7 @@ function least(values, compare = __WEBPACK_IMPORTED_MODULE_0__ascending_js__["a"
 
 
 /***/ }),
-/* 149 */
+/* 151 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22293,7 +21994,7 @@ function map(values, mapper) {
 
 
 /***/ }),
-/* 150 */
+/* 152 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22320,7 +22021,7 @@ function mean(values, valueof) {
 
 
 /***/ }),
-/* 151 */
+/* 153 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22333,11 +22034,7 @@ function mean(values, valueof) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 187 */
-=======
-/* 152 */
->>>>>>> Add babia-navigator
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22354,7 +22051,7 @@ function merge(arrays) {
 
 
 /***/ }),
-/* 153 */
+/* 155 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22378,7 +22075,7 @@ function pair(a, b) {
 
 
 /***/ }),
-/* 154 */
+/* 156 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22398,11 +22095,7 @@ function pair(a, b) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 188 */
-=======
-/* 155 */
->>>>>>> Add babia-navigator
+/* 157 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22424,7 +22117,7 @@ function reduce(values, reducer, value) {
 
 
 /***/ }),
-/* 156 */
+/* 158 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22436,7 +22129,7 @@ function reverse(values) {
 
 
 /***/ }),
-/* 157 */
+/* 159 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22451,11 +22144,7 @@ function scan(values, compare) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 189 */
-=======
-/* 158 */
->>>>>>> Add babia-navigator
+/* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22466,7 +22155,7 @@ function set(values) {
 
 
 /***/ }),
-/* 159 */
+/* 161 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22487,7 +22176,7 @@ function shuffler(random) {
 
 
 /***/ }),
-/* 160 */
+/* 162 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22505,11 +22194,7 @@ function some(values, test) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 190 */
-=======
-/* 161 */
->>>>>>> Add babia-navigator
+/* 163 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22523,7 +22208,7 @@ function subset(values, other) {
 
 
 /***/ }),
-/* 162 */
+/* 164 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22549,11 +22234,7 @@ function sum(values, valueof) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 191 */
-=======
-/* 163 */
->>>>>>> Add babia-navigator
+/* 165 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22568,11 +22249,7 @@ function sum(values, valueof) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 192 */
-=======
-/* 164 */
->>>>>>> Add babia-navigator
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22587,11 +22264,7 @@ function sum(values, valueof) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 193 */
-=======
-/* 165 */
->>>>>>> Add babia-navigator
+/* 167 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22608,11 +22281,7 @@ function union(...others) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 194 */
-=======
-/* 166 */
->>>>>>> Add babia-navigator
+/* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22625,11 +22294,7 @@ function union(...others) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 195 */
-=======
-/* 167 */
->>>>>>> Add babia-navigator
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22642,16 +22307,6 @@ function union(...others) {
 function add(tree, x, d) {
   if (isNaN(x)) return tree; // ignore invalid points
 
-<<<<<<< HEAD
-/***/ }),
-/* 196 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__formatDecimal_js__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__formatPrefixAuto_js__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formatRounded_js__ = __webpack_require__(194);
-=======
   var parent,
       node = tree._root,
       leaf = {data: d},
@@ -22671,7 +22326,6 @@ function add(tree, x, d) {
     if (right = x >= (xm = (x0 + x1) / 2)) x0 = xm; else x1 = xm;
     if (parent = node, !(node = node[i = +right])) return parent[i] = leaf, tree;
   }
->>>>>>> Add babia-navigator
 
   // Is the new point is exactly coincident with the existing point?
   xp = +tree._x.call(null, node.data);
@@ -22703,14 +22357,8 @@ function addAll(data) {
   // If there were no (valid) points, abort.
   if (x0 > x1) return this;
 
-<<<<<<< HEAD
-/***/ }),
-/* 197 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   // Expand the tree to cover the new points.
   this.cover(x0).cover(x1);
->>>>>>> Add babia-navigator
 
   // Add the new points.
   for (i = 0; i < n; ++i) {
@@ -22722,47 +22370,31 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 198 */
-=======
-/* 168 */
->>>>>>> Add babia-navigator
+/* 170 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = binarytree;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add__ = __webpack_require__(167);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover__ = __webpack_require__(169);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data__ = __webpack_require__(170);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent__ = __webpack_require__(171);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find__ = __webpack_require__(172);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove__ = __webpack_require__(173);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root__ = __webpack_require__(174);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size__ = __webpack_require__(175);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit__ = __webpack_require__(176);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter__ = __webpack_require__(177);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x__ = __webpack_require__(178);
-
-
-
-
-<<<<<<< HEAD
-/***/ }),
-/* 199 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover__ = __webpack_require__(171);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data__ = __webpack_require__(172);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent__ = __webpack_require__(173);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root__ = __webpack_require__(176);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x__ = __webpack_require__(180);
 
 
 
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 200 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
+
+
+
+
 
 
 
@@ -22824,11 +22456,7 @@ treeProto.visitAfter = __WEBPACK_IMPORTED_MODULE_9__visitAfter__["a" /* default 
 treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
 
 /***/ }),
-<<<<<<< HEAD
-/* 201 */
-=======
-/* 169 */
->>>>>>> Add babia-navigator
+/* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22871,11 +22499,7 @@ treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 202 */
-=======
-/* 170 */
->>>>>>> Add babia-navigator
+/* 172 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22889,11 +22513,7 @@ treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 203 */
-=======
-/* 171 */
->>>>>>> Add babia-navigator
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22905,11 +22525,7 @@ treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 204 */
-=======
-/* 172 */
->>>>>>> Add babia-navigator
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22941,15 +22557,9 @@ treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
         || (x1 = q.x0) > x3
         || (x2 = q.x1) < x0) continue;
 
-<<<<<<< HEAD
-/***/ }),
-/* 205 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     // Bisect the current half.
     if (node.length) {
       var xm = (x1 + x2) / 2;
->>>>>>> Add babia-navigator
 
       halves.push(
         new __WEBPACK_IMPORTED_MODULE_0__half__["a" /* default */](node[1], xm, x2),
@@ -22981,11 +22591,7 @@ treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 206 */
-=======
-/* 173 */
->>>>>>> Add babia-navigator
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23022,14 +22628,8 @@ treeProto.x = __WEBPACK_IMPORTED_MODULE_10__x__["b" /* default */];
   while (node.data !== d) if (!(previous = node, node = node.next)) return this;
   if (next = node.next) delete node.next;
 
-<<<<<<< HEAD
-/***/ }),
-/* 207 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   // If there are multiple coincident points, remove just the point.
   if (previous) return (next ? previous.next = next : delete previous.next), this;
->>>>>>> Add babia-navigator
 
   // If this is the root point, remove it.
   if (!parent) return this._root = next, this;
@@ -23055,11 +22655,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 208 */
-=======
-/* 174 */
->>>>>>> Add babia-navigator
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23069,11 +22665,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 209 */
-=======
-/* 175 */
->>>>>>> Add babia-navigator
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23087,11 +22679,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 210 */
-=======
-/* 176 */
->>>>>>> Add babia-navigator
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23113,26 +22701,11 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 211 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export interpolateTransformCss */
-/* unused harmony export interpolateTransformSvg */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parse_js__ = __webpack_require__(212);
-
-
-
-function interpolateTransform(parse, pxComma, pxParen, degParen) {
-=======
-/* 177 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__half__ = __webpack_require__(23);
->>>>>>> Add babia-navigator
 
 
 /* harmony default export */ __webpack_exports__["a"] = (function(callback) {
@@ -23155,7 +22728,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
 
 
 /***/ }),
-/* 178 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23170,16 +22743,7 @@ function defaultX(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 212 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = parseCss;
-/* harmony export (immutable) */ __webpack_exports__["b"] = parseSvg;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__decompose_js__ = __webpack_require__(210);
-=======
-/* 179 */
+/* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23188,7 +22752,6 @@ function defaultX(d) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__define_js__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__color_js__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__math_js__ = __webpack_require__(60);
->>>>>>> Add babia-navigator
 
 
 
@@ -23253,11 +22816,7 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__define_js__["a" /* default */
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 213 */
-=======
-/* 180 */
->>>>>>> Add babia-navigator
+/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23396,11 +22955,7 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__define_js__["a" /* default */
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 214 */
-=======
-/* 181 */
->>>>>>> Add babia-navigator
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23491,21 +23046,17 @@ function set(type, name, callback) {
 
 
 /***/ }),
-/* 182 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dispatch_js__ = __webpack_require__(181);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dispatch_js__ = __webpack_require__(183);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__dispatch_js__["a"]; });
 
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 215 */
-=======
-/* 183 */
->>>>>>> Add babia-navigator
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23544,15 +23095,9 @@ function set(type, name, callback) {
     return arguments.length ? (x = +_, force) : x;
   };
 
-<<<<<<< HEAD
-/***/ }),
-/* 216 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   force.y = function(_) {
     return arguments.length ? (y = +_, force) : y;
   };
->>>>>>> Add babia-navigator
 
   force.z = function(_) {
     return arguments.length ? (z = +_, force) : z;
@@ -23567,11 +23112,7 @@ function set(type, name, callback) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 217 */
-=======
-/* 184 */
->>>>>>> Add babia-navigator
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23582,12 +23123,6 @@ function set(type, name, callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__jiggle_js__ = __webpack_require__(26);
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 218 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 
 
@@ -23721,49 +23256,28 @@ function z(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 219 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = octree;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add__ = __webpack_require__(214);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover__ = __webpack_require__(215);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data__ = __webpack_require__(216);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent__ = __webpack_require__(217);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find__ = __webpack_require__(218);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove__ = __webpack_require__(220);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root__ = __webpack_require__(221);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size__ = __webpack_require__(222);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit__ = __webpack_require__(223);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__y__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__z__ = __webpack_require__(227);
-=======
-/* 185 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__center_js__ = __webpack_require__(183);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__center_js__ = __webpack_require__(185);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_0__center_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__collide_js__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__collide_js__ = __webpack_require__(186);
 /* unused harmony reexport forceCollide */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link_js__ = __webpack_require__(187);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link_js__ = __webpack_require__(189);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__link_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__manyBody_js__ = __webpack_require__(188);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__manyBody_js__ = __webpack_require__(190);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_3__manyBody_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__radial_js__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__radial_js__ = __webpack_require__(191);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_4__radial_js__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simulation_js__ = __webpack_require__(61);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_5__simulation_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__x_js__ = __webpack_require__(190);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__x_js__ = __webpack_require__(192);
 /* unused harmony reexport forceX */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__y_js__ = __webpack_require__(191);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__y_js__ = __webpack_require__(193);
 /* unused harmony reexport forceY */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__z_js__ = __webpack_require__(192);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__z_js__ = __webpack_require__(194);
 /* unused harmony reexport forceZ */
->>>>>>> Add babia-navigator
 
 
 
@@ -23775,7 +23289,7 @@ function z(d) {
 
 
 /***/ }),
-/* 186 */
+/* 188 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23791,7 +23305,7 @@ const m = 4294967296; // 2^32
 
 
 /***/ }),
-/* 187 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23840,15 +23354,9 @@ function find(nodeById, nodeId) {
         l = (l - distances[i]) / l * alpha * strengths[i];
         x *= l, y *= l, z *= l;
 
-<<<<<<< HEAD
-/***/ }),
-/* 220 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
         target.vx -= x * (b = bias[i]);
         if (nDim > 1) { target.vy -= y * b; }
         if (nDim > 2) { target.vz -= z * b; }
->>>>>>> Add babia-navigator
 
         source.vx += x * (b = 1 - b);
         if (nDim > 1) { source.vy += y * b; }
@@ -23913,15 +23421,9 @@ function find(nodeById, nodeId) {
     return arguments.length ? (id = _, force) : id;
   };
 
-<<<<<<< HEAD
-/***/ }),
-/* 221 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   force.iterations = function(_) {
     return arguments.length ? (iterations = +_, force) : iterations;
   };
->>>>>>> Add babia-navigator
 
   force.strength = function(_) {
     return arguments.length ? (strength = typeof _ === "function" ? _ : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__constant_js__["a" /* default */])(+_), initializeStrength(), force) : strength;
@@ -23936,11 +23438,7 @@ function find(nodeById, nodeId) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 222 */
-=======
-/* 188 */
->>>>>>> Add babia-navigator
+/* 190 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23952,12 +23450,6 @@ function find(nodeById, nodeId) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__simulation_js__ = __webpack_require__(61);
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 223 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 
 
@@ -23995,15 +23487,9 @@ function find(nodeById, nodeId) {
     for (i = 0; i < n; ++i) node = nodes[i], strengths[node.index] = +strength(node, i, nodes);
   }
 
-<<<<<<< HEAD
-/***/ }),
-/* 224 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   function accumulate(treeNode) {
     var strength = 0, q, c, weight = 0, x, y, z, i;
     var numChildren = treeNode.length;
->>>>>>> Add babia-navigator
 
     // For internal nodes, accumulate forces from children.
     if (numChildren) {
@@ -24036,17 +23522,11 @@ function find(nodeById, nodeId) {
     if (!treeNode.value) return true;
     var x2 = [arg1, arg2, arg3][nDim-1];
 
-<<<<<<< HEAD
-/***/ }),
-/* 225 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     var x = treeNode.x - node.x,
         y = (nDim > 1 ? treeNode.y - node.y : 0),
         z = (nDim > 2 ? treeNode.z - node.z : 0),
         w = x2 - x1,
         l = x * x + y * y + z * z;
->>>>>>> Add babia-navigator
 
     // Apply the Barnes-Hut approximation if possible.
     // Limit forces for very close nodes; randomize direction if coincident.
@@ -24074,11 +23554,6 @@ function find(nodeById, nodeId) {
       if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l);
     }
 
-<<<<<<< HEAD
-/***/ }),
-/* 226 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     do if (treeNode.data !== node) {
       w = strengths[treeNode.data.index] * alpha / l;
       node.vx += x * w;
@@ -24086,7 +23561,6 @@ function find(nodeById, nodeId) {
       if (nDim > 2) { node.vz += z * w; }
     } while (treeNode = treeNode.next);
   }
->>>>>>> Add babia-navigator
 
   force.initialize = function(_nodes, ...args) {
     nodes = _nodes;
@@ -24103,15 +23577,9 @@ function find(nodeById, nodeId) {
     return arguments.length ? (distanceMin2 = _ * _, force) : Math.sqrt(distanceMin2);
   };
 
-<<<<<<< HEAD
-/***/ }),
-/* 227 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   force.distanceMax = function(_) {
     return arguments.length ? (distanceMax2 = _ * _, force) : Math.sqrt(distanceMax2);
   };
->>>>>>> Add babia-navigator
 
   force.theta = function(_) {
     return arguments.length ? (theta2 = _ * _, force) : Math.sqrt(theta2);
@@ -24122,11 +23590,7 @@ function find(nodeById, nodeId) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 228 */
-=======
-/* 189 */
->>>>>>> Add babia-navigator
+/* 191 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24201,11 +23665,7 @@ function find(nodeById, nodeId) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 229 */
-=======
-/* 190 */
->>>>>>> Add babia-navigator
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24226,19 +23686,6 @@ function find(nodeById, nodeId) {
     }
   }
 
-<<<<<<< HEAD
-  this._x0 = x0;
-  this._y0 = y0;
-  this._x1 = x1;
-  this._y1 = y1;
-  return this;
-});
-
-
-/***/ }),
-/* 230 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   function initialize() {
     if (!nodes) return;
     var i, n = nodes.length;
@@ -24248,7 +23695,6 @@ function find(nodeById, nodeId) {
       strengths[i] = isNaN(xz[i] = +x(nodes[i], i, nodes)) ? 0 : +strength(nodes[i], i, nodes);
     }
   }
->>>>>>> Add babia-navigator
 
   force.initialize = function(_) {
     nodes = _;
@@ -24259,26 +23705,16 @@ function find(nodeById, nodeId) {
     return arguments.length ? (strength = typeof _ === "function" ? _ : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__constant_js__["a" /* default */])(+_), initialize(), force) : strength;
   };
 
-<<<<<<< HEAD
-/***/ }),
-/* 231 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   force.x = function(_) {
     return arguments.length ? (x = typeof _ === "function" ? _ : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__constant_js__["a" /* default */])(+_), initialize(), force) : x;
   };
->>>>>>> Add babia-navigator
 
   return force;
 });
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 232 */
-=======
-/* 191 */
->>>>>>> Add babia-navigator
+/* 193 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24327,31 +23763,11 @@ function find(nodeById, nodeId) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 233 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = quadtree;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add_js__ = __webpack_require__(228);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover_js__ = __webpack_require__(229);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_js__ = __webpack_require__(230);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent_js__ = __webpack_require__(231);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find_js__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove_js__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root_js__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size_js__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit_js__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter_js__ = __webpack_require__(238);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x_js__ = __webpack_require__(239);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__y_js__ = __webpack_require__(240);
-=======
-/* 192 */
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(11);
->>>>>>> Add babia-navigator
 
 
 /* unused harmony default export */ var _unused_webpack_default_export = (function(z) {
@@ -24396,7 +23812,7 @@ function find(nodeById, nodeId) {
 
 
 /***/ }),
-/* 193 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24425,7 +23841,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-/* 194 */
+/* 196 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24450,11 +23866,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 234 */
-=======
-/* 195 */
->>>>>>> Add babia-navigator
+/* 197 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24468,7 +23880,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-/* 196 */
+/* 198 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24487,7 +23899,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-/* 197 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24505,17 +23917,13 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 235 */
-=======
-/* 198 */
->>>>>>> Add babia-navigator
+/* 200 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__formatDecimal_js__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__formatPrefixAuto_js__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formatRounded_js__ = __webpack_require__(196);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formatRounded_js__ = __webpack_require__(198);
 
 
 
@@ -24538,11 +23946,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 236 */
-=======
-/* 199 */
->>>>>>> Add babia-navigator
+/* 201 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24552,11 +23956,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 237 */
-=======
-/* 200 */
->>>>>>> Add babia-navigator
+/* 202 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24569,11 +23969,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 238 */
-=======
-/* 201 */
->>>>>>> Add babia-navigator
+/* 203 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24586,11 +23982,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 239 */
-=======
-/* 202 */
->>>>>>> Add babia-navigator
+/* 204 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24604,11 +23996,7 @@ function defaultLocale(definition) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 240 */
-=======
-/* 203 */
->>>>>>> Add babia-navigator
+/* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24647,7 +24035,7 @@ var cubehelixLong = cubehelix(__WEBPACK_IMPORTED_MODULE_1__color_js__["b" /* def
 
 
 /***/ }),
-/* 204 */
+/* 206 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24660,11 +24048,7 @@ var cubehelixLong = cubehelix(__WEBPACK_IMPORTED_MODULE_1__color_js__["b" /* def
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 241 */
-=======
-/* 205 */
->>>>>>> Add babia-navigator
+/* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24695,11 +24079,7 @@ var hclLong = hcl(__WEBPACK_IMPORTED_MODULE_1__color_js__["b" /* default */]);
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 242 */
-=======
-/* 206 */
->>>>>>> Add babia-navigator
+/* 208 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24730,11 +24110,7 @@ var hslLong = hsl(__WEBPACK_IMPORTED_MODULE_1__color_js__["b" /* default */]);
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 243 */
-=======
-/* 207 */
->>>>>>> Add babia-navigator
+/* 209 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24751,11 +24127,7 @@ var hslLong = hsl(__WEBPACK_IMPORTED_MODULE_1__color_js__["b" /* default */]);
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 244 */
-=======
-/* 208 */
->>>>>>> Add babia-navigator
+/* 210 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24781,11 +24153,7 @@ function lab(start, end) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 245 */
-=======
-/* 209 */
->>>>>>> Add babia-navigator
+/* 211 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24805,11 +24173,7 @@ function piecewise(interpolate, values) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 246 */
-=======
-/* 210 */
->>>>>>> Add babia-navigator
+/* 212 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24821,11 +24185,7 @@ function piecewise(interpolate, values) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 247 */
-=======
-/* 211 */
->>>>>>> Add babia-navigator
+/* 213 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24837,11 +24197,7 @@ function piecewise(interpolate, values) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 248 */
-=======
-/* 212 */
->>>>>>> Add babia-navigator
+/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24875,32 +24231,22 @@ var identity = {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 249 */
-=======
-/* 213 */
->>>>>>> Add babia-navigator
+/* 215 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export interpolateTransformCss */
 /* unused harmony export interpolateTransformSvg */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__number_js__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parse_js__ = __webpack_require__(214);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parse_js__ = __webpack_require__(216);
 
 
 
 function interpolateTransform(parse, pxComma, pxParen, degParen) {
 
-<<<<<<< HEAD
-/***/ }),
-/* 250 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   function pop(s) {
     return s.length ? s.pop() + " " : "";
   }
->>>>>>> Add babia-navigator
 
   function translate(xa, ya, xb, yb, s, q) {
     if (xa !== xb || ya !== yb) {
@@ -24959,17 +24305,13 @@ var interpolateTransformSvg = interpolateTransform(__WEBPACK_IMPORTED_MODULE_1__
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 251 */
-=======
-/* 214 */
->>>>>>> Add babia-navigator
+/* 216 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = parseCss;
 /* harmony export (immutable) */ __webpack_exports__["b"] = parseSvg;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__decompose_js__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__decompose_js__ = __webpack_require__(214);
 
 
 var svgNode;
@@ -24991,11 +24333,7 @@ function parseSvg(value) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 252 */
-=======
-/* 215 */
->>>>>>> Add babia-navigator
+/* 217 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25026,11 +24364,6 @@ function tanh(x) {
         i,
         S;
 
-<<<<<<< HEAD
-/***/ }),
-/* 253 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     // Special case for u0 ≅ u1.
     if (d2 < epsilon2) {
       S = Math.log(w1 / w0) / rho;
@@ -25042,7 +24375,6 @@ function tanh(x) {
         ];
       }
     }
->>>>>>> Add babia-navigator
 
     // General case.
     else {
@@ -25079,11 +24411,7 @@ function tanh(x) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 254 */
-=======
-/* 216 */
->>>>>>> Add babia-navigator
+/* 218 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25136,11 +24464,6 @@ function add(tree, x, y, z, d) {
   zp = +tree._z.call(null, node.data);
   if (x === xp && y === yp && z === zp) return leaf.next = node, parent ? parent[i] = leaf : tree._root = leaf, tree;
 
-<<<<<<< HEAD
-/***/ }),
-/* 255 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   // Otherwise, split the leaf node until the old and new point are separated.
   do {
     parent = parent ? parent[i] = new Array(8) : tree._root = new Array(8);
@@ -25150,7 +24473,6 @@ function add(tree, x, y, z, d) {
   } while ((i = deep << 2 | bottom << 1 | right) === (j = (zp >= zm) << 2 | (yp >= ym) << 1 | (xp >= xm)));
   return parent[j] = node, parent[i] = leaf, tree;
 }
->>>>>>> Add babia-navigator
 
 function addAll(data) {
   var d, i, n = data.length,
@@ -25197,11 +24519,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 256 */
-=======
-/* 217 */
->>>>>>> Add babia-navigator
+/* 219 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25260,11 +24578,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 257 */
-=======
-/* 218 */
->>>>>>> Add babia-navigator
+/* 220 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25278,7 +24592,7 @@ function addAll(data) {
 
 
 /***/ }),
-/* 219 */
+/* 221 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25290,11 +24604,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 258 */
-=======
-/* 220 */
->>>>>>> Add babia-navigator
+/* 222 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25330,11 +24640,6 @@ function addAll(data) {
 
   while (q = octs.pop()) {
 
-<<<<<<< HEAD
-/***/ }),
-/* 259 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     // Stop searching if this octant can’t contain a closer node.
     if (!(node = q.node)
         || (x1 = q.x0) > x3
@@ -25343,7 +24648,6 @@ function addAll(data) {
         || (x2 = q.x1) < x0
         || (y2 = q.y1) < y0
         || (z2 = q.z1) < z0) continue;
->>>>>>> Add babia-navigator
 
     // Bisect the current octant.
     if (node.length) {
@@ -25390,150 +24694,24 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 260 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__categorical_category10_js__ = __webpack_require__(250);
-/* unused harmony reexport schemeCategory10 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__categorical_Accent_js__ = __webpack_require__(241);
-/* unused harmony reexport schemeAccent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__categorical_Dark2_js__ = __webpack_require__(242);
-/* unused harmony reexport schemeDark2 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__categorical_Paired_js__ = __webpack_require__(243);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_3__categorical_Paired_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__categorical_Pastel1_js__ = __webpack_require__(244);
-/* unused harmony reexport schemePastel1 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__categorical_Pastel2_js__ = __webpack_require__(245);
-/* unused harmony reexport schemePastel2 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__categorical_Set1_js__ = __webpack_require__(246);
-/* unused harmony reexport schemeSet1 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__categorical_Set2_js__ = __webpack_require__(247);
-/* unused harmony reexport schemeSet2 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__categorical_Set3_js__ = __webpack_require__(248);
-/* unused harmony reexport schemeSet3 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__categorical_Tableau10_js__ = __webpack_require__(249);
-/* unused harmony reexport schemeTableau10 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__diverging_BrBG_js__ = __webpack_require__(251);
-/* unused harmony reexport interpolateBrBG */
-/* unused harmony reexport schemeBrBG */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__diverging_PRGn_js__ = __webpack_require__(252);
-/* unused harmony reexport interpolatePRGn */
-/* unused harmony reexport schemePRGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__diverging_PiYG_js__ = __webpack_require__(253);
-/* unused harmony reexport interpolatePiYG */
-/* unused harmony reexport schemePiYG */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__diverging_PuOr_js__ = __webpack_require__(254);
-/* unused harmony reexport interpolatePuOr */
-/* unused harmony reexport schemePuOr */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__diverging_RdBu_js__ = __webpack_require__(255);
-/* unused harmony reexport interpolateRdBu */
-/* unused harmony reexport schemeRdBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__diverging_RdGy_js__ = __webpack_require__(256);
-/* unused harmony reexport interpolateRdGy */
-/* unused harmony reexport schemeRdGy */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__diverging_RdYlBu_js__ = __webpack_require__(257);
-/* unused harmony reexport interpolateRdYlBu */
-/* unused harmony reexport schemeRdYlBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__diverging_RdYlGn_js__ = __webpack_require__(258);
-/* unused harmony reexport interpolateRdYlGn */
-/* unused harmony reexport schemeRdYlGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__diverging_Spectral_js__ = __webpack_require__(259);
-/* unused harmony reexport interpolateSpectral */
-/* unused harmony reexport schemeSpectral */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__sequential_multi_BuGn_js__ = __webpack_require__(261);
-/* unused harmony reexport interpolateBuGn */
-/* unused harmony reexport schemeBuGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__sequential_multi_BuPu_js__ = __webpack_require__(262);
-/* unused harmony reexport interpolateBuPu */
-/* unused harmony reexport schemeBuPu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__sequential_multi_GnBu_js__ = __webpack_require__(263);
-/* unused harmony reexport interpolateGnBu */
-/* unused harmony reexport schemeGnBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__sequential_multi_OrRd_js__ = __webpack_require__(264);
-/* unused harmony reexport interpolateOrRd */
-/* unused harmony reexport schemeOrRd */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__sequential_multi_PuBuGn_js__ = __webpack_require__(266);
-/* unused harmony reexport interpolatePuBuGn */
-/* unused harmony reexport schemePuBuGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__sequential_multi_PuBu_js__ = __webpack_require__(265);
-/* unused harmony reexport interpolatePuBu */
-/* unused harmony reexport schemePuBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__sequential_multi_PuRd_js__ = __webpack_require__(267);
-/* unused harmony reexport interpolatePuRd */
-/* unused harmony reexport schemePuRd */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__sequential_multi_RdPu_js__ = __webpack_require__(268);
-/* unused harmony reexport interpolateRdPu */
-/* unused harmony reexport schemeRdPu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__sequential_multi_YlGnBu_js__ = __webpack_require__(270);
-/* unused harmony reexport interpolateYlGnBu */
-/* unused harmony reexport schemeYlGnBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__sequential_multi_YlGn_js__ = __webpack_require__(269);
-/* unused harmony reexport interpolateYlGn */
-/* unused harmony reexport schemeYlGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__sequential_multi_YlOrBr_js__ = __webpack_require__(271);
-/* unused harmony reexport interpolateYlOrBr */
-/* unused harmony reexport schemeYlOrBr */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__sequential_multi_YlOrRd_js__ = __webpack_require__(272);
-/* unused harmony reexport interpolateYlOrRd */
-/* unused harmony reexport schemeYlOrRd */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__sequential_single_Blues_js__ = __webpack_require__(279);
-/* unused harmony reexport interpolateBlues */
-/* unused harmony reexport schemeBlues */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__sequential_single_Greens_js__ = __webpack_require__(280);
-/* unused harmony reexport interpolateGreens */
-/* unused harmony reexport schemeGreens */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__sequential_single_Greys_js__ = __webpack_require__(281);
-/* unused harmony reexport interpolateGreys */
-/* unused harmony reexport schemeGreys */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__sequential_single_Purples_js__ = __webpack_require__(283);
-/* unused harmony reexport interpolatePurples */
-/* unused harmony reexport schemePurples */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__sequential_single_Reds_js__ = __webpack_require__(284);
-/* unused harmony reexport interpolateReds */
-/* unused harmony reexport schemeReds */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__sequential_single_Oranges_js__ = __webpack_require__(282);
-/* unused harmony reexport interpolateOranges */
-/* unused harmony reexport schemeOranges */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__sequential_multi_cividis_js__ = __webpack_require__(273);
-/* unused harmony reexport interpolateCividis */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__sequential_multi_cubehelix_js__ = __webpack_require__(274);
-/* unused harmony reexport interpolateCubehelixDefault */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__sequential_multi_rainbow_js__ = __webpack_require__(275);
-/* unused harmony reexport interpolateRainbow */
-/* unused harmony reexport interpolateWarm */
-/* unused harmony reexport interpolateCool */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__sequential_multi_sinebow_js__ = __webpack_require__(276);
-/* unused harmony reexport interpolateSinebow */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__sequential_multi_turbo_js__ = __webpack_require__(277);
-/* unused harmony reexport interpolateTurbo */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__sequential_multi_viridis_js__ = __webpack_require__(278);
-/* unused harmony reexport interpolateViridis */
-/* unused harmony reexport interpolateMagma */
-/* unused harmony reexport interpolateInferno */
-/* unused harmony reexport interpolatePlasma */
-
-=======
-/* 221 */
+/* 223 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = octree;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add__ = __webpack_require__(216);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover__ = __webpack_require__(217);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data__ = __webpack_require__(218);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent__ = __webpack_require__(219);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find__ = __webpack_require__(220);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove__ = __webpack_require__(222);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root__ = __webpack_require__(223);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter__ = __webpack_require__(226);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x__ = __webpack_require__(227);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__y__ = __webpack_require__(228);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__z__ = __webpack_require__(229);
->>>>>>> Add babia-navigator
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add__ = __webpack_require__(218);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data__ = __webpack_require__(220);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent__ = __webpack_require__(221);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root__ = __webpack_require__(225);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit__ = __webpack_require__(227);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x__ = __webpack_require__(229);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__y__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__z__ = __webpack_require__(231);
 
 
 
@@ -25615,7 +24793,7 @@ treeProto.z = __WEBPACK_IMPORTED_MODULE_12__z__["b" /* default */];
 
 
 /***/ }),
-/* 222 */
+/* 224 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25691,7 +24869,7 @@ function removeAll(data) {
 
 
 /***/ }),
-/* 223 */
+/* 225 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25701,7 +24879,7 @@ function removeAll(data) {
 
 
 /***/ }),
-/* 224 */
+/* 226 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25715,11 +24893,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 261 */
-=======
-/* 225 */
->>>>>>> Add babia-navigator
+/* 227 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25747,11 +24921,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 262 */
-=======
-/* 226 */
->>>>>>> Add babia-navigator
+/* 228 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25784,7 +24954,7 @@ function removeAll(data) {
 
 
 /***/ }),
-/* 227 */
+/* 229 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25799,11 +24969,7 @@ function defaultX(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 263 */
-=======
-/* 228 */
->>>>>>> Add babia-navigator
+/* 230 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25818,7 +24984,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 229 */
+/* 231 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25833,11 +24999,7 @@ function defaultZ(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 264 */
-=======
-/* 230 */
->>>>>>> Add babia-navigator
+/* 232 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25891,11 +25053,6 @@ function add(tree, x, y, d) {
   return parent[j] = node, parent[i] = leaf, tree;
 }
 
-<<<<<<< HEAD
-/***/ }),
-/* 265 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 function addAll(data) {
   var d, i, n = data.length,
       x,
@@ -25906,7 +25063,6 @@ function addAll(data) {
       y0 = Infinity,
       x1 = -Infinity,
       y1 = -Infinity;
->>>>>>> Add babia-navigator
 
   // Compute the points and their extent.
   for (i = 0; i < n; ++i) {
@@ -25935,11 +25091,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 266 */
-=======
-/* 231 */
->>>>>>> Add babia-navigator
+/* 233 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25989,11 +25141,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 267 */
-=======
-/* 232 */
->>>>>>> Add babia-navigator
+/* 234 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26007,11 +25155,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 268 */
-=======
-/* 233 */
->>>>>>> Add babia-navigator
+/* 235 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26023,11 +25167,7 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 269 */
-=======
-/* 234 */
->>>>>>> Add babia-navigator
+/* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26059,18 +25199,12 @@ function addAll(data) {
 
   while (q = quads.pop()) {
 
-<<<<<<< HEAD
-/***/ }),
-/* 270 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
     // Stop searching if this quadrant can’t contain a closer node.
     if (!(node = q.node)
         || (x1 = q.x0) > x3
         || (y1 = q.y0) > y3
         || (x2 = q.x1) < x0
         || (y2 = q.y1) < y0) continue;
->>>>>>> Add babia-navigator
 
     // Bisect the current quadrant.
     if (node.length) {
@@ -26111,39 +25245,23 @@ function addAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 271 */
-=======
-/* 235 */
->>>>>>> Add babia-navigator
+/* 237 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = quadtree;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add_js__ = __webpack_require__(230);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover_js__ = __webpack_require__(231);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_js__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent_js__ = __webpack_require__(233);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find_js__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove_js__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root_js__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size_js__ = __webpack_require__(238);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit_js__ = __webpack_require__(239);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter_js__ = __webpack_require__(240);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x_js__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__y_js__ = __webpack_require__(242);
-
-
-
-
-
-
-<<<<<<< HEAD
-/***/ }),
-/* 272 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__add_js__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cover_js__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_js__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__extent_js__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__find_js__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__remove_js__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__root_js__ = __webpack_require__(239);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__size_js__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__visit_js__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__visitAfter_js__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__x_js__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__y_js__ = __webpack_require__(244);
 
 
 
@@ -26151,16 +25269,16 @@ function addAll(data) {
 
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 273 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
+
+
+
+
+
+
 function quadtree(nodes, x, y) {
   var tree = new Quadtree(x == null ? __WEBPACK_IMPORTED_MODULE_10__x_js__["a" /* defaultX */] : x, y == null ? __WEBPACK_IMPORTED_MODULE_11__y_js__["a" /* defaultY */] : y, NaN, NaN, NaN, NaN);
   return nodes == null ? tree : tree.addAll(nodes);
 }
->>>>>>> Add babia-navigator
 
 function Quadtree(x, y, x0, y0, x1, y1) {
   this._x = x;
@@ -26178,13 +25296,7 @@ function leaf_copy(leaf) {
   return copy;
 }
 
-<<<<<<< HEAD
-/***/ }),
-/* 274 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
 var treeProto = quadtree.prototype = Quadtree.prototype;
->>>>>>> Add babia-navigator
 
 treeProto.copy = function() {
   var copy = new Quadtree(this._x, this._y, this._x0, this._y0, this._x1, this._y1),
@@ -26226,11 +25338,7 @@ treeProto.y = __WEBPACK_IMPORTED_MODULE_11__y_js__["b" /* default */];
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 275 */
-=======
-/* 236 */
->>>>>>> Add babia-navigator
+/* 238 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26273,14 +25381,8 @@ treeProto.y = __WEBPACK_IMPORTED_MODULE_11__y_js__["b" /* default */];
   while (node.data !== d) if (!(previous = node, node = node.next)) return this;
   if (next = node.next) delete node.next;
 
-<<<<<<< HEAD
-/***/ }),
-/* 276 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
   // If there are multiple coincident points, remove just the point.
   if (previous) return (next ? previous.next = next : delete previous.next), this;
->>>>>>> Add babia-navigator
 
   // If this is the root point, remove it.
   if (!parent) return this._root = next, this;
@@ -26306,11 +25408,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 277 */
-=======
-/* 237 */
->>>>>>> Add babia-navigator
+/* 239 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26320,11 +25418,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 278 */
-=======
-/* 238 */
->>>>>>> Add babia-navigator
+/* 240 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26338,11 +25432,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 279 */
-=======
-/* 239 */
->>>>>>> Add babia-navigator
+/* 241 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26366,11 +25456,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 280 */
-=======
-/* 240 */
->>>>>>> Add babia-navigator
+/* 242 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26399,11 +25485,7 @@ function removeAll(data) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 281 */
-=======
-/* 241 */
->>>>>>> Add babia-navigator
+/* 243 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26418,11 +25500,7 @@ function defaultX(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 282 */
-=======
-/* 242 */
->>>>>>> Add babia-navigator
+/* 244 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26437,11 +25515,7 @@ function defaultY(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 283 */
-=======
-/* 243 */
->>>>>>> Add babia-navigator
+/* 245 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26452,11 +25526,7 @@ function defaultY(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 284 */
-=======
-/* 244 */
->>>>>>> Add babia-navigator
+/* 246 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26467,11 +25537,7 @@ function defaultY(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 285 */
-=======
-/* 245 */
->>>>>>> Add babia-navigator
+/* 247 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26482,7 +25548,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 246 */
+/* 248 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26493,7 +25559,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 247 */
+/* 249 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26504,7 +25570,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 248 */
+/* 250 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26515,7 +25581,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 249 */
+/* 251 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26526,11 +25592,7 @@ function defaultY(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 286 */
-=======
-/* 250 */
->>>>>>> Add babia-navigator
+/* 252 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26541,11 +25603,7 @@ function defaultY(d) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 287 */
-=======
-/* 251 */
->>>>>>> Add babia-navigator
+/* 253 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26556,7 +25614,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 252 */
+/* 254 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26567,7 +25625,7 @@ function defaultY(d) {
 
 
 /***/ }),
-/* 253 */
+/* 255 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26593,7 +25651,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 254 */
+/* 256 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26619,7 +25677,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 255 */
+/* 257 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26645,11 +25703,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 288 */
-=======
-/* 256 */
->>>>>>> Add babia-navigator
+/* 258 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26675,66 +25729,13 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 289 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__band_js__ = __webpack_require__(285);
-/* unused harmony reexport scaleBand */
-/* unused harmony reexport scalePoint */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__identity_js__ = __webpack_require__(288);
-/* unused harmony reexport scaleIdentity */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__linear_js__ = __webpack_require__(10);
-/* unused harmony reexport scaleLinear */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__log_js__ = __webpack_require__(31);
-/* unused harmony reexport scaleLog */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__symlog_js__ = __webpack_require__(34);
-/* unused harmony reexport scaleSymlog */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ordinal_js__ = __webpack_require__(76);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_5__ordinal_js__["a"]; });
-/* unused harmony reexport scaleImplicit */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pow_js__ = __webpack_require__(33);
-/* unused harmony reexport scalePow */
-/* unused harmony reexport scaleSqrt */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__radial_js__ = __webpack_require__(292);
-/* unused harmony reexport scaleRadial */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__quantile_js__ = __webpack_require__(290);
-/* unused harmony reexport scaleQuantile */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__quantize_js__ = __webpack_require__(291);
-/* unused harmony reexport scaleQuantize */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__threshold_js__ = __webpack_require__(294);
-/* unused harmony reexport scaleThreshold */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__time_js__ = __webpack_require__(79);
-/* unused harmony reexport scaleTime */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__utcTime_js__ = __webpack_require__(295);
-/* unused harmony reexport scaleUtc */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__sequential_js__ = __webpack_require__(77);
-/* unused harmony reexport scaleSequential */
-/* unused harmony reexport scaleSequentialLog */
-/* unused harmony reexport scaleSequentialPow */
-/* unused harmony reexport scaleSequentialSqrt */
-/* unused harmony reexport scaleSequentialSymlog */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__sequentialQuantile_js__ = __webpack_require__(293);
-/* unused harmony reexport scaleSequentialQuantile */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__diverging_js__ = __webpack_require__(287);
-/* unused harmony reexport scaleDiverging */
-/* unused harmony reexport scaleDivergingLog */
-/* unused harmony reexport scaleDivergingPow */
-/* unused harmony reexport scaleDivergingSqrt */
-/* unused harmony reexport scaleDivergingSymlog */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__tickFormat_js__ = __webpack_require__(78);
-/* unused harmony reexport tickFormat */
-
-=======
-/* 257 */
+/* 259 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export scheme */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__colors_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ramp_js__ = __webpack_require__(1);
->>>>>>> Add babia-navigator
 
 
 
@@ -26754,7 +25755,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 258 */
+/* 260 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26780,7 +25781,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 259 */
+/* 261 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26806,7 +25807,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 260 */
+/* 262 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26832,7 +25833,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 261 */
+/* 263 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26858,128 +25859,124 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 290 */
-=======
-/* 262 */
->>>>>>> Add babia-navigator
+/* 264 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__categorical_category10_js__ = __webpack_require__(252);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__categorical_category10_js__ = __webpack_require__(254);
 /* unused harmony reexport schemeCategory10 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__categorical_Accent_js__ = __webpack_require__(243);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__categorical_Accent_js__ = __webpack_require__(245);
 /* unused harmony reexport schemeAccent */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__categorical_Dark2_js__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__categorical_Dark2_js__ = __webpack_require__(246);
 /* unused harmony reexport schemeDark2 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__categorical_Paired_js__ = __webpack_require__(245);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__categorical_Paired_js__ = __webpack_require__(247);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_3__categorical_Paired_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__categorical_Pastel1_js__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__categorical_Pastel1_js__ = __webpack_require__(248);
 /* unused harmony reexport schemePastel1 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__categorical_Pastel2_js__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__categorical_Pastel2_js__ = __webpack_require__(249);
 /* unused harmony reexport schemePastel2 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__categorical_Set1_js__ = __webpack_require__(248);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__categorical_Set1_js__ = __webpack_require__(250);
 /* unused harmony reexport schemeSet1 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__categorical_Set2_js__ = __webpack_require__(249);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__categorical_Set2_js__ = __webpack_require__(251);
 /* unused harmony reexport schemeSet2 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__categorical_Set3_js__ = __webpack_require__(250);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__categorical_Set3_js__ = __webpack_require__(252);
 /* unused harmony reexport schemeSet3 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__categorical_Tableau10_js__ = __webpack_require__(251);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__categorical_Tableau10_js__ = __webpack_require__(253);
 /* unused harmony reexport schemeTableau10 */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__diverging_BrBG_js__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__diverging_BrBG_js__ = __webpack_require__(255);
 /* unused harmony reexport interpolateBrBG */
 /* unused harmony reexport schemeBrBG */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__diverging_PRGn_js__ = __webpack_require__(254);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__diverging_PRGn_js__ = __webpack_require__(256);
 /* unused harmony reexport interpolatePRGn */
 /* unused harmony reexport schemePRGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__diverging_PiYG_js__ = __webpack_require__(255);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__diverging_PiYG_js__ = __webpack_require__(257);
 /* unused harmony reexport interpolatePiYG */
 /* unused harmony reexport schemePiYG */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__diverging_PuOr_js__ = __webpack_require__(256);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__diverging_PuOr_js__ = __webpack_require__(258);
 /* unused harmony reexport interpolatePuOr */
 /* unused harmony reexport schemePuOr */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__diverging_RdBu_js__ = __webpack_require__(257);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__diverging_RdBu_js__ = __webpack_require__(259);
 /* unused harmony reexport interpolateRdBu */
 /* unused harmony reexport schemeRdBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__diverging_RdGy_js__ = __webpack_require__(258);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__diverging_RdGy_js__ = __webpack_require__(260);
 /* unused harmony reexport interpolateRdGy */
 /* unused harmony reexport schemeRdGy */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__diverging_RdYlBu_js__ = __webpack_require__(259);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__diverging_RdYlBu_js__ = __webpack_require__(261);
 /* unused harmony reexport interpolateRdYlBu */
 /* unused harmony reexport schemeRdYlBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__diverging_RdYlGn_js__ = __webpack_require__(260);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__diverging_RdYlGn_js__ = __webpack_require__(262);
 /* unused harmony reexport interpolateRdYlGn */
 /* unused harmony reexport schemeRdYlGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__diverging_Spectral_js__ = __webpack_require__(261);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__diverging_Spectral_js__ = __webpack_require__(263);
 /* unused harmony reexport interpolateSpectral */
 /* unused harmony reexport schemeSpectral */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__sequential_multi_BuGn_js__ = __webpack_require__(263);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__sequential_multi_BuGn_js__ = __webpack_require__(265);
 /* unused harmony reexport interpolateBuGn */
 /* unused harmony reexport schemeBuGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__sequential_multi_BuPu_js__ = __webpack_require__(264);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__sequential_multi_BuPu_js__ = __webpack_require__(266);
 /* unused harmony reexport interpolateBuPu */
 /* unused harmony reexport schemeBuPu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__sequential_multi_GnBu_js__ = __webpack_require__(265);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__sequential_multi_GnBu_js__ = __webpack_require__(267);
 /* unused harmony reexport interpolateGnBu */
 /* unused harmony reexport schemeGnBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__sequential_multi_OrRd_js__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__sequential_multi_OrRd_js__ = __webpack_require__(268);
 /* unused harmony reexport interpolateOrRd */
 /* unused harmony reexport schemeOrRd */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__sequential_multi_PuBuGn_js__ = __webpack_require__(268);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__sequential_multi_PuBuGn_js__ = __webpack_require__(270);
 /* unused harmony reexport interpolatePuBuGn */
 /* unused harmony reexport schemePuBuGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__sequential_multi_PuBu_js__ = __webpack_require__(267);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__sequential_multi_PuBu_js__ = __webpack_require__(269);
 /* unused harmony reexport interpolatePuBu */
 /* unused harmony reexport schemePuBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__sequential_multi_PuRd_js__ = __webpack_require__(269);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__sequential_multi_PuRd_js__ = __webpack_require__(271);
 /* unused harmony reexport interpolatePuRd */
 /* unused harmony reexport schemePuRd */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__sequential_multi_RdPu_js__ = __webpack_require__(270);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__sequential_multi_RdPu_js__ = __webpack_require__(272);
 /* unused harmony reexport interpolateRdPu */
 /* unused harmony reexport schemeRdPu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__sequential_multi_YlGnBu_js__ = __webpack_require__(272);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__sequential_multi_YlGnBu_js__ = __webpack_require__(274);
 /* unused harmony reexport interpolateYlGnBu */
 /* unused harmony reexport schemeYlGnBu */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__sequential_multi_YlGn_js__ = __webpack_require__(271);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__sequential_multi_YlGn_js__ = __webpack_require__(273);
 /* unused harmony reexport interpolateYlGn */
 /* unused harmony reexport schemeYlGn */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__sequential_multi_YlOrBr_js__ = __webpack_require__(273);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29__sequential_multi_YlOrBr_js__ = __webpack_require__(275);
 /* unused harmony reexport interpolateYlOrBr */
 /* unused harmony reexport schemeYlOrBr */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__sequential_multi_YlOrRd_js__ = __webpack_require__(274);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__sequential_multi_YlOrRd_js__ = __webpack_require__(276);
 /* unused harmony reexport interpolateYlOrRd */
 /* unused harmony reexport schemeYlOrRd */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__sequential_single_Blues_js__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__sequential_single_Blues_js__ = __webpack_require__(283);
 /* unused harmony reexport interpolateBlues */
 /* unused harmony reexport schemeBlues */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__sequential_single_Greens_js__ = __webpack_require__(282);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_32__sequential_single_Greens_js__ = __webpack_require__(284);
 /* unused harmony reexport interpolateGreens */
 /* unused harmony reexport schemeGreens */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__sequential_single_Greys_js__ = __webpack_require__(283);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_33__sequential_single_Greys_js__ = __webpack_require__(285);
 /* unused harmony reexport interpolateGreys */
 /* unused harmony reexport schemeGreys */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__sequential_single_Purples_js__ = __webpack_require__(285);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34__sequential_single_Purples_js__ = __webpack_require__(287);
 /* unused harmony reexport interpolatePurples */
 /* unused harmony reexport schemePurples */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__sequential_single_Reds_js__ = __webpack_require__(286);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_35__sequential_single_Reds_js__ = __webpack_require__(288);
 /* unused harmony reexport interpolateReds */
 /* unused harmony reexport schemeReds */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__sequential_single_Oranges_js__ = __webpack_require__(284);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_36__sequential_single_Oranges_js__ = __webpack_require__(286);
 /* unused harmony reexport interpolateOranges */
 /* unused harmony reexport schemeOranges */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__sequential_multi_cividis_js__ = __webpack_require__(275);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_37__sequential_multi_cividis_js__ = __webpack_require__(277);
 /* unused harmony reexport interpolateCividis */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__sequential_multi_cubehelix_js__ = __webpack_require__(276);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_38__sequential_multi_cubehelix_js__ = __webpack_require__(278);
 /* unused harmony reexport interpolateCubehelixDefault */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__sequential_multi_rainbow_js__ = __webpack_require__(277);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_39__sequential_multi_rainbow_js__ = __webpack_require__(279);
 /* unused harmony reexport interpolateRainbow */
 /* unused harmony reexport interpolateWarm */
 /* unused harmony reexport interpolateCool */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__sequential_multi_sinebow_js__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_40__sequential_multi_sinebow_js__ = __webpack_require__(280);
 /* unused harmony reexport interpolateSinebow */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__sequential_multi_turbo_js__ = __webpack_require__(279);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_41__sequential_multi_turbo_js__ = __webpack_require__(281);
 /* unused harmony reexport interpolateTurbo */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__sequential_multi_viridis_js__ = __webpack_require__(280);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_42__sequential_multi_viridis_js__ = __webpack_require__(282);
 /* unused harmony reexport interpolateViridis */
 /* unused harmony reexport interpolateMagma */
 /* unused harmony reexport interpolateInferno */
@@ -26998,12 +25995,6 @@ var scheme = new Array(3).concat(
 
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 291 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 
 
@@ -27020,12 +26011,6 @@ var scheme = new Array(3).concat(
 
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 292 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 
 
@@ -27042,7 +26027,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 263 */
+/* 265 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27066,11 +26051,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 293 */
-=======
-/* 264 */
->>>>>>> Add babia-navigator
+/* 266 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27094,7 +26075,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 265 */
+/* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27118,11 +26099,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 294 */
-=======
-/* 266 */
->>>>>>> Add babia-navigator
+/* 268 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27146,7 +26123,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 267 */
+/* 269 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27170,11 +26147,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 295 */
-=======
-/* 268 */
->>>>>>> Add babia-navigator
+/* 270 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27198,11 +26171,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 296 */
-=======
-/* 269 */
->>>>>>> Add babia-navigator
+/* 271 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27226,11 +26195,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 297 */
-=======
-/* 270 */
->>>>>>> Add babia-navigator
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27254,7 +26219,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 271 */
+/* 273 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27278,7 +26243,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 272 */
+/* 274 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27302,7 +26267,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 273 */
+/* 275 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27326,29 +26291,13 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 298 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__timer_js__ = __webpack_require__(37);
-/* unused harmony reexport now */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__timer_js__["a"]; });
-/* unused harmony reexport timerFlush */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__timeout_js__ = __webpack_require__(300);
-/* unused harmony reexport timeout */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interval_js__ = __webpack_require__(299);
-/* unused harmony reexport interval */
-
-=======
-/* 274 */
+/* 276 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export scheme */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__colors_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ramp_js__ = __webpack_require__(1);
->>>>>>> Add babia-navigator
 
 
 
@@ -27366,11 +26315,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 299 */
-=======
-/* 275 */
->>>>>>> Add babia-navigator
+/* 277 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27385,11 +26330,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 300 */
-=======
-/* 276 */
->>>>>>> Add babia-navigator
+/* 278 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27402,14 +26343,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 301 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_index_array_by__ = __webpack_require__(303);
-=======
-/* 277 */
+/* 279 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27417,7 +26351,6 @@ var scheme = new Array(3).concat(
 /* unused harmony export cool */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_color__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__ = __webpack_require__(13);
->>>>>>> Add babia-navigator
 
 
 
@@ -27438,7 +26371,7 @@ var c = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_d3_color__["b" /* cube
 
 
 /***/ }),
-/* 278 */
+/* 280 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27460,7 +26393,7 @@ var c = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_d3_color__["a" /* rgb 
 
 
 /***/ }),
-/* 279 */
+/* 281 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27475,7 +26408,7 @@ var c = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_d3_color__["a" /* rgb 
 
 
 /***/ }),
-/* 280 */
+/* 282 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27502,7 +26435,7 @@ var plasma = ramp(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__colors_js__
 
 
 /***/ }),
-/* 281 */
+/* 283 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27526,7 +26459,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 282 */
+/* 284 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27550,7 +26483,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 283 */
+/* 285 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27574,7 +26507,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 284 */
+/* 286 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27598,13 +26531,8 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 302 */
-/***/ (function(module, exports) {
-=======
-/* 285 */
+/* 287 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
->>>>>>> Add babia-navigator
 
 "use strict";
 /* unused harmony export scheme */
@@ -27627,7 +26555,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-/* 286 */
+/* 288 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27651,11 +26579,7 @@ var scheme = new Array(3).concat(
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 303 */
-=======
-/* 287 */
->>>>>>> Add babia-navigator
+/* 289 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27768,7 +26692,7 @@ function point() {
 
 
 /***/ }),
-/* 288 */
+/* 290 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27781,7 +26705,7 @@ function constants(x) {
 
 
 /***/ }),
-/* 289 */
+/* 291 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27838,15 +26762,6 @@ function transformer() {
     return arguments.length ? (interpolator = _, scale) : interpolator;
   };
 
-<<<<<<< HEAD
-/***/ }),
-/* 304 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(302);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
-=======
   function range(interpolate) {
     return function(_) {
       var r0, r1, r2;
@@ -27855,7 +26770,6 @@ function transformer() {
   }
 
   scale.range = range(__WEBPACK_IMPORTED_MODULE_0_d3_interpolate__["d" /* interpolate */]);
->>>>>>> Add babia-navigator
 
   scale.rangeRound = range(__WEBPACK_IMPORTED_MODULE_0_d3_interpolate__["e" /* interpolateRound */]);
 
@@ -27915,7 +26829,7 @@ function divergingSqrt() {
 
 
 /***/ }),
-/* 290 */
+/* 292 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27953,14 +26867,14 @@ function identity(domain) {
 
 
 /***/ }),
-/* 291 */
+/* 293 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__band_js__ = __webpack_require__(287);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__band_js__ = __webpack_require__(289);
 /* unused harmony reexport scaleBand */
 /* unused harmony reexport scalePoint */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__identity_js__ = __webpack_require__(290);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__identity_js__ = __webpack_require__(292);
 /* unused harmony reexport scaleIdentity */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__linear_js__ = __webpack_require__(10);
 /* unused harmony reexport scaleLinear */
@@ -27974,17 +26888,17 @@ function identity(domain) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pow_js__ = __webpack_require__(33);
 /* unused harmony reexport scalePow */
 /* unused harmony reexport scaleSqrt */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__radial_js__ = __webpack_require__(294);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__radial_js__ = __webpack_require__(296);
 /* unused harmony reexport scaleRadial */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__quantile_js__ = __webpack_require__(292);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__quantile_js__ = __webpack_require__(294);
 /* unused harmony reexport scaleQuantile */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__quantize_js__ = __webpack_require__(293);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__quantize_js__ = __webpack_require__(295);
 /* unused harmony reexport scaleQuantize */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__threshold_js__ = __webpack_require__(296);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__threshold_js__ = __webpack_require__(298);
 /* unused harmony reexport scaleThreshold */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__time_js__ = __webpack_require__(79);
 /* unused harmony reexport scaleTime */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__utcTime_js__ = __webpack_require__(297);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__utcTime_js__ = __webpack_require__(299);
 /* unused harmony reexport scaleUtc */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__sequential_js__ = __webpack_require__(77);
 /* unused harmony reexport scaleSequential */
@@ -27992,9 +26906,9 @@ function identity(domain) {
 /* unused harmony reexport scaleSequentialPow */
 /* unused harmony reexport scaleSequentialSqrt */
 /* unused harmony reexport scaleSequentialSymlog */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__sequentialQuantile_js__ = __webpack_require__(295);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__sequentialQuantile_js__ = __webpack_require__(297);
 /* unused harmony reexport scaleSequentialQuantile */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__diverging_js__ = __webpack_require__(289);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__diverging_js__ = __webpack_require__(291);
 /* unused harmony reexport scaleDiverging */
 /* unused harmony reexport scaleDivergingLog */
 /* unused harmony reexport scaleDivergingPow */
@@ -28014,12 +26928,6 @@ function identity(domain) {
 
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 305 */
-/***/ (function(module, exports, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 
 
@@ -28044,7 +26952,7 @@ function identity(domain) {
 
 
 /***/ }),
-/* 292 */
+/* 294 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28111,7 +27019,7 @@ function quantile() {
 
 
 /***/ }),
-/* 293 */
+/* 295 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28178,7 +27086,7 @@ function quantize() {
 
 
 /***/ }),
-/* 294 */
+/* 296 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28231,15 +27139,9 @@ function radial() {
     return arguments.length ? (round = !!_, scale) : round;
   };
 
-<<<<<<< HEAD
-/***/ }),
-/* 306 */
-/***/ (function(module, exports, __webpack_require__) {
-=======
   scale.clamp = function(_) {
     return arguments.length ? (squared.clamp(_), scale) : squared.clamp();
   };
->>>>>>> Add babia-navigator
 
   scale.unknown = function(_) {
     return arguments.length ? (unknown = _, scale) : unknown;
@@ -28259,7 +27161,7 @@ function radial() {
 
 
 /***/ }),
-/* 295 */
+/* 297 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28308,14 +27210,8 @@ function sequentialQuantile() {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 307 */
-/***/ (function(module, exports, __webpack_require__) {
-
-=======
-/* 296 */
+/* 298 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
->>>>>>> Add babia-navigator
 
 "use strict";
 /* unused harmony export default */
@@ -28363,13 +27259,8 @@ function threshold() {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 308 */
-/***/ (function(module, exports, __webpack_require__) {
-=======
-/* 297 */
+/* 299 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
->>>>>>> Add babia-navigator
 
 "use strict";
 /* unused harmony export default */
@@ -28388,13 +27279,8 @@ function utcTime() {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 309 */
-/***/ (function(module, exports, __webpack_require__) {
-=======
-/* 298 */
+/* 300 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
->>>>>>> Add babia-navigator
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__isoFormat_js__ = __webpack_require__(81);
@@ -28415,7 +27301,7 @@ var parseIso = +new Date("2000-01-01T00:00:00.000Z")
 
 
 /***/ }),
-/* 299 */
+/* 301 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28442,12 +27328,6 @@ var parseIso = +new Date("2000-01-01T00:00:00.000Z")
 
 
 
-<<<<<<< HEAD
-/***/ }),
-/* 310 */
-/***/ (function(module, exports, __webpack_require__) {
-=======
->>>>>>> Add babia-navigator
 
 
 
@@ -28508,23 +27388,11 @@ function ticker(year, month, week, day, hour, minute) {
 const [utcTicks, utcTickInterval] = ticker(__WEBPACK_IMPORTED_MODULE_15__utcYear_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_14__utcMonth_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_13__utcWeek_js__["a" /* utcSunday */], __WEBPACK_IMPORTED_MODULE_12__utcDay_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_11__utcHour_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_10__utcMinute_js__["a" /* default */]);
 const [timeTicks, timeTickInterval] = ticker(__WEBPACK_IMPORTED_MODULE_9__year_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_8__month_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_7__week_js__["a" /* sunday */], __WEBPACK_IMPORTED_MODULE_6__day_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_5__hour_js__["a" /* default */], __WEBPACK_IMPORTED_MODULE_4__minute_js__["a" /* default */]);
 
-<<<<<<< HEAD
-/***/ }),
-/* 311 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const createPatternBuilder = __webpack_require__(14);
-const getVariableName = __webpack_require__(98);
-
-module.exports = generateQuadTreeFunction;
-module.exports.generateQuadTreeFunctionBody = generateQuadTreeFunctionBody;
-=======
->>>>>>> Add babia-navigator
 
 
 
 /***/ }),
-/* 300 */
+/* 302 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28532,9 +27400,9 @@ module.exports.generateQuadTreeFunctionBody = generateQuadTreeFunctionBody;
 /* unused harmony reexport now */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__timer_js__["a"]; });
 /* unused harmony reexport timerFlush */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__timeout_js__ = __webpack_require__(302);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__timeout_js__ = __webpack_require__(304);
 /* unused harmony reexport timeout */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interval_js__ = __webpack_require__(301);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__interval_js__ = __webpack_require__(303);
 /* unused harmony reexport interval */
 
 
@@ -28544,7 +27412,7 @@ module.exports.generateQuadTreeFunctionBody = generateQuadTreeFunctionBody;
 
 
 /***/ }),
-/* 301 */
+/* 303 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28569,7 +27437,7 @@ module.exports.generateQuadTreeFunctionBody = generateQuadTreeFunctionBody;
 
 
 /***/ }),
-/* 302 */
+/* 304 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -28588,11 +27456,11 @@ module.exports.generateQuadTreeFunctionBody = generateQuadTreeFunctionBody;
 
 
 /***/ }),
-/* 303 */
+/* 305 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_index_array_by__ = __webpack_require__(305);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_index_array_by__ = __webpack_require__(307);
 
 
 function _defineProperty(obj, key, value) {
@@ -28865,11 +27733,6 @@ _ref7) {
     data.forEach(function (d) {
       var obj = createObj(d);
 
-<<<<<<< HEAD
-/***/ }),
-/* 312 */
-/***/ (function(module, exports) {
-=======
       if (obj) {
         obj[dataBindAttr] = d;
         d[objBindAttr] = obj;
@@ -28878,7 +27741,6 @@ _ref7) {
     });
     return newObjs;
   }
->>>>>>> Add babia-navigator
 
   function updateObjs(data) {
     data.forEach(function (d) {
@@ -28894,19 +27756,9 @@ _ref7) {
 
 /* harmony default export */ __webpack_exports__["a"] = (viewDigest);
 
-<<<<<<< HEAD
-/***/ }),
-/* 313 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @fileOverview Contains definition of the core graph object.
- */
-=======
->>>>>>> Add babia-navigator
 
 /***/ }),
-/* 304 */
+/* 306 */
 /***/ (function(module, exports) {
 
 /**
@@ -28982,7 +27834,7 @@ module.exports = debounce;
 
 
 /***/ }),
-/* 305 */
+/* 307 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29212,11 +28064,11 @@ var index = (function () {
 
 
 /***/ }),
-/* 306 */
+/* 308 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(304);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(306);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 
 
@@ -29408,13 +28260,8 @@ function index (_ref2) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 314 */
-/***/ (function(module, exports) {
-=======
-/* 307 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> Add babia-navigator
 
 module.exports = createLayout;
 module.exports.simulator = __webpack_require__(99);
@@ -29449,15 +28296,9 @@ function createLayout(graph, physicsSettings) {
 
   var springTransform = physicsSimulator.settings.springTransform || noop;
 
-<<<<<<< HEAD
-/***/ }),
-/* 315 */
-/***/ (function(module, exports) {
-=======
   // Initialize physics with what we have in the graph:
   initPhysics();
   listenToEvents();
->>>>>>> Add babia-navigator
 
   var wasStable = false;
 
@@ -29679,28 +28520,6 @@ function createLayout(graph, physicsSettings) {
     bodiesCount = graph.getNodesCount();
   }
 
-<<<<<<< HEAD
-/***/ }),
-/* 316 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_three__ = __webpack_require__(317);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_force_3d__ = __webpack_require__(183);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngraph_graph__ = __webpack_require__(313);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngraph_graph___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_ngraph_graph__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout__ = __webpack_require__(305);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_ngraph_forcelayout__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_kapsule__ = __webpack_require__(304);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_accessor_fn__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_d3_array__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_data_joint__ = __webpack_require__(301);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_d3_scale__ = __webpack_require__(289);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_d3_scale_chromatic__ = __webpack_require__(260);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_tinycolor2__ = __webpack_require__(318);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_tinycolor2___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_tinycolor2__);
-=======
   function initPhysics() {
     bodiesCount = 0;
 
@@ -29711,7 +28530,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     graph.forEachLink(initLink);
   }
->>>>>>> Add babia-navigator
 
   function initBody(nodeId) {
     var body = nodeBodies.get(nodeId);
@@ -29840,7 +28658,7 @@ function noop() { }
 
 
 /***/ }),
-/* 308 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -29917,7 +28735,7 @@ function generateBoundsFunctionBody(dimension) {
 
 
 /***/ }),
-/* 309 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -29992,7 +28810,7 @@ return {Body: Body, Vector: Vector};
 }
 
 /***/ }),
-/* 310 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createPatternBuilder = __webpack_require__(14);
@@ -30021,7 +28839,7 @@ function generateCreateDragForceFunctionBody(dimension) {
 
 
 /***/ }),
-/* 311 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createPatternBuilder = __webpack_require__(14);
@@ -30074,7 +28892,7 @@ function generateCreateSpringForceFunctionBody(dimension) {
 
 
 /***/ }),
-/* 312 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createPatternBuilder = __webpack_require__(14);
@@ -30129,7 +28947,7 @@ function generateIntegratorFunctionBody(dimension) {
 
 
 /***/ }),
-/* 313 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const createPatternBuilder = __webpack_require__(14);
@@ -30557,7 +29375,7 @@ function InsertStackElement(node, body) {
 }
 
 /***/ }),
-/* 314 */
+/* 316 */
 /***/ (function(module, exports) {
 
 module.exports = Spring;
@@ -30575,7 +29393,7 @@ function Spring(fromBody, toBody, length, springCoefficient) {
 
 
 /***/ }),
-/* 315 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31168,7 +29986,7 @@ function makeLinkId(fromId, toId) {
 
 
 /***/ }),
-/* 316 */
+/* 318 */
 /***/ (function(module, exports) {
 
 module.exports = merge;
@@ -31205,7 +30023,7 @@ function merge(target, options) {
 
 
 /***/ }),
-/* 317 */
+/* 319 */
 /***/ (function(module, exports) {
 
 module.exports = random;
@@ -31350,11 +30168,7 @@ function randomIterator(array, customRandom) {
 }
 
 /***/ }),
-<<<<<<< HEAD
-/* 317 */
-=======
-/* 318 */
->>>>>>> Add babia-navigator
+/* 320 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -80975,11 +79789,7 @@ if ( typeof window !== 'undefined' ) {
 
 
 /***/ }),
-<<<<<<< HEAD
-/* 318 */
-=======
-/* 319 */
->>>>>>> Add babia-navigator
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;// TinyColor v1.4.2
