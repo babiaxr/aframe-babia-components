@@ -107,8 +107,7 @@ AFRAME.registerComponent('babia-selector', {
         })
 
         this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
-            console.log('setPosition')
-            if (e.target = this.selectorController){
+            if (e.target == this.el){
                 this.isPaused = true
                 this.setSelect(e.detail)
                 this.selectorController.emit('babiaStop')
