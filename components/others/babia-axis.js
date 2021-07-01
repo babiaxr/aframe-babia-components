@@ -11,7 +11,7 @@ if (typeof AFRAME === 'undefined') {
 class Axis {
     /*
     * @param el Element
-    * @param axis Axis ('x´, 'y', 'z')
+    * @param axis Axis ('x', 'y', 'z')
     * @param anim Is done with animation?
     * @param dur Duration of the animation
     */
@@ -152,6 +152,63 @@ class Axis {
             el.appendChild(label);
         };
     };
+
+    updateName(name, align, length){
+        const axis = this.axis;
+        let el = this.el;
+        const anim = this.anim;
+        const dur = this.dur;
+
+       // for (let i = 0; i < ticks.length; ++i) {
+            let label = document.createElement('a-entity');
+            label.setAttribute('text', {
+                'value': name,
+                'align': 'right',
+                'width': 10,
+                'color': '#000',
+                'opacity': 0
+            });
+            if (align == "behind" || align == "right"){
+                label.setAttribute('text', {'align': 'left'})
+            }
+            let pos;
+            if (axis === 'x') {
+                if (align == 'behind'){
+                    pos = { x: length + 0.5, y: 0, z: -5.15 };
+                } else {
+                    pos = { x: length + 0.5, y: 0, z: 5.25 };
+                }
+            } else if (axis === 'y') {
+                if (align == "right"){
+                    pos = { x: 5.2, y: length + 0.5, z: 0 };
+                } else {
+                    pos = { x: - 5.2, y: length + 0.5, z: 0 };
+                }
+            } else if (axis === 'z'){
+                if (align == "right"){
+                    pos = { x: 5.2, y: 0, z: length + 0.5 };
+                } else {
+                    pos = { x: - 5.2, y: 0, z: length + 0.5};
+                }
+            }
+            label.setAttribute('position', pos);
+            if (axis === 'x') {
+                label.setAttribute('rotation', { x: -90, y: 90, z: 0 });
+            } else if (axis === 'z'){
+                label.setAttribute('rotation', { x: -90, y: 0, z: 0 });
+            }
+            if (anim) {
+                label.setAttribute('animation', {
+                    'property': 'text.opacity',
+                    'to': 1,
+                    'dur': dur
+                });
+            } else {
+                label.setAttribute('text', {'opacity': 1})
+            };
+            el.appendChild(label);
+       // };
+    }
 }
 
  /*
@@ -174,7 +231,9 @@ AFRAME.registerComponent('babia-axis-y', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels behind to axis.
-        align: { type: 'string', defautl: 'left'}
+        align: { type: 'string', defautl: 'left'},
+        // Name to show on label
+        name: { type: 'string', default: null}
     },
  
     init: function() {
@@ -221,6 +280,9 @@ AFRAME.registerComponent('babia-axis-y', {
             };
             this.axis.updateLabels(ticks, labels, data.color, data.palette, data.align);
         };
+        // Update name in axis label
+        if (data.name) this.axis.updateName(data.name, data.align, data.length);
+        
     }
 });      
 
@@ -246,7 +308,9 @@ AFRAME.registerComponent('babia-axis-x', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels behind of the axis.
-        align: { type: 'string', defautl: 'front'}
+        align: { type: 'string', defautl: 'front'},
+        // Name to show on label
+        name: { type: 'string', default: null}
     },
 
     init: function() {
@@ -263,6 +327,8 @@ AFRAME.registerComponent('babia-axis-x', {
         this.axis.removeLabels();
         // Update labels with new values
         this.axis.updateLabels(data.ticks, data.labels, data.color, data.palette, data.align);
+        // Update name in axis label
+        if (data.name) this.axis.updateName(data.name, data.align, data.length);
      }
 
 });
@@ -289,7 +355,9 @@ AFRAME.registerComponent('babia-axis-z', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels on the right of the axis.
-        align: { type: 'string', defautl: 'left'}
+        align: { type: 'string', defautl: 'left'},
+        // Name to show on label
+        name: { type: 'string', default: null}
     },
 
     init: function() {
@@ -306,6 +374,8 @@ AFRAME.registerComponent('babia-axis-z', {
         this.axis.removeLabels();
         // Update labels with new values
         this.axis.updateLabels(data.ticks, data.labels, data.color, data.palette, data.align);
+        // Update name in axis label
+        if (data.name) this.axis.updateName(data.name, data.align, data.length);
      }
 
 });

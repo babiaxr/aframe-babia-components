@@ -19,6 +19,8 @@ AFRAME.registerComponent('babia-bars', {
         from: { type: 'string' },
         legend: { type: 'boolean', default: false },
         axis: { type: 'boolean', default: true },
+        // Name for axis
+        axis_name: {type: 'boolean', default: false},
         palette: { type: 'string', default: 'ubuntu' },
         title: { type: 'string' },
         titleFont: { type: 'string' },
@@ -288,6 +290,14 @@ AFRAME.registerComponent('babia-bars', {
             this.yAxisEl.setAttribute('position', {
                 x: -this.widthBars/2, y: 0, z: this.widthBars/2
             });
+            if (data.axis_name){
+                if (data.index) {
+                    this.xAxisEl.setAttribute('babia-axis-x', 'name', data.index);
+                } else {
+                    this.xAxisEl.setAttribute('babia-axis-x', 'name', data.x_axis);
+                }
+                this.yAxisEl.setAttribute('babia-axis-y', 'name', data.height);
+            }
         }
     },
 
