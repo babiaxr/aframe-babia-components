@@ -36,11 +36,11 @@ AFRAME.registerComponent('babia-navigator', {
 
 
         // Listener of the other events (should be re-sended to selector)
-        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep']
+        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep', 'babiaSetSpeed']
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
                 // Re-send event
-                if (e.target != this){
+                if (e.target = this){
                     this.selector.el.emit(evt, e.detail)
                 }
 

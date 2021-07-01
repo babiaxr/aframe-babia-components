@@ -107,9 +107,12 @@ AFRAME.registerComponent('babia-selector', {
         })
 
         this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
-            this.isPaused = true
-            this.setSelect(e.detail)
-            this.selectorController.emit('babiaStop')
+            console.log('setPosition')
+            if (e.target = this.selectorController){
+                this.isPaused = true
+                this.setSelect(e.detail)
+                this.selectorController.emit('babiaStop')
+            }
         })
 
         this.el.addEventListener('babiaSetStep',  _listener = (e) => {
@@ -130,15 +133,15 @@ AFRAME.registerComponent('babia-selector', {
             }
         })
 
-        /*this.el.addEventListener('babiaSetSpeed',  _listener = (e) => {
+        this.el.addEventListener('babiaSetSpeed',  _listener = (e) => {
             this.speed = e.detail
-            let timeout = this.data.timeout * this.speed
+            let timeout = this.data.timeout / this.speed
+            let self = this
             clearInterval(this.interval);
             this.interval = window.setInterval(function () {
-                this.loop(this)
+                self.loop(self)
             }, timeout);
-            console.log(this.interval)
-        })*/
+        })
 
     },
 
