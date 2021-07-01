@@ -90,10 +90,13 @@
                 </a-sphere>
             </a-entity>
             <!-- Hand Controls -->
-            <a-entity id="leftHand" laser-controls="hand: left"></a-entity>
-            <a-entity id="rightHand" laser-controls="hand: right"
-                raycaster="showLine: true; far: 100; lineColor: white; lineOpacity: 1"></a-entity>
-            <a-entity id="cursor" cursor="rayOrigin:mouse"></a-entity>
+            <a-entity id="leftHand" oculus-touch-controls="hand: left"
+                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+                                    hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
+                raycaster="objects: .babiaxraycasterclass, #audio_button, #color_button"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button, #color_button">
+            </a-entity>
         </a-entity>
 
 
