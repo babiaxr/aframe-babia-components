@@ -1,0 +1,337 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Desert Demo — Networked-Aframe</title>
+    <meta name="description" content="New Demo NO sharing UI — Networked-Aframe" />
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="../easyrtc.js"></script>
+    <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+    <script src="https://unpkg.com/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+</head>
+
+<body>
+    <a-scene id="AframeScene" networked-scene="
+      room: demo_desert;
+      adapter: easyrtc;
+      debug: true;
+      audio: false;
+      serverURL: empty_server;
+    ">
+
+        <a-assets>
+            <!-- Dummy asset to make the scene sync (WIP)-->
+            <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
+
+            <!-- Templates -->
+            <!-- Avatar -->
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-entity class="avatar" networked-audio-source></a-entity>
+            </template>
+
+            <!-- Bars -->
+            <template id="bars-template">
+                <a-entity class="bars"></a-entity>
+            </template>
+            <!-- Querier, same one for all graphs -->
+            <template id="querier-template">
+                <a-entity class="querier"></a-entity>
+            </template>
+            <!-- Avatar Assets -->
+            <a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
+            <a-asset-item id="bot" src="../../assets/avatars/bot/scene.gltf"></a-asset-item>
+            <a-asset-item id="charmander" src="../../assets/avatars/charmander/scene.gltf"></a-asset-item>
+            <a-asset-item id="dinosaur" src="../../assets/avatars/dinosaur/scene.gltf"></a-asset-item>
+            <a-asset-item id="dwarf" src="../../assets/avatars/dwarf/scene.gltf"></a-asset-item>
+            <a-asset-item id="nigiri" src="../../assets/avatars/nigiri/scene.gltf"></a-asset-item>
+            <a-asset-item id="owl_sleep" src="../../assets/avatars/owl_sleep/scene.gltf"></a-asset-item>
+            <a-asset-item id="penguin" src="../../assets/avatars/penguin/scene.gltf"></a-asset-item>
+            <a-asset-item id="pidgeon" src="../../assets/avatars/pidgeon/scene.gltf"></a-asset-item>
+            <a-asset-item id="rubberduck" src="../../assets/avatars/rubberduck/scene.gltf"></a-asset-item>
+            <a-asset-item id="shiba" src="../../assets/avatars/shiba/scene.gltf"></a-asset-item>
+        </a-assets>
+
+        <!--Sync entities, not persistent-->
+        <a-entity id="rig" position="0 0.5 -7" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+                networked="template:#camera-template;attachTemplateToLocal:false;">
+                <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#dinosaur" visible="false" rotation="0 180 0"
+                    networked="template:#avatar-template;attachTemplateToLocal:false">
+                </a-entity>
+            </a-entity>
+            <!-- Hand Controls -->
+            <a-entity id="leftHand" oculus-touch-controls="hand: left"
+                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+                        hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
+                raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
+            </a-entity>
+        </a-entity>
+
+        <!-- Sync entities, persistent -->
+        <a-entity id="querierData" babia-queryjson="url: ../data_vaccination.json;"
+            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
+
+        <a-entity id="bars" babia-bars='index: country; height: partial; legend: true; axis: true; palette: foxy;  title: babia-bars;
+        titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 100; animation: true;
+           from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
+            position="-5 0.5 -10" rotation="0 0 0" scale="0.25 0.5 0.25"></a-entity>
+
+        <!--Not sync entities-->
+        <a-plane id="audio_button" position="5 1.5 -10" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
+            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+        <a-entity id="ui_bars" babia-ui="target: bars" position="-15 1 -5" rotation="0 45 0" scale="0.5 0.5 0.5">
+        </a-entity>
+
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+    </a-scene>
+
+    <script>
+        /* GET DOM ELEMENTS */
+        let scene = document.getElementById('AframeScene');
+        let avatar = document.getElementById('avatar');
+        let hand_right = document.getElementById('rightHand');
+        let audioButton = document.getElementById('audio_button');
+        let audioLabel = document.getElementById('audio_label');
+        let bars = document.getElementById('bars');
+        let uiDesktop = document.getElementById('ui_bars');
+
+        /* SET AVATAR FROM QUERY STRING */
+        let chosenAvatar = getValueFromQueryString('avatar');
+        if (chosenAvatar) {
+            if (chosenAvatar == 'astro') {
+                avatar.setAttribute("gltf-model", "#astro");
+                avatar.setAttribute('scale', '0.003 0.003 0.003');
+            } else if (chosenAvatar == 'bot') {
+                avatar.setAttribute("gltf-model", "#bot");
+                avatar.setAttribute('scale', '0.2 0.2 0.2');
+                avatar.setAttribute('rotation', '0 90 0');
+                avatar.setAttribute('position', '0 0.6 0');
+            } else if (chosenAvatar == 'charmander') {
+                avatar.setAttribute("gltf-model", "#charmander");
+                avatar.setAttribute('scale', '0.045 0.045 0.045');
+                avatar.setAttribute('position', '0 1 0');
+            } else if (chosenAvatar == 'dinosaur') {
+                avatar.setAttribute("gltf-model", "#dinosaur");
+                avatar.setAttribute('scale', '0.5 0.5 0.5');
+                avatar.setAttribute('position', '0 0.8 0');
+            } else if (chosenAvatar == 'dwarf') {
+                avatar.setAttribute("gltf-model", "#dwarf");
+                avatar.setAttribute('scale', '0.8 0.8 0.8');
+            } else if (chosenAvatar == 'nigiri') {
+                avatar.setAttribute("gltf-model", "#nigiri");
+                avatar.setAttribute('scale', '0.025 0.025 0.025');
+            } else if (chosenAvatar == 'owl_sleep') {
+                avatar.setAttribute("gltf-model", "#owl_sleep");
+                avatar.setAttribute('scale', '0.8 0.8 0.8');
+            } else if (chosenAvatar == 'penguin') {
+                avatar.setAttribute("gltf-model", "#penguin");
+                avatar.setAttribute('scale', '2 2 2');
+                avatar.setAttribute('position', '0 1 0');
+            } else if (chosenAvatar == 'pidgeon') {
+                avatar.setAttribute("gltf-model", "#pidgeon");
+                avatar.setAttribute('scale', '2.8 2.8 2.8');
+                avatar.setAttribute('rotation', '0 0 0');
+            } else if (chosenAvatar == 'rubberduck') {
+                avatar.setAttribute("gltf-model", "#rubberduck");
+                avatar.setAttribute('scale', '2.5 2.5 2.5');
+                avatar.setAttribute('rotation', '0 90 0');
+            } else if (chosenAvatar == 'shiba') {
+                avatar.setAttribute("gltf-model", "#shiba");
+                avatar.setAttribute('scale', '1.5 1.5 1.5');
+                avatar.setAttribute('position', '0 1.5 0');
+            }
+        }
+
+        /* SET SERVER URL FROM QUERY STRING */
+        let serverURL = getValueFromQueryString('serverURL');
+        console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
+        if (serverURL) {
+            scene.setAttribute('networked-scene', 'serverURL', serverURL);
+            scene.setAttribute('networked-scene', 'audio', 'true');
+        }
+
+        /* UI Event Listeners */
+
+        // VR started
+        document.addEventListener('controllerconnected', (event) => {
+            document.querySelector('#rig').setAttribute('position', { x: 0, y: 1.6, z: -7 });
+        });
+
+        // AudioButton
+        audioButton.addEventListener('click', function (event) {
+            if (audioLabel.getAttribute('value') === 'Stop Audio') {
+                stopAudio();
+            } else {
+                turnOnAudio();
+            }
+        });
+
+        // uiDesktop
+        uiDesktop.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(bars)) {
+                NAF.utils.takeOwnership(bars);
+            }
+        });
+
+        document.addEventListener('controllerconnected', (event) => {
+            console.log("controller connected");
+        });
+
+        scene.addEventListener('child-attached', function (event) {
+            if (event.detail.el.id === 'babia-menu-hand') {
+                console.log('uiVR has been added: ', event.target.children["babia-menu-hand"]);
+                let uiVR = document.querySelector('#babia-menu-hand');
+                uiVR.addEventListener('click', function (event) {
+                    if (!NAF.utils.isMine(bars)) {
+                        NAF.utils.takeOwnership(bars);
+                    };
+                });
+            }
+        });
+        /* NAF Messages */
+
+        // Subscriptions
+        NAF.connection.subscribeToDataChannel('hello_message', function (senderId, dataType, data, targetId) {
+            console.log('Message received: ', data);
+        })
+
+        // Senders
+
+        // One client
+        function sendMessage(client, dataType, data) {
+            NAF.connection.sendDataGuaranteed(client, dataType, data);
+            console.log(`message sent to ${client}`);
+        };
+
+        // To everyone
+        function broadcastMessage(dataType, data) {
+            NAF.connection.broadcastDataGuaranteed(dataType, data);
+            console.log(`message broadcasted`);
+        };
+
+        /* NAF Event Listeners */
+
+        // Connected
+        document.body.addEventListener('connected', function (event) {
+            console.log('connected event. clientId =', event.detail.clientId);
+            console.log("Filled serverURL, networked-scene: ", scene.getAttribute('networked-scene'));
+            let message = 'Hello everyone! I am: ' + event.detail.clientId;
+            broadcastMessage('hello_message', message);
+        });
+
+        // Client Connected
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            let message = 'Hello, ' + clientId + '! I am ' + NAF.clientId;
+            sendMessage(clientId, 'hello_message', message);
+        });
+
+        // Client Disconnected
+        document.body.addEventListener('clientDisconnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientDisconnected event. clientId =', clientId);
+        });
+
+        /* Ownership Event Listeners */
+
+        // Bars
+        bars.addEventListener('ownership-gained', e => {
+            console.log("Bars ownership gained");
+        });
+        bars.addEventListener('ownership-lost', e => console.log("Bars ownership lost"));
+
+        /* Other methods */
+
+        // Get Server
+        function getValueFromQueryString(string) {
+            string = string.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + string + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Audio
+        function turnOnAudio() {
+            NAF.connection.adapter.enableMicrophone(true);
+            audioButton.setAttribute('color', '#E44B00');
+            audioLabel.setAttribute('value', 'Stop Audio');
+        }
+
+        function stopAudio() {
+            NAF.connection.adapter.enableMicrophone(false);
+            audioButton.setAttribute('color', '#F8F6F2');
+            audioLabel.setAttribute('value', 'Turn on Audio');
+        }
+
+    </script>
+
+    <script>
+        // Schemas with components and attributes for syncronization
+        NAF.schemas.add({
+            template: '#rig-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#camera-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#avatar-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'gltf-model'
+            ]
+        });
+
+        // Important to add here the graph component
+        NAF.schemas.add({
+            template: '#bars-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-bars'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#querier-template',
+            components: [
+                'babia-queryjson'
+            ]
+        });
+
+    </script>
+</body>
+
+</html>

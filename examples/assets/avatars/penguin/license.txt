@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cute Creature Workshop: Mister Penguin
+* source:	https://sketchfab.com/3d-models/cute-creature-workshop-mister-penguin-29008a78a7874812a2160e19ceda4ca5
+* author:	deryckere (https://sketchfab.com/deryckere)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cute Creature Workshop: Mister Penguin" (https://sketchfab.com/3d-models/cute-creature-workshop-mister-penguin-29008a78a7874812a2160e19ceda4ca5) by deryckere (https://sketchfab.com/deryckere) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

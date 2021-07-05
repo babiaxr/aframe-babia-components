@@ -1,0 +1,180 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Babia Multiuser Demo — Networked-Aframe</title>
+    <meta name="description" content="Demo — Networked-Aframe, Babia Multiuser" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="slideshow">
+        <h1>Babia Multiuser Demo</h1>
+        <h2>Choose a server URL to connect to:</h2>
+        <label for="server_url">Server URL:</label>
+        <input class="input" type="text" id="server_url" name="server_url"
+            value="https://f-l2108-pc02.aulas.etsit.urjc.es:49153/">
+        <h2>Choose an avatar:</h2>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/astro.png">
+            <div class="title">Astronaut</div>
+            <a class="license" href="https://sketchfab.com/3d-models/moon-walk-4a6955a4df8449b5af8ef4c3cd9d0e03">Moon
+                Walk model by
+                EvgenyS (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/bot.png">
+            <div class="title">Bot</div>
+            <a class="license"
+                href="https://sketchfab.com/3d-models/low-poly-robot-rigged-8c6f019a4d15407396b7786d7cb9f4ac">Low poly
+                robot (rigged) model by MrEliptik (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/charmander.png">
+            <div class="title">Charmander</div>
+            <a class="license" href="https://sketchfab.com/3d-models/moon-walk-4a6955a4df8449b5af8ef4c3cd9d0e03">Jolly
+                Wangcore - Avatar
+                Derpy Charmander model by Brunnyyyy (License: CC Attribution)</a>
+        </div>
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/dinosaur.png">
+            <div class="title">Dinosaur</div>
+            <a class="license" href="https://sketchfab.com/3d-models/dinosaur-3e12af7c5c354ea6b01bccfb529a9c02">Dinosaur
+                model by zixisun02 (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/dwarf.png">
+            <div class="title">Dwarf</div>
+            <a class="license"
+                href="https://sketchfab.com/3d-models/dwarf-fat-lowpoly-c43010d152f74d1ab0b251d25ad3f4f3"> dwarf
+                fat_lowpoly model by kumaran0206 (License: CC Attribution-NonCommercial-ShareAlike)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/nigiri.png">
+            <div class="title">Nigiri</div>
+            <a class="license"
+                href="https://sketchfab.com/3d-models/sushi-personnage-be09228bd6444e45ae090957b3f13db1">Sushi
+                personnage
+                model by Lidia.Kulagina (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/owl_sleep.png">
+            <div class="title">Morning Owl</div>
+            <a class="license"
+                href="https://sketchfab.com/3d-models/day-22-morning-face-66e19c96a2014546ac87df440f9ef71f"> Day 22:
+                Morning Face
+                model by Katerina Novakova (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/penguin.png">
+            <div class="title">Penguin</div>
+            <a class="license"
+                href="https://sketchfab.com/3d-models/cute-creature-workshop-mister-penguin-29008a78a7874812a2160e19ceda4ca5">Cute
+                Creature Workshop: Mister Penguin model by @maniani0122 (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/pidgeon.png">
+            <div class="title">Pidgeon</div>
+            <a class="license" href="https://sketchfab.com/3d-models/pegion-2f6e0a400fb0439a9b64ca7549c51198"> Pegion
+                model by
+                KOMIRA.studio (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/rubberduck.png">
+            <div class="title">Rubber Duck</div>
+            <a class="license"
+                href="https://sketchfab.com/3d-models/rubberduck-5b20ca71fe4f475e8838420fd66519d2">RubberDuck model by
+                KOMIRA.studio (License: CC Attribution)</a>
+        </div>
+
+        <div class="character">
+            <img class="photo" src="../../assets/avatars/images/shiba.png">
+            <div class="title">Shiba</div>
+            <a class="license" href="https://sketchfab.com/3d-models/shiba-faef9fe5ace445e7b2989d1c1ece361c">Shiba model
+                by zixisun02
+                (License: CC Attribution)</a>
+        </div>
+
+        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next" onclick="changeSlide(1)">&#10095;</a>
+
+        <div class="dots">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+            <span class="dot" onclick="currentSlide(5)"></span>
+            <span class="dot" onclick="currentSlide(6)"></span>
+            <span class="dot" onclick="currentSlide(7)"></span>
+            <span class="dot" onclick="currentSlide(8)"></span>
+            <span class="dot" onclick="currentSlide(9)"></span>
+            <span class="dot" onclick="currentSlide(10)"></span>
+            <span class="dot" onclick="currentSlide(11)"></span>
+        </div>
+        <ul>
+            <li>
+                <h3>Desert Demo</h3>
+                <input class="btn" type="button" id="start_button" value="Start">
+            </li>
+        </ul>
+    </div>
+
+
+    <script>
+        let startButton = document.getElementById("start_button")
+        let serverUrlInput = document.getElementById("server_url");
+        let serverURL = serverUrlInput.value;
+        let slides = document.getElementsByClassName("character");
+        let dots = document.getElementsByClassName("dot");
+
+        let avatar = "astro"
+        let avatars = ["astro", "bot", "charmander", "dinosaur", "dwarf",
+            "nigiri", "owl_sleep", "penguin", "pidgeon", "rubberduck", "shiba"]
+
+        // Slides 
+        var index = 1;
+
+        showSlides(index);
+        function changeSlide(n) {
+            showSlides(index += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(index = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            if (n > slides.length) { index = 1 }
+            if (n < 1) { index = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[index - 1].style.display = "block";
+            dots[index - 1].className += " active";
+            avatar = avatars[index - 1]
+        }
+
+
+        startButton.addEventListener('click', function (event) {
+            let url = "./desert_demo.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+            window.location.href = url;
+        });
+
+    </script>
+</body>
+
+
+</html>
