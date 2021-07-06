@@ -1,0 +1,254 @@
+[
+    {
+        "date": "04/05/2020", 
+        "country": "Qatar", 
+        "cases": 679, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Saudi_Arabia", 
+        "cases": 1552, 
+        "fatality": "0.00515463917526", 
+        "deaths": 8
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Singapore", 
+        "cases": 657, 
+        "fatality": "0.00152207001522", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "South_Korea", 
+        "cases": 8, 
+        "fatality": "0.25", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Oman", 
+        "cases": 85, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Pakistan", 
+        "cases": 1083, 
+        "fatality": "0.0203139427516", 
+        "deaths": 22
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Palestine", 
+        "cases": 5, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Philippines", 
+        "cases": 295, 
+        "fatality": "0.0135593220339", 
+        "deaths": 4
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Sri_Lanka", 
+        "cases": 13, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Taiwan", 
+        "cases": 4, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Bahrain", 
+        "cases": 99, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Afghanistan", 
+        "cases": 235, 
+        "fatality": "0.0553191489362", 
+        "deaths": 13
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "China", 
+        "cases": 3, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Bangladesh", 
+        "cases": 665, 
+        "fatality": "0.00300751879699", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Indonesia", 
+        "cases": 349, 
+        "fatality": "0.0401146131805", 
+        "deaths": 14
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "India", 
+        "cases": 2553, 
+        "fatality": "0.0282021151586", 
+        "deaths": 72
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Iraq", 
+        "cases": 77, 
+        "fatality": "0.025974025974", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Iran", 
+        "cases": 976, 
+        "fatality": "0.0481557377049", 
+        "deaths": 47
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Japan", 
+        "cases": 218, 
+        "fatality": "0.0825688073394", 
+        "deaths": 18
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Israel", 
+        "cases": 23, 
+        "fatality": "0.130434782609", 
+        "deaths": 3
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Kazakhstan", 
+        "cases": 87, 
+        "fatality": "0.0229885057471", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Jordan", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Kyrgyzstan", 
+        "cases": 35, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Kuwait", 
+        "cases": 364, 
+        "fatality": "0.0137362637363", 
+        "deaths": 5
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Malaysia", 
+        "cases": 122, 
+        "fatality": "0.016393442623", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Lebanon", 
+        "cases": 4, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Mongolia", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Maldives", 
+        "cases": 8, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Nepal", 
+        "cases": 16, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Myanmar", 
+        "cases": 4, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Thailand", 
+        "cases": 3, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Tajikistan", 
+        "cases": 44, 
+        "fatality": "0.0454545454545", 
+        "deaths": 2
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Vietnam", 
+        "cases": 1, 
+        "fatality": "0", 
+        "deaths": 0
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Uzbekistan", 
+        "cases": 22, 
+        "fatality": "0.0454545454545", 
+        "deaths": 1
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "United_Arab_Emirates", 
+        "cases": 564, 
+        "fatality": "0.0124113475177", 
+        "deaths": 7
+    }, 
+    {
+        "date": "04/05/2020", 
+        "country": "Turkey", 
+        "cases": 1670, 
+        "fatality": "0.0365269461078", 
+        "deaths": 61
+    }
+]

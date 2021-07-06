@@ -1,0 +1,128 @@
+[
+    {
+        "date": "04/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 24.972, 
+        "fatality": "0.0519381707512", 
+        "list": "cases"
+    },
+    {
+        "date": "04/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 1.297, 
+        "fatality": "0.0519381707512", 
+        "list": "deaths"
+    },
+    {
+        "date": "03/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 29.288, 
+        "fatality": "0.0449672220705", 
+        "list": "cases"
+    },
+    {
+        "date": "03/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 0.317, 
+        "fatality": "0.0449672220705", 
+        "list": "deaths"
+    }, 
+    {
+        "date": "02/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 33.955, 
+        "fatality": "0.0607274333677", 
+        "list": "cases"
+    }, 
+    {
+        "date": "02/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 2.062, 
+        "fatality": "0.0607274333677", 
+        "list": "deaths"
+    }, 
+    {
+        "date": "01/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 29.917, 
+        "fatality": "0.0681886552796", 
+        "list": "cases"
+    }, 
+    {
+        "date": "01/05/2020", 
+        "country": "United_States_of_America", 
+        "cases": 2.040, 
+        "fatality": "0.0681886552796", 
+        "list": "deaths"
+    },
+    {
+        "date": "30/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 27.326, 
+        "fatality": "0.0955500256166", 
+        "list": "cases"
+    }, 
+    {
+        "date": "30/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 2.611, 
+        "fatality": "0.0955500256166", 
+        "list": "deaths"
+    }, 
+    {
+        "date": "29/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 2.611, 
+        "fatality": "0.087435769932", 
+        "list": "cases"
+    }, 
+    {
+        "date": "29/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 2.110, 
+        "fatality": "0.087435769932", 
+        "list": "deaths"
+    },
+    {
+        "date": "28/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 22.541, 
+        "fatality": "0.0607337740118", 
+        "list": "cases"
+    },
+    {
+        "date": "28/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 1.369, 
+        "fatality": "0.0607337740118", 
+        "list": "deaths"
+    },
+    {
+        "date": "27/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 26.857, 
+        "fatality": "0.0628141639051", 
+        "list": "cases"
+    }, 
+    {
+        "date": "27/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 1.687, 
+        "fatality": "0.0628141639051", 
+        "list": "deaths"
+    }, 
+    {
+        "date": "26/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 48.529, 
+        "fatality": "0.0447567433905", 
+        "list": "cases"
+    },
+    {
+        "date": "26/04/2020", 
+        "country": "United_States_of_America", 
+        "cases": 2.172, 
+        "fatality": "0.0447567433905", 
+        "list": "deaths"
+    }
+]

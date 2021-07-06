@@ -13,13 +13,14 @@ describe('Others examples (screenshot)', () => {
         });
     });
 
-    ['1.0.7', '1.0.11'].forEach((example) => {
+    ['1.0.7', '1.0.11', '1.0.2'].forEach((example) => {
         it(`Screenshot Demo (${example})`, () => {
             cy.visit('/examples/demos/' + example + '/index.html');
             cy.wait(10000);
             cy.screenshot('demo_' + example);
         });
     });
+    
 
     ['500bars_anime', '500bars_100anime', '500simplebars_100anime'].forEach((example) => {
         it(`Screenshot Performance ${example} Example`, () => {

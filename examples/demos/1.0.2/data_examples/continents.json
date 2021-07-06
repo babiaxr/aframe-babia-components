@@ -1,0 +1,132 @@
+[
+    {
+        "date": "06/07/2021", 
+        "country": "South_Africa", 
+        "cases": 207.5409, 
+        "fatality": "0.0300", 
+        "deaths": 6.2171,
+        "continentExp": "Africa"
+    }, 
+
+    {
+        "date": "06/07/2021", 
+        "country": "Egypt", 
+        "cases": 28.2257, 
+        "fatality": "0.0577", 
+        "deaths": 1.6284,
+        "continentExp": "Africa"
+    }, 
+ 
+    {
+        "date": "06/07/2021", 
+        "country": "Morocco", 
+        "cases": 53.4797, 
+        "fatality": "0.0174", 
+        "deaths": 0.9329,
+        "continentExp": "Africa"
+    }, 
+
+    {
+        "date": "06/07/2021", 
+        "country": "Ukraine", 
+        "cases": 223.8364, 
+        "fatality": "0.0238", 
+        "deaths": 5.2504,
+        "continentExp": "Europe"
+    },  
+ 
+    {
+        "date": "06/07/2021", 
+        "country": "Italy", 
+        "cases": 426.3797, 
+        "fatality": "0.0299", 
+        "deaths": 12.7680,
+        "continentExp": "Europe"
+    }, 
+  
+
+    {
+        "date": "06/07/2021", 
+        "country": "Belgium", 
+        "cases": 108.8363, 
+        "fatality": "0.0232", 
+        "deaths": 2.5190,
+        "continentExp": "Europe"
+    },    
+    {
+        "date": "06/07/2021", 
+        "country": "Germany", 
+        "cases": 373.8843, 
+        "fatality": "0.0244", 
+        "deaths": 9.1595,
+        "continentExp": "Europe"
+    },   
+    {
+        "date": "06/07/2021", 
+        "country": "Netherlands", 
+        "cases": 169.0625, 
+        "fatality": "0.0105", 
+        "deaths": 1.7757,
+        "continentExp": "Europe"
+    },  
+
+    {
+        "date": "06/07/2021", 
+        "country": "Romania", 
+        "cases": 108.0979, 
+        "fatality": "0.0314", 
+        "deaths": 3.3973,
+        "continentExp": "Europe"
+    },
+
+    {
+        "date": "06/07/2021", 
+        "country": "Canada", 
+        "cases": 141.7639, 
+        "fatality": "0.0185", 
+        "deaths": 2.6368,
+        "continentExp": "America"
+    }, 
+
+    {
+        "date": "06/07/2021", 
+        "country": "Colombia", 
+        "cases": 437.5861, 
+        "fatality": "0.0250", 
+        "deaths": 10.9466,
+        "continentExp": "America"
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Chile", 
+        "cases": 157.2608, 
+        "fatality": "0.0211", 
+        "deaths": 3.3249,
+        "continentExp": "America"
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Ecuador", 
+        "cases": 46.2649, 
+        "fatality": "0.0469", 
+        "deaths": 2.1695,
+        "continentExp": "America"
+    }, 
+
+    {
+        "date": "06/07/2021", 
+        "country": "Mexico", 
+        "cases": 254.1873, 
+        "fatality": "0.0920", 
+        "deaths": 23.3689,
+        "continentExp": "America"
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Peru", 
+        "cases": 206.6677, 
+        "fatality": "0.0940", 
+        "deaths": 19.3389,
+        "continentExp": "America"
+    }
+]
