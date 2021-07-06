@@ -88,7 +88,8 @@
         <a-entity id="querierData" babia-queryjson="url: ../data_vaccination.json;"
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
 
-        <a-entity id="bars" babia-bars='index: country; height: partial; legend: true; axis: true; palette: foxy;  title: babia-bars;
+        <a-entity id="bars"
+            babia-bars='index: country; height: partial; legend: true; axis: true; axis_name: true; palette: foxy;  title: babia-bars;
         titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 100; animation: true;
            from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
             position="-5 0.5 -10" rotation="0 0 0" scale="0.25 0.5 0.25"></a-entity>
