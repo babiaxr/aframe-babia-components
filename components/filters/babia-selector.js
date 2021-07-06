@@ -67,7 +67,7 @@ AFRAME.registerComponent('babia-selector', {
         // Field to use as selector
         select: { type: 'string', default: 'date'},
         // Timeout for moving to the next selection
-        timeout: { type: 'number', default: 3000 },
+        timeout: { type: 'number', default: 6000 },
         // data, for debugging, highest priority
         data: { type: 'string' }
     },

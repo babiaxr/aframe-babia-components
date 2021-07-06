@@ -303,7 +303,7 @@ AFRAME.registerComponent('babia-speed-controller', {
     this.sliderEl.setAttribute('babia-slider', {
         size: 1,
         min: 1,
-        max: 10,
+        max: 3,
         value: 1,
         vertical: true
     }); // When implement with selector, add the attributes
