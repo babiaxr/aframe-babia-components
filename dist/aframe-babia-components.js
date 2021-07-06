@@ -7642,7 +7642,7 @@ AFRAME.registerComponent('babia-selector', {
         // Field to use as selector
         select: { type: 'string', default: 'date'},
         // Timeout for moving to the next selection
-        timeout: { type: 'number', default: 3000 },
+        timeout: { type: 'number', default: 6000 },
         // data, for debugging, highest priority
         data: { type: 'string' }
     },
@@ -9810,7 +9810,7 @@ AFRAME.registerComponent('babia-speed-controller', {
     this.sliderEl.setAttribute('babia-slider', {
         size: 1,
         min: 1,
-        max: 10,
+        max: 3,
         value: 1,
         vertical: true
     }); // When implement with selector, add the attributes
