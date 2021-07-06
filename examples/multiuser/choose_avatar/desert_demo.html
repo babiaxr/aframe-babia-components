@@ -182,7 +182,8 @@
 
         // VR started
         document.addEventListener('controllerconnected', (event) => {
-            rig.setAttribute('position', { x: 0, y: 0.5, z: -7 });
+            rig.setAttribute('position', "0 0 -7");
+            avatar.setAttribute('position', "0 0 0");
         });
 
         // AudioButton
