@@ -108,6 +108,7 @@
     <script>
         /* GET DOM ELEMENTS */
         let scene = document.getElementById('AframeScene');
+            let rig = document.querySelector('#rig');
         let avatar = document.getElementById('avatar');
         let hand_right = document.getElementById('rightHand');
         let audioButton = document.getElementById('audio_button');
@@ -116,6 +117,7 @@
         let uiDesktop = document.getElementById('ui_bars');
 
         /* SET AVATAR FROM QUERY STRING */
+            let y = 0;
         let chosenAvatar = getValueFromQueryString('avatar');
         if (chosenAvatar) {
             if (chosenAvatar == 'astro') {
@@ -174,7 +176,7 @@
 
         // VR started
         document.addEventListener('controllerconnected', (event) => {
-            document.querySelector('#rig').setAttribute('position', { x: 0, y: 1.6, z: -7 });
+            rig.setAttribute('position', { x: 0, y: 0, z: -7 });
         });
 
         // AudioButton
