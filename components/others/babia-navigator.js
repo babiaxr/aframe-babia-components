@@ -28,7 +28,12 @@ AFRAME.registerComponent('babia-navigator', {
         });
 
         this.el.addEventListener('babiaSelectorDataUpdated', _listener = (e) => {
-            this.current = e.detail.selectable.current
+            if (this.toPresent){
+                this.current = e.detail.selectable.current - 1
+            } else {
+                this.current = e.detail.selectable.current + 1
+            }
+            
             if ((this.current >= this.sliderEl.min) && (this.current <= this.sliderEl.max)){
                 this.sliderEl.setAttribute('babia-slider', 'value', this.current)
             }
