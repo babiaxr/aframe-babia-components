@@ -92,7 +92,7 @@
             babia-bars='index: country; height: partial; legend: true; axis: true; axis_name: true; palette: foxy;  title: babia-bars;
         titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 100; animation: true;
            from: querierData' networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
-            position="-5 0.5 -10" rotation="0 0 0" scale="0.25 0.5 0.25"></a-entity>
+            position="-5 0.1 -10" rotation="0 0 0" scale="0.25 0.5 0.25"></a-entity>
 
         <!--Not sync entities-->
         <a-plane id="audio_button" position="5 1.5 -10" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
@@ -184,7 +184,7 @@
         // VR started
         document.addEventListener('controllerconnected', (event) => {
             rig.setAttribute('position', "0 0 -7");
-            avatar.setAttribute('position', "0 0 0");
+            avatar.setAttribute('position', "0 -1.5 0");
         });
 
         // AudioButton
