@@ -7673,17 +7673,22 @@ AFRAME.registerComponent('babia-selector', {
 
         this.el.addEventListener('babiaToPresent',  _listener = (e) => {
             this.toPresent = true
-            this.selectable.current += 2
+            if (this.selectable.current != this.selectable.length){
+                this.selectable.current += 2
+            }
         })
 
         this.el.addEventListener('babiaToPast',  _listener = (e) => {
             this.toPresent = false
-            this.selectable.current -= 2
+            if (this.selectable.current < 1){
+                this.selectable.current = 0
+            } else {
+                this.selectable.current -= 2
+            }
         })
 
         this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
-            console.log('setPosition')
-            if (e.target = this.selectorController){
+            if (e.target == this.el){
                 this.isPaused = true
                 this.setSelect(e.detail)
                 this.selectorController.emit('babiaStop')
@@ -7804,21 +7809,19 @@ AFRAME.registerComponent('babia-selector', {
                 this.dataComponent.register(el);
             };    
         }
-  
     },
 
     nextSelect: function() {
-        console.log(this.selectable.current)
         if (this.selectable.current > this.selectable.length - 1){
             this.selectable.current = this.selectable.length - 1
             this.isPaused = true
             this.selectorController.emit('babiaStop')
-            this.selectorController.emit("babiaSelectorDataUpdated", this)
         }
         this.babiaData = this.selectable.next();
         this.babiaMetadata = { id: this.selectable.current };
         // Dispatch interested events
         dataReadyToSend("babiaData", this);
+        this.selectorController.emit("babiaSelectorDataUpdated", this)
     },
 
     prevSelect: function() {
@@ -7827,12 +7830,12 @@ AFRAME.registerComponent('babia-selector', {
             this.babiaMetadata = { id: this.selectable.current };
             // Dispatch interested events
             dataReadyToSend("babiaData", this);  
+            this.selectorController.emit("babiaSelectorDataUpdated", this)
         } else {
             this.selectable.current = 0
             this.isPaused = true
             this.selectorController.emit('babiaStop')
         }
-
     },
 
     setSelect: function(value) {
@@ -7845,6 +7848,7 @@ AFRAME.registerComponent('babia-selector', {
         }
         // Dispatch interested events
         dataReadyToSend("babiaData", this);
+        this.selectorController.emit("babiaSelectorDataUpdated", this)
     },
 
     /**
@@ -9382,7 +9386,12 @@ AFRAME.registerComponent('babia-navigator', {
         });
 
         this.el.addEventListener('babiaSelectorDataUpdated', _listener = (e) => {
-            this.current = e.detail.selectable.current
+            if (this.toPresent){
+                this.current = e.detail.selectable.current - 1
+            } else {
+                this.current = e.detail.selectable.current + 1
+            }
+            
             if ((this.current >= this.sliderEl.min) && (this.current <= this.sliderEl.max)){
                 this.sliderEl.setAttribute('babia-slider', 'value', this.current)
             }
@@ -9393,8 +9402,8 @@ AFRAME.registerComponent('babia-navigator', {
         let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep', 'babiaSetSpeed']
         events.forEach(evt => {
             this.el.addEventListener(evt, _listener = (e) => {
-                // Re-send event
-                if (e.target = this){
+                // Re-send event                
+                if (e.target == this.el){
                     this.selector.el.emit(evt, e.detail)
                 }
 
