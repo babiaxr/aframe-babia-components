@@ -81,6 +81,7 @@ This component shows a simple 2D bar chart.
 | height          | the **numeric** field of the data that will define the height of the bars | string | height |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| axis_name | Shows metric labels on axis | boolean | false |
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
@@ -115,6 +116,7 @@ This component shows a bars map.
 | height          | the **numeric** field of the data that will define the height of the bars | string | height |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
+| axis_name | Shows metric labels on axis | boolean | false |
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |

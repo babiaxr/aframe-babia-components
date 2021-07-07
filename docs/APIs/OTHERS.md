@@ -49,3 +49,76 @@ To work needs to indicate it inside the selector
 ```html
    <a-entity id="nav" babia-navigator></a-entity>
 ```
+
+### babia-axis components
+
+The axis components add axis to the graphs. It is currently available for babia-bars and babia-barsmap components.
+
+#### **babia-axis-x component**
+
+This component adds a x axis to the graph.
+
+#### API
+
+| Property       | Description           | Type   | Default value |
+| --------       | -----------           | ----   | ----- |
+| labels         | List of labels to show | array | - |
+| ticks          | Points where labels are added in the axis | array | - |
+| length         | Length of the axis | number | - |
+| color          | Color for axis and labels | color | #000 |
+| palette        | Color palette for axis and labels:`blues` `bussiness` `sunset`. [See more](CHARTS.md)) **Important**: If the value is not **None**, it will disable `color` attribute. | string | ' ' |
+| animation      | Animates the axis if true | boolean | true |
+| dur            | Duration of animation | number | 2000 |
+| align          | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**| string | front |
+| name           | Metric name to show on title label. | string | - |
+
+```html
+    <a-entity babia-axis-x = 'labels: countries, ticks: calculatedTicks, length: 10, palette: ubuntu,
+    align: behind, name: country'></a-entity>
+```
+
+
+#### **babia-axis-y component**
+
+This component adds a y axis to the graph.
+
+#### API
+
+| Property       | Description           | Type   | Default value |
+| --------       | -----------           | ----   | ----- |
+| maxValue       | Maximum value that this axis will show | number | - |
+| length         | Length of the axis | number | - |
+| minSteps       | Minimum number of steps | number | 6 |
+| color          | Color for axis and labels | color | #000 |
+| animation      | Animates the axis if true | boolean | true |
+| dur            | Duration of animation | number | 2000 |
+| align          | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**| string | front |
+| name           | Metric name to show on title label. | string | - |
+
+```html
+    <a-entity babia-axis-y = 'maxValue: 250, length: 10, color: #fff,
+    align: left'></a-entity>
+```
+
+#### **babia-axis-z component**
+
+This component adds a z axis to the graph.
+
+#### API
+
+| Property       | Description           | Type   | Default value |
+| --------       | -----------           | ----   | ----- |
+| labels         | List of labels to show | array | - |
+| ticks          | Points where labels are added in the axis | array | - |
+| length         | Length of the axis | number | - |
+| color          | Color for axis and labels | color | #000 |
+| palette        | Color palette for axis and labels. **Important**: If the value is not **None**, it will disable `color` attribute. | string | ' ' |
+| animation      | Animates the axis if true | boolean | true |
+| dur            | Duration of animation | number | 2000 |
+| align          | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**| string | front |
+| name           | Metric name to show on title label. | string | - |
+
+```html
+    <a-entity babia-axis-z = 'labels: continents, ticks: calculatedTicks, length: 10, palette: pearl,
+    align: front, name: continent'></a-entity>
+```

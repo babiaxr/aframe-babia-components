@@ -49,7 +49,7 @@ describe ('babia-barsmap component', () => {
 
 describe('Babia-barsmap component examples (screenshot)', () => {
 
-    ['', '_querier'].forEach((example) => {
+    ['', '_querier', '_axis_name'].forEach((example) => {
         it(`Screenshot barsmap (${example})`, () => {
             cy.visit('/examples/charts'+ example+ '/barsmap' + example + '/index.html');
             cy.wait(5000);

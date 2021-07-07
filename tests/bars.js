@@ -79,7 +79,7 @@ describe ('Babia-Bars component', () => {
 
 describe('Babia-bars component examples (screenshot)', () => {
 
-    ['', '_querier'].forEach((example) => {
+    ['', '_querier', '_axis_name'].forEach((example) => {
         it(`Screenshot Bars (${example})`, () => {
             cy.visit('/examples/charts'+ example+ '/bars' + example + '/index.html');
             cy.wait(5000);
