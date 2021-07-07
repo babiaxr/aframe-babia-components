@@ -243,10 +243,14 @@
 
                 <!-- Controls and Camera -->
                 <a-entity lounge-entry-point>
-                        <a-entity camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false">
+                        <a-entity movement-controls="fly: false" position="3 -3.5 0">
+                                <a-entity camera position="0 0 0" look-controls></a-entity>
+                                <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass">
+                                </a-entity>
+                                <a-entity laser-controls="hand: right" oculus-touch-controls="hand: right" raycaster="objects: .babiaxraycasterclass">
+                                </a-entity>
+                                <a-entity id="leftHand" oculus-touch-controls="hand: left"></a-entity>
                         </a-entity>
-                        <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
-                        <a-entity laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
                 </a-entity>
 
         </a-scene>
