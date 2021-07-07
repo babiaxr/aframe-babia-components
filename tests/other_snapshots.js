@@ -20,6 +20,7 @@ describe('Others examples (screenshot)', () => {
             cy.screenshot('demo_' + example);
         });
     });
+    
 
     ['500bars_anime', '500bars_100anime', '500simplebars_100anime'].forEach((example) => {
         it(`Screenshot Performance ${example} Example`, () => {

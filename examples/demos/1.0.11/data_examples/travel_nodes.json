@@ -1,0 +1,48 @@
+[
+    {
+        "date": "06/07/2021", 
+        "country": "Spain",
+        "population": 46.7
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Portugal",
+        "population": 10.2
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Italy",
+        "population": 60.5
+    },
+    {
+        "date": "06/07/2021", 
+        "country": "Finland",
+        "population": 5.5
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Russia",
+        "population": 145.9
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Germany",
+        "population": 83.7
+    },
+    {
+        "date": "06/07/2021", 
+        "country": "Mexico",
+        "population": 128.9
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "Belgium",
+        "population": 11.6
+    }, 
+    {
+        "date": "06/07/2021", 
+        "country": "France",
+        "population": 65.3
+    }
+]
+   

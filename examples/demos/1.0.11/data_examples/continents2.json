@@ -2,131 +2,138 @@
     {
         "date": "06/07/2021", 
         "country": "South_Africa", 
-        "cases": 207.5409, 
+        "cases": 20.75409, 
         "fatality": "0.0300", 
-        "deaths": 6.2171,
+        "deaths": 0.62171,
         "continentExp": "Africa"
     }, 
 
     {
         "date": "06/07/2021", 
         "country": "Egypt", 
-        "cases": 28.2257, 
+        "cases": 2.82257, 
         "fatality": "0.0577", 
-        "deaths": 1.6284,
+        "deaths": 0.16284,
         "continentExp": "Africa"
     }, 
  
     {
         "date": "06/07/2021", 
         "country": "Morocco", 
-        "cases": 53.4797, 
+        "cases": 5.34797, 
         "fatality": "0.0174", 
-        "deaths": 0.9329,
+        "deaths": 0.09329,
         "continentExp": "Africa"
     }, 
 
     {
         "date": "06/07/2021", 
         "country": "Ukraine", 
-        "cases": 223.8364, 
+        "cases": 22.38364, 
         "fatality": "0.0238", 
-        "deaths": 5.2504,
+        "deaths": 0.52504,
         "continentExp": "Europe"
     },  
  
     {
         "date": "06/07/2021", 
         "country": "Italy", 
-        "cases": 426.3797, 
+        "cases": 42.63797, 
         "fatality": "0.0299", 
-        "deaths": 12.7680,
+        "deaths": 1.27680,
         "continentExp": "Europe"
     }, 
   
-
     {
         "date": "06/07/2021", 
         "country": "Belgium", 
-        "cases": 108.8363, 
+        "cases": 10.88363, 
         "fatality": "0.0232", 
-        "deaths": 2.5190,
+        "deaths": 0.25190,
         "continentExp": "Europe"
     },    
     {
         "date": "06/07/2021", 
         "country": "Germany", 
-        "cases": 373.8843, 
+        "cases": 37.38843, 
         "fatality": "0.0244", 
-        "deaths": 9.1595,
+        "deaths": 0.91595,
         "continentExp": "Europe"
     },   
     {
         "date": "06/07/2021", 
         "country": "Netherlands", 
-        "cases": 169.0625, 
+        "cases": 16.90625, 
         "fatality": "0.0105", 
-        "deaths": 1.7757,
+        "deaths": 0.17757,
         "continentExp": "Europe"
     },  
 
     {
         "date": "06/07/2021", 
         "country": "Romania", 
-        "cases": 108.0979, 
+        "cases": 10.80979, 
         "fatality": "0.0314", 
-        "deaths": 3.3973,
+        "deaths": 0.33973,
         "continentExp": "Europe"
     },
 
     {
         "date": "06/07/2021", 
+        "country": "Bolivia", 
+        "cases": 4.46362, 
+        "fatality": "0.0381", 
+        "deaths": 0.16985,
+        "continentExp": "America"
+    }, 
+    {
+        "date": "06/07/2021", 
         "country": "Canada", 
-        "cases": 141.7639, 
+        "cases": 14.17639, 
         "fatality": "0.0185", 
-        "deaths": 2.6368,
+        "deaths": 0.26368,
         "continentExp": "America"
     }, 
 
     {
         "date": "06/07/2021", 
         "country": "Colombia", 
-        "cases": 437.5861, 
+        "cases": 43.75861, 
         "fatality": "0.0250", 
-        "deaths": 10.9466,
+        "deaths": 1.09466,
         "continentExp": "America"
     }, 
     {
         "date": "06/07/2021", 
         "country": "Chile", 
-        "cases": 157.2608, 
+        "cases": 15.72608, 
         "fatality": "0.0211", 
-        "deaths": 3.3249,
+        "deaths": 0.33249,
         "continentExp": "America"
     }, 
     {
         "date": "06/07/2021", 
         "country": "Ecuador", 
-        "cases": 46.2649, 
+        "cases": 4.62649, 
         "fatality": "0.0469", 
-        "deaths": 2.1695,
+        "deaths": 0.21695,
         "continentExp": "America"
     }, 
 
     {
         "date": "06/07/2021", 
         "country": "Mexico", 
-        "cases": 254.1873, 
+        "cases": 25.41873, 
         "fatality": "0.0920", 
-        "deaths": 23.3689,
+        "deaths": 2.33689,
         "continentExp": "America"
     }, 
     {
         "date": "06/07/2021", 
         "country": "Peru", 
-        "cases": 206.6677, 
+        "cases": 20.66677, 
         "fatality": "0.0940", 
-        "deaths": 19.3389,
+        "deaths": 1.93389,
         "continentExp": "America"
     }
 ]
