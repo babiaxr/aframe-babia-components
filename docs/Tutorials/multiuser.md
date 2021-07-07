@@ -139,60 +139,84 @@ This could be useful if we want to add a button that controls something related 
 
 ## Special cases
 
-### Special case 1: **movement-controls**
+### Special case 1: **avatar, camera and rig**
 
-To syncronize the entity with movement-controls component, that has a child entity with camera component, we simply do not add movement-controls to the schema, but just position and rotation. In this case, we are going to create a different template and schema for the parent and the child.
+To syncronize the avatar that is inside our camera component, we first have to syncronize the entity "rig" that contains the camera, cursor and hands. For that we simply just add position and rotation to the "rig-template" schema and the "camera-template" schema. Then we add all needed attributes to "avatar-template" schema. In this case, we are going to create a different template and schema for the parents and the children.
 
-In this case, we do not want the entities to be persistent, sine we would like to have an entity per client connected.
+In this case, we do not want the entities to be persistent, since we would like to have an entity per client connected.
+
+
 
 ```html
-<!-- TEMPLATES -->
-<!-- Parent Entity-->
-<template id="mov-template">
-   <a-entity class="mov"></a-entity>
-</template>
+<!-- Templates -->
+    <template id="rig-template">
+        <a-entity class="rig"></a-entity>
+    </template>
+    <template id="camera-template">
+        <a-entity class="camera"></a-entity>
+    </template>
+    <template id="avatar-template">
+        <a-entity class="avatar" networked-audio-source></a-entity>
+    </template>
 
-<!-- Child Entity, with camera-->
-<template id="avatar-template">
-   <a-sphere class="avatar" scale="0.45 0.5 0.4"></a-sphere>
-</template>
 
 <!-- ENTITIES -->
-<!-- Parent Entity, with movement-controls-->
-<a-entity id="mov" movement-controls="fly: true" position="0 3 10" rotation="0 30 0" networked="template:#mov-template; attachTemplateToLocal:false">
-
-    <!-- Child Entity, with camera-->
-    <a-sphere id="avatar" camera color="#66FFFF" position="0 1 0" look-controls networked="template:#avatar-template; attachTemplateToLocal:false;"></a-sphere>
-
-    <!-- Other entities needed -->
-    <a-entity cursor="rayOrigin:mouse"></a-entity>
-    <a-entity laser-controls="hand: right"></a-entity>
-
+<!-- Rig entity -->
+<a-entity id="rig" position="0 0.5 -7"      networked="template:#rig-template; attachTemplateToLocal:false">
+    <!-- Camera entity -->
+    <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+    networked="template:#camera-template;attachTemplateToLocal:false;">
+        <!-- Avatar entity -->
+        <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#dinosaur" visible="false" rotation="0 180 0" networked="template:#avatar-template; attachTemplateToLocal:false">
+        </a-entity>
+    </a-entity>
+    <!-- Hand Controls -->
+    <a-entity id="leftHand" oculus-touch-controls="hand: left" teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+    <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
+    <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
 </a-entity>
+
 ```
 ```javascript
 /* SCHEMAS*/
-
-// Parent entity
-NAF.schemas.add({ 
-    template: '#mov-template', 
-    components: [ 
-        'position', 
-        'rotation' 
-        ] 
+NAF.schemas.add({
+    template: '#rig-template',
+    components: [
+        'position',
+        'rotation'
+    ]
 });
 
-// Child entity
-NAF.schemas.add({ 
-    template: '#avatar-template', 
-    components: [ 
-        'position', 
-        'rotation', 
-        'color' 
-        ] 
+NAF.schemas.add({
+    template: '#camera-template',
+    components: [
+        'position',
+        'rotation'
+    ]
 });
+
+NAF.schemas.add({
+    template: '#avatar-template',
+    components: [
+        'position',
+        'rotation',
+        'scale',
+        'gltf-model'
+    ]
+});
+
 ```
-### Special case 2: **babia graphs**
+
+
+### Special case 2: **avatar**
+
+Imagine we have an avatar created around us, right where we are, so that when we move around the scene, everybody sees us. If this avatar is pretty big, we would not be able to see through it, since the camera would be right in the middle of its body. In this case we probably want it to not be visible, so we can set the visible attribute to "false" and not add it to the schema. This way we would not see our own avatar, but everyone else will se it.
+
+```html
+<a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#dinosaur" visible="false" rotation="0 180 0" networked="template:#avatar-template;attachTemplateToLocal:false">
+```
+
+### Special case 3: **babia graphs**
 
 In order to syncronize any babia graph, we have to add it to the schema of the entity that contains it.
 
@@ -220,7 +244,7 @@ NAF.schemas.add({
 });
 ```
 
-### Special case 3: **babia querier**
+### Special case 4: **babia querier**
 
 If we are using a querier to get the data it needs to be syncronized as well, so we need to add it to the schema of the entity that contains it.
 
@@ -244,6 +268,34 @@ NAF.schemas.add({
         'babia-queryjson'
     ]
 })
+```
+
+### Special case 5: **babia ui**
+
+If we have an ui for a graph, when we interact with it, we have to ask ffor the ownership of the graph:
+
+```javascript
+ui.addEventListener('click', function (event){
+    if (!NAF.utils.isMine(graph)) {
+        NAF.utils.takeOwnership(graph);
+    }
+});
+```
+When we enter VR and this ui goes to our hand, we are creating a new entity for the ui, and therefore we have to add the eventListener one more time:
+
+```javascript
+scene.addEventListener('child-attached', function (event) {
+    if (event.detail.el.id === 'babia-menu-hand') {
+        event.target.children["babia-menu-hand"]);
+        let uiVR = document.querySelector('#babia-menu-hand');
+        uiVR.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(graph)) {
+                NAF.utils.takeOwnership(graph);
+            };
+        });
+    }
+});
+
 ```
 
 ## Audio
