@@ -39,3 +39,13 @@ The look-at component defines the behavior for an entity to dynamically rotate o
 ```html
     <a-entity id="monster" geometry="primitive: box" material="src: url(monster.png)" look-at="[camera]"></a-entity>
 ```
+
+### babia-navigator component
+
+The navigator component creates a timeline with all indexes of the selector component and lets manage it using player, speed, and step controllers.
+
+To work needs to indicate it inside the selector
+
+```html
+   <a-entity id="nav" babia-navigator></a-entity>
+```

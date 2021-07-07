@@ -34,3 +34,22 @@ This component must be used with one of the `babia-query` or `babia-filter` comp
 | from            | Id of one of the querier/filter components  | string | - |
 | field | Field of the data that will define the tree | string   | - |
 | split_by | Character that will be used for split the field selected of the data, building a tree (i.e `split_by="/"` ) | char   | - |
+
+
+### babia-selector component
+
+This component must be used with one of the `babia-query` components. This component works like a filter but changing over time.
+
+By selecting a property to filter the data (for example, by date), it will be sorted and displayed on the visualizer every X seconds. 
+
+You need the `babia-navigator` to manage the progress.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| from            | Id of one of the querier components  | string | - |
+| controller           | Id of one of the navigator component  | string | - |
+| select            | Field to filter data  | string | `date` |
+| timeout            | Time between points of time in seconds  | number | 6000 |
+| data          | Embedded data to filter. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
