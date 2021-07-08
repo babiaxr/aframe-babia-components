@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Babia Bars with Axis Names</title>
+    <meta name="description" content="Example of babia-bars adding axis with their names" />
+
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+
+    <script src="https://unpkg.com/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
+
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+</head>
+
+<body>
+    <a-scene id="AframeScene">
+        <a-assets>
+            <a-asset-item id="optimerBoldFont"
+                src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
+        </a-assets>
+        <a-entity environment></a-entity>
+        <a-light type="ambient" intensity="0.5" position="-30 20 30"></a-light>
+
+        <a-entity id="rig" position="-7 2.5 0" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera look-controls wasd-controls="fly: false"></a-entity>
+            <!-- Hand Controls -->
+            <a-entity id="leftHand" oculus-touch-controls="hand: left"
+                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+                        hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
+                raycaster="objects: .babiaxraycasterclass, #audio_button, #color_button"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+        </a-entity>
+
+        <a-entity id="querierData" babia-queryjson="url: ./data2.json;"></a-entity>
+
+        <a-entity id="bars"
+            babia-bars='index: name; x_axis: name; height: age; legend: true; axis: true; axis_name: true; palette: pearl;  title: babia-bars;
+        titleColor: #fff; titleFont: #optimerBoldFont; titlePosition: -8.5 0.3 0.5; heightMax: 170; animation: true; from: querierData'
+            position="-5 1 -7" rotation="0 0 0" scale="0.55 0.5 0.5"></a-entity>
+
+        <a-entity id="ui_bars" babia-ui="target: bars" position="-10 1 -7" rotation="0 45 0" scale="0.5 0.5 0.5">
+        </a-entity>
+
+    </a-scene>
+
+
+    </script>
+
+
+</body>
+
+</html>
