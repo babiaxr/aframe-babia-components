@@ -273,6 +273,10 @@
                 </g>
             </svg></a></div>
     <script>
+            let scene = document.getElementById('scene');
+            let rig = document.querySelector('#rig');
+            let avatar = document.getElementById('avatar');
+            let hand_right = document.getElementById('rightHand');
         let doughnut = document.getElementById('doughnut')
         let uiDesktop = document.getElementById('ui_doughnut')
 
@@ -282,8 +286,7 @@
                 NAF.utils.takeOwnership(doughnut)
             }
         });
-        scene.addEventListener('child-attached', function (event) {
-            console.log(event);
+                scene.addEventListener('child-attached', function (event) {
             if (event.detail.el.id === 'babia-menu-hand') {
                 console.log('uiVR has been added: ', event.target.children["babia-menu-hand"])
                 let uiVR = document.querySelector('#babia-menu-hand')
