@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>BabiaXR Multiuser Demo - COVID-19 Data into BabiaXr Charts with Multiuser Mode </title>
+    <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
+    </meta>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+    <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+    <script src="./dist/aframe-lounge-component.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <script src="../../multiuser/easyrtc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+    <script src="https://unpkg.com/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
+
+    <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+
+    <style>
+        h1 {
+            color: #AAAAAA;
+            font-family: 'Archivo', sans-serif;
+            font-size: 45px;
+            text-align: center;
+            text-shadow: black 0.1em 0.1em 0.2em
+        }
+
+        p {
+            color: #444444;
+            font-family: 'Archivo', sans-serif;
+            font-size: 26px;
+            text-align: justify;
+            text-shadow: #AAAAAA 0.1em 0.1em 0.2em
+        }
+    </style>
+</head>
+
+<body>
+    <a-scene id="scene" light="defaultLightsEnabled: false" networked-scene="
+        room: demo_museum;
+        adapter: easyrtc;
+        debug: true;
+        audio: false;
+        serverURL: empty_server;
+    ">
+
+        <!-- Assets -->
+        <a-assets>
+            <!-- Dummy asset to make the scene sync (WIP)-->
+            <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
+
+            <!-- Templates -->
+            <!-- Avatar -->
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-entity class="avatar" networked-audio-source></a-entity>
+            </template>
+            <!-- Lounge -->
+            <template id="lounge-template">
+                <a-entity class="lounge"></a-entity>
+            </template>
+            <!-- Bars -->
+            <template id="bars-template">
+                <a-entity class="bars"></a-entity>
+            </template>
+            <!-- Doughnut -->
+            <template id="doughnut-template">
+                <a-entity class="doughnut"></a-entity>
+            </template>
+            <!-- Bubbles -->
+            <template id="bubbles-template">
+                <a-entity class="bubbles"></a-entity>
+            </template>
+            <!-- Cylsmap -->
+            <template id="cylsmap-template">
+                <a-entity class="cylsmap"></a-entity>
+            </template>
+            <!-- City -->
+            <template id="city-template">
+                <a-entity class="city"></a-entity>
+            </template>
+            <!-- City -->
+            <template id="network-template">
+                <a-entity class="network"></a-entity>
+            </template>
+            <!-- Queriers -->
+            <template id="querier-template">
+                <a-entity class="querier"></a-entity>
+            </template>
+
+            <!-- Scene Assets -->
+            <img id="sky" src="./assets/360-panorama.jpg">
+            <img id="floor" src="./assets/floor-texture.jpg">
+            <img id="metalic" src="./assets/metalic-texture.jpg">
+            <!-- Avatar Assets -->
+            <a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
+            <!--<a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
+            <a-asset-item id="bot" src="../../assets/avatars/bot/scene.gltf"></a-asset-item>
+            <a-asset-item id="charmander" src="../../assets/avatars/charmander/scene.gltf"></a-asset-item>
+            <a-asset-item id="dinosaur" src="../../assets/avatars/dinosaur/scene.gltf"></a-asset-item>
+            <a-asset-item id="dwarf" src="../../assets/avatars/dwarf/scene.gltf"></a-asset-item>
+            <a-asset-item id="nigiri" src="../../assets/avatars/nigiri/scene.gltf"></a-asset-item>
+            <a-asset-item id="owl_sleep" src="../../assets/avatars/owl_sleep/scene.gltf"></a-asset-item>
+            <a-asset-item id="penguin" src="../../assets/avatars/penguin/scene.gltf"></a-asset-item>
+            <a-asset-item id="pidgeon" src="../../assets/avatars/pidgeon/scene.gltf"></a-asset-item>
+            <a-asset-item id="rubberduck" src="../../assets/avatars/rubberduck/scene.gltf"></a-asset-item>
+            <a-asset-item id="shiba" src="../../assets/avatars/shiba/scene.gltf"></a-asset-item>-->
+
+        </a-assets>
+
+        <!-- Querier Components -->
+        <a-entity id="networknodes" babia-queryjson="url: ./data_examples/travel_nodes.json;"
+            networked="template:#querier-template; networkId:nodesquerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="networklinks" babia-queryjson="url: ./data_examples/travel_links.json;"
+            networked="template:#querier-template; networkId:linksquerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="doughnutdata" babia-queryjson="url: ./data_examples/asia.json;"
+            networked="template:#querier-template; networkId:doughnutquerier; persistent: true; owner: scene">
+        </a-entity>
+        <a-entity id="bardata" babia-queryjson="url: ./data_examples/usa2.json;"
+            networked="template:#querier-template; networkId:barsquerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="continentsdata" babia-queryjson="url: ./data_examples/continents.json;"
+            networked="template:#querier-template; networkId:continentsquerier; persistent: true; owner: scene">
+        </a-entity>
+
+        <!-- Enviroment -->
+        <a-sky src="#sky"></a-sky>
+
+        <!-- Aframe Lounge -->
+        <a-entity networked="template:#lounge-template; networkId:lounge; persistent: true; owner: scene" id="lounge"
+            position="5 0 0" lounge="width: 40; depth: 50; height: 10;
+            north: barrier; floorTexture: ./assets/floor-texture.jpg">
+
+            <!-- Simple Components -->
+            <a-entity networked="template:#lounge-template; networkId:doughnut_lounge; persistent: true; owner: scene"
+                position="6 0 2" lounge-plinth="width: 4; depth: 4" lounge-staydown scale="0.5 0.5 0.5">
+                <a-entity id="doughnut"
+                    networked="template:#doughnut-template; networkId:doughnut; persistent: true; owner: scene"
+                    babia-doughnut='legend: true; palette: pearl; from: doughnutdata; key: country; size: cases'
+                    position="0 2.5 0" rotation="90 -45 0" scale="1.5 1.5 1.5"></a-entity>
+            </a-entity>
+            <a-entity networked="template:#lounge-template; networkId:bars_lounge; persistent: true; owner: scene"
+                position="0 0 8" rotation="0 180 0" lounge-plinth="width: 6.5; depth: 4" lounge-staydown
+                scale="0.5 0.5 0.5">
+                <a-entity id="bar" networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
+                    babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths'
+                    position="-2.25 0.275 0" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+            </a-entity>
+
+            <!-- 3D Components -->
+            <a-entity networked="template:#lounge-template; networkId:bubbles_lounge; persistent: true; owner: scene"
+                position="-2 0 -1" lounge-plinth="width: 10; depth: 4" lounge-staydown scale="0.5 0.5 0.5">
+                <a-entity id="bubbles"
+                    networked="template:#bubbles-template; networkId:bubbles; persistent: true; owner: scene"
+                    babia-bubbles='legend: true; palette: ubuntu; radiusMax: 2.2; heightMax: 30; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
+                    position="-4.35 0.275 0" rotation="0 0 0" scale="0.15 0.15 0.15"></a-entity>
+            </a-entity>
+            <a-entity networked="template:#lounge-template; networkId:clysmap_lounge; persistent: true; owner: scene"
+                position="-5 0 5" lounge-plinth="width: 3; depth: 9.8" lounge-staydown rotation="0 0 0"
+                scale="0.5 0.5 0.5">
+                <a-entity id="3dcylinder"
+                    networked="template:#cylsmap-template; networkId:cylsmap; persistent: true; owner: scene"
+                    babia-cylsmap='legend: true; palette: flat; heightMax: 100; radiusMax: 2; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
+                    position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.09 0.09"></a-entity>
+            </a-entity>
+
+            <!-- CodeCity Component-->
+            <a-entity networked="template:#lounge-template; networkId:city_lounge; persistent: true; owner: scene"
+                position="5 3 6" lounge-plinth="width: 6; depth: 6" lounge-staydown scale="0.5 0.5 0.5">
+                <a-entity position="0 0.25 0" id="codecity" babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
+                                extra: 1.5; base_thick: 0.3; split: pivot; titles: true; time_evolution_delta: 3000;
+                                 data: ./main_data.json' scale="0.3 0.3 0.3" rotation="0 180 0"
+                    networked="template:#city-template; networkId:city; persistent: true; owner: scene">
+                </a-entity>
+            </a-entity>
+
+            <!-- Network Component -->
+            <a-entity networked="template:#lounge-template; networkId:network_lounge; persistent: true; owner: scene"
+                position="3 3 -3" lounge-plinth="width: 6; depth: 6" lounge-staydown scale="0.5 0.5 0.5">
+                <a-entity id="network" babia-network='nodesFrom: networknodes; linksFrom: networklinks;
+                    nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
+                    nodeResolution: 20; nodeVal: population; nodeRelSize: 1; 
+                    linkWidth: 0.1; nodeLegend: true;' scale="0.1 0.1 0.1" rotation="0 0 -90" position="0 5 0"
+                    networked="template:#network-template; networkId:network; persistent: true; owner: scene">
+                </a-entity>
+            </a-entity>
+
+            <!-- UI Component -->
+            <a-entity id="ui_doughnut" babia-ui="target: doughnut" position="18 -1 9" rotation="0 -90 0"
+                scale="0.4 0.7 0.5">
+            </a-entity>
+
+        </a-entity>
+
+        <!-- Lights -->
+        <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+
+
+        <!--Sync entities, not persistent-->
+        <!--<a-entity lounge-entry-point id="rig" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false"
+                networked="template:#camera-template;attachTemplateToLocal:false;">
+                <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
+                    networked="template:#avatar-template;attachTemplateToLocal:false">
+                </a-entity>
+            </a-entity>-->
+        <!-- Hand Controls -->
+        <!--<a-entity id="leftHand" oculus-touch-controls="hand: left"
+            teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+                        hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger">
+            </>
+            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
+                raycaster="objects: .babiaxraycasterclass"></a-entity>
+            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass">
+            </a-entity>
+            </a-entity>-->
+
+        <!-- Controls and Camera -->
+        <a-entity lounge-entry-point>
+            <a-entity camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false">
+            </a-entity>
+            <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+            <a-entity laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
+        </a-entity>
+
+
+    </a-scene>
+    <div class="gitlab-corner-wrapper"><a
+            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/demos/1.0.11/index.html"
+            class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                <g id="g44">
+                    <path id="path46" class="cls-1"
+                        d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                </g>
+                <g id="g48">
+                    <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                </g>
+                <g id="g56">
+                    <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                </g>
+                <g id="g64">
+                    <path id="path66" class="cls-3"
+                        d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                </g>
+                <g id="g72">
+                    <path id="path74" class="cls-2"
+                        d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                </g>
+                <g id="g76">
+                    <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                </g>
+                <g id="g80">
+                    <path id="path82" class="cls-3"
+                        d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                </g>
+                <g id="g84">
+                    <path id="path86" class="cls-2"
+                        d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                </g>
+            </svg></a></div>
+    <script>
+        let doughnut = document.getElementById('doughnut')
+        let uiDesktop = document.getElementById('ui_doughnut')
+
+        // uiDesktop
+        uiDesktop.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(doughnut)) {
+                NAF.utils.takeOwnership(doughnut)
+            }
+        });
+        scene.addEventListener('child-attached', function (event) {
+            console.log(event);
+            if (event.detail.el.id === 'babia-menu-hand') {
+                console.log('uiVR has been added: ', event.target.children["babia-menu-hand"])
+                let uiVR = document.querySelector('#babia-menu-hand')
+                uiVR.addEventListener('click', function (event) {
+                    if (!NAF.utils.isMine(doughnut)) {
+                        NAF.utils.takeOwnership(doughnut)
+                    };
+                });
+            }
+        });
+
+        // Schemas with components and attributes for syncronization
+        NAF.schemas.add({
+            template: '#rig-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#camera-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#avatar-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'gltf-model'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#lounge-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#bars-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-bars'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#doughnut-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-doughnut'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#cylsmap-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-cylsmap'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#bubbles-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-bubbles'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#city-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babiaxr-codecity'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#network-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-network'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#querier-template',
+            components: [
+                'babia-queryjson'
+            ]
+        });
+
+    </script>
+
+</body>
+
+</html>
