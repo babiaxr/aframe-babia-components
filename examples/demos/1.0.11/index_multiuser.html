@@ -49,8 +49,8 @@
         room: demo_museum;
         adapter: easyrtc;
         debug: true;
-        audio: false;
-        serverURL: empty_server;
+        audio: true;
+        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/;
     ">
 
         <!-- Assets -->
@@ -286,6 +286,7 @@
                 NAF.utils.takeOwnership(doughnut)
             }
         });
+
                 scene.addEventListener('child-attached', function (event) {
             if (event.detail.el.id === 'babia-menu-hand') {
                 console.log('uiVR has been added: ', event.target.children["babia-menu-hand"])
