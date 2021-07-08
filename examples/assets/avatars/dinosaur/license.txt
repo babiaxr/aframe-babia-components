@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dinosaur
+* source:	https://sketchfab.com/3d-models/dinosaur-3e12af7c5c354ea6b01bccfb529a9c02
+* author:	zixisun02 (https://sketchfab.com/dogerlo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dinosaur" (https://sketchfab.com/3d-models/dinosaur-3e12af7c5c354ea6b01bccfb529a9c02) by zixisun02 (https://sketchfab.com/dogerlo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
