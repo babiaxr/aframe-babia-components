@@ -380,6 +380,18 @@
             }
                 });
 
+            // Other methods
+
+            // Get Server
+            function getValueFromQueryString(string) {
+                string = string.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + string + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(window.location.href);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
         // Schemas with components and attributes for syncronization
         NAF.schemas.add({
             template: '#rig-template',
