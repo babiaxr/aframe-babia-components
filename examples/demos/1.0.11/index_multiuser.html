@@ -50,7 +50,7 @@
         adapter: easyrtc;
         debug: true;
         audio: true;
-        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/;
+        serverURL: empty_server;
     ">
 
         <!-- Assets -->
@@ -108,7 +108,7 @@
             <img id="metalic" src="./assets/metalic-texture.jpg">
             <!-- Avatar Assets -->
             <a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
-            <!--<a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
+            <a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
             <a-asset-item id="bot" src="../../assets/avatars/bot/scene.gltf"></a-asset-item>
             <a-asset-item id="charmander" src="../../assets/avatars/charmander/scene.gltf"></a-asset-item>
             <a-asset-item id="dinosaur" src="../../assets/avatars/dinosaur/scene.gltf"></a-asset-item>
@@ -118,7 +118,7 @@
             <a-asset-item id="penguin" src="../../assets/avatars/penguin/scene.gltf"></a-asset-item>
             <a-asset-item id="pidgeon" src="../../assets/avatars/pidgeon/scene.gltf"></a-asset-item>
             <a-asset-item id="rubberduck" src="../../assets/avatars/rubberduck/scene.gltf"></a-asset-item>
-            <a-asset-item id="shiba" src="../../assets/avatars/shiba/scene.gltf"></a-asset-item>-->
+            <a-asset-item id="shiba" src="../../assets/avatars/shiba/scene.gltf"></a-asset-item>
 
         </a-assets>
 
@@ -228,14 +228,6 @@
             </a-entity>
             </a-entity>
 
-        <!-- Controls and Camera -->
-        <!--<a-entity lounge-entry-point>
-            <a-entity camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false">
-            </a-entity>
-            <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
-            <a-entity laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
-        </a-entity>-->
-
     </a-scene>
     <div class="gitlab-corner-wrapper"><a
             href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/demos/1.0.11/index.html"
@@ -279,6 +271,96 @@
         let doughnut = document.getElementById('doughnut')
         let uiDesktop = document.getElementById('ui_doughnut')
 
+                    /* SET AVATAR FROM QUERY STRING */
+                    let y = 0;
+                    let chosenAvatar = getValueFromQueryString('avatar');
+                    if (chosenAvatar) {
+                        if (chosenAvatar == 'astro') {
+                            avatar.setAttribute("gltf-model", "#astro");
+                            avatar.setAttribute('scale', '0.003 0.003 0.003');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'bot') {
+                            avatar.setAttribute("gltf-model", "#bot");
+                            avatar.setAttribute('scale', '0.2 0.2 0.2');
+                            avatar.setAttribute('rotation', '0 90 0');
+                            avatar.setAttribute('position', '0 0.1 0');
+                        } else if (chosenAvatar == 'charmander') {
+                            avatar.setAttribute("gltf-model", "#charmander");
+                            avatar.setAttribute('scale', '0.045 0.045 0.045');
+                            avatar.setAttribute('position', '0 0.5 0');
+                        } else if (chosenAvatar == 'dinosaur') {
+                            avatar.setAttribute("gltf-model", "#dinosaur");
+                            avatar.setAttribute('scale', '0.5 0.5 0.5');
+                            avatar.setAttribute('position', '0 0.3 0');
+                        } else if (chosenAvatar == 'dwarf') {
+                            avatar.setAttribute("gltf-model", "#dwarf");
+                            avatar.setAttribute('scale', '0.8 0.8 0.8');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'nigiri') {
+                            avatar.setAttribute("gltf-model", "#nigiri");
+                            avatar.setAttribute('scale', '0.025 0.025 0.025');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'owl_sleep') {
+                            avatar.setAttribute("gltf-model", "#owl_sleep");
+                            avatar.setAttribute('scale', '0.8 0.8 0.8');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'penguin') {
+                            avatar.setAttribute("gltf-model", "#penguin");
+                            avatar.setAttribute('scale', '2 2 2');
+                            avatar.setAttribute('position', '0 1 0');
+                        } else if (chosenAvatar == 'pidgeon') {
+                            avatar.setAttribute("gltf-model", "#pidgeon");
+                            avatar.setAttribute('scale', '2.8 2.8 2.8');
+                            avatar.setAttribute('rotation', '0 0 0');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'rubberduck') {
+                            avatar.setAttribute("gltf-model", "#rubberduck");
+                            avatar.setAttribute('scale', '2.5 2.5 2.5');
+                            avatar.setAttribute('rotation', '0 90 0');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'shiba') {
+                            avatar.setAttribute("gltf-model", "#shiba");
+                            avatar.setAttribute('scale', '1.5 1.5 1.5');
+                            avatar.setAttribute('position', '0 1 0');
+                        }
+                    }
+
+                    /* SET SERVER URL FROM QUERY STRING */
+                    let serverURL = getValueFromQueryString('serverURL');
+                    console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
+                    if (serverURL) {
+                        scene.setAttribute('networked-scene', 'serverURL', serverURL);
+                        scene.setAttribute('networked-scene', 'audio', 'true');
+                    }
+                    /* UI Event Listeners */
+
+                    // VR started
+                    document.addEventListener('controllerconnected', (event) => {
+                        rig.setAttribute('position', "0 0 -7");
+                        if (chosenAvatar == 'astro') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'bot') {
+                            avatar.setAttribute('position', '0 -0.65 0');
+                        } else if (chosenAvatar == 'charmander') {
+                            avatar.setAttribute('position', '0 -0.25 0');
+                        } else if (chosenAvatar == 'dinosaur') {
+                            avatar.setAttribute('position', '0 -0.45 0');
+                        } else if (chosenAvatar == 'dwarf') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'nigiri') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'owl_sleep') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'penguin') {
+                            avatar.setAttribute('position', '0 0.25 0');
+                        } else if (chosenAvatar == 'pidgeon') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'rubberduck') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'shiba') {
+                            avatar.setAttribute('position', '0 0.25 0');
+                        }
+                    });
         // uiDesktop
         uiDesktop.addEventListener('click', function (event) {
             if (!NAF.utils.isMine(doughnut)) {
@@ -296,25 +378,7 @@
                     };
                 });
             }
-        });
-                                    /* NAF Event Listeners */
-
-                                    // Connected
-                                    document.body.addEventListener('connected', function (event) {
-                                        console.log('connected event. clientId =', event.detail.clientId);
-                                    });
-
-                                    // Client Connected
-                                    document.body.addEventListener('clientConnected', function (event) {
-                                        let clientId = event.detail.clientId;
-                                        console.log('clientConnected event. clientId =', clientId);
-                                    });
-
-                                    // Client Disconnected
-                                    document.body.addEventListener('clientDisconnected', function (event) {
-                                        let clientId = event.detail.clientId;
-                                        console.log('clientDisconnected event. clientId =', clientId);
-                                    });
+                });
 
         // Schemas with components and attributes for syncronization
         NAF.schemas.add({

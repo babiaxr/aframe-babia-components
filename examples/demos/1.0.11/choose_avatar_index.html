@@ -5,14 +5,14 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Babia Multiuser Demo — Networked-Aframe in BabiaXr</title>
+    <title>Babia Multiuser Museum Demo — Networked-Aframe in BabiaXr</title>
     <meta name="description" content="Demo — Networked-Aframe, Babia Multiuser in BabiaXr" />
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="slideshow">
-        <h1>Babia Multiuser Demo</h1>
+        <h1>Babia Multiuser Museum Demo</h1>
         <h2>Choose a server URL to connect to:</h2>
         <label for="server_url">Server URL:</label>
         <input class="input" type="text" id="server_url" name="server_url"
@@ -173,7 +173,7 @@
 
 
         startButton.addEventListener('click', function (event) {
-            let url = "./desert_demo.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+            let url = "./index_multiuser.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
             window.location.href = url;
         });
 
