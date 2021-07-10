@@ -146,14 +146,14 @@
 
             <!-- Simple Components -->
             <a-entity networked="template:#lounge-template; networkId:doughnut_lounge; persistent: true; owner: scene"
-                position="6 0 2" lounge-plinth="width: 4; depth: 4" lounge-staydown scale="0.5 0.5 0.5">
+                position="4 -4.5 3" lounge-plinth="width: 4; depth: 4" scale="0.5 0.5 0.5">
                 <a-entity id="doughnut"
                     networked="template:#doughnut-template; networkId:doughnut; persistent: true; owner: scene"
                     babia-doughnut='legend: true; palette: pearl; from: doughnutdata; key: country; size: cases'
                     position="0 2.5 0" rotation="90 -45 0" scale="1.5 1.5 1.5"></a-entity>
             </a-entity>
             <a-entity networked="template:#lounge-template; networkId:bars_lounge; persistent: true; owner: scene"
-                position="0 0 8" rotation="0 180 0" lounge-plinth="width: 6.5; depth: 4" lounge-staydown
+                position="-2 -4.5 8" rotation="0 180 0" lounge-plinth="width: 6.5; depth: 4"
                 scale="0.5 0.5 0.5">
                 <a-entity id="bars" networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
                     babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths'
@@ -162,24 +162,24 @@
 
             <!-- 3D Components -->
             <a-entity networked="template:#lounge-template; networkId:bubbles_lounge; persistent: true; owner: scene"
-                position="-2 0 -1" lounge-plinth="width: 10; depth: 4" lounge-staydown scale="0.5 0.5 0.5">
+                position="-3 -4.5 0" lounge-plinth="width: 10; depth: 4" scale="0.5 0.5 0.5">
                 <a-entity id="bubbles"
                     networked="template:#bubbles-template; networkId:bubbles; persistent: true; owner: scene"
                     babia-bubbles='legend: true; palette: ubuntu; radiusMax: 2.2; heightMax: 30; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
                     position="-4.35 0.275 0" rotation="0 0 0" scale="0.15 0.15 0.15"></a-entity>
             </a-entity>
             <a-entity networked="template:#lounge-template; networkId:clysmap_lounge; persistent: true; owner: scene"
-                position="-5 0 5" lounge-plinth="width: 3; depth: 9.8" lounge-staydown rotation="0 0 0"
+                position="-5 -4.5 5" lounge-plinth="width: 3; depth: 9.8" rotation="0 0 0"
                 scale="0.5 0.5 0.5">
                 <a-entity id="3dcylinder"
                     networked="template:#cylsmap-template; networkId:cylsmap; persistent: true; owner: scene"
                     babia-cylsmap='legend: true; palette: flat; heightMax: 100; radiusMax: 2; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
-                    position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.09 0.09"></a-entity>
+                    position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.07 0.09"></a-entity>
             </a-entity>
 
             <!-- CodeCity Component-->
             <a-entity networked="template:#lounge-template; networkId:city_lounge; persistent: true; owner: scene"
-                position="5 3 6" lounge-plinth="width: 6; depth: 6" lounge-staydown scale="0.5 0.5 0.5">
+                position="3 -4.5 7" lounge-plinth="width: 6; depth: 6"  scale="0.5 0.5 0.5">
                 <a-entity position="0 0.25 0" id="codecity" babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
                                 extra: 1.5; base_thick: 0.3; split: pivot; titles: true; time_evolution_delta: 3000;
                                  data: ./main_data.json' scale="0.3 0.3 0.3" rotation="0 180 0"
@@ -189,7 +189,7 @@
 
             <!-- Network Component -->
             <a-entity networked="template:#lounge-template; networkId:network_lounge; persistent: true; owner: scene"
-                position="3 3 -3" lounge-plinth="width: 6; depth: 6" lounge-staydown scale="0.5 0.5 0.5">
+                position="2 -4.5 -1" lounge-plinth="width: 6; depth: 6"  scale="0.5 0.5 0.5">
                 <a-entity id="network" babia-network='nodesFrom: networknodes; linksFrom: networklinks;
                     nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
                     nodeResolution: 20; nodeVal: population; nodeRelSize: 1; 
@@ -209,9 +209,9 @@
         <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
 
 
-        <!--Sync entities, not persistent-->
-        <a-entity lounge-entry-point id="rig" networked="template:#rig-template; attachTemplateToLocal:false">
-            <a-entity id="camera" camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false"
+        <!--Rig, Camera and Avatar-->
+        <a-entity lounge-entry-point id="rig" position="3 -3 4" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera rotation="0 90 0" look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
                 <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
                     networked="template:#avatar-template;attachTemplateToLocal:false">
@@ -336,7 +336,7 @@
 
                     // VR started
                     document.addEventListener('controllerconnected', (event) => {
-                        rig.setAttribute('position', "0 0 -7");
+                        rig.setAttribute('position', "3 -4.5 4");
                         if (chosenAvatar == 'astro') {
                             avatar.setAttribute('position', '0 -1.25 0')
                         } else if (chosenAvatar == 'bot') {
