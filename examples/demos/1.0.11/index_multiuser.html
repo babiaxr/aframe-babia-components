@@ -18,8 +18,8 @@
     <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
     <script src="./dist/aframe-lounge-component.min.js"></script>
     <script src="../../../dist/aframe-babia-components.min.js"></script>
-    <script src="../../multiuser/easyrtc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="../../multiuser/easyrtc.js"></script>
     <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
     <script src="https://unpkg.com/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
 
@@ -155,7 +155,7 @@
             <a-entity networked="template:#lounge-template; networkId:bars_lounge; persistent: true; owner: scene"
                 position="0 0 8" rotation="0 180 0" lounge-plinth="width: 6.5; depth: 4" lounge-staydown
                 scale="0.5 0.5 0.5">
-                <a-entity id="bar" networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
+                <a-entity id="bars" networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
                     babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths'
                     position="-2.25 0.275 0" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
             </a-entity>
@@ -210,32 +210,31 @@
 
 
         <!--Sync entities, not persistent-->
-        <!--<a-entity lounge-entry-point id="rig" networked="template:#rig-template; attachTemplateToLocal:false">
+        <a-entity lounge-entry-point id="rig" networked="template:#rig-template; attachTemplateToLocal:false">
             <a-entity id="camera" camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
                 <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
                     networked="template:#avatar-template;attachTemplateToLocal:false">
                 </a-entity>
-            </a-entity>-->
+            </a-entity>
         <!-- Hand Controls -->
-        <!--<a-entity id="leftHand" oculus-touch-controls="hand: left"
+        <a-entity id="leftHand" oculus-touch-controls="hand: left"
             teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
                         hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger">
-            </>
+        </a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
                 raycaster="objects: .babiaxraycasterclass"></a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass">
             </a-entity>
-            </a-entity>-->
+            </a-entity>
 
         <!-- Controls and Camera -->
-        <a-entity lounge-entry-point>
+        <!--<a-entity lounge-entry-point>
             <a-entity camera position="3 2 -10" rotation="0 90 0" look-controls wasd-controls="fly: false">
             </a-entity>
             <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
             <a-entity laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
-        </a-entity>
-
+        </a-entity>-->
 
     </a-scene>
     <div class="gitlab-corner-wrapper"><a
@@ -298,6 +297,24 @@
                 });
             }
         });
+                                    /* NAF Event Listeners */
+
+                                    // Connected
+                                    document.body.addEventListener('connected', function (event) {
+                                        console.log('connected event. clientId =', event.detail.clientId);
+                                    });
+
+                                    // Client Connected
+                                    document.body.addEventListener('clientConnected', function (event) {
+                                        let clientId = event.detail.clientId;
+                                        console.log('clientConnected event. clientId =', clientId);
+                                    });
+
+                                    // Client Disconnected
+                                    document.body.addEventListener('clientDisconnected', function (event) {
+                                        let clientId = event.detail.clientId;
+                                        console.log('clientDisconnected event. clientId =', clientId);
+                                    });
 
         // Schemas with components and attributes for syncronization
         NAF.schemas.add({
