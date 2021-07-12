@@ -208,7 +208,9 @@
         <!-- Lights -->
         <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
 
-
+        <a-plane id="transparentGround" rotation="-90 0 0" position="0 -5 0" width="100" height="100"
+            material="opacity: 0.0; transparent: true"></a-plane>
+        
         <!--Rig, Camera and Avatar-->
         <a-entity lounge-entry-point id="rig" position="3 -3 4" networked="template:#rig-template; attachTemplateToLocal:false">
             <a-entity id="camera" camera rotation="0 90 0" look-controls wasd-controls="fly: false"
@@ -219,14 +221,14 @@
             </a-entity>
         <!-- Hand Controls -->
         <a-entity id="leftHand" oculus-touch-controls="hand: left"
-            teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+            teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #transparentGround;
                         hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger">
         </a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
                 raycaster="objects: .babiaxraycasterclass"></a-entity>
-            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass">
+            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
             </a-entity>
-            </a-entity>
+
 
     </a-scene>
     <div class="gitlab-corner-wrapper"><a
