@@ -73,6 +73,10 @@
             <template id="lounge-template">
                 <a-entity class="lounge"></a-entity>
             </template>
+            <!-- Pie -->
+            <template id="pie-template">
+                <a-entity class="pie"></a-entity>
+            </template>
             <!-- Bars -->
             <template id="bars-template">
                 <a-entity class="bars"></a-entity>
@@ -123,6 +127,8 @@
         </a-assets>
 
         <!-- Querier Components -->
+        <a-entity id="piedata" babia-queryjson="url: data_examples/europe.json;"
+            networked="template:#querier-template; networkId:piequerier; persistent: true; owner: scene"></a-entity>
         <a-entity id="networknodes" babia-queryjson="url: ./data_examples/travel_nodes.json;"
             networked="template:#querier-template; networkId:nodesquerier; persistent: true; owner: scene"></a-entity>
         <a-entity id="networklinks" babia-queryjson="url: ./data_examples/travel_links.json;"
@@ -145,6 +151,19 @@
             north: barrier; floorTexture: ./assets/floor-texture.jpg">
 
             <!-- Simple Components -->
+            <a-entity networked="template:#lounge-template; networkId:pie_lounge; persistent: true; owner: scene"
+                position=" 3 -4.5 7" lounge-plinth="width: 6; depth: 6" scale="0.5 0.5 0.5">
+                <a-entity id="pie" networked="template:#pie-template; networkId:pie; persistent: true; owner: scene"
+                    babia-pie='legend: true; palette: blues; from: piedata; key: country; size: cases' position="0 2.5 0"
+                    rotation="90 -135 0" scale="2 2 2"></a-entity>
+            </a-entity>
+            <a-text id="pie_label" value="babia-pie" color="#fff" width="3" position="1.45 -4.48 5.5" rotation="0 -90 0">
+            </a-text>
+            <a-plane class="museum_button" id="pie_button" position="1.45 -4.48 7.75" rotation="0 -90 0" height="0.2" width="0.5"
+                color="#fff">
+                <a-text id="pie_rotate_label" value="Rotate" color="#000" width="3" position="-0.2 0 0" rotation="0 0 0">
+                </a-text>
+            </a-plane>
             <a-entity networked="template:#lounge-template; networkId:doughnut_lounge; persistent: true; owner: scene"
                 position="4 -4.5 3" lounge-plinth="width: 4; depth: 4" scale="0.5 0.5 0.5">
                 <a-entity id="doughnut"
@@ -152,13 +171,22 @@
                     babia-doughnut='legend: true; palette: pearl; from: doughnutdata; key: country; size: cases'
                     position="0 2.5 0" rotation="90 -45 0" scale="1.5 1.5 1.5"></a-entity>
             </a-entity>
+            <a-text id="doughnut_label" value="babia-doughnut" color="#fff" width="3" position="2.9 -4.48 2.2" rotation="0 -90 0">
+            </a-text>
             <a-entity networked="template:#lounge-template; networkId:bars_lounge; persistent: true; owner: scene"
                 position="-2 -4.5 8" rotation="0 180 0" lounge-plinth="width: 6.5; depth: 4"
                 scale="0.5 0.5 0.5">
                 <a-entity id="bars" networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
-                    babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths'
+                    babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths; palette: ubuntu'
                     position="-2.25 0.275 0" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
             </a-entity>
+            <a-text id="bars_label" value="babia-bars" color="#fff" width="3" position="-0.5 -4.48 6.95" rotation="0 180 0">
+            </a-text>
+            <a-plane class="museum_button" id="bars_button" position="-3 -4.48 6.95" rotation="0 180 0" height="0.2" width="1"
+                color="#fff">
+                <a-text id="bars_palette_label" value="Change palette" color="#000" width="3" position="-0.45 0 0" rotation="0 0 0">
+                </a-text>
+            </a-plane>
 
             <!-- 3D Components -->
             <a-entity networked="template:#lounge-template; networkId:bubbles_lounge; persistent: true; owner: scene"
@@ -168,41 +196,53 @@
                     babia-bubbles='legend: true; palette: ubuntu; radiusMax: 2.2; heightMax: 30; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
                     position="-4.35 0.275 0" rotation="0 0 0" scale="0.15 0.15 0.15"></a-entity>
             </a-entity>
+            <a-text id="bubbles_label" value="babia-bubbles" color="#fff" width="3" position="-5 -4.48 1.05" rotation="0 0 0">
+            </a-text>
+            <a-plane class="museum_button" id="bubbles_button" position="-1.5 -4.48 1.05" rotation="0 0 0" height="0.2" width="1.55"
+                color="#fff">
+                <a-text id="bubbles_radius_label" value="Change maximum radius" color="#000" width="3" position="-0.75 0 0"
+                    rotation="0 0 0">
+                </a-text>
+            </a-plane>
             <a-entity networked="template:#lounge-template; networkId:clysmap_lounge; persistent: true; owner: scene"
                 position="-5 -4.5 5" lounge-plinth="width: 3; depth: 9.8" rotation="0 0 0"
                 scale="0.5 0.5 0.5">
-                <a-entity id="3dcylinder"
+                <a-entity id="cylsmap"
                     networked="template:#cylsmap-template; networkId:cylsmap; persistent: true; owner: scene"
                     babia-cylsmap='legend: true; palette: flat; heightMax: 100; radiusMax: 2; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
                     position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.07 0.09"></a-entity>
             </a-entity>
-
-            <!-- CodeCity Component-->
-            <a-entity networked="template:#lounge-template; networkId:city_lounge; persistent: true; owner: scene"
-                position="3 -4.5 7" lounge-plinth="width: 6; depth: 6"  scale="0.5 0.5 0.5">
-                <a-entity position="0 0.25 0" id="codecity" babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
-                                extra: 1.5; base_thick: 0.3; split: pivot; titles: true; time_evolution_delta: 3000;
-                                 data: ./main_data.json' scale="0.3 0.3 0.3" rotation="0 180 0"
-                    networked="template:#city-template; networkId:city; persistent: true; owner: scene">
-                </a-entity>
-            </a-entity>
+            <a-text id="cylsmap_label" value="babia-cylsmap" color="#fff" width="3" position="-4.2 -4.48 7" rotation="0 90 0">
+            </a-text>
+            <a-plane class="museum_button" id="cylsmap_button" position="-4.2 -4.48 3" rotation="0 90 0" height="0.2" width="0.5"
+                color="#fff">
+                <a-text id="cylsmap_size_label" value="Resize" color="#000" width="3" position="-0.2 0 0" rotation="0 0 0">
+                </a-text>
+            </a-plane>
 
             <!-- Network Component -->
             <a-entity networked="template:#lounge-template; networkId:network_lounge; persistent: true; owner: scene"
                 position="2 -4.5 -1" lounge-plinth="width: 6; depth: 6"  scale="0.5 0.5 0.5">
                 <a-entity id="network" babia-network='nodesFrom: networknodes; linksFrom: networklinks;
                     nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
-                    nodeResolution: 20; nodeVal: population; nodeRelSize: 1; 
+                    nodeResolution: 30; nodeVal: population; nodeRelSize: 1;
                     linkWidth: 0.1; nodeLegend: true;' scale="0.1 0.1 0.1" rotation="0 0 -90" position="0 5 0"
                     networked="template:#network-template; networkId:network; persistent: true; owner: scene">
                 </a-entity>
             </a-entity>
+            <a-plane class="museum_button" id="network_button" position="2.9 -4.48 0.55" rotation="0 0 0" height="0.2" width="0.5"
+                color="#fff">
+                <a-text id="network_resolution_label" value="Rotate" color="#000" width="3" position="-0.2 0 0"
+                    rotation="0 0 0">
+                </a-text>
+            </a-plane>
+            <a-text id="network_label" value="babia-network" color="#fff" width="3" position="0.6 -4.48 0.55" rotation="0 0 0">
+            </a-text>
 
             <!-- UI Component -->
             <a-entity id="ui_doughnut" babia-ui="target: doughnut" position="18 -1 9" rotation="0 -90 0"
                 scale="0.4 0.7 0.5">
             </a-entity>
-
         </a-entity>
 
         <!-- Lights -->
@@ -219,8 +259,8 @@
         <!-- Hand Controls -->
         <a-entity id="leftHand" oculus-touch-controls="hand: left"></a-entity>
         <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
-            raycaster="objects: .babiaxraycasterclass"></a-entity>
-        <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+            raycaster="objects: .babiaxraycasterclass, .museum_button"></a-entity>
+        <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .museum_button"></a-entity>
         </a-entity>
 
 
@@ -264,8 +304,20 @@
             let rig = document.querySelector('#rig');
             let avatar = document.getElementById('avatar');
             let hand_right = document.getElementById('rightHand');
-        let doughnut = document.getElementById('doughnut')
-        let uiDesktop = document.getElementById('ui_doughnut')
+
+    let uiDesktop = document.getElementById('ui_doughnut');
+    let pieButton = document.getElementById('pie_button');
+    let barsButton = document.getElementById('bars_button');
+    let bubblesButton = document.getElementById('bubbles_button');
+    let cylsmapButton = document.getElementById('cylsmap_button');
+    let networkButton = document.getElementById('network_button');
+
+    let doughnut = document.getElementById('doughnut');
+    let pie = document.getElementById('pie');
+    let bars = document.getElementById('bars');
+    let bubbles = document.getElementById('bubbles');
+    let cylsmap = document.getElementById('cylsmap');
+    let network = document.getElementById('network');
 
                     /* SET AVATAR FROM QUERY STRING */
                     let y = 0;
@@ -375,6 +427,37 @@
                 });
             }
                 });
+                                        // Buttons
+                                        pieButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(pie)) {
+                                                NAF.utils.takeOwnership(pie)
+                                            }
+                                            rotatePie();
+                                        });
+                                        barsButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(bars)) {
+                                                NAF.utils.takeOwnership(bars)
+                                            }
+                                            paletteBars();
+                                        });
+                                        bubblesButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(bubbles)) {
+                                                NAF.utils.takeOwnership(bubbles)
+                                            }
+                                            radiusBubbles();
+                                        });
+                                        cylsmapButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(cylsmap)) {
+                                                NAF.utils.takeOwnership(cylsmap)
+                                            }
+                                            resizeCylsmap();
+                                        });
+                                        networkButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(network)) {
+                                                NAF.utils.takeOwnership(network)
+                                            }
+                                            rotateNetwork();
+                                        });
 
             // Other methods
 
@@ -387,6 +470,56 @@
                 if (!results[2]) return '';
                 return decodeURIComponent(results[2].replace(/\+/g, ' '));
             }
+
+                                            // Button actions
+                                            function rotatePie() {
+                                                let x = pie.getAttribute('rotation').x;
+                                                let y = pie.getAttribute('rotation').y;
+                                                let z = pie.getAttribute('rotation').z;
+                                                y = y - 45;
+                                                let rotation = `${x} ${y} ${z}`
+                                                pie.setAttribute('rotation', rotation);
+                                            }
+                                            function paletteBars() {
+                                                let palette = bars.getAttribute('babia-bars').palette;
+                                                let palettes = ["blues", "bussiness", "commerce", "flat", "foxy", "icecream", "pearl", "sunset", "ubuntu"]
+                                                if (palette === palettes[palettes.length - 1]) {
+                                                    palette = palettes[0]
+                                                } else {
+                                                    palette = palettes[palettes.indexOf(palette) + 1]
+                                                }
+                                                bars.setAttribute('babia-bars', 'palette', palette);
+                                            }
+                                            function radiusBubbles() {
+                                                let radiusMax = bubbles.getAttribute('babia-bubbles').radiusMax;
+                                                if (radiusMax >= 2.4) {
+                                                    radiusMax = 2.1;
+                                                } else {
+                                                    radiusMax = radiusMax + 0.1;
+                                                }
+                                                bubbles.setAttribute('babia-bubbles', 'radiusMax', radiusMax);
+                                            }
+                                            function resizeCylsmap() {
+                                                let scale_x = cylsmap.getAttribute('scale').x;
+                                                let scale_y = cylsmap.getAttribute('scale').y;
+                                                let scale_z = cylsmap.getAttribute('scale').z;
+                                                if (scale_y >= 0.09) {
+                                                    scale_y = 0.05;
+                                                } else {
+                                                    scale_y = scale_y + 0.02;
+                                                }
+                                                let scale = `${scale_x} ${scale_y} ${scale_z}`
+                                                cylsmap.setAttribute('scale', scale);
+                                            }
+                                            function rotateNetwork() {
+                                                let x = network.getAttribute('rotation').x;
+                                                let y = network.getAttribute('rotation').y;
+                                                let z = network.getAttribute('rotation').z;
+                                                y = y - 45;
+                                                let rotation = `${x} ${y} ${z}`
+                                                network.setAttribute('rotation', rotation);
+                                            }
+                                        
 
         // Schemas with components and attributes for syncronization
         NAF.schemas.add({
@@ -422,6 +555,16 @@
                 'rotation'
             ]
         });
+
+                                                                                                                                                                                                                                                            NAF.schemas.add({
+                                                                                                                                                                                                                                                                template: '#pie-template',
+                                                                                                                                                                                                                                                                components: [
+                                                                                                                                                                                                                                                                    'position',
+                                                                                                                                                                                                                                                                    'rotation',
+                                                                                                                                                                                                                                                                    'scale',
+                                                                                                                                                                                                                                                                    'babia-pie'
+                                                                                                                                                                                                                                                                ]
+                                                                                                                                                                                                                                                            });
 
         NAF.schemas.add({
             template: '#bars-template',
@@ -459,16 +602,7 @@
                 'babia-bubbles'
             ]
         });
-        NAF.schemas.add({
-            template: '#city-template',
-            components: [
-                'position',
-                'rotation',
-                'scale',
-                'babiaxr-codecity'
-            ]
-        });
-        NAF.schemas.add({
+                                                                                                                                                                                                                                                            NAF.schemas.add({
             template: '#network-template',
             components: [
                 'position',
