@@ -18,10 +18,61 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Kakegurui        | -   |  -  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
 | Light        | -   |  2021-03-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/13) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Light) | [Link](#light)  | 1.1.1 |
 | Mazinger Z        | -   |  2021-04-21  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#mazinger-z)  | - |
-| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#naruto)  | - |
+| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | - |
+| One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | - |
 
 
 ## Release notes
+
+### One Punch Man
+
+> NPM 1.1.3 version
+
+#### Multiuser NEW
+
+- Define watchers in components for showing a log message when an attribute is changed (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/173)
+- Added demos (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/179) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/182) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/116) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/178) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/191) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/183) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/193) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/196)
+- Add docs (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/186) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/211)
+- Research about RTC servers (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/177)
+
+#### Async WIP
+
+- First research (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/188)
+
+#### Boats component changes
+
+- Fix bug with the quarter base (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/159)
+
+#### Web changes
+
+- Fix documentation link (https://gitlab.com/babiaxr/babiaxr.gitlab.io/-/issues/20)
+- Fix issues in How to use totem component (deleted) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/157)
+- Sync docs (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/137)
+- New museum demo (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/198)
+
+#### UI changes
+
+- More than one UI in the same scene (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/192)
+
+#### Time evolution feature  and selector component NEW
+
+- Desing of the components (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/176)
+- Velocity control component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/175)
+- Navigator component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/185)
+- Skip controller component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/194)
+- Improve selector component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/190)
+- Slider component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/108)
+- Navigation controls component (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/174)
+- Fixed minor bugs (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/201) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/207)
+- Added doc (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/180)
+
+#### Network component changes
+
+- Fix raycaster bug on Oculus (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/169)
+
+#### Axis component changes
+
+- Added names on axis (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/197)
 
 ### Naruto
 
