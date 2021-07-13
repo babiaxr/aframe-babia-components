@@ -564,7 +564,7 @@ function showZAxis(parent, zEnd, cylinder_printed, maxRadius) {
 function showLegend(data, cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
     this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-    legend = generateLegend(data, cylinder, cylinderEntity);
+    legend = generateLegend(data, cylinder, cylinderEntity, element.getAttribute("scale"));
     element.appendChild(legend);
   });
 
@@ -574,7 +574,7 @@ function showLegend(data, cylinderEntity, cylinder, element) {
   });
 }
 
-function generateLegend(data, cylinder, cylinderEntity) {
+function generateLegend(data, cylinder, cylinderEntity, scale) {
   let text = ''
   let lines = []
   lines.push(cylinder[data.x_axis] + ' ' + cylinder[data.z_axis] + '\n');
@@ -592,7 +592,7 @@ function generateLegend(data, cylinder, cylinderEntity) {
   let entity = document.createElement('a-plane');
   entity.setAttribute('position', {
     x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3,
-    z: cylinderPosition.z + cylinder[data.radius] / 2
+    z: cylinderPosition.z + (cylinder[data.radius] / 2) * scale.z
   });
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '4');
