@@ -590,10 +590,12 @@ function generateLegend(data, cylinder, cylinderEntity, scale) {
 
   let cylinderPosition = cylinderEntity.getAttribute('position')
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {
-    x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3,
-    z: cylinderPosition.z + (cylinder[data.radius] / 2) * scale.z
-  });
+  let z = cylinderPosition.z;
+  if (scale)
+    z = z + (cylinder[data.radius] / 2) * scale.z;
+  else 
+    z = z + (cylinder[data.radius] / 2);
+  entity.setAttribute('position', {x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3, z: z});
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
   entity.setAttribute('height', '4');
   entity.setAttribute('width', width);
