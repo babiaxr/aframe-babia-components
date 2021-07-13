@@ -389,10 +389,10 @@ AFRAME.registerComponent('babia-network', {
 
       if (topObject) {
         if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
-          showLegend(topObject, topObject.__data, this.data.nodeLabel)
+          showLegend(topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
         } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
           if (this.data.linkLabel != ""){
-            showLinkLegend(this, topObject, topObject.__data, this.data.linkLabel)
+            showLinkLegend(this, topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
           }
         }
       }
@@ -775,20 +775,29 @@ function elDataFromNodesAndLinks(elData) {
   return elData;
 } 
 
-function generateLegend(node, nodeLabel, nodePosition, radius) {
+function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
   let text = node[nodeLabel];
 
   let width = 2;
+  let x = 3;
+  let y = 3;
+  let z = 3;
   if (text.length > 16)
     width = text.length / 8;
+  if(scale){
+    x = x * scale.x;
+    y = y * scale.y;
+    z = z * scale.z;
+    radius = (radius + 3) * scale.y;
+  }
 
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius + 3, z: nodePosition.z})
+  entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius, z: nodePosition.z})
   entity.setAttribute('babia-lookat', "[camera]");
   entity.setAttribute('width', width);
   entity.setAttribute('height', '1');
   entity.setAttribute('color', 'white');
-  entity.setAttribute('scale', {x:3, y:3, z:3})
+  entity.setAttribute('scale', {x: x, y: y, z: z})
   entity.setAttribute('text', {
     'value': node[nodeLabel],
     'align': 'center',
@@ -799,28 +808,38 @@ function generateLegend(node, nodeLabel, nodePosition, radius) {
   return entity;
 }
 
-function showLegend(nodeThree, node, nodeLabel) {
+function showLegend(nodeThree, node, nodeLabel, scale) {
   let worldPosition = new THREE.Vector3();
   nodeThree.getWorldPosition(worldPosition);
   let radius = nodeThree.geometry.boundingSphere.radius
   let sceneEl = document.querySelector('a-scene');
-  legend = generateLegend(node, nodeLabel, worldPosition, radius);
+  legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
   sceneEl.appendChild(legend);
 }
 
-function generateLinkLegend(link, linkLabel, linkPosition, radius) {
+function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
   let text = link[linkLabel];
   let width = 2;
+  let x = 3;
+  let y = 3;
+  let z = 3;
   if (text.length > 16)
     width = text.length / 8;
+  if(scale){
+      x = x * scale.x;
+      y = y * scale.y;
+      z = z * scale.z;
+      radius = (radius + 3) * scale.y;
+  }
+
 
   let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {x: linkPosition.x, y: linkPosition.y + radius + 3, z: linkPosition.z})
+  entity.setAttribute('position', {x: linkPosition.x, y: linkPosition.y + radius, z: linkPosition.z})
   entity.setAttribute('babia-lookat', "[camera]");
   entity.setAttribute('width', width);
   entity.setAttribute('height', '1');
   entity.setAttribute('color', 'white');
-  entity.setAttribute('scale', {x:3, y:3, z:3})
+  entity.setAttribute('scale', {x: x, y: y, z: z})
   entity.setAttribute('text', {
     'value': link[linkLabel],
     'align': 'center',
@@ -831,7 +850,7 @@ function generateLinkLegend(link, linkLabel, linkPosition, radius) {
   return entity;
 }
 
-function showLinkLegend(self, linkThree, link, linkLabel, linkWidth) {
+function showLinkLegend(self, linkThree, link, linkLabel, linkWidth, scale) {
   let worldPosition = new THREE.Vector3();
   //linkThree.getWorldPosition(worldPosition);
   let radius = linkThree.geometry.boundingSphere.radius
@@ -855,7 +874,7 @@ function showLinkLegend(self, linkThree, link, linkLabel, linkWidth) {
   worldPosition.z = (sourcePos.z + targetPos.z)/2
 
   let sceneEl = document.querySelector('a-scene');
-  legend = generateLinkLegend(link, linkLabel, worldPosition, radius);
+  legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
   sceneEl.appendChild(legend);
 }
 
