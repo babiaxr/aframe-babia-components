@@ -63,6 +63,9 @@
             <template id="rig-template">
                 <a-entity class="rig"></a-entity>
             </template>
+            <template id="mov-template">
+                <a-entity class="mov"></a-entity>
+            </template>
             <template id="camera-template">
                 <a-entity class="camera"></a-entity>
             </template>
@@ -538,6 +541,13 @@
         // Schemas with components and attributes for syncronization
         NAF.schemas.add({
             template: '#rig-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#mov-template',
             components: [
                 'position',
                 'rotation'
