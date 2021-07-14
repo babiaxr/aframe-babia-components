@@ -314,6 +314,7 @@
     <script>
             let scene = document.getElementById('scene');
             let rig = document.querySelector('#rig');
+            let mov = document.querySelector('#mov');
             let avatar = document.getElementById('avatar');
             let hand_right = document.getElementById('rightHand');
 
@@ -396,7 +397,7 @@
 
                     // VR started
                     document.addEventListener('controllerconnected', (event) => {
-                        rig.setAttribute('position', "3 -4.5 4");
+                        mov.setAttribute('position', "3 -4.5 4");
                         if (chosenAvatar == 'astro') {
                             avatar.setAttribute('position', '0 -1.25 0')
                         } else if (chosenAvatar == 'bot') {
