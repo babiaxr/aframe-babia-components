@@ -133,6 +133,10 @@
                 <h3>Museum Multiuser Demo</h3>
                 <input class="btn" type="button" id="start_button_1" value="Start">
             </li>
+            <li>
+                <h3>Museum Multiuser Demo test UI</h3>
+                <input class="btn" type="button" id="start_button_2" value="Start">
+            </li>
         </ul>
     </div>
 
@@ -140,6 +144,8 @@
     <script>
         let startButton = document.getElementById("start_button")
         let startButton1 = document.getElementById("start_button_1")
+        let startButton2 = document.getElementById("start_button_2")
+
         let serverUrlInput = document.getElementById("server_url");
         let serverURL = serverUrlInput.value;
         let slides = document.getElementsByClassName("character");
@@ -183,6 +189,10 @@
         });
         startButton1.addEventListener('click', function (event) {
             let url = "../../demos/1.0.11/index_multiuser.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+            window.location.href = url;
+        });
+        startButton2.addEventListener('click', function (event) {
+            let url = "../../demos/1.0.11/index_multiuser_ui.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
             window.location.href = url;
         });
 
