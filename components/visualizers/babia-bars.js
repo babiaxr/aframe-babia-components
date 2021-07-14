@@ -37,6 +37,8 @@ AFRAME.registerComponent('babia-bars', {
         animation: { type: 'boolean', default: true},
         // Duration of animations
         dur: { type: 'number', default: 2000},
+        uiLink: {type: 'boolean', default: false},
+        uiLinkPosition: { type: 'vec3', default: {x: -4.5, y: 2, z: 2.5} },
     },
 
     /**
@@ -87,6 +89,10 @@ AFRAME.registerComponent('babia-bars', {
             // Dispatch events because I updated my visualization
             dataReadyToSend("newData", self)
         };
+
+        if (data.uiLink){
+            createUiLink(el, data.uiLinkPosition)
+        }
 
     },
     /**
@@ -499,4 +505,19 @@ let generateBar = (self, data, item, maxValue, widthBars, colorId, palette, step
     bar.setAttribute('position', { x: stepX, y: 0, z: 0 }); 
     bar.id = item[self.data.index]
     return bar
+}
+
+let createUiLink = (el, position) => {
+    let ui_link = document.createElement('a-entity');
+    if (!el.id){
+        // Generate id
+        let id = 'bars' + Math.floor(Math.random() * 1000);
+        el.id = id
+    }
+    console.log('id:', el.id)
+    ui_link.setAttribute('babia-ui-link', {viz: el.id})
+    ui_link.setAttribute('position', {x: position.x, y: position.y, z:position.z})
+    el.appendChild(ui_link)
+    console.log('Create Button', el) 
+    return
 }
