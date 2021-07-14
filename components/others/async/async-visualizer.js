@@ -28,7 +28,8 @@ AFRAME.registerComponent('async-visualizer', {
         plane.setAttribute('width', '10');
         plane.setAttribute('color', 'white');
         let label = document.createElement("a-text");
-        label.setAttribute('id', 'info_label');
+        let label_text = this.el.getAttribute("id") + "_info_label"
+        label.setAttribute('id', label_text);
         label.setAttribute('value', 'No info');
         label.setAttribute('color', '#000');
         label.setAttribute('width', '9');
@@ -97,12 +98,11 @@ let findFrom = (data, el) => {
     return fromComponent
   }
 
-  let getDataFrom = (fromComponent) => {
+  let getDataFrom = (fromComponent, el) => {
     let data = [];
     setInterval(() => {
-        fromComponent.register.getData().then( _data => {
+        fromComponent.register.getData(el).then( _data => {
             data = _data;
-            console.log("Data: " + data)
                 let dataToPrint = data.reduce((accumulator, currentValue) => {
                     if (data.indexOf(currentValue) == data.length -1){
                         return accumulator + currentValue['country'] + '.'
@@ -112,9 +112,10 @@ let findFrom = (data, el) => {
                         return accumulator + currentValue['country'] + ', '
                     }
                 }, "New data: ")
-                document.getElementById("info_label").setAttribute('value', dataToPrint)
+                let label_text = el.getAttribute("id") + "_info_label"
+                document.getElementById(label_text).setAttribute('value', dataToPrint)
         });        
-    }, 500);
+    }, 1000);
   }
   
   

@@ -21,6 +21,25 @@ AFRAME.registerComponent('babia-async-querier', {
     */
     init: function () {
         this.register = new Register();
+
+        setInterval(() => {
+            // 1. Check if there was already data (for new visualizers)
+            // 2. Check for changes inside the data file, when the url has not changed
+            
+            // Compare data
+            if (!this.register.isUpdating){
+                let old_data = this.register.data;
+                let new_data = [];
+                //if (this.querierdata){
+                    requestJSONDataFromURL(this.querierdata.url).then((json) => {
+                        new_data = json;
+                        if (old_data == null | old_data != new_data){
+                            this.register.data = new_data;
+                        }
+                    });
+                //} 
+            }
+        }, 1000);
     },
 
     /**
@@ -29,11 +48,15 @@ AFRAME.registerComponent('babia-async-querier', {
     */
 
     update: function (oldData) {
-        let data = this.data;
         let self = this;
+        self.querierdata = self.data;
         
-        if (oldData.url !== data.url) {
-            requestJSONDataFromURL(data.url).then((json) => self.register.data = json);
+        if (oldData.url != self.querierdata.url) {
+            self.register.isUpdating = true;
+            requestJSONDataFromURL(self.querierdata.url).then((json) => {
+                self.register.data = json;
+                self.register.isUpdating = false;
+            });
         }
     },
     /**
@@ -57,15 +80,14 @@ AFRAME.registerComponent('babia-async-querier', {
      * Register variable
     */
     register: undefined,
+    querierdata: undefined,
 })
 
 async function requestJSONDataFromURL(url) { 
     let response = await fetch(url);
-    console.log("Response: " + response)
 
     if (response.status == 200) {
        let json = await response.json();
-       console.log("Json: " +json)
        return json;
     }
  
@@ -75,9 +97,11 @@ async function requestJSONDataFromURL(url) {
  class Register {
     constructor(){
         this.data = null;
+        this.isUpdating = true;
     }
 
-    async getData() {
+    async getData(el) {
+        console.log("getData in: ", el)
         let dataReady = await this.data
         return dataReady; 
     }
