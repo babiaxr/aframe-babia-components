@@ -425,7 +425,8 @@
         // uiDesktop
         
         uiDesktop.addEventListener('click', function (event) {
-            let target = document.getElementById(uiDesktop.getAttribute("babia-ui","target"))
+            console.log(uiDesktop.getAttribute("babia-ui").target)
+            let target = document.getElementById(uiDesktop.getAttribute("babia-ui").target)
             console.log("Target: ", target)
                     if (!NAF.utils.isMine(target)) {
                         NAF.utils.takeOwnership(target)
@@ -437,7 +438,8 @@
                 console.log('uiVR has been added: ', event.target.children["babia-menu-hand"])
                 let uiVR = document.querySelector('#babia-menu-hand')
                 uiVR.addEventListener('click', function (event) {
-                    let target = document.getElementById(uiVR.getAttribute("babia-ui","target"));
+                    console.log(uiVR.getAttribute("babia-ui").target)
+                    let target = document.getElementById(uiVR.getAttribute("babia-ui").target);
                     console.log("Target: ", target)
                     if (!NAF.utils.isMine(target)) {
                         NAF.utils.takeOwnership(target)
