@@ -254,20 +254,22 @@
 
         <!-- Lights -->
         <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
-        
-        <!--Rig, Camera and Avatar-->
-        <a-entity lounge-entry-point id="rig" position="3 -3 4" networked="template:#rig-template; attachTemplateToLocal:false">
-            <a-entity id="camera" camera rotation="0 90 0" look-controls wasd-controls="fly: false"
-                networked="template:#camera-template;attachTemplateToLocal:false;">
-                <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
-                    networked="template:#avatar-template;attachTemplateToLocal:false">
+
+        <a-entity lounge-entry-point id="rig" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity movement-controls="fly: false" id="mov" position="3 -3 4"
+                networked="template:#mov-template;attachTemplateToLocal:false;">
+                <a-entity id="camera" camera rotation="0 90 0" look-controls
+                    networked="template:#camera-template;attachTemplateToLocal:false;">
+                    <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
+                        networked="template:#avatar-template;attachTemplateToLocal:false"></a-entity>
                 </a-entity>
-            </a-entity>
         <!-- Hand Controls -->
-        <a-entity id="leftHand" oculus-touch-controls="hand: left"></a-entity>
-        <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
-            raycaster="objects: .babiaxraycasterclass, .museum_button"></a-entity>
-        <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .museum_button"></a-entity>
+                <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .museum_button">
+                </a-entity>
+                <a-entity laser-controls="hand: right" oculus-touch-controls="hand: right" raycaster="objects: .babiaxraycasterclass, .museum_button">
+                </a-entity>
+                <a-entity id="leftHand" oculus-touch-controls="hand: left"></a-entity>
+            </a-entity>
         </a-entity>
 
 
