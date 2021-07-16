@@ -30,7 +30,7 @@ AFRAME.registerComponent('async-visualizer', {
         let label = document.createElement("a-text");
         let label_text = this.el.getAttribute("id") + "_info_label"
         label.setAttribute('id', label_text);
-        label.setAttribute('value', 'No info');
+        label.setAttribute('value', 'Loading...');
         label.setAttribute('color', '#000');
         label.setAttribute('width', '9');
         label.setAttribute('position', '-4.5 0 0')
@@ -115,7 +115,7 @@ let findFrom = (data, el) => {
                 let label_text = el.getAttribute("id") + "_info_label"
                 document.getElementById(label_text).setAttribute('value', dataToPrint)
         });        
-    }, 1000);
+    }, 5000);
   }
   
   

@@ -20,26 +20,24 @@ AFRAME.registerComponent('babia-async-querier', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
+        console.log("async querier init()")
         this.register = new Register();
 
         setInterval(() => {
-            // 1. Check if there was already data (for new visualizers)
-            // 2. Check for changes inside the data file, when the url has not changed
+            // Check for changes inside the data file, when the url has not changed
             
             // Compare data
             if (!this.register.isUpdating){
                 let old_data = this.register.data;
                 let new_data = [];
-                //if (this.querierdata){
                     requestJSONDataFromURL(this.querierdata.url).then((json) => {
                         new_data = json;
                         if (old_data == null | old_data != new_data){
                             this.register.data = new_data;
                         }
                     });
-                //} 
             }
-        }, 1000);
+        }, 5000);
     },
 
     /**
@@ -48,6 +46,7 @@ AFRAME.registerComponent('babia-async-querier', {
     */
 
     update: function (oldData) {
+        console.log("async querier update()")
         let self = this;
         self.querierdata = self.data;
         
@@ -101,6 +100,8 @@ async function requestJSONDataFromURL(url) {
     }
 
     async getData(el) {
+        /* No need to check if there already was data (for new visualizers), 
+        since we just wait for dataReady to have a value, and if it was previously set, it will have one*/
         console.log("getData in: ", el)
         let dataReady = await this.data
         return dataReady; 
