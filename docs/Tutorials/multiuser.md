@@ -22,9 +22,21 @@ It is needed a WebRTC Server for sharing information, you can connect to an exis
 Once you have access to the WebRTC server, you will have to remember the url to connect to it, since it will be needed in the next step.
 
 
+## Imports
+
+Once we start writing the html, the first thing to do is to import the necessary .js of socket.io and easyrtc, and finally import the networked-aframe component.
+
+```html
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="./easyrtc.js"></script>
+    <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+```
+
+>Note: It is important to add the socket.io file before the easyrtc file.
+
 ## Scene
 
-Once we start writing the html, the first thing to do is to create a scene and attach the **networked-scene** component to it. In this component is where you have to define the WebRTC server url WebRTC, as well as a server adapter, an app, a room, if there is audio or/and video...
+Then we have to create a scene and attach the **networked-scene** component to it. In this component is where you have to define the WebRTC server url WebRTC, as well as a server adapter, an app, a room, if there is audio or/and video...
 
 ```html
 <a-scene id="AframeScene" networked-scene="

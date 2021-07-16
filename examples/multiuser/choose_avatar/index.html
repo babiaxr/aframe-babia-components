@@ -5,14 +5,14 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Babia Multiuser Demo — Networked-Aframe in BabiaXr</title>
-    <meta name="description" content="Demo — Networked-Aframe, Babia Multiuser in BabiaXr" />
+    <title>Babia Multiuser Demos — Networked-Aframe in BabiaXr</title>
+    <meta name="description" content="Demos — Networked-Aframe, Babia Multiuser in BabiaXr" />
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="slideshow">
-        <h1>Babia Multiuser Demo</h1>
+        <h1>Babia Multiuser Demos</h1>
         <h2>Choose a server URL to connect to:</h2>
         <label for="server_url">Server URL:</label>
         <input class="input" type="text" id="server_url" name="server_url"
@@ -38,7 +38,8 @@
         <div class="character">
             <img class="photo" src="../../assets/avatars/images/charmander.png">
             <div class="title">Charmander</div>
-            <a class="license" href="https://sketchfab.com/3d-models/moon-walk-4a6955a4df8449b5af8ef4c3cd9d0e03">Jolly
+            <a class="license"
+                href="https://sketchfab.com/3d-models/jolly-wangcore-avatar-derpy-charmander-e5dd91ae20f04560b503c3f29f8787a8">Jolly
                 Wangcore - Avatar
                 Derpy Charmander model by Brunnyyyy (License: CC Attribution)</a>
         </div>
@@ -125,8 +126,16 @@
         </div>
         <ul>
             <li>
-                <h3>Desert Demo</h3>
+                <h3>Desert Multiuser Demo</h3>
                 <input class="btn" type="button" id="start_button" value="Start">
+            </li>
+            <li>
+                <h3>Museum Multiuser Demo</h3>
+                <input class="btn" type="button" id="start_button_1" value="Start">
+            </li>
+            <li>
+                <h3>Museum Multiuser Demo test UI</h3>
+                <input class="btn" type="button" id="start_button_2" value="Start">
             </li>
         </ul>
     </div>
@@ -134,6 +143,9 @@
 
     <script>
         let startButton = document.getElementById("start_button")
+        let startButton1 = document.getElementById("start_button_1")
+        let startButton2 = document.getElementById("start_button_2")
+
         let serverUrlInput = document.getElementById("server_url");
         let serverURL = serverUrlInput.value;
         let slides = document.getElementsByClassName("character");
@@ -173,6 +185,14 @@
 
         startButton.addEventListener('click', function (event) {
             let url = "./desert_demo.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+            window.location.href = url;
+        });
+        startButton1.addEventListener('click', function (event) {
+            let url = "../../demos/1.0.11/index_multiuser.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+            window.location.href = url;
+        });
+        startButton2.addEventListener('click', function (event) {
+            let url = "../../demos/1.0.11/index_multiuser_ui.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
             window.location.href = url;
         });
 

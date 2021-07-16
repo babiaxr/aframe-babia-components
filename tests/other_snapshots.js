@@ -13,7 +13,7 @@ describe('Others examples (screenshot)', () => {
         });
     });
 
-    ['1.0.7', '1.0.11'].forEach((example) => {
+    ['1.0.7', '1.0.11', '1.0.11_multiuser'].forEach((example) => {
         it(`Screenshot Demo (${example})`, () => {
             cy.visit('/examples/demos/' + example + '/index.html');
             cy.wait(10000);

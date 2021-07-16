@@ -15,8 +15,7 @@ https://sketchfab.com/3d-models/low-poly-robot-rigged-8c6f019a4d15407396b7786d7c
 
 "Jolly Wangcore - Avatar Derpy Charmander" model by Brunnyyyy (License: CC Attribution)
 
-https://sketchfab.com/3d-models/moon-walk-4a6955a4df8449b5af8ef4c3cd9d0e03
-
+https://sketchfab.com/3d-models/jolly-wangcore-avatar-derpy-charmander-e5dd91ae20f04560b503c3f29f8787a8
 
 ## Dinosaur
 

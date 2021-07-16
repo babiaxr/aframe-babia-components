@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>BabiaXR Multiuser Demo - COVID-19 Data into BabiaXr Charts with Multiuser Mode </title>
+    <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
+    </meta>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+    <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+    <script src="./dist/aframe-lounge-component.min.js"></script>
+    <script src="../../../dist/aframe-babia-components.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    <script src="../../multiuser/easyrtc.js"></script>
+    <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+    <script src="https://unpkg.com/aframe-teleport-controls/dist/aframe-teleport-controls.min.js"></script>
+
+    <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+
+    <style>
+        h1 {
+            color: #AAAAAA;
+            font-family: 'Archivo', sans-serif;
+            font-size: 45px;
+            text-align: center;
+            text-shadow: black 0.1em 0.1em 0.2em
+        }
+
+        p {
+            color: #444444;
+            font-family: 'Archivo', sans-serif;
+            font-size: 26px;
+            text-align: justify;
+            text-shadow: #AAAAAA 0.1em 0.1em 0.2em
+        }
+    </style>
+</head>
+
+<body>
+    <a-scene id="scene" light="defaultLightsEnabled: false" networked-scene="
+        room: demo_museum;
+        adapter: easyrtc;
+        debug: true;
+        audio: true;
+        serverURL: empty_server;
+    ">
+
+        <!-- Assets -->
+        <a-assets>
+            <!-- Dummy asset to make the scene sync (WIP)-->
+            <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
+
+            <!-- Templates -->
+            <!-- Avatar -->
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-entity class="avatar" networked-audio-source></a-entity>
+            </template>
+            <!-- Lounge -->
+            <template id="lounge-template">
+                <a-entity class="lounge"></a-entity>
+            </template>
+            <!-- Pie -->
+            <template id="pie-template">
+                <a-entity class="pie"></a-entity>
+            </template>
+            <!-- Bars -->
+            <template id="bars-template">
+                <a-entity class="bars"></a-entity>
+            </template>
+            <!-- Doughnut -->
+            <template id="doughnut-template">
+                <a-entity class="doughnut"></a-entity>
+            </template>
+            <!-- Bubbles -->
+            <template id="bubbles-template">
+                <a-entity class="bubbles"></a-entity>
+            </template>
+            <!-- Cylsmap -->
+            <template id="cylsmap-template">
+                <a-entity class="cylsmap"></a-entity>
+            </template>
+            <!-- City -->
+            <template id="city-template">
+                <a-entity class="city"></a-entity>
+            </template>
+            <!-- City -->
+            <template id="network-template">
+                <a-entity class="network"></a-entity>
+            </template>
+            <!-- Queriers -->
+            <template id="querier-template">
+                <a-entity class="querier"></a-entity>
+            </template>
+
+            <!-- Scene Assets -->
+            <img id="sky" src="./assets/360-panorama.jpg">
+            <img id="floor" src="./assets/floor-texture.jpg">
+            <img id="metalic" src="./assets/metalic-texture.jpg">
+            <!-- Avatar Assets -->
+            <a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
+            <a-asset-item id="astro" src="../../assets/avatars/astro/scene.gltf"></a-asset-item>
+            <a-asset-item id="bot" src="../../assets/avatars/bot/scene.gltf"></a-asset-item>
+            <a-asset-item id="charmander" src="../../assets/avatars/charmander/scene.gltf"></a-asset-item>
+            <a-asset-item id="dinosaur" src="../../assets/avatars/dinosaur/scene.gltf"></a-asset-item>
+            <a-asset-item id="dwarf" src="../../assets/avatars/dwarf/scene.gltf"></a-asset-item>
+            <a-asset-item id="nigiri" src="../../assets/avatars/nigiri/scene.gltf"></a-asset-item>
+            <a-asset-item id="owl_sleep" src="../../assets/avatars/owl_sleep/scene.gltf"></a-asset-item>
+            <a-asset-item id="penguin" src="../../assets/avatars/penguin/scene.gltf"></a-asset-item>
+            <a-asset-item id="pidgeon" src="../../assets/avatars/pidgeon/scene.gltf"></a-asset-item>
+            <a-asset-item id="rubberduck" src="../../assets/avatars/rubberduck/scene.gltf"></a-asset-item>
+            <a-asset-item id="shiba" src="../../assets/avatars/shiba/scene.gltf"></a-asset-item>
+
+        </a-assets>
+
+        <!-- Querier Components -->
+        <a-entity id="piedata" babia-queryjson="url: data_examples/europe.json;"
+            networked="template:#querier-template; networkId:piequerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="networknodes" babia-queryjson="url: ./data_examples/travel_nodes.json;"
+            networked="template:#querier-template; networkId:nodesquerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="networklinks" babia-queryjson="url: ./data_examples/travel_links.json;"
+            networked="template:#querier-template; networkId:linksquerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="doughnutdata" babia-queryjson="url: ./data_examples/asia.json;"
+            networked="template:#querier-template; networkId:doughnutquerier; persistent: true; owner: scene">
+        </a-entity>
+        <a-entity id="bardata" babia-queryjson="url: ./data_examples/usa2.json;"
+            networked="template:#querier-template; networkId:barsquerier; persistent: true; owner: scene"></a-entity>
+        <a-entity id="continentsdata" babia-queryjson="url: ./data_examples/continents.json;"
+            networked="template:#querier-template; networkId:continentsquerier; persistent: true; owner: scene">
+        </a-entity>
+
+        <!-- Enviroment -->
+        <a-sky src="#sky"></a-sky>
+
+        <!-- Aframe Lounge -->
+        <a-entity networked="template:#lounge-template; networkId:lounge; persistent: true; owner: scene" id="lounge"
+            position="5 0 0" lounge="width: 40; depth: 50; height: 10;
+            north: barrier; floorTexture: ./assets/floor-texture.jpg">
+
+            <!-- Simple Components -->
+            <a-entity networked="template:#lounge-template; networkId:pie_lounge; persistent: true; owner: scene"
+                position=" 3 -4.5 7" lounge-plinth="width: 6; depth: 6" scale="0.5 0.5 0.5">
+                <a-entity id="pie" networked="template:#pie-template; networkId:pie; persistent: true; owner: scene"
+                    babia-pie='legend: true; palette: blues; from: piedata; key: country; size: cases' position="0 2.5 0"
+                    rotation="90 -135 0" scale="2 2 2"></a-entity>
+            </a-entity>
+            <a-text id="pie_label" value="babia-pie" color="#fff" width="3" position="1.45 -4.48 5.5" rotation="0 -90 0">
+            </a-text>
+            <a-plane class="museum_button" id="pie_button" position="1.45 -4.48 7.75" rotation="0 -90 0" height="0.2" width="0.5"
+                color="#fff">
+                <a-text id="pie_rotate_label" value="Rotate" color="#000" width="3" position="-0.2 0 0" rotation="0 0 0">
+                </a-text>
+            </a-plane>
+            <a-entity networked="template:#lounge-template; networkId:doughnut_lounge; persistent: true; owner: scene"
+                position="4 -4.5 3" lounge-plinth="width: 4; depth: 4" scale="0.5 0.5 0.5">
+                <a-entity id="doughnut"
+                    networked="template:#doughnut-template; networkId:doughnut; persistent: true; owner: scene"
+                    babia-doughnut='legend: true; palette: pearl; from: doughnutdata; key: country; size: cases'
+                    position="0 2.5 0" rotation="90 -45 0" scale="1.5 1.5 1.5"></a-entity>
+            </a-entity>
+            <a-text id="doughnut_label" value="babia-doughnut" color="#fff" width="3" position="2.9 -4.48 2.2" rotation="0 -90 0">
+            </a-text>
+            <a-entity networked="template:#lounge-template; networkId:bars_lounge; persistent: true; owner: scene"
+                position="-2 -4.5 8" rotation="0 180 0" lounge-plinth="width: 6.5; depth: 4"
+                scale="0.5 0.5 0.5">
+                <a-entity id="bars" networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"
+                    babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths; palette: ubuntu'
+                    position="-2.25 0.275 0" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+            </a-entity>
+            <a-text id="bars_label" value="babia-bars" color="#fff" width="3" position="-0.5 -4.48 6.95" rotation="0 180 0">
+            </a-text>
+            <a-plane class="museum_button" id="bars_button" position="-3 -4.48 6.95" rotation="0 180 0" height="0.2" width="1"
+                color="#fff">
+                <a-text id="bars_palette_label" value="Change palette" color="#000" width="3" position="-0.45 0 0" rotation="0 0 0">
+                </a-text>
+            </a-plane>
+
+            <!-- 3D Components -->
+            <a-entity networked="template:#lounge-template; networkId:bubbles_lounge; persistent: true; owner: scene"
+                position="-3 -4.5 0" lounge-plinth="width: 10; depth: 4" scale="0.5 0.5 0.5">
+                <a-entity id="bubbles"
+                    networked="template:#bubbles-template; networkId:bubbles; persistent: true; owner: scene"
+                    babia-bubbles='legend: true; palette: ubuntu; radiusMax: 2.2; heightMax: 30; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
+                    position="-4.35 0.275 0" rotation="0 0 0" scale="0.15 0.15 0.15"></a-entity>
+            </a-entity>
+            <a-text id="bubbles_label" value="babia-bubbles" color="#fff" width="3" position="-5 -4.48 1.05" rotation="0 0 0">
+            </a-text>
+            <a-plane class="museum_button" id="bubbles_button" position="-1.5 -4.48 1.05" rotation="0 0 0" height="0.2" width="1.55"
+                color="#fff">
+                <a-text id="bubbles_radius_label" value="Change maximum radius" color="#000" width="3" position="-0.75 0 0"
+                    rotation="0 0 0">
+                </a-text>
+            </a-plane>
+            <a-entity networked="template:#lounge-template; networkId:clysmap_lounge; persistent: true; owner: scene"
+                position="-5 -4.5 5" lounge-plinth="width: 3; depth: 9.8" rotation="0 0 0"
+                scale="0.5 0.5 0.5">
+                <a-entity id="cylsmap"
+                    networked="template:#cylsmap-template; networkId:cylsmap; persistent: true; owner: scene"
+                    babia-cylsmap='legend: true; palette: flat; heightMax: 100; radiusMax: 2; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
+                    position="0 0.275 -3.65" rotation="0 -90 0" scale="0.09 0.07 0.09"></a-entity>
+            </a-entity>
+            <a-text id="cylsmap_label" value="babia-cylsmap" color="#fff" width="3" position="-4.2 -4.48 7" rotation="0 90 0">
+            </a-text>
+            <a-plane class="museum_button" id="cylsmap_button" position="-4.2 -4.48 3" rotation="0 90 0" height="0.2" width="0.5"
+                color="#fff">
+                <a-text id="cylsmap_size_label" value="Resize" color="#000" width="3" position="-0.2 0 0" rotation="0 0 0">
+                </a-text>
+            </a-plane>
+
+            <!-- Network Component -->
+            <a-entity networked="template:#lounge-template; networkId:network_lounge; persistent: true; owner: scene"
+                position="2 -4.5 -1" lounge-plinth="width: 6; depth: 6"  scale="0.5 0.5 0.5">
+                <a-entity id="network" babia-network='nodesFrom: networknodes; linksFrom: networklinks;
+                    nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
+                    nodeResolution: 30; nodeVal: population; nodeRelSize: 1;
+                    linkWidth: 0.1; nodeLegend: true;' scale="0.1 0.1 0.1" rotation="0 0 -90" position="0 5 0"
+                    networked="template:#network-template; networkId:network; persistent: true; owner: scene">
+                </a-entity>
+            </a-entity>
+            <a-plane class="museum_button" id="network_button" position="2.9 -4.48 0.55" rotation="0 0 0" height="0.2" width="0.5"
+                color="#fff">
+                <a-text id="network_resolution_label" value="Rotate" color="#000" width="3" position="-0.2 0 0"
+                    rotation="0 0 0">
+                </a-text>
+            </a-plane>
+            <a-text id="network_label" value="babia-network" color="#fff" width="3" position="0.6 -4.48 0.55" rotation="0 0 0">
+            </a-text>
+
+            <!-- UI Component -->
+            <a-entity id="ui_doughnut" babia-ui="target: doughnut" position="18 -1 9" rotation="0 -90 0"
+                scale="0.4 0.7 0.5">
+            </a-entity>
+        </a-entity>
+
+        <!-- Lights -->
+        <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+        
+        <!--Rig, Camera and Avatar-->
+        <a-entity lounge-entry-point id="rig" position="3 -3 4" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="camera" camera rotation="0 90 0" look-controls wasd-controls="fly: false"
+                networked="template:#camera-template;attachTemplateToLocal:false;">
+                <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
+                    networked="template:#avatar-template;attachTemplateToLocal:false">
+                </a-entity>
+            </a-entity>
+        <!-- Hand Controls -->
+        <a-entity id="leftHand" oculus-touch-controls="hand: left"></a-entity>
+        <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
+            raycaster="objects: .babiaxraycasterclass, .museum_button"></a-entity>
+        <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .museum_button"></a-entity>
+        </a-entity>
+
+
+    </a-scene>
+    <div class="gitlab-corner-wrapper"><a
+            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/demos/1.0.11/index.html"
+            class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                <g id="g44">
+                    <path id="path46" class="cls-1"
+                        d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                </g>
+                <g id="g48">
+                    <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                </g>
+                <g id="g56">
+                    <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                </g>
+                <g id="g64">
+                    <path id="path66" class="cls-3"
+                        d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                </g>
+                <g id="g72">
+                    <path id="path74" class="cls-2"
+                        d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                </g>
+                <g id="g76">
+                    <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                </g>
+                <g id="g80">
+                    <path id="path82" class="cls-3"
+                        d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                </g>
+                <g id="g84">
+                    <path id="path86" class="cls-2"
+                        d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                </g>
+            </svg></a></div>
+    <script>
+            let scene = document.getElementById('scene');
+            let rig = document.querySelector('#rig');
+            let avatar = document.getElementById('avatar');
+            let hand_right = document.getElementById('rightHand');
+
+    let uiDesktop = document.getElementById('ui_doughnut');
+    let pieButton = document.getElementById('pie_button');
+    let barsButton = document.getElementById('bars_button');
+    let bubblesButton = document.getElementById('bubbles_button');
+    let cylsmapButton = document.getElementById('cylsmap_button');
+    let networkButton = document.getElementById('network_button');
+
+    let doughnut = document.getElementById('doughnut');
+    let pie = document.getElementById('pie');
+    let bars = document.getElementById('bars');
+    let bubbles = document.getElementById('bubbles');
+    let cylsmap = document.getElementById('cylsmap');
+    let network = document.getElementById('network');
+
+                    /* SET AVATAR FROM QUERY STRING */
+                    let y = 0;
+                    let chosenAvatar = getValueFromQueryString('avatar');
+                    if (chosenAvatar) {
+                        if (chosenAvatar == 'astro') {
+                            avatar.setAttribute("gltf-model", "#astro");
+                            avatar.setAttribute('scale', '0.003 0.003 0.003');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'bot') {
+                            avatar.setAttribute("gltf-model", "#bot");
+                            avatar.setAttribute('scale', '0.2 0.2 0.2');
+                            avatar.setAttribute('rotation', '0 90 0');
+                            avatar.setAttribute('position', '0 0.1 0');
+                        } else if (chosenAvatar == 'charmander') {
+                            avatar.setAttribute("gltf-model", "#charmander");
+                            avatar.setAttribute('scale', '0.045 0.045 0.045');
+                            avatar.setAttribute('position', '0 0.5 0');
+                        } else if (chosenAvatar == 'dinosaur') {
+                            avatar.setAttribute("gltf-model", "#dinosaur");
+                            avatar.setAttribute('scale', '0.5 0.5 0.5');
+                            avatar.setAttribute('position', '0 0.3 0');
+                        } else if (chosenAvatar == 'dwarf') {
+                            avatar.setAttribute("gltf-model", "#dwarf");
+                            avatar.setAttribute('scale', '0.8 0.8 0.8');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'nigiri') {
+                            avatar.setAttribute("gltf-model", "#nigiri");
+                            avatar.setAttribute('scale', '0.025 0.025 0.025');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'owl_sleep') {
+                            avatar.setAttribute("gltf-model", "#owl_sleep");
+                            avatar.setAttribute('scale', '0.8 0.8 0.8');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'penguin') {
+                            avatar.setAttribute("gltf-model", "#penguin");
+                            avatar.setAttribute('scale', '2 2 2');
+                            avatar.setAttribute('position', '0 1 0');
+                        } else if (chosenAvatar == 'pidgeon') {
+                            avatar.setAttribute("gltf-model", "#pidgeon");
+                            avatar.setAttribute('scale', '2.8 2.8 2.8');
+                            avatar.setAttribute('rotation', '0 0 0');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'rubberduck') {
+                            avatar.setAttribute("gltf-model", "#rubberduck");
+                            avatar.setAttribute('scale', '2.5 2.5 2.5');
+                            avatar.setAttribute('rotation', '0 90 0');
+                            avatar.setAttribute('position', '0 -0.5 0')
+                        } else if (chosenAvatar == 'shiba') {
+                            avatar.setAttribute("gltf-model", "#shiba");
+                            avatar.setAttribute('scale', '1.5 1.5 1.5');
+                            avatar.setAttribute('position', '0 1 0');
+                        }
+                    }
+
+                    /* SET SERVER URL FROM QUERY STRING */
+                    let serverURL = getValueFromQueryString('serverURL');
+                    console.log("Empty server URL, networked-scene: ", scene.getAttribute('networked-scene'));
+                    if (serverURL) {
+                        scene.setAttribute('networked-scene', 'serverURL', serverURL);
+                        scene.setAttribute('networked-scene', 'audio', 'true');
+                    }
+                    /* UI Event Listeners */
+
+                    // VR started
+                    document.addEventListener('controllerconnected', (event) => {
+                        rig.setAttribute('position', "3 -4.5 4");
+                        if (chosenAvatar == 'astro') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'bot') {
+                            avatar.setAttribute('position', '0 -0.65 0');
+                        } else if (chosenAvatar == 'charmander') {
+                            avatar.setAttribute('position', '0 -0.25 0');
+                        } else if (chosenAvatar == 'dinosaur') {
+                            avatar.setAttribute('position', '0 -0.45 0');
+                        } else if (chosenAvatar == 'dwarf') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'nigiri') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'owl_sleep') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'penguin') {
+                            avatar.setAttribute('position', '0 0.25 0');
+                        } else if (chosenAvatar == 'pidgeon') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'rubberduck') {
+                            avatar.setAttribute('position', '0 -1.25 0')
+                        } else if (chosenAvatar == 'shiba') {
+                            avatar.setAttribute('position', '0 0.25 0');
+                        }
+                    });
+        // uiDesktop
+        uiDesktop.addEventListener('click', function (event) {
+            if (!NAF.utils.isMine(doughnut)) {
+                NAF.utils.takeOwnership(doughnut)
+            }
+        });
+
+                scene.addEventListener('child-attached', function (event) {
+            if (event.detail.el.id === 'babia-menu-hand') {
+                console.log('uiVR has been added: ', event.target.children["babia-menu-hand"])
+                let uiVR = document.querySelector('#babia-menu-hand')
+                uiVR.addEventListener('click', function (event) {
+                    if (!NAF.utils.isMine(doughnut)) {
+                        NAF.utils.takeOwnership(doughnut)
+                    };
+                });
+            }
+                });
+                                        // Buttons
+                                        pieButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(pie)) {
+                                                NAF.utils.takeOwnership(pie)
+                                            }
+                                            rotatePie();
+                                        });
+                                        barsButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(bars)) {
+                                                NAF.utils.takeOwnership(bars)
+                                            }
+                                            paletteBars();
+                                        });
+                                        bubblesButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(bubbles)) {
+                                                NAF.utils.takeOwnership(bubbles)
+                                            }
+                                            radiusBubbles();
+                                        });
+                                        cylsmapButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(cylsmap)) {
+                                                NAF.utils.takeOwnership(cylsmap)
+                                            }
+                                            resizeCylsmap();
+                                        });
+                                        networkButton.addEventListener('click', function (event) {
+                                            if (!NAF.utils.isMine(network)) {
+                                                NAF.utils.takeOwnership(network)
+                                            }
+                                            rotateNetwork();
+                                        });
+
+            // Other methods
+
+            // Get Server
+            function getValueFromQueryString(string) {
+                string = string.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + string + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(window.location.href);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+                                            // Button actions
+                                            function rotatePie() {
+                                                let x = pie.getAttribute('rotation').x;
+                                                let y = pie.getAttribute('rotation').y;
+                                                let z = pie.getAttribute('rotation').z;
+                                                y = y - 45;
+                                                let rotation = `${x} ${y} ${z}`
+                                                pie.setAttribute('rotation', rotation);
+                                            }
+                                            function paletteBars() {
+                                                let palette = bars.getAttribute('babia-bars').palette;
+                                                let palettes = ["blues", "bussiness", "commerce", "flat", "foxy", "icecream", "pearl", "sunset", "ubuntu"]
+                                                if (palette === palettes[palettes.length - 1]) {
+                                                    palette = palettes[0]
+                                                } else {
+                                                    palette = palettes[palettes.indexOf(palette) + 1]
+                                                }
+                                                bars.setAttribute('babia-bars', 'palette', palette);
+                                            }
+                                            function radiusBubbles() {
+                                                let radiusMax = bubbles.getAttribute('babia-bubbles').radiusMax;
+                                                if (radiusMax >= 2.4) {
+                                                    radiusMax = 2.1;
+                                                } else {
+                                                    radiusMax = radiusMax + 0.1;
+                                                }
+                                                bubbles.setAttribute('babia-bubbles', 'radiusMax', radiusMax);
+                                            }
+                                            function resizeCylsmap() {
+                                                let scale_x = cylsmap.getAttribute('scale').x;
+                                                let scale_y = cylsmap.getAttribute('scale').y;
+                                                let scale_z = cylsmap.getAttribute('scale').z;
+                                                if (scale_y >= 0.09) {
+                                                    scale_y = 0.05;
+                                                } else {
+                                                    scale_y = scale_y + 0.02;
+                                                }
+                                                let scale = `${scale_x} ${scale_y} ${scale_z}`
+                                                cylsmap.setAttribute('scale', scale);
+                                            }
+                                            function rotateNetwork() {
+                                                let x = network.getAttribute('rotation').x;
+                                                let y = network.getAttribute('rotation').y;
+                                                let z = network.getAttribute('rotation').z;
+                                                y = y - 45;
+                                                let rotation = `${x} ${y} ${z}`
+                                                network.setAttribute('rotation', rotation);
+                                            }
+                                        
+
+        // Schemas with components and attributes for syncronization
+        NAF.schemas.add({
+            template: '#rig-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#camera-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#avatar-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'gltf-model'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#lounge-template',
+            components: [
+                'position',
+                'rotation'
+            ]
+        });
+
+                                                                                                                                                                                                                                                            NAF.schemas.add({
+                                                                                                                                                                                                                                                                template: '#pie-template',
+                                                                                                                                                                                                                                                                components: [
+                                                                                                                                                                                                                                                                    'position',
+                                                                                                                                                                                                                                                                    'rotation',
+                                                                                                                                                                                                                                                                    'scale',
+                                                                                                                                                                                                                                                                    'babia-pie'
+                                                                                                                                                                                                                                                                ]
+                                                                                                                                                                                                                                                            });
+
+        NAF.schemas.add({
+            template: '#bars-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-bars'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#doughnut-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-doughnut'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#cylsmap-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-cylsmap'
+            ]
+        });
+        NAF.schemas.add({
+            template: '#bubbles-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-bubbles'
+            ]
+        });
+                                                                                                                                                                                                                                                            NAF.schemas.add({
+            template: '#network-template',
+            components: [
+                'position',
+                'rotation',
+                'scale',
+                'babia-network'
+            ]
+        });
+
+        NAF.schemas.add({
+            template: '#querier-template',
+            components: [
+                'babia-queryjson'
+            ]
+        });
+
+    </script>
+
+</body>
+
+</html>
