@@ -7,7 +7,7 @@
     {"x_axis":"Estonia","continent":"Europe","country":"Estonia","population": 1.462,"partial": 11.31,"partial%":18.70,"complete": 11.87,"complete%":19.63},
     {"x_axis":"Latvia","continent":"Europe","country":"Latvia","population": 1.934,"partial": 4.61,"partial%":3.16,"complete": 11.92, "complete%":8.17},
     {"x_axis":"Panama","continent":"America","country":"Panama","population": 37.742,"partial": 19.45,"partial%":51.53 ,"complete": 2.01,"complete%":5.33},
-    {"x_axis":"Argentina","continent":"America","country":"Argentina","population": 19.116,"partial": 2.57,"partial%":13.44,"complete": 7.95,"complete%":41.57},
+    {"x_axis":"Argentine","continent":"America","country":"Argentine","population": 19.116,"partial": 2.57,"partial%":13.44,"complete": 7.95,"complete%":41.57},
     {"x_axis":"Philippines","continent":"Asia","country":"Philippines","population": 126.476,"partial": 5.89,"partial%":4.66,"complete": 3.23,"complete%":2.55},
     {"x_axis":"Jordan","continent":"Asia","country":"Jordan","population": 8.656,"partial": 0.320,"partial%":3.70,"complete": 5.13, "complete%":59.28},
     {"x_axis":"Costa Rica","continent":"America","country":"Costa Rica","population": 20.883,"partial": 3.14,"partial%":6.17,"complete": 3.26,"complete%":6.41},
@@ -15,7 +15,7 @@
     {"x_axis":"Fidji","continent":"Oceania","country":"Fidji","population": 16.719,"partial": 0.606,"partial%":3.63,"complete": 1.96,"complete%":11.73},
     {"x_axis":"New Zealand","continent":"Oceania","country":"New Zealand","population": 25.500,"partial": 3.22,"partial%":12.64,"complete": 0.495, "complete%":1.94},
     {"x_axis":"Sweden","continent":"Europe","country":"Sweden","population": 5.792,"partial": 0.860,"partial%":14.83,"complete": 1.25,"complete%":21.50},
-    {"x_axis":"Urugay","continent":"America","country":"Uruguay","population": 11.673,"partial": 0.941,"partial%":8.07,"complete": 0.347,"complete%":2.97},
+    {"x_axis":"Uruguay","continent":"America","country":"Uruguay","population": 11.673,"partial": 0.941,"partial%":8.07,"complete": 0.347,"complete%":2.97},
     {"x_axis":"Ireland","continent":"Europe","country":"Ireland","population": 67.886,"partial": 13.93,"partial%":20.51,"complete": 25.33,"complete%":37.32},
     {"x_axis":"El Salvador","continent":"America","country":"El Salvador","population": 22.559,"partial": 23.07,"partial%":19.86,"complete": 22.01,"complete%":10.35}
 ]

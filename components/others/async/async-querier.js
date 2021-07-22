@@ -11,99 +11,82 @@ AFRAME.registerComponent('babia-async-querier', {
         url: { type: 'string' },
     },
 
-    /**
-    * Set if component needs multiple instancing.
-    */
     multiple: false,
 
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
     init: function () {
-        console.log("async querier init()")
         this.register = new Register();
-
-        setInterval(() => {
-            // Check for changes inside the data file, when the url has not changed
-            
-            // Compare data
-            if (!this.register.isUpdating){
-                let old_data = this.register.data;
-                let new_data = [];
-                    requestJSONDataFromURL(this.querierdata.url).then((json) => {
-                        new_data = json;
-                        if (old_data == null | old_data != new_data){
-                            this.register.data = new_data;
-                        }
-                    });
-            }
-        }, 5000);
+        this.register.initRegister(getDataFromURL, this, modifyData);
     },
 
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        console.log("async querier update()")
-        let self = this;
-        self.querierdata = self.data;
-        
-        if (oldData.url != self.querierdata.url) {
-            self.register.isUpdating = true;
-            requestJSONDataFromURL(self.querierdata.url).then((json) => {
-                self.register.data = json;
-                self.register.isUpdating = false;
-            });
-        }
+    update: function () {
+        this.register.setData(getDataFromURL, this, modifyData)
     },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
+    
     remove: function () { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
     pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
     play: function () { },
-    /**
-     * Register variable
-    */
+
     register: undefined,
-    querierdata: undefined,
 })
 
-async function requestJSONDataFromURL(url) { 
-    let response = await fetch(url);
 
+// Function to obtain data in querier
+async function getDataFromURL(self) { 
+    let response = await fetch(self.data.url);
     if (response.status == 200) {
        let json = await response.json();
        return json;
     }
- 
     throw new Error(response.status);
  }
+
+ // Function passed as parameter in register's setData
+ function modifyData(data) {return data}
+
+ /* REGISTER */
 
  class Register {
     constructor(){
         this.data = null;
-        this.isUpdating = true;
+        this.isUpdating = false;
     }
 
-    async getData(el) {
-        /* No need to check if there already was data (for new visualizers), 
-        since we just wait for dataReady to have a value, and if it was previously set, it will have one*/
-        console.log("getData in: ", el)
-        let dataReady = await this.data
-        return dataReady; 
+    // Function that resolves or rejects the data promise
+    promisedData() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => { 
+                if (this.data != null) {
+                    resolve(this.data)
+                } else {
+                    reject('data_empty')
+                }              
+            }, 250);
+        });
+    }
+
+    // Wait for the data promised and get it from register
+    async getData() {
+        return await this.promisedData(); 
+    }
+
+    // Loop function to set data in register case there are changes that do not trigger update()
+    initRegister(obtain, obtainParam, modify, modifyParam){
+        setInterval(() => {
+            this.setData(obtain, obtainParam, modify, modifyParam)
+        }, 2000);
+    }
+  
+    // Function to set data in register: obtain, modify and set 
+    setData(obtain, obtainParam, modify, modifyParam){
+        if (!this.isUpdating){
+            this.isUpdating = true;
+            obtain(obtainParam).then((result) => { // obtain data
+                let new_data = modify(result, modifyParam) //modify data
+                if (this.data == null || this.data != new_data){
+                    this.data = new_data; // set data
+                }
+            });
+            this.isUpdating = false;
+        }
     }
 }
