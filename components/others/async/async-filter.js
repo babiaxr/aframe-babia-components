@@ -16,11 +16,11 @@ AFRAME.registerComponent('babia-async-filter', {
 
     init: function () {
         this.register = new Register();
-        this.register.initRegister(getDataToFilter, this, filterData, this.data)
+        this.register.initRegister(obtainData, this, filterData, this.data, 2000)
     },
 
     update: function (oldData) {
-        this.register.setData(getDataToFilter, this, filterData, this.data)
+        this.register.setData(obtainData, this, filterData, this.data)
     },
 
     remove: function () { },
@@ -53,26 +53,23 @@ AFRAME.registerComponent('babia-async-filter', {
     return fromComponent
   }
 
-  // Function to obtain data from fromComponent's register
-  async function getDataToFilter(self) { 
-    let fromComponent = findFrom(self.data, self.el);
-    let data = await fromComponent.register.getData();
-    if (data != "data_empty") {
-       return data;
-    }
- }
+// Function to obtain data from fromComponent's register
+async function obtainData(self) { 
+  let fromComponent = findFrom(self.data, self.el);
+  return await fromComponent.register.getData(1000, 10);
+}
 
-  // Function to filter data once obtained
-  let filterData = (rawData, data) => {
-    let filter = data.filter.split('=')
-    if (filter[0] && filter[1]) {
-      let dataFiltered = rawData.filter((key) => key[filter[0]] == filter[1])
-      return dataFiltered
-    } else {
-      console.error("Error on filter, please use key=value syntax")
-      return []
-    }
+// Function to filter data once obtained
+let filterData = (rawData, data) => {
+  let filter = data.filter.split('=')
+  if (filter[0] && filter[1]) {
+    let dataFiltered = rawData.filter((key) => key[filter[0]] == filter[1])
+    return dataFiltered
+  } else {
+    console.error("Error on filter, please use key=value syntax")
+    return []
   }
+}
 
 
 
@@ -85,32 +82,36 @@ class Register {
       this.isUpdating = false;
   }
 
-  // Function that resolves or rejects the data promise
-  promisedData() {
-      return new Promise((resolve, reject) => {
-          setTimeout(() => { 
-              if (this.data != null) {
-                  resolve(this.data)
-              } else {
-                  reject('data_empty')
-              }              
-          }, 250);
-      });
+  // (Receiver) Function that resolves the promise when data has a value
+  promisedData(time, max) {
+    return new Promise((resolve, reject) => {
+        let counter = 0;
+        let interval = setInterval(() => {
+            counter++
+            if (this.data != null) {
+                resolve(this.data)
+                clearInterval(interval)
+            } else if (counter <= max){
+                reject("data_empty")
+                clearInterval(interval)
+            }
+          }, time)
+    });
+}
+
+  // (Receiver) Wait for the data promised and get it from register
+  async getData(time, max) {
+      return await this.promisedData(time, max); 
   }
 
-  // Wait for the data promised and get it from register
-  async getData() {
-      return await this.promisedData(); 
-  }
-
-  // Loop function to set data in register case there are changes that do not trigger update()
-  initRegister(obtain, obtainParam, modify, modifyParam){
+  // (Source) Loop function to set data in register case there are changes that do not trigger update()
+  initRegister(obtain, obtainParam, modify, modifyParam, time){
     setInterval(() => {
       this.setData(obtain, obtainParam, modify, modifyParam)
-    }, 2000);
+    }, time);
   }
 
-  // Function to set data in register: obtain, modify and set 
+  // (Source) Function to set data in register: obtain, modify and set 
   setData(obtain, obtainParam, modify, modifyParam){
     if (!this.isUpdating){
       this.isUpdating = true;

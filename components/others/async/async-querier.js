@@ -15,11 +15,11 @@ AFRAME.registerComponent('babia-async-querier', {
 
     init: function () {
         this.register = new Register();
-        this.register.initRegister(getDataFromURL, this, modifyData);
+        this.register.initRegister(obtainData, this, modifyData, null, 2000);
     },
 
     update: function () {
-        this.register.setData(getDataFromURL, this, modifyData)
+        this.register.setData(obtainData, this, modifyData)
     },
     
     remove: function () { },
@@ -31,7 +31,7 @@ AFRAME.registerComponent('babia-async-querier', {
 
 
 // Function to obtain data in querier
-async function getDataFromURL(self) { 
+async function obtainData(self) { 
     let response = await fetch(self.data.url);
     if (response.status == 200) {
        let json = await response.json();
@@ -51,32 +51,36 @@ async function getDataFromURL(self) {
         this.isUpdating = false;
     }
 
-    // Function that resolves or rejects the data promise
-    promisedData() {
+  // (Receiver) Function that resolves the promise when data has a value
+  promisedData(time, max) {
         return new Promise((resolve, reject) => {
-            setTimeout(() => { 
+            let counter = 0;
+            let interval = setInterval(() => {
+                counter++
                 if (this.data != null) {
                     resolve(this.data)
-                } else {
-                    reject('data_empty')
-                }              
-            }, 250);
+                    clearInterval(interval)
+                } else if (counter <= max){
+                    reject("data_empty")
+                    clearInterval(interval)
+                }
+              }, time)
         });
     }
 
-    // Wait for the data promised and get it from register
-    async getData() {
-        return await this.promisedData(); 
+    // (Receiver) Wait for the data promised and get it from register
+    async getData(time, max) {
+        return await this.promisedData(time, max); 
     }
 
-    // Loop function to set data in register case there are changes that do not trigger update()
-    initRegister(obtain, obtainParam, modify, modifyParam){
+    // (Source) Loop function to set data in register case there are changes that do not trigger update()
+    initRegister(obtain, obtainParam, modify, modifyParam, time){
         setInterval(() => {
             this.setData(obtain, obtainParam, modify, modifyParam)
-        }, 2000);
+        }, time);
     }
   
-    // Function to set data in register: obtain, modify and set 
+    // (Source) Function to set data in register: obtain, modify and set 
     setData(obtain, obtainParam, modify, modifyParam){
         if (!this.isUpdating){
             this.isUpdating = true;

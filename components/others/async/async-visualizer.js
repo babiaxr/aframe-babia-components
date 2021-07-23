@@ -33,13 +33,13 @@ AFRAME.registerComponent('async-visualizer', {
         this.el.appendChild(plane);
 
         setInterval(() => {
-          getDataToShow(this);
+          obtainData(this);
         }, 2000);
     },
 
     update: function (oldData) {
         if (oldData.from !== this.data.from) {
-            getDataToShow(this);
+            obtainData(this);
         }
     },
 
@@ -75,12 +75,9 @@ let findFrom = (data, el) => {
   }
 
   // Function to obtain data from fromComponent's register
-  async function getDataToShow (self) {
+  async function obtainData (self) {
     let fromComponent = findFrom(self.data, self.el);
-    let rawData = await fromComponent.register.getData();
-    if (rawData != "data_empty"){
-      showData(rawData, self.el)
-    }   
+    await fromComponent.register.getData(1000, 10).then((rawData) => showData(rawData, self.el));
   }
 
   // Function to rearrange and show data once obtained
