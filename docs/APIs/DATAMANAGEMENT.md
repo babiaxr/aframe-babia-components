@@ -53,3 +53,5 @@ You need the `babia-navigator` to manage the progress.
 | select            | Field to filter data  | string | `date` |
 | timeout            | Time between points of time in seconds  | number | 6000 |
 | data          | Embedded data to filter. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
+
+**NOTE:** You can use multiple visualizers with the same selector component. Only indicating its id in `from` of any visualizer. All of them will be managed by the same navigator component.
