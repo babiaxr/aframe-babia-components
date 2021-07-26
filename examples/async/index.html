@@ -21,7 +21,10 @@
 
         <a-entity id="querier" babia-async-querier="url: ./data_vaccination_2.json"></a-entity>
 
-        <a-entity id="vis" async-visualizer="from: querier">
+        <a-entity id="vis1" async-visualizer="from: querier" position="0 -5 0">
+        </a-entity>
+
+        <a-entity id="vis2" async-visualizer="from: querier" position="0 0 0">
         </a-entity>
 
         <a-entity movement-controls="fly: true" position="0 5 0" rotation="0 180 0">
@@ -35,10 +38,11 @@
     <script>
         let querier = document.getElementById("querier");
         changeFrom();
+        addVisualizer();
 
         async function changeFrom() {
             for (let i = 0; i < 10; i++) {
-                await delay()
+                await delay3()
                 if (i == 0 || i % 2 == 0) {
                     querier.setAttribute('babia-async-querier', { 'url': './data_vaccination_1.json' });
                     console.log("Url: " + querier.getAttribute('babia-async-querier')['url'])
@@ -48,9 +52,35 @@
                 }
             }
         }
+        async function addVisualizer(){
+            for (let i = 3; i < 7; i++) {
+                await delay10();
+                let new_vis = document.createElement("a-entity");
+                let id = `vis_${i}`;
+                new_vis.setAttribute("id", id);
+                new_vis.setAttribute("async-visualizer", "from", "querier")
+                if (i == 3){
+                    new_vis.setAttribute("position", "0 5 0");
+                } else if (i == 4){
+                    new_vis.setAttribute("position", "-10 -5 0");
+                }
+                else if (i == 5){
+                    new_vis.setAttribute("position", "-10 0 0");
+                }
+                else if (i == 6){
+                    new_vis.setAttribute("position", "-10 5 0");
+                }
+                document.getElementById("AframeScene").appendChild(new_vis);
+            }
 
-        function delay() {
+        }
+
+
+        function delay3() {
             return new Promise(resolve => setTimeout(resolve, 3000));
+        }
+        function delay10() {
+            return new Promise(resolve => setTimeout(resolve, 10000));
         }
     </script>
 </body>

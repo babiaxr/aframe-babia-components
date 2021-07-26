@@ -11,74 +11,86 @@ AFRAME.registerComponent('babia-async-querier', {
         url: { type: 'string' },
     },
 
-    /**
-    * Set if component needs multiple instancing.
-    */
     multiple: false,
 
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
     init: function () {
         this.register = new Register();
+        this.register.initRegister(obtainData, this, modifyData, null, 2000);
     },
 
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    update: function (oldData) {
-        let data = this.data;
-        let self = this;
-        
-        if (oldData.url !== data.url) {
-            requestJSONDataFromURL(data.url).then((json) => self.register.data = json);
-        }
+    update: function () {
+        this.register.setData(obtainData, this, modifyData)
     },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
+    
     remove: function () { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
     pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
     play: function () { },
-    /**
-     * Register variable
-    */
+
     register: undefined,
 })
 
-async function requestJSONDataFromURL(url) { 
-    let response = await fetch(url);
-    console.log("Response: " + response)
 
+// Function to obtain data in querier
+async function obtainData(self) { 
+    let response = await fetch(self.data.url);
     if (response.status == 200) {
        let json = await response.json();
-       console.log("Json: " +json)
        return json;
     }
- 
     throw new Error(response.status);
  }
+
+ // Function passed as parameter in register's setData
+ function modifyData(data) {return data}
+
+ /* REGISTER */
 
  class Register {
     constructor(){
         this.data = null;
+        this.isUpdating = false;
     }
 
-    async getData() {
-        let dataReady = await this.data
-        return dataReady; 
+  // (Receiver) Function that resolves the promise when data has a value
+  promisedData(time, max) {
+        return new Promise((resolve, reject) => {
+            let counter = 0;
+            let interval = setInterval(() => {
+                counter++
+                if (this.data != null) {
+                    resolve(this.data)
+                    clearInterval(interval)
+                } else if (counter <= max){
+                    reject("data_empty")
+                    clearInterval(interval)
+                }
+              }, time)
+        });
+    }
+
+    // (Receiver) Wait for the data promised and get it from register
+    async getData(time, max) {
+        return await this.promisedData(time, max); 
+    }
+
+    // (Source) Loop function to set data in register case there are changes that do not trigger update()
+    initRegister(obtain, obtainParam, modify, modifyParam, time){
+        setInterval(() => {
+            this.setData(obtain, obtainParam, modify, modifyParam)
+        }, time);
+    }
+  
+    // (Source) Function to set data in register: obtain, modify and set 
+    setData(obtain, obtainParam, modify, modifyParam){
+        if (!this.isUpdating){
+            this.isUpdating = true;
+            obtain(obtainParam).then((result) => { // obtain data
+                let new_data = modify(result, modifyParam) //modify data
+                if (this.data == null || this.data != new_data){
+                    this.data = new_data; // set data
+                }
+            });
+            this.isUpdating = false;
+        }
     }
 }

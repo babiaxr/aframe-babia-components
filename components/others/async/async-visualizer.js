@@ -11,15 +11,10 @@ AFRAME.registerComponent('async-visualizer', {
         from: { type: 'string' },
     },
 
-    /**
-    * Set if component needs multiple instancing.
-    */
     multiple: false,
 
-    /**
-    * Called once when component is attached. Generally for initial setup.
-    */
     init: function () {
+      // Create visualizer
         let plane = document.createElement("a-plane");
         plane.setAttribute('id', 'info_plane');
         plane.setAttribute('position', '0 7 10');
@@ -28,51 +23,33 @@ AFRAME.registerComponent('async-visualizer', {
         plane.setAttribute('width', '10');
         plane.setAttribute('color', 'white');
         let label = document.createElement("a-text");
-        label.setAttribute('id', 'info_label');
-        label.setAttribute('value', 'No info');
+        let label_text = this.el.getAttribute("id") + "_info_label"
+        label.setAttribute('id', label_text);
+        label.setAttribute('value', 'Loading...');
         label.setAttribute('color', '#000');
         label.setAttribute('width', '9');
         label.setAttribute('position', '-4.5 0 0')
         plane.appendChild(label);
         this.el.appendChild(plane);
-    },
 
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
+        setInterval(() => {
+          obtainData(this);
+        }, 2000);
+    },
 
     update: function (oldData) {
-        const self = this;
-        let data = this.data;
-        let el = this.el;
-
-        if (oldData.from !== data.from) {
-            let fromComponent = findFrom(data, el, self);
-            getDataFrom(fromComponent, el);
+        if (oldData.from !== this.data.from) {
+            obtainData(this);
         }
     },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
+
     remove: function () { },
-
-  
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
     pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
     play: function () { },
 
 })
 
+// Function to find fromComponent to get data from it's register
 let findFrom = (data, el) => {
     let fromComponent;
     if (data.from) {
@@ -97,24 +74,23 @@ let findFrom = (data, el) => {
     return fromComponent
   }
 
-  let getDataFrom = (fromComponent) => {
-    let data = [];
-    setInterval(() => {
-        fromComponent.register.getData().then( _data => {
-            data = _data;
-            console.log("Data: " + data)
-                let dataToPrint = data.reduce((accumulator, currentValue) => {
-                    if (data.indexOf(currentValue) == data.length -1){
-                        return accumulator + currentValue['country'] + '.'
-                    } else if (data.indexOf(currentValue) == data.length -2) {
-                        return accumulator + currentValue['country'] + ' and '
-                    } else {
-                        return accumulator + currentValue['country'] + ', '
-                    }
-                }, "New data: ")
-                document.getElementById("info_label").setAttribute('value', dataToPrint)
-        });        
-    }, 500);
+  // Function to obtain data from fromComponent's register
+  async function obtainData (self) {
+    let fromComponent = findFrom(self.data, self.el);
+    await fromComponent.register.getData(1000, 10).then((rawData) => showData(rawData, self.el));
   }
-  
-  
+
+  // Function to rearrange and show data once obtained
+  let showData = (data, el) => {
+    let dataToPrint = data.reduce((acc, cv) => {
+      if (data.indexOf(cv) == data.length -1){
+        return acc + cv['country'] + '.'
+      } else if (data.indexOf(cv) == data.length -2) {
+        return acc + cv['country'] + ' and '
+      } else {
+        return acc + cv['country'] + ', '
+      }
+    }, "New data: ")
+      let label_text = el.getAttribute("id") + "_info_label";
+      document.getElementById(label_text).setAttribute('value', dataToPrint)
+  }

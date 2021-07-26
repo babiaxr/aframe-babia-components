@@ -1,0 +1,126 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Async-Await</title>
+    <meta name="description" content="Async-Await test" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script src="../../dist/aframe-babia-components.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="0 5 0"></a-light>
+
+        <a-entity id="querier_1" babia-async-querier="url: ./data_vaccination_2.json"></a-entity>
+        <a-entity id="filter_1" babia-async-filter="from: querier_1; filter: continent=Europe"></a-entity>
+        <a-entity id="querier_2" babia-async-querier="url: ./data_vaccination_4.json"></a-entity>
+        <a-entity id="filter_2" babia-async-filter="from: querier_2; filter: continent=Asia"></a-entity>
+
+        <a-entity id="vis_1" async-visualizer="from: filter_1" position="0 -5 0">
+        </a-entity>
+
+        <a-entity id="vis_2" async-visualizer="from: filter_2" position="0 0 0">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="0 5 0" rotation="0 180 0">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+    </a-scene>
+
+
+    <script>
+        let querier_1 = document.getElementById("querier_1");
+        changeQuerierFrom();
+        changeFilterFrom();
+        addVisualizer();
+
+        async function changeQuerierFrom() {
+            for (let i = 0; i < 5; i++) {
+                await delay10()
+                if (i == 0 || i % 2 == 0) {
+                    querier_1.setAttribute('babia-async-querier', { 'url': './data_vaccination_2.json' });
+                } else {
+                    querier_1.setAttribute('babia-async-querier', { 'url': './data_vaccination_1.json' });
+                }
+                console.log("Url: " + querier_1.getAttribute('babia-async-querier')['url'])
+            }
+        }
+        async function changeFilterFrom() {
+            for (let i = 0; i < 5; i++) {
+                await delay5()
+                if (i == 0 || i % 2 == 0) {
+                    filter_1.setAttribute('babia-async-filter', 'from', 'querier_1' );
+                } else {
+                    filter_1.setAttribute('babia-async-filter', 'from', 'querier_2' );
+                }
+                console.log("From: " + filter_1.getAttribute('babia-async-filter')['from'])
+            }
+            
+        }
+    
+       async function addVisualizer(){
+            for (let i = 3; i < 7; i++) {
+                await delay5();
+                let new_vis = document.createElement("a-entity");
+                let id = `vis_${i}`;
+                new_vis.setAttribute("id", id);
+                if (i == 3){
+                    new_vis.setAttribute("position", "0 5 0");
+                } else if (i == 4){
+                    new_vis.setAttribute("position", "-10 -5 0");
+                }
+                else if (i == 5){
+                    new_vis.setAttribute("position", "-10 0 0");
+                }
+                else if (i == 6){
+                    new_vis.setAttribute("position", "-10 5 0");
+                }
+                addFilter(new_vis, i);
+                document.getElementById("AframeScene").appendChild(new_vis);
+            }
+        }
+        function addFilter(vis, i){
+            let new_filter = document.createElement("a-entity");
+            let id = `filter_${i}`;
+            new_filter.setAttribute("id", id);
+            if (i%2 == 0){
+                new_filter.setAttribute("babia-async-filter", {"from": "querier_1", "filter": "continent=America"});
+            } else {
+                new_filter.setAttribute("babia-async-filter", {"from": "querier_2", "filter": "continent=America"});
+                changeFilter(new_filter)
+            }
+            document.getElementById("AframeScene").appendChild(new_filter);
+            vis.setAttribute("async-visualizer", "from", id)
+        }
+
+        async function changeFilter(filter){
+            for (let i = 0; i < 5; i++) {
+                await delay5()
+                if (i == 0 || i % 2 == 0) {
+                    filter.setAttribute('babia-async-filter', 'filter', 'continent=Africa' );
+                } else {
+                    filter.setAttribute('babia-async-filter', 'filter', 'continent=Oceania' );
+                }
+                console.log("Filter: " + filter.getAttribute('babia-async-filter')['filter'])
+            }
+        }
+
+
+        function delay5() {
+            return new Promise(resolve => setTimeout(resolve, 5000));
+        }
+        function delay10() {
+            return new Promise(resolve => setTimeout(resolve, 10000));
+        }
+    </script>
+</body>
+
+</html>
