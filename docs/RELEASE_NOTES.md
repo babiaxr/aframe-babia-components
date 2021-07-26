@@ -18,11 +18,50 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Kakegurui        | -   |  -  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
 | Light        | -   |  2021-03-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/13) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Light) | [Link](#light)  | 1.1.1 |
 | Mazinger Z        | -   |  2021-04-21  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#mazinger-z)  | - |
-| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | - |
-| One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | - |
+| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | 1.1.2 |
+| One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | 1.1.3 |
+| Pokemon        | 2021-06-07   |  2021-06-26 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/17) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Pokemon) | [Link](#pokemon)  | 1.1.4 |
 
 
 ## Release notes
+
+### Pokemon
+
+> NPM 1.1.4 version
+
+#### Network component changes
+
+- Legends are now smaller (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/209)
+
+#### Barsmap component changes
+
+- Fix bug when legend dissapear (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/210)
+
+#### Cylsmap component changes
+
+- Legends are closer now to the visualizer (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/208)
+
+#### UI component changes
+
+- Allow to select more than one graph (selector) (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/206)
+- Add eventListener feature to have the ownership (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/205)
+
+
+#### Multiuser feature changes
+
+- Add eventListener feature to have the ownership (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/205)
+- New demo with the lounge (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/199)
+
+#### Time evolution feature
+
+- Selector with more visualizers (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/203)
+
+#### Async feature
+
+- Async filter (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/220)
+- Loop fetch for retrieving data (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/215)
+- Format code (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/219)
+- Documentation (https://gitlab.com/babiaxr/aframe-babia-components/-/issues/212)
 
 ### One Punch Man
 
