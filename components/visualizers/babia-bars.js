@@ -374,7 +374,9 @@ AFRAME.registerComponent('babia-bars', {
                 'width': widthBars,
                 'depth': widthBars,
                 'color': colors.get(colorId, palette),
-                'label': 'events'
+                'label': 'events',
+                'animation': data.animation
+
             });
             if (data.legend) {
                 barEl.setAttribute('babia-bar', {
@@ -495,7 +497,8 @@ let generateBar = (self, data, item, maxValue, widthBars, colorId, palette, step
         'width': widthBars,
         'depth': widthBars,
         'color': colors.get(colorId, palette),
-        'label': 'events'
+        'label': 'events',
+        'animation': data.animation
     });
     if (data.legend) {
         bar.setAttribute('babia-bar', {

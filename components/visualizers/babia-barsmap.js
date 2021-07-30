@@ -406,7 +406,8 @@ AFRAME.registerComponent('babia-barsmap', {
                     'width': widthBars,
                     'depth': widthBars,
                     'color': colors.get(colorId, palette),
-                    'label': 'events'
+                    'label': 'events',
+                    'animation': data.animation
                 });
             } else {
                 barEl.setAttribute('babia-bar', {
@@ -538,7 +539,8 @@ let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLab
         'width': widthBars,
         'depth': widthBars,
         'color': colors.get(colorId, palette),
-        'label': 'events'
+        'label': 'events',
+        'animation': data.animation
     });
     barEl.object3D.position.x = posX;
     barEl.object3D.position.z = posZ;
