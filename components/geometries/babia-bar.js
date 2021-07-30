@@ -64,8 +64,26 @@ AFRAME.registerComponent('babia-bar', {
                     'to': { x: 0, y: data.height/2, z:0 },
                     'dur': data.dur
                 });
+                if (data.height <= 0 && oldData.height > 0){
+                    box.setAttribute('animation__opacity', {
+                        'property': 'material.opacity',
+                        'to': 0,
+                        'dur': data.dur
+                    });
+                } else if (oldData.height <= 0 && data.height > 0){
+                    box.setAttribute('animation__opacity', {
+                        'property': 'material.opacity',
+                        'to': 100,
+                        'dur': data.dur
+                    });  
+                }
             } else {
                 box.setAttribute('position', { x: 0, y: data.height/2, z: 0 });
+                if (data.height <= 0 && oldData.height > 0){
+                    box.setAttribute('material', 'opacity', 0);
+                } else if (oldData.height <= 0 && data.height > 0){
+                    box.setAttribute('material', 'opacity', 100);
+                }
             };
         };
         this.updateProperty(box, 'geometry', 'width', data.animation,
