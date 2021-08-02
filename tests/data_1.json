@@ -1,0 +1,7 @@
+[{"continent":"Europe", "country":"Spain","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+    {"continent":"Asia","country":"South Korea","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+    {"continent":"Asia","country":"China","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+    {"continent":"Africa","country":"Equatorial Guinea","population": 1.403,"partial": 0.076,"partial%":5.45,"complete": 0.072,"complete%":5.10},
+    {"continent":"Europe","country":"Germany","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+    {"continent":"Europe","country":"France","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}
+]
