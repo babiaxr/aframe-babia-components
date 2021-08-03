@@ -75,9 +75,9 @@ AFRAME.registerComponent('babia-network', {
   schema: {
     nodeLegend: { type: 'boolean', default: false },
     linkLegend: {type: 'boolean', default: false},
-    from: { type: 'string', default: undefined },
-    nodesFrom: { type: 'string', default: undefined },
-    linksFrom: { type: 'string', default: undefined },
+    from: { type: 'string'},
+    nodesFrom: { type: 'string'},
+    linksFrom: { type: 'string'},
     data: { type: 'string', default: ''},
     nodes: { type:'string', default: '' },
     links: { type: 'string', default: '' },
@@ -261,7 +261,7 @@ AFRAME.registerComponent('babia-network', {
     // Data from querier
     } else {
       // If changed from, need to re-register to the new data component
-      if (elData.from !== oldData.from) {
+      if (elData.from !== oldData.from && !elData.nodesFrom) {
         // Unregister for old querier
         if (self.dataComponent) { self.dataComponent.unregister(el) }
 
