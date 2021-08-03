@@ -1,6 +1,6 @@
 describe('Babia-Network component examples (screenshot)', () => {
 
-    ['', '_querier'].forEach((example) => {
+    [''].forEach((example) => {
         it(`Screenshot Network (${example})`, () => {
             cy.visit('/examples/charts'+ example+ '/network_chart' + example + '/network_chart.html');
             cy.wait(5000);
