@@ -153,14 +153,20 @@ This could be useful if we want to add a button that controls something related 
 
 ### Special case 1: **avatar, camera and rig**
 
-To syncronize the avatar that is inside our camera component, we first have to syncronize the entity "rig" that contains the camera, cursor and hands. For that we simply just add position and rotation to the "rig-template" schema and the "camera-template" schema. Then we add all needed attributes to "avatar-template" schema. In this case, we are going to create a different template and schema for the parents and the children.
+**Option 1. With teleport, look-controls and wasd-controls**
+
+To syncronize the avatar that is inside our camera component, we first have to syncronize the entity **rig** that contains the camera, cursor and hands. For that we simply just add position and rotation to the **rig-template** schema and the **camera-template** schema. Then we add all needed attributes to **avatar-template** schema. In this case, we are going to create a different template and schema for the parents and the children.
 
 In this case, we do not want the entities to be persistent, since we would like to have an entity per client connected.
 
+>Note 1: in this case the components look-controls and wasd-controls will be added to the camera entity and will not be included in the schema.
 
+>Note 2: Teleport controls will be added to the left hand.
+
+>Note 3: Hands and cursor are not synchronized.
 
 ```html
-<!-- Templates -->
+<!-- TEMPLATES -->
     <template id="rig-template">
         <a-entity class="rig"></a-entity>
     </template>
@@ -174,18 +180,29 @@ In this case, we do not want the entities to be persistent, since we would like 
 
 <!-- ENTITIES -->
 <!-- Rig entity -->
-<a-entity id="rig" position="0 0.5 -7"      networked="template:#rig-template; attachTemplateToLocal:false">
+<a-entity id="rig" position="0 0.5 -7"    
+networked="template:#rig-template; attachTemplateToLocal:false">
     <!-- Camera entity -->
-    <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+    <a-entity id="camera" camera look-controls
+    wasd-controls="fly: false"
     networked="template:#camera-template;attachTemplateToLocal:false;">
         <!-- Avatar entity -->
-        <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#dinosaur" visible="false" rotation="0 180 0" networked="template:#avatar-template; attachTemplateToLocal:false">
+        <a-entity id="avatar" scale="0.1 0.1 0.1"
+        gltf-model="#dinosaur" visible="false" rotation="0 180 0"
+        networked="template:#avatar-template; attachTemplateToLocal:false">
         </a-entity>
     </a-entity>
     <!-- Hand Controls -->
-    <a-entity id="leftHand" oculus-touch-controls="hand: left" teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
-    <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right" raycaster="objects: .babiaxraycasterclass"></a-entity>
-    <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+    <a-entity id="leftHand"
+    oculus-touch-controls="hand: left"
+    teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+    <a-entity id="rightHand"
+    laser-controls="hand: right"
+    oculus-touch-controls="hand: right"
+    raycaster="objects: .babiaxraycasterclass"></a-entity>
+    <a-entity id="cursor"
+    cursor="rayOrigin:mouse"
+    raycaster="objects: .babiaxraycasterclass"></a-entity>
 </a-entity>
 
 ```
@@ -219,10 +236,59 @@ NAF.schemas.add({
 
 ```
 
+**Option 2. With movement-controls and no teleport**
+
+This case is similar to the previous one, but we have one more entity, between **rig** and **camera**, cursor and hands. We will call it **mov** for now. Therefore we need to add a new **mov-template**, whose schema will simply have rotation and position.
+
+>Note: in this case, there will not be look-controls nor wasd-controls, but the component movement-controls will be added to the mov entity (but not be included in the schema).
+
+```html
+<!--TEMPLATES-->
+<template id="mov-template">
+    <a-entity class="mov"></a-entity>
+</template>
+
+<!-- ENTITIES -->
+<!-- Rig entity -->
+<a-entity lounge-entry-point id="rig"
+networked="template:#rig-template; attachTemplateToLocal:false">
+    <!-- Mov entity -->
+    <a-entity movement-controls="fly: false" id="mov" position="3 -3 4"     
+    networked="template:#mov-template;attachTemplateToLocal:false;">
+        <!-- Camera entity -->
+        <a-entity id="camera" camera rotation="0 90 0" look-controls
+        networked="template:#camera-template;attachTemplateToLocal:false;">
+            <!-- Avatar entity -->
+            <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro"
+            visible="false" rotation="0 180 0"
+            networked="template:#avatar-template;attachTemplateToLocal:false">
+            </a-entity>
+        </a-entity>
+        <!-- Hand Controls -->
+        <a-entity cursor="rayOrigin:mouse" 
+        raycaster="objects: .babiaxraycasterclass"></a-entity>
+        <a-entity laser-controls="hand: right"
+        oculus-touch-controls="hand: right"
+        raycaster="objects: .babiaxraycasterclass"></a-entity>
+        <a-entity id="leftHand"
+        oculus-touch-controls="hand: left"></a-entity>
+    </a-entity>
+</a-entity>
+```
+```javascript
+/* SCHEMAS*/
+NAF.schemas.add({
+    template: '#mov-template',
+    components: [
+        'position',
+        'rotation'
+    ]
+});
+```
 
 ### Special case 2: **avatar**
 
-Imagine we have an avatar created around us, right where we are, so that when we move around the scene, everybody sees us. If this avatar is pretty big, we would not be able to see through it, since the camera would be right in the middle of its body. In this case we probably want it to not be visible, so we can set the visible attribute to "false" and not add it to the schema. This way we would not see our own avatar, but everyone else will se it.
+Imagine we have an avatar created around us, right where we are, so that when we move around the scene, everybody sees us. If this avatar is pretty big, we would not be able to see through it, since the camera would be right in the middle of its body. In this case we probably want it to not be visible, so we can set the visible attribute to "false" and not add it to the schema. This way we will not see our own avatar, but everyone else will se it.
 
 ```html
 <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#dinosaur" visible="false" rotation="0 180 0" networked="template:#avatar-template;attachTemplateToLocal:false">
@@ -284,12 +350,12 @@ NAF.schemas.add({
 
 ### Special case 5: **babia ui**
 
-If we have an ui for a graph, when we interact with it, we have to ask ffor the ownership of the graph:
+If we have an ui for a graph, when we interact with it, we have to ask for the ownership of the graph. For example, if the graph we are sharing is a babia-pie, we would do the following:
 
 ```javascript
 ui.addEventListener('click', function (event){
-    if (!NAF.utils.isMine(graph)) {
-        NAF.utils.takeOwnership(graph);
+    if (!NAF.utils.isMine(pie_graph)) {
+        NAF.utils.takeOwnership(pie_graph);
     }
 });
 ```
@@ -301,13 +367,40 @@ scene.addEventListener('child-attached', function (event) {
         event.target.children["babia-menu-hand"]);
         let uiVR = document.querySelector('#babia-menu-hand');
         uiVR.addEventListener('click', function (event) {
-            if (!NAF.utils.isMine(graph)) {
-                NAF.utils.takeOwnership(graph);
+            if (!NAF.utils.isMine(pie_graph)) {
+                NAF.utils.takeOwnership(pie_graph);
             };
         });
     }
 });
 
+```
+
+**Same ui for more than one graph**
+
+When we use the same ui for more than one graph, we need to ask for the ownership of a different graph depending on which one is activated. In order to do so, we just have to get the target and use it in the previous code, so it acts on the specific selected graph and no other:
+
+```javascript
+uiDesktop.addEventListener('click', function (event) {
+    let target = document.getElementById(uiDesktop.getAttribute("babia-ui").target)
+    if (!NAF.utils.isMine(target)) {
+        NAF.utils.takeOwnership(target)
+    };
+});
+```
+And the same change will be needed for VR:
+```javascript
+scene.addEventListener('child-attached', function (event) {
+    if (event.detail.el.id === 'babia-menu-hand') {
+        let uiVR = document.querySelector('#babia-menu-hand')
+        uiVR.addEventListener('click', function (event) {
+            let target = document.getElementById(uiDesktop.getAttribute("babia-ui").target)
+            if (!NAF.utils.isMine(target)) {
+                NAF.utils.takeOwnership(target)
+            };
+        });
+    }
+});
 ```
 
 ## Audio
@@ -374,7 +467,7 @@ document.body.addEventListener('clientDisconnected', function (event) {
 });
 ```
 
-In the same way, there are many events that are triggered when the states of the networked change, for example, when the ownership changes.
+In the same way, there are many events that are triggered when the states of a networked entity change, for example, when the ownership changes.
 
 ```javascript
 // We have obtained the ownership of the box
