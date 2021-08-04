@@ -18793,9 +18793,9 @@ AFRAME.registerComponent('babia-network', {
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
       }
       if (this.data.nodeLegend && prevObjType === 'node' ){
-        removeLegend()
+        removeLegend(this)
       } else if(this.data.linkLegend && this.data.linkLabel!="" && prevObjType === 'link'){
-        removeLegend()
+        removeLegend(this)
       }
       if (objType) {
         // Hover in
@@ -18806,7 +18806,7 @@ AFRAME.registerComponent('babia-network', {
 
       if (topObject) {
         if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
-          showLegend(topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
+          showLegend(this, topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
         } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
           if (this.data.linkLabel != ""){
             showLinkLegend(this, topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
@@ -18888,6 +18888,8 @@ AFRAME.registerComponent('babia-network', {
   babiaMetadata: {
     id: 0
   },
+
+  legend: '',
 
 });
 
@@ -19225,13 +19227,13 @@ function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
   return entity;
 }
 
-function showLegend(nodeThree, node, nodeLabel, scale) {
+function showLegend(self, nodeThree, node, nodeLabel, scale) {
   let worldPosition = new THREE.Vector3();
   nodeThree.getWorldPosition(worldPosition);
   let radius = nodeThree.geometry.boundingSphere.radius
   let sceneEl = document.querySelector('a-scene');
-  legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
-  sceneEl.appendChild(legend);
+  self.legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
+  sceneEl.appendChild(self.legend);
 }
 
 function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
@@ -19291,14 +19293,14 @@ function showLinkLegend(self, linkThree, link, linkLabel, linkWidth, scale) {
   worldPosition.z = (sourcePos.z + targetPos.z)/2
 
   let sceneEl = document.querySelector('a-scene');
-  legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
-  sceneEl.appendChild(legend);
+  self.legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
+  sceneEl.appendChild(self.legend);
 }
 
-function removeLegend(){
-  if (legend){
+function removeLegend(self){
+  if (self.legend){
     let sceneEl = document.querySelector('a-scene');
-    sceneEl.removeChild(legend)
+    sceneEl.removeChild(self.legend)
   }
   
 }
