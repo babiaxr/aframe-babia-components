@@ -32,7 +32,7 @@ AFRAME.registerComponent('babia-bars', {
         // Keep height when updating data
         keepHeight: { type: 'boolean', default: true},
         incremental: { type: 'boolean', default: false},
-        index: { type: 'string', default: 'x_axis'},
+        index: { type: 'string' },
         // Should this be animated
         animation: { type: 'boolean', default: true},
         // Duration of animations
@@ -75,6 +75,10 @@ AFRAME.registerComponent('babia-bars', {
         const self = this;
         let data = this.data;
         let el = this.el;
+
+        if (!data.index){
+            data.index = data.x_axis
+        }
 
         console.log("Starting Bars");
         this.animation = data.animation
@@ -376,7 +380,6 @@ AFRAME.registerComponent('babia-bars', {
                 'color': colors.get(colorId, palette),
                 'label': 'events',
                 'animation': data.animation
-
             });
             if (data.legend) {
                 barEl.setAttribute('babia-bar', {
