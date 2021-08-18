@@ -17230,6 +17230,8 @@ AFRAME.registerComponent('babia-cylsmap', {
     from: { type: 'string' },
     legend: { type: 'boolean' },
     axis: { type: 'boolean', default: true },
+    // Name for axis
+    axis_name: {type: 'boolean', default: false},
     animation: { type: 'boolean', default: false },
     palette: { type: 'string', default: 'ubuntu' },
     title: { type: 'string' },
@@ -17280,7 +17282,7 @@ AFRAME.registerComponent('babia-cylsmap', {
       while (self.el.firstChild)
         self.el.firstChild.remove();
       console.log("Generating 3Dcylynderchart from data...")
-      self.chart = generateCylinderChart(self.data, JSON.parse(data.data), self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+      self.chartEl = generateCylinderChart(self, self.data, JSON.parse(self.data.data), self.el)
 
       // Dispatch interested events because I updated my visualization
       dataReadyToSend("babiaData", self)
@@ -17316,7 +17318,7 @@ AFRAME.registerComponent('babia-cylsmap', {
         while (self.el.firstChild)
               self.el.firstChild.remove();
           console.log("Generating Cylinder...")
-          self.chart = generateCylinderChart(self.data, self.babiaData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+          self.chartEl = generateCylinderChart(self, self.data, self.babiaData, self.el)
           
           // Dispatch interested events because I updated my visualization
           dataReadyToSend("babiaData", self)
@@ -17406,27 +17408,6 @@ AFRAME.registerComponent('babia-cylsmap', {
   babiaMetadata: {
     id: 0
   },
-
-  /**
-   * Proportion of the bars
-   */
-  proportion: undefined,
-
-  /**
-   * Value max
-   */
-  valueMax: undefined,
-
-  /**
-   * Max radius
-   */
-  maxRadius: undefined,
-
-  /**
-   * Max radius
-   */
-  radius_scale: undefined,
-
 })
 
 let findDataComponent = (data, el, self) => {
@@ -17492,14 +17473,13 @@ let attachNewDataEventCallback = (self, e) => {
   while (self.el.firstChild)
     self.el.firstChild.remove();
   console.log("Generating Cylinder...")
-  self.chart = generateCylinderChart(self.data, rawData, self.el, self.maxRadius, self.proportion, self.valueMax, self.radius_scale)
+  self.chartEl = generateCylinderChart(self, self.data, rawData, self.el)
 
   // Dispatch interested events because I updated my visualization
   dataReadyToSend("babiaData", self)
 }
 
-let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion, valueMax, radius_scale) => {
-  let stepMax
+let generateCylinderChart = (self, data, dataRetrieved, element) => {
   if (dataRetrieved) {
     const dataToPrint = dataRetrieved
     const palette = data.palette
@@ -17508,92 +17488,101 @@ let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion
     const color = data.titleColor
     const title_position = data.titlePosition
     const scale = data.scale
-    const heightMax = data.heightMax
-    const radiusMax = data.radiusMax
+    let heightMax = data.heightMax
+    let radiusMax = data.radiusMax
 
-    let colorid = 0
-    let maxColorId = 0
-    let stepX = 0
-    let maxX = 0
+    let xLabels = [];
+    let xTicks = [];
+    let zLabels = [];
+    let zTicks = [];
+    let colorid = 0;
+    let maxColorId = 0;
+    let stepX = 0;
+    let stepZ = 0;
+    
+    let maxX = 0;
+    let maxZ = 0;
+    
     let keys_used = {}
-    let stepZ = 0
-    let maxZ = 0
     let z_axis = {}
-    let xaxis_dict = []
-    let zaxis_dict = []
+
     let animation = data.animation
 
-    let maxY = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
-    maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
+    let valueMax = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+    let maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
+
     if (scale) {
-      maxY = maxY / scale
+      valueMax = valueMax / scale
       maxRadius = maxRadius / scale
-    } else if (heightMax || radiusMax) {
-      if (heightMax) {
-        valueMax = maxY
-        proportion = heightMax / maxY
-        maxY = heightMax
-      }
-      if (radiusMax) {
-        stepMax = maxRadius
-        radius_scale = radiusMax / maxRadius
-        maxRadius = radiusMax
-      }
     }
+    if (!heightMax) {
+      heightMax = valueMax
+    }
+    proportion = heightMax / valueMax
 
-    let chart_entity = document.createElement('a-entity');
-    chart_entity.classList.add('babiaxrChart')
+    if (!radiusMax) {
+      radiusMax = maxRadius
+    }
+    radius_scale = radiusMax / maxRadius
 
-    element.appendChild(chart_entity)
+    self.chartEl = document.createElement('a-entity');
+    self.chartEl.classList.add('babiaxrChart')
+
+    element.appendChild(self.chartEl)
+    maxZ = maxRadius;
 
     for (let cylinder of dataToPrint) {
+      let xLabel = cylinder[data.x_axis]
+      let zLabel = cylinder[data.z_axis]
+      let height = cylinder[data.height]
+      let radius = cylinder[data.radius]
+
       // Check if used in order to put the cylinder in the parent row
-      if (keys_used[cylinder[data.x_axis]]) {
-        stepX = keys_used[cylinder[data.x_axis]].posX
-        colorid = keys_used[cylinder[data.x_axis]].colorid
+      if (keys_used[xLabel]) {
+        stepX = keys_used[xLabel].posX
+        colorid = keys_used[xLabel].colorid
       } else {
-        stepX = maxX
+        if (scale) {
+          stepX += 2 * maxRadius / scale + 0.5
+        } else {
+          stepX += 2 * maxRadius * radius_scale + 0.5
+        }
         colorid = maxColorId
         //Save in used
-        keys_used[cylinder[data.x_axis]] = {
-          "posX": maxX,
-          "colorid": maxColorId
+        keys_used[xLabel] = {
+          "posX": stepX,
+          "colorid": colorid
         }
 
-        //Axis dict
-        let cylinder_printed = {
-          colorid: colorid,
-          posX: stepX,
-          key: cylinder[data.x_axis]
-        }
-        xaxis_dict.push(cylinder_printed)
-
-        maxX += 2 * maxRadius + 1
+        xLabels.push(xLabel)
+        xTicks.push(stepX)
         maxColorId++
       }
 
-      // Get Z val
-      if (z_axis[cylinder[data.z_axis]]) {
-        stepZ = z_axis[cylinder[data.z_axis]].posZ
+      if (z_axis[zLabel]) {
+        stepZ = z_axis[zLabel].posZ
       } else {
-        stepZ = maxZ
+        if (scale) {
+          stepZ = maxZ + 2 * maxRadius / scale + 0.5
+        } else {
+          stepZ = maxZ + 2 * maxRadius * radius_scale + 0.5
+        }
         //Save in used
-        z_axis[cylinder[data.z_axis]] = {
-          "posZ": maxZ
+        z_axis[zLabel] = {
+          "posZ": stepZ
         }
-
-        //Axis dict
-        let cylinder_printed = {
-          colorid: colorid,
-          posZ: stepZ,
-          key: cylinder[data.z_axis]
-        }
-        zaxis_dict.push(cylinder_printed)
-
-        maxZ += 2 * maxRadius + 1
+        zLabels.push(zLabel)
+        zTicks.push(stepZ)
       }
 
-      let cylinderEntity = generateCylinder(cylinder[data.height], cylinder[data.radius], colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
+      if (stepX > maxX){
+        maxX = stepX
+      }
+      if (stepZ > maxZ){
+        maxZ = stepZ
+      }
+     
+      let cylinderEntity = generateCylinder(height, radius, colorid, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
       cylinderEntity.classList.add("babiaxraycasterclass")
 
       //Prepare legend
@@ -17601,23 +17590,22 @@ let generateCylinderChart = (data, dataRetrieved, element, maxRadius, proportion
         showLegend(data, cylinderEntity, cylinder, element)
       }
 
-      chart_entity.appendChild(cylinderEntity, element)
+      self.chartEl.appendChild(cylinderEntity, element)
 
       //Print Title
       let title_3d = showTitle(title, font, color, title_position);
       element.appendChild(title_3d);
     }
 
-    // Axis
-    if (data.axis) {
-      showXAxis(element, maxX, xaxis_dict, palette, maxRadius)
-      showZAxis(element, maxZ, zaxis_dict, maxRadius)
-      showYAxis(element, maxY, scale, maxRadius, proportion, valueMax)
+     //Print axis
+     if (data.axis) {
+      const lengthX = maxX
+      const lengthZ = maxZ
+      const lengthY = heightMax
+      updateAxis(self, xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, maxRadius, valueMax, lengthY);
     }
   }
 }
-
-
 
 function generateCylinder(height, radius, colorid, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {
   let color = getColor(colorid, palette)
@@ -17667,113 +17655,6 @@ function getColor(colorid, palette) {
   }
   return color
 }
-
-function showXAxis(parent, xEnd, cylinder_printed, palette, maxRadius) {
-  let axis = document.createElement('a-entity');
-
-  //Print line
-  let axis_line = document.createElement('a-entity');
-  axis_line.setAttribute('line__xaxis', {
-    'start': { x: -maxRadius - 1, y: 0, z: -maxRadius },
-    'end': { x: xEnd, y: 0, z: -maxRadius },
-    'color': '#ffffff'
-  });
-  axis_line.setAttribute('position', { x: 0, y: 0.1, z: - 1 });
-  axis.appendChild(axis_line)
-
-  //Print keys
-  cylinder_printed.forEach(e => {
-    let key = document.createElement('a-entity');
-    let color = getColor(e.colorid, palette)
-    key.setAttribute('text', {
-      'value': e.key,
-      'align': 'left',
-      'width': 30,
-      'color': color
-    });
-    key.setAttribute('position', { x: e.posX, y: 0.1, z: -maxRadius - 16.5 })
-    key.setAttribute('rotation', { x: -90, y: 90, z: 0 });
-    axis.appendChild(key)
-  });
-
-  //axis completion
-  parent.appendChild(axis)
-}
-
-function showYAxis(parent, yEnd, scale, maxRadius, proportion, valueMax) {
-  let axis = document.createElement('a-entity');
-  let yLimit = yEnd
-  //Print line
-  let axis_line = document.createElement('a-entity');
-  axis_line.setAttribute('line__yaxis', {
-    'start': { x: -maxRadius, y: 0, z: 0 },
-    'end': { x: -maxRadius, y: yEnd, z: 0 },
-    'color': '#ffffff'
-  });
-  axis_line.setAttribute('position', { x: -1, y: 0, z: -maxRadius - 1 });
-  axis.appendChild(axis_line)
-
-  if (proportion) {
-    yLimit = yLimit / proportion
-    var mod = Math.floor(Math.log10(valueMax))
-  }
-  for (let i = 0; i <= yLimit; i++) {
-    let key = document.createElement('a-entity');
-    let value = i
-    let pow = Math.pow(10, mod - 1)
-    if (!proportion || (proportion && i % pow === 0)) {
-      key.setAttribute('text', {
-        'value': value,
-        'align': 'right',
-        'width': 10,
-        'color': 'white '
-      });
-      if (scale) {
-        key.setAttribute('text', { 'value': value * scale })
-        key.setAttribute('position', { x: -maxRadius - 6.5, y: value, z: -maxRadius - 1 })
-      } else if (proportion) {
-        key.setAttribute('position', { x: -maxRadius - 6.5, y: i * proportion, z: -maxRadius - 1 })
-      } else {
-        key.setAttribute('position', { x: -maxRadius - 6.5, y: i, z: -maxRadius - 1 })
-      }
-    }
-    axis.appendChild(key)
-  }
-
-  //axis completion
-  parent.appendChild(axis)
-}
-
-function showZAxis(parent, zEnd, cylinder_printed, maxRadius) {
-  let axis = document.createElement('a-entity');
-  //Print line
-  let axis_line = document.createElement('a-entity');
-  axis_line.setAttribute('line__xaxis', {
-    'start': { x: -maxRadius, y: 0.1, z: 0 },
-    'end': { x: -maxRadius, y: 0.1, z: zEnd + maxRadius },
-    'color': '#ffffff'
-  });
-  axis_line.setAttribute('position', { x: -1, y: 0, z: -maxRadius - 1 });
-  axis.appendChild(axis_line)
-
-  //Print keys
-  cylinder_printed.forEach(e => {
-    let key = document.createElement('a-entity');
-    key.setAttribute('text', {
-      'value': e.key,
-      'align': 'right',
-      'width': 30,
-      'color': '#ffffff'
-    });
-    key.setAttribute('position', { x: -maxRadius - 16.5, y: 0.1, z: e.posZ })
-    key.setAttribute('rotation', { x: -90, y: 0.1, z: 0 });
-    axis.appendChild(key)
-  });
-
-  //axis completion
-  parent.appendChild(axis)
-}
-
 
 function showLegend(data, cylinderEntity, cylinder, element) {
   cylinderEntity.addEventListener('mouseenter', function () {
@@ -17844,6 +17725,42 @@ function showTitle(title, font, color, position) {
   entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
   entity.classList.add("babiaxrTitle")
   return entity;
+}
+
+/*
+* Update axis
+ */
+
+function updateAxis(self, xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, maxRadius, valueMax, lengthY) {
+  let xAxisEl = document.createElement('a-entity');
+  self.chartEl.appendChild(xAxisEl);
+  xAxisEl.setAttribute('babia-axis-x',
+      {'labels': xLabels, 'ticks': xTicks, 'length': lengthX,
+          'palette': self.data.palette});
+  xAxisEl.setAttribute('position', {
+      x: 0, y: 0, z: 0
+  });
+
+  let yAxisEl = document.createElement('a-entity');
+  self.chartEl.appendChild(yAxisEl);
+  yAxisEl.setAttribute('babia-axis-y',
+      {'maxValue': valueMax, 'length': lengthY});
+  yAxisEl.setAttribute('position', {
+      x: 0, y: 0, z: 0
+  });
+
+  let zAxisEl = document.createElement('a-entity');
+  self.chartEl.appendChild(zAxisEl);
+  zAxisEl.setAttribute('babia-axis-z',
+      {'labels': zLabels, 'ticks': zTicks, 'length': lengthZ});
+  zAxisEl.setAttribute('position', {
+      x: 0, y: 0, z: 0
+  });
+  if (self.data.axis_name){
+      xAxisEl.setAttribute('babia-axis-x', 'name', self.data.x_axis);
+      yAxisEl.setAttribute('babia-axis-y', 'name', self.data.height);
+      zAxisEl.setAttribute('babia-axis-z', 'name', self.data.z_axis);
+  }
 }
 
 let colors = [
