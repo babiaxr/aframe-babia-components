@@ -14589,8 +14589,10 @@ let generateBubblesChart = (self, data, dataRetrieved, element) => {
 
         element.appendChild(self.chartEl)
         if (scale) {
-            maxZ = maxRadius / scale
+            maxX = maxRadius / scale;
+            maxZ = maxRadius / scale;
         } else {
+            maxX = maxRadius * radius_scale;
             maxZ = maxRadius * radius_scale;
         }
 
