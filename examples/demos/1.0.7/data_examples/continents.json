@@ -1,11 +1,11 @@
 [
     {
         "date": "04/05/2020", 
-        "country": "Sudan", 
-        "cases": 0.86, 
-        "fatality": "0", 
-        "deaths": 0,
-        "continentExp": "Africa"
+        "country": "Italy", 
+        "cases": 13.89, 
+        "fatality": "0.125269978402", 
+        "deaths": 1.74,
+        "continentExp": "Europe"
     }, 
     {
         "date": "04/05/2020", 
@@ -97,14 +97,6 @@
     }, 
     {
         "date": "04/05/2020", 
-        "country": "Italy", 
-        "cases": 13.89, 
-        "fatality": "0.125269978402", 
-        "deaths": 1.74,
-        "continentExp": "Europe"
-    }, 
-    {
-        "date": "04/05/2020", 
         "country": "United_Kingdom", 
         "cases": 43.39, 
         "fatality": "0.0725973726665", 
@@ -142,15 +134,7 @@
         "fatality": "0.205970149254", 
         "deaths": 0.69,
         "continentExp": "Europe"
-    },  
-    {
-        "date": "04/05/2020", 
-        "country": "Russia", 
-        "cases": 106.33, 
-        "fatality": "0.00545471644879", 
-        "deaths": 0.58,
-        "continentExp": "Europe"
-    }, 
+    },   
     {
         "date": "04/05/2020", 
         "country": "Romania", 
@@ -159,14 +143,6 @@
         "deaths": 0.9,
         "continentExp": "Europe"
     },
-    {
-        "date": "04/05/2020", 
-        "country": "United_States_of_America", 
-        "cases": 249.72, 
-        "fatality": "0.0519381707512", 
-        "deaths": 12.97,
-        "continentExp": "America"
-    }, 
     {
         "date": "04/05/2020", 
         "country": "Bolivia", 
