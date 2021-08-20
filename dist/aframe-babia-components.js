@@ -16974,7 +16974,7 @@ let generateCylinderChart = (self, data, dataRetrieved, element) => {
     proportion = heightMax / valueMax
     
     if (!radiusMax){
-      stepMax = maxRadius
+      radiusMax = maxRadius
     }
     radius_scale = radiusMax / maxRadius
 
@@ -16992,19 +16992,15 @@ let generateCylinderChart = (self, data, dataRetrieved, element) => {
         //Calculate stepX
         if (scale) {
           stepX += lastradius + radius / scale + 0.5
-        } else if (radiusMax) {
+        } else{
           stepX += lastradius + radius * radius_scale + 0.5
-        } else {
-          stepX += lastradius + radius + 0.5
         }
 
       } else {
         if (scale) {
           firstradius = radius / scale
-        } else if (radiusMax) {
-          firstradius = radius * radius_scale
         } else {
-          firstradius = radius
+          firstradius = radius * radius_scale
         }
       }
 
