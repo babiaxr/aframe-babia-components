@@ -17445,7 +17445,13 @@ let generateCylinderChart = (self, data, dataRetrieved, element) => {
     self.chartEl.classList.add('babiaxrChart')
 
     element.appendChild(self.chartEl)
-    maxZ = maxRadius;
+    if (scale) {
+      maxX = maxRadius / scale
+      maxZ = maxRadius / scale
+  } else {
+      maxX = maxRadius * radius_scale
+      maxZ = maxRadius * radius_scale;
+  }
 
     for (let cylinder of dataToPrint) {
       let xLabel = cylinder[data.x_axis]
@@ -17508,9 +17514,7 @@ let generateCylinderChart = (self, data, dataRetrieved, element) => {
 
       self.chartEl.appendChild(cylinderEntity, element)
 
-      //Print Title
-      let title_3d = showTitle(title, font, color, title_position);
-      element.appendChild(title_3d);
+      
     }
 
      //Print axis
@@ -17518,8 +17522,12 @@ let generateCylinderChart = (self, data, dataRetrieved, element) => {
       const lengthX = maxX
       const lengthZ = maxZ
       const lengthY = heightMax
-      updateAxis(self, xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, maxRadius, valueMax, lengthY);
+      updateAxis(self, xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, valueMax, lengthY);
     }
+
+    //Print Title
+    let title_3d = showTitle(title, font, color, title_position);
+    element.appendChild(title_3d);
   }
 }
 
@@ -17647,7 +17655,7 @@ function showTitle(title, font, color, position) {
 * Update axis
  */
 
-function updateAxis(self, xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, maxRadius, valueMax, lengthY) {
+function updateAxis(self, xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, valueMax, lengthY) {
   let xAxisEl = document.createElement('a-entity');
   self.chartEl.appendChild(xAxisEl);
   xAxisEl.setAttribute('babia-axis-x',
