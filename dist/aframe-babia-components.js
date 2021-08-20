@@ -8600,9 +8600,9 @@ AFRAME.registerComponent('babia-axis-y', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels behind to axis.
-        align: { type: 'string', defautl: 'left'},
+        align: { type: 'string', default: 'left'},
         // Name to show on label
-        name: { type: 'string', default: null}
+        name: { type: 'string', default: ''}
     },
  
     init: function() {
@@ -8677,9 +8677,9 @@ AFRAME.registerComponent('babia-axis-x', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels behind of the axis.
-        align: { type: 'string', defautl: 'front'},
+        align: { type: 'string', default: 'front'},
         // Name to show on label
-        name: { type: 'string', default: null}
+        name: { type: 'string', default: ''}
     },
 
     init: function() {
@@ -8724,9 +8724,9 @@ AFRAME.registerComponent('babia-axis-z', {
         // Duration of animations
         dur: { type: 'number', default: 2000},
         // If we want the labels on the right of the axis.
-        align: { type: 'string', defautl: 'left'},
+        align: { type: 'string', default: 'left'},
         // Name to show on label
-        name: { type: 'string', default: null}
+        name: { type: 'string', default: ''}
     },
 
     init: function() {
