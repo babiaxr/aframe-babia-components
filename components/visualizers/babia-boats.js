@@ -27,7 +27,8 @@ AFRAME.registerComponent('babia-boats', {
         height_quarter_legend_box: { type: 'number', default: 11 },
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
-        legend_scale: { type: 'number', default: 1 }
+        legend_scale: { type: 'number', default: 1 },
+        selector: {type: 'boolean', default: false}
     },
 
     /**
@@ -258,13 +259,18 @@ AFRAME.registerComponent('babia-boats', {
         // Draw figures
         t.x = 0;
         t.z = 0;
-        if (!this.figures_old) {
+        if (this.data.selector){
             this.drawElements(el, this.figures, t);
             this.figures_old = this.figures;
         } else {
-            console.log("Updating elements...");
-            this.animation = true;
-            this.start_time = Date.now();
+            if (!this.figures_old) {
+                this.drawElements(el, this.figures, t);
+                this.figures_old = this.figures;
+            } else {
+                console.log("Updating elements...");
+                this.animation = true;
+                this.start_time = Date.now();
+            }
         }
     },
 
@@ -484,6 +490,11 @@ AFRAME.registerComponent('babia-boats', {
 
     drawElements: function (element, figures, translate) {
         let self = this
+
+        // First, delete all elements of the component
+        while (self.el.firstChild)
+            self.el.firstChild.remove();
+
         for (let i in figures) {
 
             let height = figures[i].height;
