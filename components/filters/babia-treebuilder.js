@@ -70,11 +70,13 @@ AFRAME.registerComponent('babia-treebuilder', {
                     let rawData = self.dataComponent[self.dataComponentDataPropertyName]
 
                     // Generate Tree, save the new references
+                    console.log(rawData)
                     let dataTreeFormat = generateTree(data, rawData)
                     self.babiaData = dataTreeFormat
                     self.babiaMetadata = {
                         id: self.babiaMetadata.id++
                     }
+                    console.log(self.babiaData)
 
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -192,6 +194,9 @@ let findDataComponent = (data, el, self) => {
         if (dataElement.components['babia-filter']) {
             self.dataComponent = dataElement.components['babia-filter']
             eventName = "babiaFilterDataReady"
+        } else if (dataElement.components['babia-selector']) {
+            self.dataComponent = dataElement.components['babia-selector']
+            eventName = "babiaSelectorDataReady"
         } else if (dataElement.components['babia-queryjson']) {
             self.dataComponent = dataElement.components['babia-queryjson']
         } else if (dataElement.components['babia-queryes']) {
@@ -207,6 +212,9 @@ let findDataComponent = (data, el, self) => {
         if (el.components['babia-filter']) {
             self.dataComponent = el.components['babia-filter']
             eventName = "babiaFilterDataReady"
+        } else if (el.components['babia-selector']) {
+            self.dataComponent = el.components['babia-selector']
+            eventName = "babiaSelectorDataReady"
         } else if (el.components['babia-queryjson']) {
             self.dataComponent = el.components['babia-queryjson']
         } else if (el.components['babia-queryes']) {
