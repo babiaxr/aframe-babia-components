@@ -214,7 +214,7 @@ AFRAME.registerComponent('babia-selector', {
                     }, data.timeout * self.speed);
     
                     // Dispatch interested events
-                    dataReadyToSend("babiaData", self)
+                    //dataReadyToSend("babiaData", self)
 
                 });
                 // If there is data in the data component, get it
