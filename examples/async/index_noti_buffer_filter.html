@@ -1,0 +1,101 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Async-Await</title>
+    <meta name="description" content="Async-Await test" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script src="../../dist/aframe-babia-components.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="0 5 0"></a-light>
+
+        <a-entity id="querier_1" babia-queryjson="url: ./data_vaccination_2.json"></a-entity>
+        <a-entity id="filter_1" babia-filter="from: querier_1; filter: continent=Europe"></a-entity>
+        <a-entity id="querier_2" babia-queryjson="url: ./data_vaccination_4.json"></a-entity>
+        <a-entity id="filter_2" babia-filter="from: querier_2; filter: continent=Asia"></a-entity>
+
+        <a-entity id="bars_1" babia-bars="animation: false; from: filter_1; legend: true; axis: true; height: population" position="2 2 5" rotation="0 180 0"scale="0.25 0.25 0.25">
+        </a-entity>
+
+        <a-entity id="bars_2" babia-bars="from: filter_2; legend: true; axis: true; height: population" position="-5 2 10" rotation="0 180 0"scale="0.25 0.25 0.25">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="0 5 0" rotation="0 180 0">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+    </a-scene>
+
+
+    <script>
+        let querier_1 = document.getElementById("querier_1");
+        let filter_1 = document.getElementById("filter_1")
+        
+        changeData()
+
+        async function changeData(){
+            querier_1.setAttribute('babia-queryjson', { 'url': './data_vaccination_1.json' });
+            await delay3()
+            querier_1.setAttribute('babia-queryjson', { 'url': './data_vaccination_2.json' });
+            await delay3()
+            filter_1.setAttribute('babia-filter', 'from', 'querier_1' );
+            await delay3()  
+            filter_1.setAttribute('babia-filter', 'from', 'querier_2' );
+            await delay3();
+            
+            let bars_3 = document.createElement("a-entity");
+            bars_3.setAttribute("id", "bars_3");
+            bars_3.setAttribute("position", "0 2 20");
+            bars_3.setAttribute("rotation", "0 180 0");
+            bars_3.setAttribute("scale", "0.25 0.25 0.25");
+            bars_3.setAttribute("babia-bars", "from", "filter_1")
+            bars_3.setAttribute("babia-bars", "height", "population");
+            document.getElementById("AframeScene").appendChild(bars_3);
+            
+            await delay3();
+            let filter_3 = document.createElement("a-entity");
+            filter_3.setAttribute("id", "filter_3");
+            filter_3.setAttribute("babia-filter", {"from": "querier_2", "filter": "continent=America"});
+            document.getElementById("AframeScene").appendChild(filter_3);
+            bars_3.setAttribute("babia-bars", "from", "filter_3")
+            
+            let bars_4 = document.createElement("a-entity");
+            bars_4.setAttribute("id", "bars_4");
+            bars_4.setAttribute("babia-bars", "animation", "false")
+            bars_4.setAttribute("position", "5 2 15");
+            bars_4.setAttribute("rotation", "0 180 0");
+            bars_4.setAttribute("scale", "0.25 0.25 0.25");
+            bars_4.setAttribute("babia-bars", "from", "filter_2");
+            bars_4.setAttribute("babia-bars", "height", "population");
+            document.getElementById("AframeScene").appendChild(bars_4);
+
+            await delay3();
+            let filter_4 = document.createElement("a-entity");
+            filter_4.setAttribute("id", "filter_4");
+            filter_4.setAttribute("babia-filter", {"from": "querier_1", "filter": "continent=America"});
+            document.getElementById("AframeScene").appendChild(filter_4);
+            bars_4.setAttribute("babia-bars", "from", "filter_4");
+            await delay3()
+            filter_1.setAttribute('babia-filter', 'filter', 'continent=Africa' );
+            await delay3()
+            filter_1.setAttribute('babia-filter', 'filter', 'continent=Oceania' );
+        }
+        
+
+        function delay3() {
+            return new Promise(resolve => setTimeout(resolve, 3000));
+        }
+
+    </script>
+</body>
+
+</html>

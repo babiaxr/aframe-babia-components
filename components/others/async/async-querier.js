@@ -31,11 +31,12 @@ AFRAME.registerComponent('babia-async-querier', {
 
 
 // Function to obtain data in querier
-async function obtainData(self) { 
-    let response = await fetch(self.data.url);
+async function getJSON(url) { 
+    let response = await fetch(url);
     if (response.status == 200) {
        let json = await response.json();
        return json;
+
     }
     throw new Error(response.status);
  }

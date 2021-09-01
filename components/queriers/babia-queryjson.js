@@ -3,6 +3,8 @@ if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /**
 * A-Charts component for A-Frame.
 */
@@ -22,7 +24,10 @@ AFRAME.registerComponent('babia-queryjson', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { },
+    init: function () {
+        // Buffer for setting the data obtained and notifying consumers
+        this.notiBuffer = new NotiBuffer();
+    },
 
     /**
     * Called when component is attached and when component data changes.
@@ -31,17 +36,17 @@ AFRAME.registerComponent('babia-queryjson', {
 
     update: function (oldData) {
         let data = this.data;
-        let el = this.el;
-        let self = this;
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
-            parseEmbeddedJSONData(data.data, el, self)
+            let object = JSON.parse(data.data);
+            this.notiBuffer.set(object);        
         } else {
             if (oldData.url !== data.url) {
-                requestJSONDataFromURL(data, el, self)
+                this.getJSON(data.url);
             } else if (oldData.embedded !== data.embedded) {
-                parseEmbeddedJSONData(data.embedded, el, self)
+               let object = JSON.parse(data.embedded);
+               this.notiBuffer.set(object);
             }
         }
     },
@@ -68,118 +73,27 @@ AFRAME.registerComponent('babia-queryjson', {
     */
     play: function () { },
 
-    /**
-     * Where the data is gonna be stored
-     */
-    babiaData: undefined,
+    /*
+ *  Asynchronous function to get a JSON document.
+ *  Returns a promise that resolves to the object corresponding to the
+ *  retrieved JSON document, or to undefined, if some error happened.
+ *  It is non blocking, since it gives a promise. No value has to be 
+ *  obtained once fulfilled and all the synchronous code is inside the 
+ *  function (two awaits that block the code until promises are fulfilled)
+ */
 
-    /**
-     * Where the metaddata is gonna be stored
-     */
-    babiaMetadata: {
-        id: 0
-    },
+    getJSON: async function(url) { 
+        let response = await fetch(url);
+            if (response.status == 200) {
+                let json = await response.json();
+                // TODO: throw error if json is not in the right format
+                this.notiBuffer.set(json);
+                return;
+            } 
+            throw new Error(response.status);
 
-    /**
-     * Register function
-     */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
+    },// Try-catch to get and print errors outside
 
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchEventOnElement(interestedElem, "babiaData")
-        }
-    },
-
-    /**
-     * Unregister function
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-            this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements
-     */
-    interestedElements: [],
+ 
 })
 
-
-let requestJSONDataFromURL = (data, el, self) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Initialize a request
-    request.open('get', data.url)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            // Save data
-            let dataRetrieved
-            if (typeof request.response === 'string' || request.response instanceof String) {
-                dataRetrieved = JSON.parse(request.response)
-            } else {
-                dataRetrieved = request.response
-            }
-
-            // Check if a list
-            if (!Array.isArray(dataRetrieved)) {
-                console.error("Data must be an array")
-                return
-            }
-
-            // Save
-            self.babiaData = dataRetrieved
-            self.babiaMetadata = {
-                id: self.babiaMetadata.id++
-            }
-
-            // Dispatch/Trigger/Fire the event
-            dataReadyToSend("babiaData", self)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-            console.error("Error during requesting data", this.status, xhr.statusText)
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-        console.error("Error during requesting data", this.status, xhr.statusText)
-    };
-    request.send();
-}
-
-let parseEmbeddedJSONData = (embedded, el, self) => {
-    // Save data
-    let dataRetrieved = JSON.parse(embedded)
-    self.babiaData = dataRetrieved
-    self.babiaMetadata = {
-        id: self.babiaMetadata.id++
-    }
-
-    // Dispatch/Trigger/Fire the event
-    dataReadyToSend("babiaData", self)
-}
-
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-        dispatchEventOnElement(element, propertyName)
-    });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaQuerierDataReady", propertyName)
-}

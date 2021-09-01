@@ -85,8 +85,59 @@ let findDataComponent = (data, el, self) => {
     return eventName
 }
 
+let findProducerComponent = (data, el, self) => {
+    if (data.from) {
+        // Save the reference to the querier or filterdata
+        let dataElement = document.getElementById(data.from)
+        if (dataElement.components['babia-filter']) {
+            self.producerComponent = dataElement.components['babia-filter']
+        } else if (dataElement.components['babia-queryjson']) {
+            self.producerComponent = dataElement.components['babia-queryjson']
+        } else if (dataElement.components['babia-queryes']) {
+            self.producerComponent = dataElement.components['babia-queryes']
+        } else if (dataElement.components['babia-querygithub']) {
+            self.producerComponent = dataElement.components['babia-querygithub']
+        } else if (dataElement.components['babia-selector']) {
+            self.producerComponent = dataElement.components['babia-selector'];
+        } else {
+            console.error("Problem registering to the querier", el);
+            return
+        }
+    } else {
+        // Look for a querier or filterdata in the same element and register
+        if (el.components['babia-filter']) {
+            self.producerComponent = el.components['babia-filter']
+        } else if (el.components['babia-queryjson']) {
+            self.producerComponent = el.components['babia-queryjson']
+        } else if (el.components['babia-queryes']) {
+            self.producerComponent = el.components['babia-queryes']
+        } else if (el.components['babia-querygithub']) {
+            self.producerComponent = el.components['babia-querygithub']
+        } else if (el.components['babia-selector']) {
+            self.producerComponent = el.components['babia-selector'];
+        } else {
+            // Look for a querier or filterdata in the scene
+            if (document.querySelectorAll("[babia-filter]").length > 0) {
+                self.producerComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
+            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
+                self.producerComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
+                self.producerComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
+            } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
+                self.producerComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
+            } else if (document.querySelectorAll('[babia-selector]').length > 0) {
+                self.producerComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
+            } else {
+                console.error("Error, querier not found", el, el.components, el.components['babia-selector']);
+                return
+            }
+        }
+    }
+}
+
 module.exports.dataReadyToSend = dataReadyToSend;
 module.exports.dispatchEventOnElement = dispatchEventOnElement;
 module.exports.findDataComponent = findDataComponent;
+module.exports.findProducerComponent = findProducerComponent;
 module.exports.colors = colors;
 
