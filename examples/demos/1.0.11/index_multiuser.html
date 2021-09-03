@@ -252,7 +252,7 @@
         <a-entity lounge-entry-point id="rig" position="3 -3 4" networked="template:#rig-template; attachTemplateToLocal:false">
             <a-entity id="camera" camera rotation="0 90 0" look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
-                <a-entity id="avatar" scale="0.1 0.1 0.1" gltf-model="#astro" visible="false" rotation="0 180 0"
+                <a-entity id="avatar" scale="0.0015 0.0015 0.0015" gltf-model="#astro" visible="false" rotation="0 180 0"
                     networked="template:#avatar-template;attachTemplateToLocal:false">
                 </a-entity>
             </a-entity>
@@ -324,53 +324,53 @@
                     let chosenAvatar = getValueFromQueryString('avatar');
                     if (chosenAvatar) {
                         if (chosenAvatar == 'astro') {
-                            avatar.setAttribute("gltf-model", "#astro");
-                            avatar.setAttribute('scale', '0.003 0.003 0.003');
-                            avatar.setAttribute('position', '0 -0.5 0')
-                        } else if (chosenAvatar == 'bot') {
-                            avatar.setAttribute("gltf-model", "#bot");
-                            avatar.setAttribute('scale', '0.2 0.2 0.2');
-                            avatar.setAttribute('rotation', '0 90 0');
-                            avatar.setAttribute('position', '0 0.1 0');
-                        } else if (chosenAvatar == 'charmander') {
-                            avatar.setAttribute("gltf-model", "#charmander");
-                            avatar.setAttribute('scale', '0.045 0.045 0.045');
-                            avatar.setAttribute('position', '0 0.5 0');
-                        } else if (chosenAvatar == 'dinosaur') {
-                            avatar.setAttribute("gltf-model", "#dinosaur");
-                            avatar.setAttribute('scale', '0.5 0.5 0.5');
-                            avatar.setAttribute('position', '0 0.3 0');
-                        } else if (chosenAvatar == 'dwarf') {
-                            avatar.setAttribute("gltf-model", "#dwarf");
-                            avatar.setAttribute('scale', '0.8 0.8 0.8');
-                            avatar.setAttribute('position', '0 -0.5 0')
-                        } else if (chosenAvatar == 'nigiri') {
-                            avatar.setAttribute("gltf-model", "#nigiri");
-                            avatar.setAttribute('scale', '0.025 0.025 0.025');
-                            avatar.setAttribute('position', '0 -0.5 0')
-                        } else if (chosenAvatar == 'owl_sleep') {
-                            avatar.setAttribute("gltf-model", "#owl_sleep");
-                            avatar.setAttribute('scale', '0.8 0.8 0.8');
-                            avatar.setAttribute('position', '0 -0.5 0')
-                        } else if (chosenAvatar == 'penguin') {
-                            avatar.setAttribute("gltf-model", "#penguin");
-                            avatar.setAttribute('scale', '2 2 2');
-                            avatar.setAttribute('position', '0 1 0');
-                        } else if (chosenAvatar == 'pidgeon') {
-                            avatar.setAttribute("gltf-model", "#pidgeon");
-                            avatar.setAttribute('scale', '2.8 2.8 2.8');
-                            avatar.setAttribute('rotation', '0 0 0');
-                            avatar.setAttribute('position', '0 -0.5 0')
-                        } else if (chosenAvatar == 'rubberduck') {
-                            avatar.setAttribute("gltf-model", "#rubberduck");
-                            avatar.setAttribute('scale', '2.5 2.5 2.5');
-                            avatar.setAttribute('rotation', '0 90 0');
-                            avatar.setAttribute('position', '0 -0.5 0')
-                        } else if (chosenAvatar == 'shiba') {
-                            avatar.setAttribute("gltf-model", "#shiba");
-                            avatar.setAttribute('scale', '1.5 1.5 1.5');
-                            avatar.setAttribute('position', '0 1 0');
-                        }
+                avatar.setAttribute("gltf-model", "#astro");
+                avatar.setAttribute('scale', '0.0015 0.0015 0.0015');
+                avatar.setAttribute('position', '0 -0.5 0')
+            } else if (chosenAvatar == 'bot') {
+                avatar.setAttribute("gltf-model", "#bot");
+                avatar.setAttribute('scale', '0.1 0.1 0.1');
+                avatar.setAttribute('rotation', '0 90 0');
+                avatar.setAttribute('position', '0 0.1 0');
+            } else if (chosenAvatar == 'charmander') {
+                avatar.setAttribute("gltf-model", "#charmander");
+                avatar.setAttribute('scale', '0.025 0.025 0.025');
+                avatar.setAttribute('position', '0 0.5 0');
+            } else if (chosenAvatar == 'dinosaur') {
+                avatar.setAttribute("gltf-model", "#dinosaur");
+                avatar.setAttribute('scale', '0.25 0.25 0.25');
+                avatar.setAttribute('position', '0 0.3 0');
+            } else if (chosenAvatar == 'dwarf') {
+                avatar.setAttribute("gltf-model", "#dwarf");
+                avatar.setAttribute('scale', '0.4 0.4 0.4');
+                avatar.setAttribute('position', '0 -0.5 0')
+            } else if (chosenAvatar == 'nigiri') {
+                avatar.setAttribute("gltf-model", "#nigiri");
+                avatar.setAttribute('scale', '0.015 0.015 0.015');
+                avatar.setAttribute('position', '0 -0.5 0')
+            } else if (chosenAvatar == 'owl_sleep') {
+                avatar.setAttribute("gltf-model", "#owl_sleep");
+                avatar.setAttribute('scale', '0.4 0.4 0.4');
+                avatar.setAttribute('position', '0 -0.5 0')
+            } else if (chosenAvatar == 'penguin') {
+                avatar.setAttribute("gltf-model", "#penguin");
+                avatar.setAttribute('scale', '1 1 1');
+                avatar.setAttribute('position', '0 1 0');
+            } else if (chosenAvatar == 'pidgeon') {
+                avatar.setAttribute("gltf-model", "#pidgeon");
+                avatar.setAttribute('scale', '1.4 1.4 1.4');
+                avatar.setAttribute('rotation', '0 0 0');
+                avatar.setAttribute('position', '0 -0.5 0')
+            } else if (chosenAvatar == 'rubberduck') {
+                avatar.setAttribute("gltf-model", "#rubberduck");
+                avatar.setAttribute('scale', '1.5 1.5 1.5');
+                avatar.setAttribute('rotation', '0 90 0');
+                avatar.setAttribute('position', '0 -0.5 0')
+            } else if (chosenAvatar == 'shiba') {
+                avatar.setAttribute("gltf-model", "#shiba");
+                avatar.setAttribute('scale', '0.75 0.75 0.75');
+                avatar.setAttribute('position', '0 1 0');
+            }
                     }
 
                     /* SET SERVER URL FROM QUERY STRING */
