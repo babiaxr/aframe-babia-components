@@ -3,3 +3,5 @@ package-lock.json
 npm-debug*
 cypress/
 tests/videos/
+dist/*.map
+yarn*
