@@ -806,7 +806,6 @@ AFRAME.registerComponent('babia-boats', {
                         // encontrar el elemento que no esta en la escena con id y darle opacidad 
                         // y cambiar sus propiedades a la nueva si es necesario 
                         figures[i].inserted = true;
-                        console.log(entity.getAttribute('width'))
                         if (entity.getAttribute('width') != figures[i].width) {
                             entity.setAttribute('width', figures[i].width);
                         }

@@ -75,7 +75,6 @@ AFRAME.registerComponent('babia-treebuilder', {
                     self.babiaMetadata = {
                         id: self.babiaMetadata.id++
                     }
-                    console.log('tree:', self.babiaData)
 
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)

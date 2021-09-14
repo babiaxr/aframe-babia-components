@@ -22,8 +22,6 @@ class Selectable {
     }
 
     next() {
-        console.log('Current',this.current)
-        console.log(this.length)
         let selected = this.data[this.selectors[this.current]];
         if (this.current + this.step <= this.length - 1){
             this.current += this.step;
