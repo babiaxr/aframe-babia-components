@@ -23,12 +23,12 @@ class Selectable {
 
     next() {
         let selected = this.data[this.selectors[this.current]];
-        if (this.current + this.step < this.length - 1){
+        if (this.current + this.step <= this.length - 1){
             this.current += this.step;
         } else if (this.current = this.length - 1) {
             this.current = this.length
         } else {
-            this.current = this.length - 1
+            this.current = this.length
         }
         return(selected);
     }

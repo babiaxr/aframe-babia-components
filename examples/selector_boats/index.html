@@ -3,34 +3,34 @@
 
 <head>
   <meta charset="utf-8">
-  <title>A-Frame Boats Component - Basic</title>
-  <meta name="description" content="Basic example for Boats component.">
+  <title>A-Frame Boats Component - Animated (Front)</title>
+  <meta name="description" content="Temporal Evolution for Boats component.">
   </meta>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
   <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
   <script src="../../dist/aframe-babia-components.js"></script>
-  <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+  <link rel="stylesheet" href="../assets/gitlab-corner.css">
 </head>
 
 <body>
   <a-scene environment="preset: yavapai" renderer="antialias: true">
     <!-- 1 Querier -->
-    <a-entity id="queriertest" babia-queryjson="url: ./commits.json;"></a-entity>
+    <a-entity id="queriertest" babia-queryjson="url: ./commits2.json;"></a-entity>
 
     <!-- 2 Selector -->
-    <a-entity id="selectortest" babia-selector="from: queriertest; controller: nav"></a-entity>
+    <a-entity id="selectortest" babia-selector="from: queriertest; controller: nav" ></a-entity>
 
     <!-- 3 Treebuilder -->
     <a-entity id="treetest" babia-treebuilder="field: id; split_by: /; from: selectortest"></a-entity>
 
     <!-- Boats Visualizer -->
-    <a-entity scale="0.4 2 0.4" babia-boats="from: treetest; area: area; selector: true" position="0 1 0"></a-entity>
+    <a-entity scale="0.4 1 0.4" babia-boats="from: treetest; area: area" position="0 1 0"></a-entity>
 
     <!-- Slider -->
-    <a-entity id="nav" babia-navigator position="-3 10 23" rotation="-10 -30 0" scale="0.5 0.5 0.5"></a-entity>
+    <a-entity id="nav" babia-navigator position="5 3 4" rotation="0 0 0"></a-entity>
 
-    <a-entity movement-controls="fly: true" position="-6 10 25" rotation="-10 -30 0">
+    <a-entity movement-controls="fly: true" position="0 5 10" rotation="0 0 0">
       <a-entity camera look-controls></a-entity>
       <a-entity cursor="rayOrigin:mouse"></a-entity>
       <a-entity laser-controls="hand: right"></a-entity>

@@ -41,6 +41,7 @@
   "homepage": "https://babiaxr.gitlab.io/",
   "devDependencies": {
     "accessor-fn": "^1.3.0",
+    "babel-core": "^6.26.3" ,
     "babel-loader": "^7.1.4",
     "chai": "^4.1.2",
     "chai-shallow-deep-equal": "^1.3.0",
@@ -50,6 +51,7 @@
     "randomcolor": "^0.4.4",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
+    "three": ">=0.118.3",
     "three-forcegraph": "^1.39.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.0.8",
