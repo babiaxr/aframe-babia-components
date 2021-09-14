@@ -67,16 +67,15 @@ AFRAME.registerComponent('babia-treebuilder', {
                 el.addEventListener(self.dataComponentEventName, _listener = (e) => {
                     // Get again the raw data from the querier/filterdata
                     self.dataComponentDataPropertyName = e.detail
-                    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
-
+                    let rawData = JSON.parse(JSON.stringify(self.dataComponent[self.dataComponentDataPropertyName]))
+                    
                     // Generate Tree, save the new references
-                    console.log(rawData)
                     let dataTreeFormat = generateTree(data, rawData)
                     self.babiaData = dataTreeFormat
                     self.babiaMetadata = {
                         id: self.babiaMetadata.id++
                     }
-                    console.log(self.babiaData)
+                    console.log('tree:', self.babiaData)
 
                     // Dispatch interested events
                     dataReadyToSend("babiaData", self)
@@ -91,7 +90,7 @@ AFRAME.registerComponent('babia-treebuilder', {
             if ((oldData.split_by && data.split_by !== oldData.split_by)
                 || (oldData.field && data.field !== oldData.field)) {
                 // Get again the raw data from the querier/filterdata
-                let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+                let rawData = JSON.parse(JSON.stringify(self.dataComponent[self.dataComponentDataPropertyName]))
 
                 // Generate Tree, save the new references
                 let dataTreeFormat = generateTree(data, rawData)

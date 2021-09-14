@@ -28,7 +28,6 @@ AFRAME.registerComponent('babia-boats', {
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
-        selector: {type: 'boolean', default: false}
     },
 
     /**
@@ -125,7 +124,9 @@ AFRAME.registerComponent('babia-boats', {
         let data = this.data;
         let el = this.el;
         let self = this;
-        this.figures = [];
+        if (!this.figures){
+            this.figures = [];
+        }
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
@@ -236,6 +237,8 @@ AFRAME.registerComponent('babia-boats', {
     play: function () { },
 
     onDataLoaded: function (items) {
+        this.figures_old = this.figures;
+        this.figures = [];
         console.log('Data Loaded.');
 
         let el = this.el;
@@ -248,7 +251,7 @@ AFRAME.registerComponent('babia-boats', {
         } else {
             // Find last level
             let levels = getLevels(elements, 0);
-            console.log("Levels:" + levels);
+            //console.log("Levels:" + levels);
             increment = this.data.border * this.data.extra * (levels + 1);
         }
 
@@ -259,15 +262,13 @@ AFRAME.registerComponent('babia-boats', {
         // Draw figures
         t.x = 0;
         t.z = 0;
-        if (this.data.selector){
+        if (this.figures_old.length == 0) {
+            // First, delete all elements of the component
+            while (this.el.firstChild)
+                this.el.firstChild.remove();
             this.drawElements(el, this.figures, t);
-            this.figures_old = this.figures;
         } else {
-            if (!this.figures_old) {
-                this.drawElements(el, this.figures, t);
-                this.figures_old = this.figures;
-            } else {
-                console.log("Updating elements...");
+            if (this.figures_old !== this.figures){
                 this.animation = true;
                 this.start_time = Date.now();
             }
@@ -491,10 +492,6 @@ AFRAME.registerComponent('babia-boats', {
     drawElements: function (element, figures, translate) {
         let self = this
 
-        // First, delete all elements of the component
-        while (self.el.firstChild)
-            self.el.firstChild.remove();
-
         for (let i in figures) {
 
             let height = figures[i].height;
@@ -613,7 +610,7 @@ AFRAME.registerComponent('babia-boats', {
                                 depth: entityGeometry.depth + 0.1,
                                 width: entityGeometry.width + 0.1
                             });
-                            legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                            legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                             let worldPos = new THREE.Vector3();
                             let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                             let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -647,7 +644,7 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', figures[i].rawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -786,7 +783,9 @@ AFRAME.registerComponent('babia-boats', {
         let entity;
         for (let i in figures) {
             if (document.getElementById(figures[i].id)) {
+                // If exists
                 entity = document.getElementById(figures[i].id);
+                // Creating... (next ticks)
                 if (figures[i].inserted) {
                     //Increment opacity
                     let opa_inc = delta / this.duration;
@@ -795,21 +794,43 @@ AFRAME.registerComponent('babia-boats', {
                         opacity += opa_inc;
                     } else {
                         opacity = 1.0;
+                        figures[i].inserted = false;
                     }
                     setOpacity(entity, opacity);
 
-                } else {
-                    // RESIZE
-                    this.resize(entity, new_time, delta, figures[i], figures_old[i]);
-                    // TRASLATE
-                    this.traslate(entity, new_time, delta, figures[i], figures_old[i], translate, translate_old);
+                } else { 
+                    // find index in old_figures
+                    let cond = 'id=' + figures[i].id
+                    let index = findIndex(figures_old, cond)
+                    if (index < 0 ){
+                        // encontrar el elemento que no esta en la escena con id y darle opacidad 
+                        // y cambiar sus propiedades a la nueva si es necesario 
+                        figures[i].inserted = true;
+                        console.log(entity.getAttribute('width'))
+                        if (entity.getAttribute('width') != figures[i].width) {
+                            entity.setAttribute('width', figures[i].width);
+                        }
+                        if (entity.getAttribute('height') != figures[i].height) {
+                            entity.setAttribute('height', figures[i].height);
+                        }
+                        if (entity.getAttribute('depth') != figures[i].depth) {
+                            entity.setAttribute('depth', figures[i].depth);
+                        }
 
-                    if (figures[i].children) {
-                        this.Animation(entity, figures[i].children, figures_old[i].children, delta, figures[i].translate_matrix, figures_old[i].translate_matrix);
+                    } else {
+                        // RESIZE
+                        this.resize(entity, new_time, delta, figures[i], figures_old[index]);
+                        // TRASLATE
+                        this.traslate(entity, new_time, delta, figures[i], figures_old[index], translate, translate_old);
+
+                        if (figures[i].children) {
+                            this.Animation(entity, figures[i].children, figures_old[index].children, delta, figures[i].translate_matrix, figures_old[index].translate_matrix);
+                        }
                     }
                 }
             } else {
 
+                // CREATE NEW
                 position = {
                     x: figures[i].posX - translate.x,
                     y: (figures[i].height / 2 + translate.y / 2),
@@ -830,13 +851,30 @@ AFRAME.registerComponent('babia-boats', {
             }
         }
 
+        // Delete figures
+        let opa_dec = delta / this.duration;
+        for (let i in figures_old){
+            let cond = 'id=' + figures_old[i].id
+            let index = findIndex(figures, cond)
+            if (index < 0){
+                let entity_del = document.getElementById(figures_old[i].id)
+                let opacity = parseFloat(entity_del.getAttribute('material').opacity);
+                if (opacity - opa_dec > 0) {
+                    opacity -= opa_dec;
+                } else {
+                    opacity = 0.0;
+                }
+                setOpacity(entity_del, opacity);
+            }
+        }
+
         if ((new_time - this.start_time) > this.duration) {
             this.animation = false;
-            this.figures_old = this.figures;
         }
     },
 
     resize: function (entity, new_time, delta, figure, figure_old) {
+        //console.log(entity.id)
         if (((new_time - this.start_time) < this.duration) &&
             ((figure.width != figure_old.width) ||
                 (figure.height != figure_old.height) ||
@@ -889,6 +927,7 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('width', figure.width);
             entity.setAttribute('height', figure.height);
             entity.setAttribute('depth', figure.depth);
+            entity.setAttribute('babiaRawData', JSON.stringify(figure.rawData))
         }
     },
 
@@ -956,6 +995,10 @@ AFRAME.registerComponent('babia-boats', {
         entity.setAttribute('width', width);
         entity.setAttribute('height', height);
         entity.setAttribute('depth', depth);
+        // rawData building
+        if (figure.rawData) {
+            entity.setAttribute('babiaRawData', JSON.stringify(figure.rawData))
+        }
 
         // add into scene
         entity.setAttribute('position', {
@@ -1181,4 +1224,15 @@ function heatMapColorforValue(val, max, min) {
     Math.round(color1[2] * w1 + color2[2] * w2)];
     return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
 
+}
+
+let findIndex = (list, condicion) => {
+    condicion = condicion.split('=')
+    //console.log(condicion)
+    for (i = 0; i < list.length; i++){
+        if (list[i][condicion[0]] === condicion[1]){
+            return i
+        }
+    }
+    return -1
 }
