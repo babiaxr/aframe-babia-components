@@ -114,6 +114,9 @@ AFRAME.registerComponent('babia-boats', {
      * 
      */
     duration: 2000,
+    figures_del: [],
+    figures_in: [],
+    animation: false,
 
     /**
     * Called when component is attached and when component data changes.
@@ -237,9 +240,26 @@ AFRAME.registerComponent('babia-boats', {
     play: function () { },
 
     onDataLoaded: function (items) {
+
+        console.log('Data Loaded.');
+
+        // when animation not finished, delete figures and opa 1 to inserted
+        if (this.animation){
+            this.figures_del.forEach(figure => {
+                let entity = document.getElementById(figure.id);
+                setOpacity(entity, 0.0);
+            })
+            this.figures_in.forEach(figure => {
+                let entity = document.getElementById(figure.id);
+                setOpacity(entity, 1.0);
+            })
+            //this.animation = false;
+            this.figures_del = [];
+            this.figures_in = [];
+        }
+
         this.figures_old = this.figures;
         this.figures = [];
-        console.log('Data Loaded.');
 
         let el = this.el;
         let elements = items
@@ -798,6 +818,12 @@ AFRAME.registerComponent('babia-boats', {
                     }
                     setOpacity(entity, opacity);
 
+                    // If animation stops before finish
+                    let cond = 'id=' + figures[i].id
+                    if (findIndex(self.figures_in, cond) < 0){
+                        self.figures_in.push(figures[i])
+                    }
+
                 } else { 
                     // find index in old_figures
                     let cond = 'id=' + figures[i].id
@@ -846,7 +872,6 @@ AFRAME.registerComponent('babia-boats', {
 
                 element.appendChild(new_entity);
                 figures[i].inserted = true;
-
             }
         }
 
@@ -856,6 +881,9 @@ AFRAME.registerComponent('babia-boats', {
             let cond = 'id=' + figures_old[i].id
             let index = findIndex(figures, cond)
             if (index < 0){
+                if (findIndex(self.figures_del, cond) < 0){
+                    self.figures_del.push(figures_old[i])
+                }
                 let entity_del = document.getElementById(figures_old[i].id)
                 let opacity = parseFloat(entity_del.getAttribute('material').opacity);
                 if (opacity - opa_dec > 0) {
