@@ -1,6 +1,5 @@
-let dataReadyToSend = require('../others/common').dataReadyToSend;
-let dispatchEventOnElement = require('../others/common').dispatchEventOnElement;
-let findDataComponent = require('../others/common').findDataComponent;
+let findProdComponent = require('../others/common').findProdComponent;
+let updateTitle = require('../others/common').updateTitle;
 const colors = require('../others/common').colors;
 
 /* global AFRAME */
@@ -27,7 +26,6 @@ AFRAME.registerComponent('babia-barsmap', {
         titleFont: { type: 'string' },
         titleColor: { type: 'string' },
         titlePosition: { type: 'string', default: "0 0 0" },
-        scale: { type: 'number' },
         // Height of the chart
         chartHeight: { type: 'number', default: 10 },
         // Keep height when updating data
@@ -60,8 +58,7 @@ AFRAME.registerComponent('babia-barsmap', {
         this.el.appendChild(this.chartEl);
 
         // Build titleEl
-        this.titleEl = document.createElement('a-entity');
-        this.titleEl.classList.add("babiaxrTitle")
+        this.updateTitle()
         this.el.appendChild(this.titleEl);
     },
 
@@ -71,91 +68,41 @@ AFRAME.registerComponent('babia-barsmap', {
     */
 
     update: function (oldData) {
-        const self = this;
         let data = this.data;
         let el = this.el;
 
-        console.log("Starting Bars");
+        if (!data.index){
+            data.index = data.x_axis
+        }
+
+        console.log("Starting Barsmap");
         this.animation = data.animation
         this.bar_array = []
 
-        // Load data, or set event handler for when the data is ready in other component
-        result = this.loadData(oldData);
-        if (result === "Ready") {
-            // Data is ready, build chart
-            this.updateChart();
-            // Dispatch events because I updated my visualization
-            dataReadyToSend("newData", self)
-            self.currentData = JSON.parse(JSON.stringify(self.newData))
-        };
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-    /**
-    * Register function when I'm updated
-    */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
-
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchEventOnElement(interestedElem, "babiaData")
+        if (data.data && oldData.data !== data.data) {
+            this.processData(data.data);
+        } else if (this.data.from !== oldData.from) {
+            // Unregister from old producer
+            if (this.prodComponent) {
+                this.prodComponent.notiBuffer.unregister(this.notiBufferId)
+            };
+            this.prodComponent = findProdComponent(this.data, el)
+            if (this.prodComponent.notiBuffer) {
+                this.notiBufferId = this.prodComponent.notiBuffer
+                    .register(this.processData.bind(this))
+            }
         }
     },
 
     /**
-     * Unregister function when I'm updated
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-            this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements when I'm updated
-     */
-    interestedElements: [],
-
-    /**
-    * Querier component target
+    * Producer component target
     */
-    dataComponent: undefined,
+    prodComponent: undefined,
 
     /**
-     * Property of the querier where the data is saved
-     */
-    dataComponentDataPropertyName: "newData",
-
-    /**
-     * Event name to difference between querier and filterdata
-     */
-    dataComponentEventName: undefined,
+    * NotiBuffer identifier
+    */
+    notiBufferId: undefined,
 
     /**
      * Where the data is gonna be stored
@@ -168,7 +115,7 @@ AFRAME.registerComponent('babia-barsmap', {
     currentData: undefined,
 
     /**
-     * Where the metaddata is gonna be stored
+     * Where the metadata is gonna be stored
      */
     babiaMetadata: {
         id: 0
@@ -189,92 +136,28 @@ AFRAME.registerComponent('babia-barsmap', {
      */
     valueMax: undefined,
 
-    xlabels: [],
-    zlabels: [],
-    xticks: [],
-    zticks: [],
+    xLabels: [],
+    zLabels: [],
+    xTicks: [],
+    zTicks: [],
 
     /**
      * Duration of the animation if activated
      */
     total_duration: 3000,
-
-    /**
-     * Load data from the different possible sources
-     * @param {*} oldData - Previous data attribute
-     * @return {string} Data loaded ("Ready") or handler prepared ("Waiting")
-     * 
-     * Data is loaded in this.babiaData
-     * Precedence: data attribute, else component in same element, else other component
-     */
-    loadData: function (oldData) {
-        let el = this.el;
-        let data;
-
-        if (this.data.data && oldData.data !== this.data.data) {
-            // Data in data argument, load it
-            console.log("Data in data argument");
-            data = this.data.data;
-            if (typeof(data) === 'string' || data instanceof String) {
-                this.newData = JSON.parse(data);
-            } else {
-                this.newData = data;
-            };
-            this.babiaMetadata = { id: this.babiaMetadata.id++ };
-            return "Ready";
-        } else {
-            if (this.data.from !== oldData.from) {
-                // From changed, re-register to the new data component
-                console.log("From was changed");
-                // Unregister for old querier
-                if (this.dataComponent) { this.dataComponent.unregister(el) };
-                // Find the new component and check if querier or filterdata from the event               
-                let eventName = findDataComponent(this.data, el, this)
-                // If changed to filterdata or to querier
-                if (this.dataComponentEventName && this.dataComponentEventName !== eventName) {
-                    el.removeEventListener(this.dataComponentEventName, _listener, true)
-                }
-                // Assign new eventName
-                this.dataComponentEventName = eventName
-
-                // Attach to the events of the data component
-                el.addEventListener(this.dataComponentEventName, _listener = (e) => {
-                    attachNewDataEventCallback(this, e);
-                });
-
-                // Register for the new one
-                this.dataComponent.register(el);
-            }
-
-            // If changed whatever, re-print with the current data
-            if (data !== oldData && this.newData && !this.data.incremental) {
-                // From was changed and data is absolute
-                console.log("New Absolute Data");
-                return "Ready";
-            }
-
-            return "Waiting";
-        }
-    },
-
+    
     /*
     * Update title
     */
     updateTitle: function() {
-        const titleEl = this.titleEl;
-        const data = this.data;
-
-        titleEl.setAttribute('text-geometry', {'value': data.title});
-        if (data.font) titleEl.setAttribute('text-geometry', {'font': data.titleFont});
-        if (data.color) titleEl.setAttribute('material', {'color': data.titleColor});
-        titleEl.setAttribute('position', data.titlePosition);
-        titleEl.setAttribute('rotation', { x: 0, y: 0, z: 0 });
+        const titleRotation = { x: 0, y: 0, z: 0 }
+        this.titleEl = updateTitle(this.data, titleRotation)
     },
 
     /*
      * Update axis
      */
-    updateAxis: function(xlabels, xticks, lengthX, maxValue, zlabels, zticks, lengthZ) {
+    updateAxis: function(xLabels, xTicks, lengthX, maxValue, zLabels, zTicks, lengthZ) {
         const data = this.data;
         if (data.axis) {
             if (!this.xAxisEl) {
@@ -282,7 +165,7 @@ AFRAME.registerComponent('babia-barsmap', {
                 this.chartEl.appendChild(this.xAxisEl);
             };
             this.xAxisEl.setAttribute('babia-axis-x',
-                {'labels': xlabels, 'ticks': xticks, 'length': lengthX,
+                {'labels': xLabels, 'ticks': xTicks, 'length': lengthX,
                     'palette': data.palette, 'align': 'behind'});
             this.xAxisEl.setAttribute('position', {
                 x: -this.widthBars/2, y: 0, z: -this.widthBars/2
@@ -293,7 +176,7 @@ AFRAME.registerComponent('babia-barsmap', {
                 this.chartEl.appendChild(this.zAxisEl);
             };
             this.zAxisEl.setAttribute('babia-axis-z',
-                {'labels': zlabels, 'ticks': zticks, 'length': lengthZ,
+                {'labels': zLabels, 'ticks': zTicks, 'length': lengthZ,
                     'palette': data.palette, 'align': 'left'});
             this.zAxisEl.setAttribute('position', {
                 x: 0-this.widthBars/2, y: 0, z: -this.widthBars/2
@@ -321,28 +204,25 @@ AFRAME.registerComponent('babia-barsmap', {
     },
 
     /*
-     * Build chart
-     * @return {} Data loaded
-     * 
+     * Update chart
      */
     updateChart: function () {
-        const el = this.el;
+        let dataToPrint
+        if (this.currentData) {
+            dataToPrint = this.currentData;
+        } else {
+            dataToPrint = this.newData;
+        }
+        console.log("Data babia-barsmap:", dataToPrint)
+
         const data = this.data;
 
-        let babiaData
-        if (this.currentData) {
-            babiaData = this.currentData;
-        } else {
-            babiaData = this.newData;
-        }
-        const widthBars = this.widthBars;
         const palette = data.palette
-        const scale = data.scale
         
         // Update title
         this.updateTitle();
 
-        let maxValue = Math.max.apply(Math, babiaData.map(function (o) {
+        let maxValue = Math.max.apply(Math, dataToPrint.map(function (o) {
             return o[data.height];
         }));
 
@@ -359,32 +239,32 @@ AFRAME.registerComponent('babia-barsmap', {
         let zTicks = [];
 
         let chartEl = this.chartEl;
-        console.log(babiaData)
-        for (let i = 0; i < babiaData.length; i++) {
-            let item = babiaData[i]
+        console.log(dataToPrint)
+        for (let i = 0; i < dataToPrint.length; i++) {
+            let item = dataToPrint[i]
  
             // Build bar
-            xLabel = item[data.x_axis]
-            zLabel = item[data.z_axis]
+            let xLabel = item[data.x_axis]
+            let zLabel = item[data.z_axis]
             // Check if exist labels and calculate posX
             let posX
             if (!xLabels.includes(xLabel)){
                 xLabels.push(xLabel)
-                posX = (xLabels.length - 1) * widthBars * 1.25;
-                xTicks.push(posX + widthBars/2)
+                posX = (xLabels.length - 1) * this.widthBars * 1.25;
+                xTicks.push(posX + this.widthBars/2)
             }
             if (!posX){
-                posX = xLabels.indexOf(xLabel) * widthBars * 1.25
+                posX = xLabels.indexOf(xLabel) * this.widthBars * 1.25
             }
 
             let posZ 
             if (!zLabels.includes(zLabel)){
                 zLabels.push(zLabel)
-                posZ = (zLabels.length - 1) * widthBars * 1.25;
-                zTicks.push(posZ + widthBars/2)
+                posZ = (zLabels.length - 1) * this.widthBars * 1.25;
+                zTicks.push(posZ + this.widthBars/2)
             }
             if (!posZ){
-                posZ = zLabels.indexOf(zLabel) * widthBars * 1.25
+                posZ = zLabels.indexOf(zLabel) * this.widthBars * 1.25
             }
 
             console.log(xLabel + " " + zLabel + " " + posX + " " + posZ)
@@ -403,8 +283,8 @@ AFRAME.registerComponent('babia-barsmap', {
             if (!item['_not']) { 
                 barEl.setAttribute('babia-bar', {
                     'height': item[data.height] * this.lengthY / maxValue,
-                    'width': widthBars,
-                    'depth': widthBars,
+                    'width': this.widthBars,
+                    'depth': this.widthBars,
                     'color': colors.get(colorId, palette),
                     'label': 'events',
                     'animation': data.animation
@@ -424,87 +304,91 @@ AFRAME.registerComponent('babia-barsmap', {
         }
 
         //Print axis
-        const lengthX = widthBars * (xLabels.length * 1.25 + 0.75);
-        const lengthZ = widthBars * (zLabels.length * 1.25 + 0.75);
+        const lengthX = this.widthBars * (xLabels.length * 1.25 + 0.75);
+        const lengthZ = this.widthBars * (zLabels.length * 1.25 + 0.75);
         this.updateAxis(xLabels, xTicks, lengthX, maxValue, zLabels, zTicks, lengthZ);
-        this.xlabels = xLabels
-        this.xticks = xTicks
-        this.zlabels = zLabels
-        this.zticks = zTicks
+        this.xLabels = xLabels
+        this.xTicks = xTicks
+        this.zLabels = zLabels
+        this.zTicks = zTicks
     },
 
+    /*
+    * Process data obtained from producer
+    */
+    processData: function (data) {
+        console.log("processData", this);
+        let object;
+        if (typeof(data) === 'string' || data instanceof String) {
+            object = JSON.parse(data);
+        } else {
+            object = data;
+        };
+        this.newData = object;
+        this.babiaMetadata = { id: this.babiaMetadata.id++ };
+
+        if (!this.data.incremental){
+            this.currentData = JSON.parse(JSON.stringify(this.newData))
+            // Update chart
+            this.updateChart()
+        } else {
+            // First add the new data in current data
+            this.newData.forEach(bar => {
+                let found = false
+                for(let i in this.currentData){
+                    if (this.currentData[i][this.data.x_axis] == bar[this.data.x_axis] && this.currentData[i][this.data.z_axis] == bar[this.data.z_axis]){
+                        this.currentData[i] = bar
+                        found = true
+                    }
+                }
+                if (!found){
+                    this.currentData.push(bar)
+                }
+            });
+            // If Keep Height (need re-draw all)
+            if (this.data.keepHeight){
+                // To calculate maxValue you need all data before
+                this.maxValue = Math.max.apply(Math, this.currentData.map(function (o) { return o[this.data.height]; }))
+                console.log("Re-draw the chart")
+                this.updateChart()
+            } else {
+                console.log("Keep ---> Update")
+                this.newData.forEach(bar => {
+                    if (!bar._not){
+                        if (this.chartEl.querySelector('#' + bar[this.data.x_axis] + bar[this.data.z_axis])){
+                            // Update bar
+                            this.chartEl.querySelector('#' + bar[this.data.x_axis] + bar[this.data.z_axis]).setAttribute('babia-bar', 
+                            {
+                                'height': bar[this.data.height] * this.data.chartHeight / this.maxValue,
+                                'labelText': bar[this.data.x_axis] +"," + bar[this.data.z_axis] + ': ' + bar[this.data.height]
+                            })
+                        } else {
+                            // Create new bar
+                            generateBar(this, this.data, bar, this.maxValue, colors, this.xLabels, this.zLabels, this.xTicks, this.zTicks);
+                        }
+                    } else {
+                        // Delete bar
+                        this.chartEl.querySelector("#" + bar[this.data.x_axis]+ bar[this.data.z_axis]).setAttribute('babia-bar', 'height', -0.1)
+                        //document.getElementById(bar[this.data.index]).remove()
+                    }
+                });
+
+                // Update axis
+                let len_x = this.xTicks[this.xTicks.length - 1] + this.widthBars * 3 / 4
+                let len_z = this.zTicks[this.zTicks.length - 1] + this.widthBars * 3 / 4
+                if (!this.data.chartHeight || !this.data.keepHeight){
+                    // Calculate new maxValue and lengthY
+                    let maxValue_new = Math.max.apply(Math, this.currentData.map(function (o) { return o[this.data.height]; }))
+                    this.lengthY = maxValue_new * this.data.chartHeight / this.maxValue
+                    this.maxValue = maxValue_new
+                }
+                this.updateAxis(this.xLabels, this.xTicks, len_x, this.maxValue, this.zLabels, this.zTicks, len_z)
+            } 
+        }
+    },
 })
 
-let attachNewDataEventCallback = (self, e) => {
-    // Get the data from the info of the event (propertyName)
-    self.dataComponentDataPropertyName = e.detail
-    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
-
-    self.newData = rawData
-    self.babiaMetadata = {
-        id: self.babiaMetadata.id++
-    }
-
-    if (!self.data.incremental){
-        self.currentData = JSON.parse(JSON.stringify(self.newData))
-        // Update chart
-        self.updateChart()
-    } else {
-        // First add the new data in current data
-        self.newData.forEach(bar => {
-            let found = false
-            for(let i in self.currentData){
-                if (self.currentData[i][self.data.x_axis] == bar[self.data.x_axis] && self.currentData[i][self.data.z_axis] == bar[self.data.z_axis]){
-                    self.currentData[i] = bar
-                    found = true
-                }
-            }
-            if (!found){
-                self.currentData.push(bar)
-            }
-        });
-        // If Keep Height (need re-draw all)
-        if (self.data.keepHeight){
-            // To calculate maxValue you need all data before
-            self.maxValue = Math.max.apply(Math, self.currentData.map(function (o) { return o[self.data.height]; }))
-            console.log("Re-draw the chart")
-            self.updateChart()
-        } else {
-            console.log("Keep ---> Update")
-            self.newData.forEach(bar => {
-                if (!bar._not){
-                    if (self.chartEl.querySelector('#' + bar[self.data.x_axis] + bar[self.data.z_axis])){
-                        // Update bar
-                        self.chartEl.querySelector('#' + bar[self.data.x_axis] + bar[self.data.z_axis]).setAttribute('babia-bar', 
-                        {
-                            'height': bar[self.data.height] * self.data.chartHeight / self.maxValue,
-                            'labelText': bar[self.data.x_axis] +"," + bar[self.data.z_axis] + ': ' + bar[self.data.height]
-                        })
-                    } else {
-                        // Create new bar
-                        generateBar(self, self.data, bar, self.maxValue, self.widthBars, colors, self.xLabels, self.zLabels, self.xTicks, self.zTicks);
-                    }
-                } else {
-                    // Delete bar
-                    self.chartEl.querySelector("#" + bar[self.data.x_axis]+ bar[self.data.z_axis]).setAttribute('babia-bar', 'height', -0.1)
-                    //document.getElementById(bar[self.data.index]).remove()
-                }
-            }); 
-            // Update axis
-            let len_x = self.xticks[self.xticks.length - 1] + self.widthBars * 3 / 4
-            let len_z = self.zticks[self.zticks.length - 1] + self.widthBars * 3 / 4
-            if (!self.data.chartHeight || !self.data.keepHeight){
-                // Calculate new maxValue and lengthY
-                let maxValue_new = Math.max.apply(Math, self.currentData.map(function (o) { return o[self.data.height]; }))
-                self.lengthY = maxValue_new * self.data.chartHeight / self.maxValue
-                self.maxValue = maxValue_new
-            }
-            self.updateAxis(self.xlabels, self.xticks, len_x, self.maxValue, self.zlabels, self.zticks, len_z)
-        } 
-    }
-}
-
-let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLabels, xTicks, zTicks) => {
+let generateBar = (self, data, item, maxValue, palette, xLabels, zLabels, xTicks, zTicks) => {
     let xLabel = item[data.x_axis]
     let zLabel = item[data.z_axis]
 
@@ -512,21 +396,21 @@ let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLab
     let posX
     if (!xLabels.includes(xLabel)){
         xLabels.push(xLabel)
-        posX = (xLabels.length - 1) * widthBars * 1.25;
-        xTicks.push(posX + widthBars/2)
+        posX = (xLabels.length - 1) * this.widthBars * 1.25;
+        xTicks.push(posX + this.widthBars/2)
     }
     if (!posX){
-        posX = xLabels.indexOf(xLabel) * widthBars * 1.25
+        posX = xLabels.indexOf(xLabel) * this.widthBars * 1.25
     }
 
     let posZ 
     if (!zLabels.includes(zLabel)){
         zLabels.push(zLabel)
-        posZ = (zLabels.length - 1) * widthBars * 1.25;
-        zTicks.push(posZ + widthBars/2)
+        posZ = (zLabels.length - 1) * this.widthBars * 1.25;
+        zTicks.push(posZ + this.widthBars/2)
     }
     if (!posZ){
-        posZ = zLabels.indexOf(zLabel) * widthBars * 1.25
+        posZ = zLabels.indexOf(zLabel) * this.widthBars * 1.25
     }
 
     let colorId = xLabels.indexOf(xLabel)
@@ -536,8 +420,8 @@ let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLab
     barEl.classList.add("babiaxraycasterclass");
     barEl.setAttribute('babia-bar', {
         'height': item[data.height] * this.lengthY / maxValue,
-        'width': widthBars,
-        'depth': widthBars,
+        'width': this.widthBars,
+        'depth': this.widthBars,
         'color': colors.get(colorId, palette),
         'label': 'events',
         'animation': data.animation
@@ -552,9 +436,9 @@ let generateBar = (self, data, item, maxValue, widthBars, palette, xLabels, zLab
         });
     };
 
-    this.xlabels = xLabels
-    this.xticks = xTicks
-    this.zlabels = zLabels
-    this.zticks = zTicks
+    this.xLabels = xLabels
+    this.xTicks = xTicks
+    this.zLabels = zLabels
+    this.zTicks = zTicks
     return bar
 }

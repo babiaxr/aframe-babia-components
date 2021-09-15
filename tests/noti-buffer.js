@@ -9,14 +9,13 @@ describe ('Async components', () => {
       });
 
     it ('NotiBuffer with QueryJson and Babia-Bars', () => {
-        /* Add components */
-        let bars;
+        // Add components
         cy.get('a-scene').then(scene => {
             // Querier 1
             let querier = Cypress.$('<a-entity id="queriertest" babia-queryjson="url: ./data_1.json;"></a-entity>');
             Cypress.$(scene).append(querier);  
             // Bars
-            bars = Cypress.$('<a-entity id="bars" babia-bars="from: queriertest; height: population"></a-entity>');
+            let bars = Cypress.$('<a-entity id="bars" babia-bars="from: queriertest; height: population"></a-entity>');
             Cypress.$(scene).append(bars);
         });
         
@@ -30,11 +29,17 @@ describe ('Async components', () => {
         cy.get('#bars').invoke('attr', 'babia-bars')
             .should('nested.include', {'from': 'queriertest'})
 
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Spain","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Asia","country":"South Korea","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+                {"continent":"Asia","country":"China","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+                {"continent":"Africa","country":"Equatorial Guinea","population": 1.403,"partial": 0.076,"partial%":5.45,"complete": 0.072,"complete%":5.10},
+                {"continent":"Europe","country":"Germany","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"France","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
         
-        
-        // TODO: Check bars data value
-
-
 
         // Change querier url
         cy.get('#queriertest').then(function($input){
@@ -43,11 +48,16 @@ describe ('Async components', () => {
         cy.get('#queriertest').invoke('attr', 'babia-queryjson')
             .should('nested.include', {'url': './data_2.json'})        
         
-
-
-        // TODO: Check bars data value
-        
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Italy","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Africa","country":"Guinea","population": 1.403,"partial": 0.076,"partial%":5.45,"complete": 0.072,"complete%":5.10},
+                {"continent":"Europe","country":"Belgium","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"America","country":"USA","population": 331.003,"partial": 32.65,"partial%":9.76,"complete": 135.09,"complete%":40.39},
+                {"continent":"America","country":"Mexico","population": 331.003,"partial": 32.65,"partial%":9.76,"complete": 135.09,"complete%":40.39},
+                {"continent":"Europe","country":"Croatia","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
         // Change again querier url
         cy.get('#queriertest').then(function($input){
@@ -56,10 +66,16 @@ describe ('Async components', () => {
         cy.get('#queriertest').invoke('attr', 'babia-queryjson')
             .should('nested.include', {'url': './data_1.json'})        
         
-
-
-        // TODO: Check bars data value
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Spain","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Asia","country":"South Korea","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+                {"continent":"Asia","country":"China","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+                {"continent":"Africa","country":"Equatorial Guinea","population": 1.403,"partial": 0.076,"partial%":5.45,"complete": 0.072,"complete%":5.10},
+                {"continent":"Europe","country":"Germany","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"France","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
 
         /* Add new querier */
@@ -83,12 +99,16 @@ describe ('Async components', () => {
         cy.get('#bars').invoke('attr', 'babia-bars')
             .should('nested.include', {'from': 'queriertest2'})
 
-
-
-        // TODO: Check bars data value
-        
-
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Italy","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Africa","country":"Guinea","population": 1.403,"partial": 0.076,"partial%":5.45,"complete": 0.072,"complete%":5.10},
+                {"continent":"Europe","country":"Belgium","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"America","country":"USA","population": 331.003,"partial": 32.65,"partial%":9.76,"complete": 135.09,"complete%":40.39},
+                {"continent":"America","country":"Mexico","population": 331.003,"partial": 32.65,"partial%":9.76,"complete": 135.09,"complete%":40.39},
+                {"continent":"Europe","country":"Croatia","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
     }); 
 
     it ('NotiBuffer with QueryJson, Filter and Babia-Bars', () => {
@@ -119,11 +139,13 @@ describe ('Async components', () => {
         cy.get('#bars').invoke('attr', 'babia-bars')
             .should('nested.include', {'from': 'filtertest'})
 
-
-
-        // TODO: Check bars data value
-
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Spain","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Europe","country":"Germany","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"France","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
         // Change querier url
         cy.get('#queriertest').then(function($input){
@@ -132,11 +154,13 @@ describe ('Async components', () => {
         cy.get('#queriertest').invoke('attr', 'babia-queryjson')
             .should('nested.include', {'url': './data_2.json'})        
         
-
-
-        // TODO: Check bars data value
-        
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Italy","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Europe","country":"Belgium","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"Croatia","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
         // Change again querier url
         cy.get('#queriertest').then(function($input){
@@ -144,12 +168,14 @@ describe ('Async components', () => {
         })
         cy.get('#queriertest').invoke('attr', 'babia-queryjson')
             .should('nested.include', {'url': './data_1.json'})        
-        
 
-
-        // TODO: Check bars data value
-
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Spain","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Europe","country":"Germany","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"France","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
         /* Add new querier and filter */
         cy.get('a-scene').then(scene => {
@@ -178,11 +204,13 @@ describe ('Async components', () => {
         cy.get('#bars').invoke('attr', 'babia-bars')
             .should('nested.include', {'from': 'filtertest2'})
 
-
-
-        // TODO: Check bars data value
-
-
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Italy","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Europe","country":"Belgium","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"Croatia","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
         // Change filter from (Also tests if filter gets data from already existing data in querier)
         cy.get('#filtertest2').then(function($input){
@@ -191,8 +219,13 @@ describe ('Async components', () => {
         cy.get('#filtertest2').invoke('attr', 'babia-filter')
             .should('nested.include', {'from': 'queriertest'})
 
-        // Check visualizer label value
-        cy.get('a-text').invoke('attr', 'value').should('eq', 'New data: Spain, Germany and France.')
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Europe", "country":"Spain","population": 46.755,"partial": 8.90,"partial%":19.04, "complete": 8.80,"complete%":18.83},
+                {"continent":"Europe","country":"Germany","population": 83.784,"partial": 21.57,"partial%":25.75,"complete": 14.62,"complete%":17.44},
+                {"continent":"Europe","country":"France","population": 65.274,"partial": 14.32,"partial%":21.20,"complete": 11.01,"complete%":16.30}]
+            );
 
         // Change filter filter
         cy.get('#filtertest2').then(function($input){
@@ -201,7 +234,11 @@ describe ('Async components', () => {
         cy.get('#filtertest2').invoke('attr', 'babia-filter')
             .should('nested.include', {'filter': 'continent=Asia'})
 
-
-        // TODO: Check bars data value
+        // Check bars newData value
+        cy.get('#bars')
+            .its('0.components.babia-bars.newData')
+            .should('deep.equal', [{"continent":"Asia","country":"South Korea","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18},
+                {"continent":"Asia","country":"China","population": 51.269,"partial": 3.26,"partial%":6.36,"complete": 2.14,"complete%":4.18}]
+            );
     }); 
 });

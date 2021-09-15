@@ -85,59 +85,109 @@ let findDataComponent = (data, el, self) => {
     return eventName
 }
 
-let findProducerComponent = (data, el, self) => {
+let findProdComponent = (data, el) => {
+    let prodComponent;
     if (data.from) {
         // Save the reference to the querier or filterdata
-        let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babia-filter']) {
-            self.producerComponent = dataElement.components['babia-filter']
-        } else if (dataElement.components['babia-queryjson']) {
-            self.producerComponent = dataElement.components['babia-queryjson']
-        } else if (dataElement.components['babia-queryes']) {
-            self.producerComponent = dataElement.components['babia-queryes']
-        } else if (dataElement.components['babia-querygithub']) {
-            self.producerComponent = dataElement.components['babia-querygithub']
-        } else if (dataElement.components['babia-selector']) {
-            self.producerComponent = dataElement.components['babia-selector'];
+        let prodElement = document.getElementById(data.from)
+        if (prodElement.components['babia-filter']) {
+            prodComponent = prodElement.components['babia-filter']
+        } else if (prodElement.components['babia-queryjson']) {
+            prodComponent = prodElement.components['babia-queryjson']
+        } else if (prodElement.components['babia-queryes']) {
+            prodComponent = prodElement.components['babia-queryes']
+        } else if (prodElement.components['babia-querygithub']) {
+            prodComponent = prodElement.components['babia-querygithub']
+        } else if (prodElement.components['babia-selector']) {
+            prodComponent = prodElement.components['babia-selector'];
         } else {
             console.error("Problem registering to the querier", el);
             return
         }
+    } else if (data.nodesFrom) {
+        // Save the reference to the querier or filterdata
+        let prodElementNodes = document.getElementById(data.nodesFrom)
+        if (prodElementNodes.components['babia-filter']) {
+            prodComponentNodes = prodElementNodes.components['babia-filter']
+        } else if (prodElementNodes.components['babia-queryjson']) {
+            prodComponentNodes = prodElementNodes.components['babia-queryjson']
+        } else if (prodElementNodes.components['babia-queryes']) {
+            prodComponentNodes = prodElementNodes.components['babia-queryes']
+        } else if (prodElementNodes.components['babia-querygithub']) {
+            prodComponentNodes = prodElementNodes.components['babia-querygithub']
+        } else if (prodElementNodes.components['babia-selector']) {
+            prodComponentNodes = prodElementNodes.components['babia-selector'];
+        } else {
+            console.error("Problem registering to the querier", el);
+            return
+        }
+        
+        // Save the reference to the querier or filterdata
+        let prodElementLinks = document.getElementById(data.linksFrom)
+        if (prodElementLinks.components['babia-filter']) {
+            prodComponentLinks = prodElementLinks.components['babia-filter']
+        } else if (prodElementLinks.components['babia-queryjson']) {
+            prodComponentLinks = prodElementLinks.components['babia-queryjson']
+        } else if (prodElementLinks.components['babia-queryes']) {
+            prodComponentLinks = prodElementLinks.components['babia-queryes']
+        } else if (prodElementLinks.components['babia-querygithub']) {
+            prodComponentLinks = prodElementLinks.components['babia-querygithub']
+        } else if (prodElementLinks.components['babia-selector']) {
+            prodComponentLinks = prodElementLinks.components['babia-selector'];
+        } else {
+            console.error("Problem registering to the querier", el);
+            return
+        }
+        return {'nodes': prodComponentNodes, 'links': prodComponentLinks}
+        
     } else {
         // Look for a querier or filterdata in the same element and register
         if (el.components['babia-filter']) {
-            self.producerComponent = el.components['babia-filter']
+            prodComponent = el.components['babia-filter']
         } else if (el.components['babia-queryjson']) {
-            self.producerComponent = el.components['babia-queryjson']
+            prodComponent = el.components['babia-queryjson']
         } else if (el.components['babia-queryes']) {
-            self.producerComponent = el.components['babia-queryes']
+            prodComponent = el.components['babia-queryes']
         } else if (el.components['babia-querygithub']) {
-            self.producerComponent = el.components['babia-querygithub']
+            prodComponent = el.components['babia-querygithub']
         } else if (el.components['babia-selector']) {
-            self.producerComponent = el.components['babia-selector'];
+            prodComponent = el.components['babia-selector'];
         } else {
             // Look for a querier or filterdata in the scene
             if (document.querySelectorAll("[babia-filter]").length > 0) {
-                self.producerComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
+                prodComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                self.producerComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+                prodComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                self.producerComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
+                prodComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-                self.producerComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
+                prodComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
             } else if (document.querySelectorAll('[babia-selector]').length > 0) {
-                self.producerComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
+                prodComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
             } else {
                 console.error("Error, querier not found", el, el.components, el.components['babia-selector']);
                 return
             }
         }
     }
+    return prodComponent;
+}
+
+let updateTitle = (data, titleRotation) => {
+    let titleEl = document.createElement('a-entity');
+    titleEl.classList.add("babiaxrTitle")
+    titleEl.setAttribute('text-geometry', {'value': data.title});
+    if (data.titleFont) titleEl.setAttribute('text-geometry', {'font': data.titleFont});
+    if (data.titleColor) titleEl.setAttribute('material', {'color': data.titleColor});
+    titleEl.setAttribute('position', data.titlePosition);
+    titleEl.setAttribute('rotation', titleRotation);
+    return titleEl
 }
 
 module.exports.dataReadyToSend = dataReadyToSend;
 module.exports.dispatchEventOnElement = dispatchEventOnElement;
 module.exports.findDataComponent = findDataComponent;
-module.exports.findProducerComponent = findProducerComponent;
+module.exports.findProdComponent = findProdComponent;
 module.exports.colors = colors;
+module.exports.updateTitle = updateTitle;
 

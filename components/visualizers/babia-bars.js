@@ -1,4 +1,5 @@
-let findDataComponent = require('../others/common').findDataComponent;
+let findProdComponent = require('../others/common').findProdComponent;
+let updateTitle = require('../others/common').updateTitle;
 const colors = require('../others/common').colors;
 
 /* global AFRAME */
@@ -24,7 +25,6 @@ AFRAME.registerComponent('babia-bars', {
         titleFont: { type: 'string' },
         titleColor: { type: 'string' },
         titlePosition: { type: 'vec3', default: {x: 0, y: 0, z: 0} },
-        scale: { type: 'number' },
         // Height of the chart
         chartHeight: { type: 'number', default: 10 },
         // Keep height when updating data
@@ -59,8 +59,7 @@ AFRAME.registerComponent('babia-bars', {
         this.el.appendChild(this.chartEl);
 
         // Build titleEl
-        this.titleEl = document.createElement('a-entity');
-        this.titleEl.classList.add("babiaxrTitle")
+        this.updateTitle()
         this.el.appendChild(this.titleEl);
     },
 
@@ -70,7 +69,6 @@ AFRAME.registerComponent('babia-bars', {
     */
 
     update: function (oldData) {
-        const self = this;
         let data = this.data;
         let el = this.el;
 
@@ -84,14 +82,14 @@ AFRAME.registerComponent('babia-bars', {
 
         if (data.data && oldData.data !== data.data) {
             this.processData(data.data);
-        } else if (this.data.from !== oldData.from) {
+        } else if (data.from !== oldData.from) {
             // Unregister from old producer
-            if (this.dataComponent) {
-                this.dataComponent.notiBuffer.unregister(this.notiBufferId) 
+            if (this.prodComponent) {
+                this.prodComponent.notiBuffer.unregister(this.notiBufferId) 
             };
-            findDataComponent(this.data, el, this)
-            if (this.dataComponent.notiBuffer){
-                this.notiBufferId = this.dataComponent.notiBuffer
+            this.prodComponent = findProdComponent(data, el)
+            if (this.prodComponent.notiBuffer){
+                this.notiBufferId = this.prodComponent.notiBuffer
                     .register(this.processData.bind(this))
             }
         }
@@ -100,21 +98,17 @@ AFRAME.registerComponent('babia-bars', {
         }
 
     },
+  
     /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
+    * Producer component
     */
-    remove: function () { },
-
-    /**
-    * Querier component target
-    */
-    dataComponent: undefined,
+    prodComponent: undefined,
 
     /**
     * NotiBuffer identifier
     */
     notiBufferId: undefined,
+    
     /**
      * Where the data is gonna be stored
      */
@@ -126,7 +120,7 @@ AFRAME.registerComponent('babia-bars', {
     currentData: undefined,
 
     /**
-     * Where the metaddata is gonna be stored
+     * Where the metadata is gonna be stored
      */
     babiaMetadata: {
         id: 0
@@ -155,31 +149,12 @@ AFRAME.registerComponent('babia-bars', {
     xLabels: [],
     xTicks: [],
 
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-
     /*
     * Update title
     */
     updateTitle: function() {
-        const titleEl = this.titleEl;
-        const data = this.data;
-
-        titleEl.setAttribute('text-geometry', {'value': data.title});
-        if (data.font) titleEl.setAttribute('text-geometry', {'font': data.titleFont});
-        if (data.color) titleEl.setAttribute('material', {'color': data.titleColor});
-        titleEl.setAttribute('position', data.titlePosition);
-        titleEl.setAttribute('rotation', { x: 0, y: 0, z: 0 });
+        const titleRotation = { x: 0, y: 0, z: 0 }
+        this.titleEl = updateTitle(this.data, titleRotation)
     },
 
     /*
@@ -220,29 +195,25 @@ AFRAME.registerComponent('babia-bars', {
     },
 
     /*
-     * Build chart
-     * @return {} Data loaded
-     * 
+     * Update chart
      */
     updateChart: function () {
-        const el = this.el;
-        const data = this.data;
-
-        let babiaData
+        let dataToPrint
         if (this.currentData) {
-            babiaData = this.currentData;
+            dataToPrint = this.currentData;
         } else {
-            babiaData = this.newData;
+            dataToPrint = this.newData;
         }
-        console.log("Data:", babiaData)
-        const widthBars = this.widthBars;
+        console.log("Data babia-bars:", dataToPrint)
+
+        const data = this.data;
+        
         const palette = data.palette
-        const scale = data.scale
         
         // Update title
         this.updateTitle();
 
-        let maxValue = Math.max.apply(Math, babiaData.map(function (o) {
+        let maxValue = Math.max.apply(Math, dataToPrint.map(function (o) {
             return o[data.height];
         }));
 
@@ -266,12 +237,12 @@ AFRAME.registerComponent('babia-bars', {
         let colorId = 0
 
         // Add or modify bars for new data
-        for (let i = 0; i < babiaData.length; i++) {
-            let item = babiaData[i]
+        for (let i = 0; i < dataToPrint.length; i++) {
+            let item = dataToPrint[i]
  
             // Build bar
-            xLabel = item[data.x_axis];
-            let posX = i * widthBars * 1.25;
+            let xLabel = item[data.x_axis];
+            let posX = i * this.widthBars * 1.25;
             if ( currentBars[xLabel] && !item['_not'] ) {
                 barEl = currentBars[xLabel].el;
                 currentBars[xLabel].found = true;
@@ -283,8 +254,8 @@ AFRAME.registerComponent('babia-bars', {
             }
             barEl.setAttribute('babia-bar', {
                 'height': item[data.height] * this.lengthY / maxValue,
-                'width': widthBars,
-                'depth': widthBars,
+                'width': this.widthBars,
+                'depth': this.widthBars,
                 'color': colors.get(colorId, palette),
                 'label': 'events',
                 'animation': data.animation
@@ -319,10 +290,13 @@ AFRAME.registerComponent('babia-bars', {
             };
         };
         //Print axis
-        const lengthX = widthBars * (babiaData.length * 1.25);
+        const lengthX = this.widthBars * (dataToPrint.length * 1.25);
         this.updateAxis(xLabels, xTicks, lengthX, maxValue);
     },
 
+    /*
+    * Process data obtained from producer
+    */
     processData: function (data) {
         console.log("processData", this);
         let object;
@@ -373,11 +347,11 @@ AFRAME.registerComponent('babia-bars', {
                             let colorId = this.chartEl.querySelectorAll('[babia-bar]').length
                             let posX = this.chartEl.querySelectorAll('[babia-bar]')[colorId - 1].getAttribute('position').x + this.widthBars + this.widthBars / 4
                             // Create new bar
-                            let barEntity = generateBar(this, this.data, bar, this.maxValue, this.widthBars, colorId, this.data.palette, posX);
+                            let barEntity = generateBar(this, this.data, bar, colorId, this.data.palette, posX);
                             this.chartEl.appendChild(barEntity)
                             // Add label and tick
-                            this.labels.push(barEntity.id)
-                            this.ticks.push(posX)
+                            this.xLabels.push(barEntity.id)
+                            this.xTicks.push(posX)
                         }
                     } else {
                         // Delete bar
@@ -385,26 +359,27 @@ AFRAME.registerComponent('babia-bars', {
                         //document.getElementById(bar[this.data.index]).remove()
                     }
                 });
+
                 // Update axis
-                let len_x = this.ticks[this.ticks.length - 1] + this.widthBars * 3 / 4
+                let len_x = this.xTicks[this.xTicks.length - 1] + this.widthBars * 3 / 4
                 if (!this.data.chartHeight || !this.data.keepHeight){
                     // Calculate new maxValue and lengthY
                     let maxValue_new = Math.max.apply(Math, this.currentData.map(function (o) { return o[this.data.height]; }))
                     this.lengthY = maxValue_new * this.data.chartHeight / this.maxValue
                     this.maxValue = maxValue_new
                 }
-                this.updateAxis(this.labels, this.ticks, len_x, this.maxValue)
+                this.updateAxis(this.xLabels, this.xTicks, len_x, this.maxValue)
             } 
         }
     },
 })
 
-let generateBar = (self, data, item, maxValue, widthBars, colorId, palette, stepX ) => {
+let generateBar = (self, data, item, colorId, palette, stepX ) => {
     let bar = document.createElement('a-entity');
     bar.setAttribute('babia-bar', {
         'height': item[self.data.height] * data.chartHeight / self.maxValue,
-        'width': widthBars,
-        'depth': widthBars,
+        'width': self.widthBars,
+        'depth': self.widthBars,
         'color': colors.get(colorId, palette),
         'label': 'events',
         'animation': data.animation

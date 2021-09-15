@@ -24,6 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
+let findProdComponent = require('../others/common').findProdComponent;
 
 /* global AFRAME */
 
@@ -215,139 +216,88 @@ AFRAME.registerComponent('babia-network', {
     setCursor();
   },
 
-
   update: function (oldData) {
-    let self = this;
     let el = this.el;
     let elData = this.data;
+    this.currentData = oldData;
 
+    /**
+    * Update or create chart component
+    */
     // Highest priority to data
     if(elData.data && oldData.data !== elData.data){
-      // From data embedded, save it anyway
-      self.babiaData = elData
-      self.babiaMetadata = {
-          id: self.babiaMetadata.id++
-      }
+      this.processData(elData.data)
 
-      /*while (self.el.firstChild)
-        self.el.firstChild.remove();*/
-      console.log("Generating Network from data...")
-      elData.data = JSON.parse(elData.data)
-      elData = elDataFromData(elData)
-      self.data = elData
-      self.chart = generateNetworkChart(elData, oldData, self) 
-      
-      // Dispatch interested events because I updated my visualization
-      dataReadyToSend("babiaData", self)
-
-    // Second highest priority to nodes and links
-    } else if (elData.nodes && oldData.nodes !== elData.nodes){
-      // From data embedded, save it anyway
-      self.babiaData = elData
-      self.babiaMetadata = {
-          id: self.babiaMetadata.id++
-      }
-
-      /*while (self.el.firstChild)
-        self.el.firstChild.remove();*/
-      console.log("Generating Network from nodes and links...")
-      elData.nodes = JSON.parse(elData.nodes);
-      elData.links = JSON.parse(elData.links);    
-      elData = elDataFromNodesAndLinks(elData);
-      self.data = elData;
-      self.chart = generateNetworkChart(elData, oldData, self);
-      // Dispatch interested events because I updated my visualization
-      dataReadyToSend("babiaData", self);
-    // Data from querier
     } else {
-      // If changed from, need to re-register to the new data component
-      if (elData.from !== oldData.from && !elData.nodesFrom) {
-        // Unregister for old querier
-        if (self.dataComponent) { self.dataComponent.unregister(el) }
-
-        // Find the component and get if querier or filterdata by the event               
-        let dataComponent = findDataComponent(elData, el, self, 'from');
-        self.dataComponent = dataComponent.component;
-        // If changed to filterdata or to querier
-        if (self.dataComponentEventName && self.dataComponentEventName !== dataComponent.eventName) {
-          el.removeEventListener(self.dataComponentEventName, _listener, true)
+      // Second highest priority to nodes and links
+      if (elData.nodes){
+        if(oldData.nodes !== elData.nodes){
+          this.processNodes(elData.nodes)
         }
-        // Assign new eventName
-        self.dataComponentEventName = dataComponent.eventName
-
-        // Attach to the events of the data component
-        el.addEventListener(self.dataComponentEventName, _listener = (e) => {
-          attachNewDataEventCallback(self, e, oldData)
-        });
-
-        // Register for the new one
-        self.dataComponent.register(el)
-        return
-      } else if (elData.nodesFrom !== oldData.nodesFrom) {
-        // Now we have nodesFrom, should have linksFrom too
-        // Unregister for old querier
-        if (self.nodesDataComponent) { self.nodesDataComponent.unregister(el) }
-
-        // Find the component and get if querier or filterdata by the event               
-        let dataComponent = findDataComponent(elData, el, self, 'nodesFrom')
-        self.nodesDataComponent = dataComponent.component;
-        // If changed to filterdata or to querier
-        if (self.nodesDataComponentEventName && self.nodesDataComponentEventName !== dataComponent.eventName) {
-          el.removeEventListener(self.nodesDataComponentEventName, _listener, true)
+        if (oldData.links !== elData.links){
+          this.processLinks(elData.links)
         }
-        // Assign new eventName
-        self.nodesDataComponentEventName = dataComponent.eventName
-
-        // Attach to the events of the data component
-        el.addEventListener(self.nodesDataComponentEventName, _listener = (e) => {
-          attachNewNodesDataEventCallback(self, e, oldData)
-        });
-
-        // Register for the new one
-        self.nodesDataComponent.register(el)
-
-        // Now, the same for linksfrom
-        // Unregister for old querier
-        if (self.linksDataComponent) { self.linksDataComponent.unregister(el) }
-
-        // Find the component and get if querier or filterdata by the event               
-        dataComponent = findDataComponent(elData, el, self, 'linksFrom')
-        self.linksDataComponent = dataComponent.component;
-        // If changed to filterdata or to querier
-        if (self.linksDataComponentEventName && self.linksDataComponentEventName !== dataComponent.eventName) {
-          el.removeEventListener(self.linksDataComponentEventName, _listener, true)
+      // Data from querier
+      } else {
+        // If changed from, need to re-register to the new data component
+        if (elData.from !== oldData.from && !elData.nodesFrom) {
+          // Unregister for old producers
+          if (this.prodComponent) {
+            this.prodComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+          if (this.nodesProdComponent){
+            this.nodesProdComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+          if (this.linksProdComponent){
+            this.linksProdComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+  
+          this.prodComponent = findProdComponent (elData, el)
+          if (this.prodComponent.notiBuffer){
+            this.notiBufferId = this.prodComponent.notiBuffer
+                .register(this.processData.bind(this))
+          }
+        } else if (elData.nodesFrom !== oldData.nodesFrom || elData.linksFrom !== oldData.linksFrom) {
+          // Now we have nodesFrom, should have linksFrom too
+          // Unregister for old producers
+          if (this.prodComponent) {
+            this.prodComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+          if (this.nodesProdComponent){
+            this.nodesProdComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+          if (this.linksProdComponent){
+            this.linksProdComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+  
+          let prodComponent = findProdComponent (elData, el)
+  
+          // First, nodes
+          this.nodesProdComponent = prodComponent.nodes
+          if (this.nodesProdComponent.notiBuffer){
+            this.notiBufferId = this.nodesProdComponent.notiBuffer
+                .register(this.processNodes.bind(this))
+          }
+  
+          // Now, the same for links
+          this.linksProdComponent = prodComponent.links
+          if (this.linksProdComponent.notiBuffer){
+            this.notiBufferId = this.linksProdComponent.notiBuffer
+                .register(this.processLinks.bind(this))
+          }
         }
-        // Assign new eventName
-        self.linksDataComponentEventName = dataComponent.eventName
-
-        // Attach to the events of the data component
-        el.addEventListener(self.linksDataComponentEventName, _listener = (e) => {
-          attachNewLinksDataEventCallback(self, e, oldData)
-        });
-
-        // Register for the new one
-        self.linksDataComponent.register(el)
-        return
+  
+        // If changed whatever, re-print with the current data
+        if (elData !== oldData) {
+          if (elData.data){
+            this.processData(elData.data)
+          } else if (elData.nodes){
+            this.processNodes(elData.nodes)
+          }
+        }
       }
-
-      // If changed whatever, re-print with the current data
-      if (elData !== oldData && self.babiaData) {
-        /*while (self.el.firstChild)
-          self.el.firstChild.remove();*/
-        elData.data = JSON.parse(elData.data)
-        elData = elDataFromData(elData)
-        self.data = elData
-        self.chart = generateNetworkChart(elData, oldData, self)
-
-        // Dispatch interested events because I updated my visualization
-        dataReadyToSend("babiaData", self)
-      }
-    }
-
-    
+    } 
   },
-
-  remove: function () {  },
 
  /**
   * Called on each scene tick.
@@ -376,9 +326,9 @@ AFRAME.registerComponent('babia-network', {
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
       }
       if (this.data.nodeLegend && prevObjType === 'node' ){
-        removeLegend(this)
+        this.removeLegend(this)
       } else if(this.data.linkLegend && this.data.linkLabel!="" && prevObjType === 'link'){
-        removeLegend(this)
+        this.removeLegend(this)
       }
       if (objType) {
         // Hover in
@@ -389,10 +339,10 @@ AFRAME.registerComponent('babia-network', {
 
       if (topObject) {
         if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
-          showLegend(this, topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
+          this.showLegend(topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
         } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
           if (this.data.linkLabel != ""){
-            showLinkLegend(this, topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
+            this.showLinkLegend(topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
           }
         }
       }
@@ -403,379 +353,325 @@ AFRAME.registerComponent('babia-network', {
   },
 
   /**
-  * Called when entity pauses.
-  * Use to stop or remove any dynamic or background behavior such as events.
-  */
-  pause: function () { },
-
-     /**
-     * Called when entity resumes.
-     * Use to continue or add any dynamic or background behavior such as events.
-     */
-  play: function () { },
-
-   /**
-  * Register function when I'm updated
-  */
-  register: function (interestedElem) {
-    this.interestedElements.push(interestedElem)
-  
-    // Send the latest version of the data
-    if (this.babiaData) {
-      dispatchEventOnElement(interestedElem, "babiaData")
-    }
-  },
-
-    /**
-   * Unregister function when I'm updated
-   */
-     unregister: function (interestedElem) {
-      const index = this.interestedElements.indexOf(interestedElem)
-  
-      // Remove from the interested elements if still there
-      if (index > -1) {
-          this.interestedElements.splice(index, 1);
-      }
-    },
-  
-    /**
-     * Interested elements when I'm updated
-     */
-    interestedElements: [],
-   /**
   * Querier component target
   */
-  dataComponent: undefined,
-  nodesDataComponent: undefined,
-  linksDataComponent: undefined,
+  prodComponent: undefined,
+  nodesProdComponent: undefined,
+  linksProdComponent: undefined,
 
   /**
-   * Property of the querier where the data is saved
-   */
-  dataComponentDataPropertyName: "babiaData",
+  * NotiBuffer identifier
+  */
+  notiBufferId: undefined,
 
   /**
-   * Event name to difference between querier and filterdata
-   */
-  dataComponentEventName: undefined,
-
-
-  /**
-   * Where the data is gonna be stored
-   */
-  babiaData: {'nodes': undefined, 'links': undefined},
+  * Where the data is gonna be stored
+  */
+  newData: undefined,
 
   /**
-   * Where the metaddata is gonna be stored
-   */
+  * Where the current data is stored
+  */
+   currentData: undefined,
+
+  /**
+  * Where the metadata is gonna be stored
+  */
   babiaMetadata: {
     id: 0
   },
 
   legend: '',
 
-});
-
-
-let findDataComponent = (data, el, self, from) => {
-  let eventName = "babiaQuerierDataReady";
-  let dataComponent;
-  let error = false;
-  if (data[from]) {
-    // Save the reference to the querier or filterdata
-    let dataElement = document.getElementById(data[from])
-    if (dataElement.components['babia-filter']) {
-      dataComponent = dataElement.components['babia-filter']
-      eventName = "babiaFilterDataReady"
-    } else if (dataElement.components['babia-queryjson']) {
-      dataComponent = dataElement.components['babia-queryjson']
-    } else if (dataElement.components['babia-queryes']) {
-      dataComponent = dataElement.components['babia-queryes']
-    } else if (dataElement.components['babia-querygithub']) {
-      dataComponent = dataElement.components['babia-querygithub']
-    } else {
-      error = true
-    }
-  } else {
-    // Look for a querier or filterdata in the same element and register
-    if (el.components['babia-filter']) {
-      dataComponent = el.components['babia-filter']
-      eventName = "babiaFilterDataReady"
-    } else if (el.components['babia-queryjson']) {
-      dataComponent = el.components['babia-queryjson']
-    } else if (el.components['babia-queryes']) {
-      dataComponent = el.components['babia-queryes']
-    } else if (el.components['babia-querygithub']) {
-      dataComponent = el.components['babia-querygithub']
-    } else {
-      // Look for a querier or filterdata in the scene
-      if (document.querySelectorAll("[babia-filter]").length > 0) {
-        dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
-        eventName = "babiaFilterDataReady"
-      } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
-      } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-      } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-        dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
-      } else {
-        error = true
+  /*
+  * Update chart
+  */
+  updateChart: function (elData, self) {
+    if (self.currentData){
+      let diff = AFRAME.utils.diff(elData, self.currentData);
+      let fgProps = [
+        'jsonUrl',
+        'numDimensions',
+        'dagMode',
+        'dagLevelDistance',
+        'dagNodeFilter',
+        'onDagError',
+        'nodeRelSize',
+        'nodeId',
+        'nodeVal',
+        'nodeResolution',
+        'nodeVisibility',
+        'nodeColor',
+        'nodeAutoColorBy',
+        'nodeOpacity',
+        'nodeThreeObject',
+        'nodeThreeObjectExtend',
+        'linkSource',
+        'linkTarget',
+        'linkVisibility',
+        'linkColor',
+        'linkAutoColorBy',
+        'linkOpacity',
+        'linkWidth',
+        'linkResolution',
+        'linkCurvature',
+        'linkCurveRotation',
+        'linkMaterial',
+        'linkThreeObject',
+        'linkThreeObjectExtend',
+        'linkPositionUpdate',
+        'linkDirectionalArrowLength',
+        'linkDirectionalArrowColor',
+        'linkDirectionalArrowRelPos',
+        'linkDirectionalArrowResolution',
+        'linkDirectionalParticles',
+        'linkDirectionalParticleSpeed',
+        'linkDirectionalParticleWidth',
+        'linkDirectionalParticleColor',
+        'linkDirectionalParticleResolution',
+        'forceEngine',
+        'd3AlphaMin',
+        'd3AphaDecay',
+        'd3VelocityDecay',
+        'ngraphPhysics',
+        'warmupTicks',
+        'cooldownTicks',
+        'cooldownTime',
+        'onEngineTick',
+        'onEngineStop'
+      ];
+  
+      fgProps
+        .filter(function (p) { return p in diff; })
+        .forEach(function (p) {
+          self.forceGraph[p](elData[p] !== '' ? elData[p] : null);
+        }); // Convert blank values into nulls
+  
+      if ('nodes' in diff || 'links' in diff) {
+        self.forceGraph.graphData({
+          nodes: elData.nodes,
+          links: elData.links
+        });
       }
     }
-  }
-  if (error) {
-    console.error("Problem fiding the querier or filter");
-    return;
-  } else {
-    return {'component': dataComponent, 'eventName': eventName};
-  };
-}
+  },
 
-let attachNewDataEventCallback = (self, e, oldData) => {
-  // Get the data from the info of the event (propertyName)
-  self.dataComponentDataPropertyName = e.detail
-  let rawData = self.dataComponent[self.dataComponentDataPropertyName]
+  /*
+  * Process data obtained from producer
+  */
+  processData: function (_data) {
+    console.log("processData", this);
+    let elData = this.data
+    if (typeof(_data) === 'string' || _data instanceof String) {
+      elData.data = JSON.parse(_data);
+    } else {
+      elData.data = _data;
+    };
 
-  self.babiaData = rawData
-  self.babiaMetadata = { id: self.babiaMetadata.id++ }
-  
-  let elData = self.data
-  elData.data = rawData
+    elData = this.elDataFromData(elData);
+    this.data = elData
+    this.babiaMetadata = { id: this.babiaMetadata.id++ };
+    console.log("Generating network...")
+    this.updateChart(elData, this)
+  },
 
-  //remove previous chart (TODO)
-  elData = elDataFromData(elData)
+  processNodes: function (nodes){
+    console.log("processNodes", this);
+    let elData = this.data
+    if (typeof(nodes) === 'string' || nodes instanceof String) {
+      elData.nodes = JSON.parse(nodes);
+    } else {
+      elData.nodes = nodes;
+    };
+    this.data.nodes = elData.nodes
+    elData = this.elDataFromNodesAndLinks(elData)
 
-  console.log("Generating Network from data callback (Data)...")
-  self.chart = generateNetworkChart(elData, oldData, self)
-  // Dispatch interested events because I updated my visualization
-  dataReadyToSend("babiaData", self)
-}
+    if (!elData){
+      if (this.data.links) {
+        this.processLinks(this.data.links)
+      } else if (this.data.linksFrom){
+        this.babiaMetadata = { id: this.babiaMetadata.id++ }
+        console.log("Generating network...")
+      }
+    } else {
+      this.data = elData
+      this.babiaMetadata = { id: this.babiaMetadata.id++ }
+      console.log("Generating network...")
+      this.updateChart(elData, this)
+    }
+    
+  },
 
-let attachNewNodesDataEventCallback = (self, e, oldData) => {
-  // Get the data from the info of the event (propertyName)
-  self.nodesDataComponentDataPropertyName = e.detail
-  let rawData = self.nodesDataComponent[self.nodesDataComponentDataPropertyName]
+  processLinks: function (links){
+    console.log("processLinks", this);
+    let elData = this.data
+    if (typeof(links) === 'string' || links instanceof String) {
+      elData.links = JSON.parse(links);
+    } else {
+      elData.links = links;
+    };
+    this.data.links = elData.links
+    elData = this.elDataFromNodesAndLinks(elData)
 
-  self.babiaData.nodes = rawData
-  self.babiaMetadata = { id: self.babiaMetadata.id++ }
-  
-  let elData = self.data
-  elData.nodes = rawData
+    if (!elData){
+      if (this.data.nodes) {
+        this.processLinks(this.data.nodes)
+      } else if (this.data.nodesFrom){
+        this.babiaMetadata = { id: this.babiaMetadata.id++ }
+        console.log("Generating network...")
+      }
+    } else {
+      this.data = elData
+      this.babiaMetadata = { id: this.babiaMetadata.id++ }
+      console.log("Generating network...")
+      this.updateChart(elData, this)
+    }
+  },
+  // Format from data to nodes and links
+  elDataFromData: function(elData){
+    let nodes = [];
+    let links = [];
 
-  //remove previous chart (TODO)
-  elData = elDataFromNodesAndLinks(elData)
-  if (elData) {
-    console.log("Generating Network from callback (Nodes)...");
-    self.chart = generateNetworkChart(elData, oldData, self);
-    // Dispatch interested events because I updated my visualization
-    dataReadyToSend("babiaData", self);
-  } else {
-    console.log("Nodes or links not ready yet");
-  };
-}
+    const data = elData.data;
+    const nodeId = elData.nodeId;
+    const linkId = elData.linkId;
+    const nodeVal = elData.nodeVal;
+    const source = elData.linkSource;
+    const target = elData.linkTarget;
+    const linkLabel = elData.linkLabel;
 
-let attachNewLinksDataEventCallback = (self, e, oldData) => {
-  // Get the data from the info of the event (propertyName)
-  self.linksDataComponentDataPropertyName = e.detail
-  let rawData = self.linksDataComponent[self.linksDataComponentDataPropertyName]
+    data.forEach(element => {
+      let node = {};
 
-  console.log("NewLinksData:", rawData)
-  self.babiaData.links = rawData
-  self.babiaMetadata = { id: self.babiaMetadata.id++ }
-  
-  let elData = self.data
-  elData.links = rawData
-
-  //remove previous chart (TODO)
-  elData = elDataFromNodesAndLinks(elData)
-  if (elData) {
-    console.log("Generating Network from callback (Links)...");
-    self.chart = generateNetworkChart(elData, oldData, self);
-    // Dispatch interested events because I updated my visualization
-    dataReadyToSend("babiaData", self);
-  } else {
-    console.log("Nodes or links not ready yet");
-  };
-}
-
-// Generate or update network
-let generateNetworkChart = (elData, oldData, self) => {
-  if (oldData){
-    let diff = AFRAME.utils.diff(elData, oldData);
-
-    let fgProps = [
-      'jsonUrl',
-      'numDimensions',
-      'dagMode',
-      'dagLevelDistance',
-      'dagNodeFilter',
-      'onDagError',
-      'nodeRelSize',
-      'nodeId',
-      'nodeVal',
-      'nodeResolution',
-      'nodeVisibility',
-      'nodeColor',
-      'nodeAutoColorBy',
-      'nodeOpacity',
-      'nodeThreeObject',
-      'nodeThreeObjectExtend',
-      'linkSource',
-      'linkTarget',
-      'linkVisibility',
-      'linkColor',
-      'linkAutoColorBy',
-      'linkOpacity',
-      'linkWidth',
-      'linkResolution',
-      'linkCurvature',
-      'linkCurveRotation',
-      'linkMaterial',
-      'linkThreeObject',
-      'linkThreeObjectExtend',
-      'linkPositionUpdate',
-      'linkDirectionalArrowLength',
-      'linkDirectionalArrowColor',
-      'linkDirectionalArrowRelPos',
-      'linkDirectionalArrowResolution',
-      'linkDirectionalParticles',
-      'linkDirectionalParticleSpeed',
-      'linkDirectionalParticleWidth',
-      'linkDirectionalParticleColor',
-      'linkDirectionalParticleResolution',
-      'forceEngine',
-      'd3AlphaMin',
-      'd3AphaDecay',
-      'd3VelocityDecay',
-      'ngraphPhysics',
-      'warmupTicks',
-      'cooldownTicks',
-      'cooldownTime',
-      'onEngineTick',
-      'onEngineStop'
-    ];
-  
-    fgProps
-      .filter(function (p) { return p in diff; })
-      .forEach(function (p) {
-        self.forceGraph[p](elData[p] !== '' ? elData[p] : null);
-      }); // Convert blank values into nulls
-  
-    if ('nodes' in diff || 'links' in diff) {
-      self.forceGraph.graphData({
-        nodes: elData.nodes,
-        links: elData.links
+      Object.keys(element).forEach(function (k) {
+        if (k === nodeId) {
+          node[nodeId] = element[k];
+        } else if (k === linkId) {
+          node.linkId = element[k];
+        } else if (k === nodeVal) {
+          node[nodeVal] = element[k];
+        }
       });
-    }
-  
-  }
-  
-}
-
-// Format from data to nodes and links
-function elDataFromData(elData){
-  let nodes = [];
-  let links = [];
-
-  let data = elData.data;
-  let nodeId = elData.nodeId;
-  let linkId = elData.linkId;
-  let nodeVal = elData.nodeVal;
-  let source = elData.linkSource;
-  let target = elData.linkTarget;
-  let linkLabel = elData.linkLabel;
-
-  data.forEach(element => {
-    let node = {};
-
-    Object.keys(element).forEach(function (k) {
-      if (k === nodeId) {
-        node[nodeId] = element[k];
-      } else if (k === linkId) {
-        node.linkId = element[k];
-      } else if (k === nodeVal) {
-        node[nodeVal] = element[k];
-      }
+      nodes.push(node);
     });
-    nodes.push(node);
-  });
 
-  nodes.forEach(firstNode => {
-    nodes.forEach(secondNode => {
-      if (firstNode[nodeId] !== secondNode[nodeId]) { // not same id
-        if (firstNode.linkId === secondNode.linkId) { // same linkId, make link
-          if (links.length > 0){
-            let linkExists = false;
-            links.forEach(link => {
-              if ((link[source] === firstNode[nodeId] && link[target] === secondNode[nodeId]) || (link[source] === secondNode[nodeId] && link[target] === firstNode[nodeId])) { // the link does already exists, in any direction
-                linkExists = true;
-              } 
-            })
-            if (!linkExists) {
+    nodes.forEach(firstNode => {
+      nodes.forEach(secondNode => {
+        if (firstNode[nodeId] !== secondNode[nodeId]) { // not same id
+          if (firstNode.linkId === secondNode.linkId) { // same linkId, make link
+            if (links.length > 0){
+              let linkExists = false;
+              links.forEach(link => {
+                if ((link[source] === firstNode[nodeId] && link[target] === secondNode[nodeId]) || (link[source] === secondNode[nodeId] && link[target] === firstNode[nodeId])) { // the link does already exists, in any direction
+                  linkExists = true;
+                }
+              })
+              if (!linkExists) {
+                let newLink = {}
+                newLink[linkLabel] = firstNode[linkLabel]
+                newLink[source] = firstNode[nodeId]
+                newLink[target] = secondNode[nodeId]
+                links.push(newLink);
+              }
+            } else {
               let newLink = {}
               newLink[linkLabel] = firstNode[linkLabel]
               newLink[source] = firstNode[nodeId]
               newLink[target] = secondNode[nodeId]
               links.push(newLink);
-            }
-          } else {
-            let newLink = {}
-            newLink[linkLabel] = firstNode[linkLabel]
-            newLink[source] = firstNode[nodeId]
-            newLink[target] = secondNode[nodeId]
-            links.push(newLink);
-          }    
+            }  
+          }
         }
-      }
-    })
-  });
-  
-  elData.nodes = nodes;
-  elData.links = links;
-
-  return elData;
-}
-
-// Format nodes and links
-
-function elDataFromNodesAndLinks(elData) {
-//  let nodes = JSON.parse(elData.nodes);
-//  let links = JSON.parse(elData.links);
-  let nodes = elData.nodes;
-  let links = elData.links;
-
-  let nodeId = elData.nodeId;
-  let nodeVal = elData.nodeVal;
-  let source = elData.linkSource;
-  let target = elData.linkTarget;
-
-  if (!Array.isArray(nodes) || !Array.isArray(links)) {
-    // Either nodes or links are not ready yet
-    return false
-  }
-  nodes.forEach(node => {
-    Object.keys(node).forEach(function (k) {
-      if (k === nodeId) {
-        node[nodeId] = node[k];
-      } else if (k === nodeVal) {
-        node[nodeVal] = node[k];
-      }
+      })
     });
-  })
-  links.map(link => {
+  
+    elData.nodes = nodes;
+    elData.links = links;
+
+    return elData;
+  },
+
+  // Format nodes and links
+
+  elDataFromNodesAndLinks: function(elData) {
+    let nodes = elData.nodes;
+    let links = elData.links;
+    const nodeId = elData.nodeId;
+    const nodeVal = elData.nodeVal;
+    const source = elData.linkSource;
+    const target = elData.linkTarget;
+
+    if (!Array.isArray(nodes) || !Array.isArray(links)) {
+      // Either nodes or links are not ready yet
+      return false
+    }
     nodes.forEach(node => {
-      if (link[source] === node[nodeId]){
-        link[source] = node[nodeId];
-      } else if (link[target] === node[nodeId]){
-              link[target] = node[nodeId];
+      Object.keys(node).forEach(function (k) {
+        if (k === nodeId) {
+          node[nodeId] = node[k];
+        } else if (k === nodeVal) {
+          node[nodeVal] = node[k];
+        }
+      });
+    })
+    links.map(link => {
+      nodes.forEach(node => {
+        if (link[source] === node[nodeId]){
+          link[source] = node[nodeId];
+        } else if (link[target] === node[nodeId]){
+          link[target] = node[nodeId];
+        }
+      })
+    })
+    elData.nodes = nodes;
+    elData.links = links;
+
+    return elData;
+  },
+  
+  showLegend: function (nodeThree, node, nodeLabel, scale) {
+    let worldPosition = new THREE.Vector3();
+    nodeThree.getWorldPosition(worldPosition);
+    let radius = nodeThree.geometry.boundingSphere.radius
+    let sceneEl = document.querySelector('a-scene');
+    this.legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
+    sceneEl.appendChild(this.legend);
+  },
+
+  showLinkLegend: function(linkThree, link, linkLabel, scale) {
+    let worldPosition = new THREE.Vector3();
+    let radius = linkThree.geometry.boundingSphere.radius
+  
+    let sourcePos = new THREE.Vector3();
+    let targetPos = new THREE.Vector3();
+  
+    let nodes = this.forceGraph.children.filter(element => element.__graphObjType == "node")
+  
+    nodes.forEach(node => {
+      if(node.__data[this.data.nodeId] == link.source[this.data.nodeId]){
+        node.getWorldPosition(sourcePos)
+      }
+      if(node.__data[this.data.nodeId] == link.target[this.data.nodeId]){
+        node.getWorldPosition(targetPos)
       }
     })
-  })
-  elData.nodes = nodes;
-  elData.links = links;
-
-  return elData;
-} 
+    
+    worldPosition.x = (sourcePos.x + targetPos.x)/2
+    worldPosition.y = (sourcePos.y + targetPos.y)/2
+    worldPosition.z = (sourcePos.z + targetPos.z)/2
+  
+    let sceneEl = document.querySelector('a-scene');
+    this.legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
+    sceneEl.appendChild(this.legend);
+  },
+  
+  removeLegend: function() {
+    if (this.legend){
+      let sceneEl = document.querySelector('a-scene');
+      sceneEl.removeChild(this.legend)
+    }
+  }
+});
 
 function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
   let text = node[nodeLabel];
@@ -810,15 +706,6 @@ function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
   return entity;
 }
 
-function showLegend(self, nodeThree, node, nodeLabel, scale) {
-  let worldPosition = new THREE.Vector3();
-  nodeThree.getWorldPosition(worldPosition);
-  let radius = nodeThree.geometry.boundingSphere.radius
-  let sceneEl = document.querySelector('a-scene');
-  self.legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
-  sceneEl.appendChild(self.legend);
-}
-
 function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
   let text = link[linkLabel];
   let width = 2;
@@ -833,7 +720,6 @@ function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
       z = z * scale.z;
       radius = (radius + 3) * scale.y;
   }
-
 
   let entity = document.createElement('a-plane');
   entity.setAttribute('position', {x: linkPosition.x, y: linkPosition.y + radius, z: linkPosition.z})
@@ -852,42 +738,6 @@ function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
   return entity;
 }
 
-function showLinkLegend(self, linkThree, link, linkLabel, linkWidth, scale) {
-  let worldPosition = new THREE.Vector3();
-  //linkThree.getWorldPosition(worldPosition);
-  let radius = linkThree.geometry.boundingSphere.radius
-
-  let sourcePos = new THREE.Vector3();
-  let targetPos = new THREE.Vector3();
-
-  let nodes = self.forceGraph.children.filter(element => element.__graphObjType == "node")
-
-  nodes.forEach(node => {
-    if(node.__data[self.data.nodeId] == link.source[self.data.nodeId]){
-      node.getWorldPosition(sourcePos)
-    }
-    if(node.__data[self.data.nodeId] == link.target[self.data.nodeId]){
-      node.getWorldPosition(targetPos)
-    }
-  })
-  
-  worldPosition.x = (sourcePos.x + targetPos.x)/2
-  worldPosition.y = (sourcePos.y + targetPos.y)/2
-  worldPosition.z = (sourcePos.z + targetPos.z)/2
-
-  let sceneEl = document.querySelector('a-scene');
-  self.legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
-  sceneEl.appendChild(self.legend);
-}
-
-function removeLegend(self){
-  if (self.legend){
-    let sceneEl = document.querySelector('a-scene');
-    sceneEl.removeChild(self.legend)
-  }
-  
-}
-
 function setCursor() {
   // When loading, cursor gets entity cursor
   cursor = document.querySelector('[cursor]');
@@ -896,14 +746,4 @@ function setCursor() {
   document.addEventListener('controllerconnected', (event) => {
     cursor = document.querySelector('[laser-controls]');
   });
-}
-
-let dataReadyToSend = (propertyName, self) => {
-  self.interestedElements.forEach(element => {
-      dispatchEventOnElement(element, propertyName)
-  });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-  element.emit("babiaVisualizerUpdated", propertyName)
 }
