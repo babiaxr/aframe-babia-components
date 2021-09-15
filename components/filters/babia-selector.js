@@ -264,16 +264,18 @@ AFRAME.registerComponent('babia-selector', {
     },
 
     setSelect: function(value) {
-        this.babiaData = this.selectable.setValue(value);
-        if (this.toPresent) {
-            this.babiaMetadata = { id: value++ };
-        } else {
-            this.babiaMetadata = { id: value-- };
-            this.selectable.current -=2
+        if (((value != this.selectable.current - 1) && this.toPresent) || ((value != this.selectable.current + 1) && !this.toPresent)) {
+            this.babiaData = this.selectable.setValue(value);
+            if (this.toPresent) {
+                this.babiaMetadata = { id: value++ };
+            } else {
+                this.babiaMetadata = { id: value-- };
+                this.selectable.current -=2
+            }
+            // Dispatch interested events
+            dataReadyToSend("babiaData", this);
+            this.selectorController.emit("babiaSelectorDataUpdated", this)
         }
-        // Dispatch interested events
-        dataReadyToSend("babiaData", this);
-        this.selectorController.emit("babiaSelectorDataUpdated", this)
     },
 
     /**
