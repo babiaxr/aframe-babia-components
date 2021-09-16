@@ -11,7 +11,6 @@ const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 AFRAME.registerComponent('babia-queryjson', {
     schema: {
         url: { type: 'string' },
-        embedded: { type: 'string' },
         // data, for debugging, highest priority
         data: { type: 'string' }
     },
@@ -41,13 +40,8 @@ AFRAME.registerComponent('babia-queryjson', {
         if (data.data && oldData.data !== data.data) {
             let object = JSON.parse(data.data);
             this.notiBuffer.set(object);        
-        } else {
-            if (oldData.url !== data.url) {
-                this.getJSON(data.url);
-            } else if (oldData.embedded !== data.embedded) {
-               let object = JSON.parse(data.embedded);
-               this.notiBuffer.set(object);
-            }
+        } else if (oldData.url !== data.url) {
+            this.getJSON(data.url);
         }
     },
     /**
@@ -84,14 +78,13 @@ AFRAME.registerComponent('babia-queryjson', {
 
     getJSON: async function(url) { 
         let response = await fetch(url);
-            if (response.status == 200) {
-                let json = await response.json();
-                // TODO: throw error if json is not in the right format
-                this.notiBuffer.set(json);
-                return;
-            } 
-            throw new Error(response.status);
-
+        if (response.status == 200) {
+            let json = await response.json();
+            // TODO: throw error if json is not in the right format
+            this.notiBuffer.set(json);
+            return;
+        } 
+        throw new Error(response.status);
     },// Try-catch to get and print errors outside
 
  
