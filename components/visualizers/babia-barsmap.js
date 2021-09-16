@@ -272,7 +272,7 @@ AFRAME.registerComponent('babia-barsmap', {
             console.log(xLabel + " " + zLabel + " " + posX + " " + posZ)
             let colorId = xLabels.indexOf(xLabel)
 
-            let barEl = chartEl.querySelector('#' + xLabel + zLabel);
+            let barEl;
             if (!barEl) {
                 barEl = document.createElement('a-entity');
                 barEl.id = xLabel + zLabel;
