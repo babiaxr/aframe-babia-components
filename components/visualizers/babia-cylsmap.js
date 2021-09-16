@@ -1,5 +1,6 @@
 let findProdComponent = require('../others/common').findProdComponent;
 let updateTitle = require('../others/common').updateTitle;
+let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
 /* global AFRAME */
@@ -55,7 +56,8 @@ AFRAME.registerComponent('babia-cylsmap', {
      * Update or create chart component
      */
     if (data.data && oldData.data !== data.data) {
-        this.processData(data.data)
+      let _data = parseJson(data.data);
+      this.processData(_data);
     } else if (data.from !== oldData.from) {
         // Unregister from old producer
             if (this.prodComponent) {
@@ -69,7 +71,8 @@ AFRAME.registerComponent('babia-cylsmap', {
     } 
     // If changed whatever, re-print with the current data
     else if (data !== oldData && this.newData) {
-        this.processData(data.data)
+      let _data = parseJson(data.data)
+      this.processData(_data)
     }
   },
 
@@ -266,19 +269,13 @@ AFRAME.registerComponent('babia-cylsmap', {
   */
   processData: function (data) {
     console.log("processData", this);
-    let object;
-    if (typeof(data) === 'string' || data instanceof String) {
-        object = JSON.parse(data);
-    } else {
-        object = data;
-    };
-    this.newData = object;
+    this.newData = data;
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
     while (this.el.firstChild)
-            this.el.firstChild.remove();
+      this.el.firstChild.remove();
     console.log("Generating cylsmap...")
     this.updateChart()
- }
+  }
 })
 
 function generateCylinder(height, radius, colorId, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {

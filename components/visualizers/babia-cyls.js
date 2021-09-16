@@ -1,5 +1,6 @@
 let findProdComponent = require('../others/common').findProdComponent;
 let updateTitle = require('../others/common').updateTitle;
+let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
 /* global AFRAME */
@@ -54,21 +55,23 @@ AFRAME.registerComponent('babia-cyls', {
          * Update or create chart component
          */
         if (data.data && oldData.data !== data.data) {
-            this.processData(data.data)
+          let _data = parseJson(data.data);
+          this.processData(_data);
         } else if (data.from !== oldData.from) {
             // Unregister from old producer
-                if (this.prodComponent) {
-                    this.prodComponent.notiBuffer.unregister(this.notiBufferId)
-                };
-                this.prodComponent = findProdComponent (data, el)
-                if (this.prodComponent.notiBuffer) {
-                    this.notiBufferId = this.prodComponent.notiBuffer
-                        .register(this.processData.bind(this))
-                }     
+          if (this.prodComponent) {
+            this.prodComponent.notiBuffer.unregister(this.notiBufferId)
+          };
+          this.prodComponent = findProdComponent (data, el)
+          if (this.prodComponent.notiBuffer) {
+            this.notiBufferId = this.prodComponent.notiBuffer
+                .register(this.processData.bind(this))
+          }     
         } 
         // If changed whatever, re-print with the current data
         else if (data !== oldData && this.newData) {
-            this.processData(data.data)
+          let _data = parseJson(data.data)
+          this.processData(_data)
         }
   },
 
@@ -232,13 +235,7 @@ AFRAME.registerComponent('babia-cyls', {
   */
   processData: function (data) {
     console.log("processData", this);
-    let object;
-    if (typeof(data) === 'string' || data instanceof String) {
-        object = JSON.parse(data);
-    } else {
-        object = data;
-    };
-    this.newData = object;
+    this.newData = data;
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
     while (this.el.firstChild)
             this.el.firstChild.remove();

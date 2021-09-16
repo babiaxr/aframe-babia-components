@@ -1,3 +1,5 @@
+let parseJson = require('../others/common').parseJson;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -38,8 +40,8 @@ AFRAME.registerComponent('babia-queryjson', {
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
-            let object = JSON.parse(data.data);
-            this.notiBuffer.set(object);        
+            let _data = parseJson(data.data)
+            this.notiBuffer.set(_data);        
         } else if (oldData.url !== data.url) {
             this.getJSON(data.url);
         }
@@ -80,12 +82,14 @@ AFRAME.registerComponent('babia-queryjson', {
         let response = await fetch(url);
         if (response.status == 200) {
             let json = await response.json();
-            // TODO: throw error if json is not in the right format
-            this.notiBuffer.set(json);
-            return;
-        } 
-        throw new Error(response.status);
-    },// Try-catch to get and print errors outside
+            // TODO: Throw error if json is not in the right format
+            let _data = parseJson(json);
+            this.notiBuffer.set(_data);
+        } else {
+            throw new Error(response.status);
+        }
+        
+    },// TODO: Try-catch to get and print errors outside
 
  
 })

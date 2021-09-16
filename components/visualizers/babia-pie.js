@@ -1,5 +1,6 @@
 let findProdComponent = require('../others/common').findProdComponent;
 let updateTitle = require('../others/common').updateTitle;
+let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
 /* global AFRAME */
@@ -49,7 +50,8 @@ AFRAME.registerComponent('babia-pie', {
          */
 
         if (data.data && oldData.data !== data.data) {
-            this.processData(data.data)
+            let _data = parseJson(data.data);
+            this.processData(_data);
         } else if (data.from !== oldData.from) {
             this.slice_array = []
             // Unregister from old producer
@@ -65,7 +67,8 @@ AFRAME.registerComponent('babia-pie', {
         // If changed whatever, re-print with the current data
         else if (data !== oldData && this.newData) {
             this.slice_array = []
-            this.processData(data.data)
+            let _data = parseJson(data.data);
+            this.processData(_data);
         }
 
     },
@@ -182,6 +185,7 @@ AFRAME.registerComponent('babia-pie', {
                 sliceEntity = generateSlice(degreeStart, degreeEnd, 1, colorId, palette);
             }
             sliceEntity.classList.add("babiaxraycasterclass")    
+            this.chartEl.appendChild(sliceEntity);
             
             //Move degree offset
             degreeStart += degreeEnd;
@@ -190,7 +194,7 @@ AFRAME.registerComponent('babia-pie', {
             if (data.legend) {
                 showLegend(data, sliceEntity, slice, el)
             }    
-            this.chartEl.appendChild(sliceEntity);
+            
             colorId++
         }
 
@@ -202,13 +206,7 @@ AFRAME.registerComponent('babia-pie', {
     */
     processData: function (data) {
         console.log("processData", this);
-        let object;
-        if (typeof(data) === 'string' || data instanceof String) {
-            object = JSON.parse(data);
-        } else {
-            object = data;
-        };
-        this.newData = object;
+        this.newData = data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
         while (this.el.firstChild)
                 this.el.firstChild.remove();

@@ -16,7 +16,7 @@
 
 <body>
     <a-scene background="color: #000" id="AframeScene">
-        <a-entity id="network" babia-network='linkLabel: link_id'>
+        <a-entity id="network" babia-network='linkLabel: link_id; nodes: [{"id": "0", "size": 0}, {"id": "1", "size": 0}]; links: [{"source": "0", "target": "1"}] '>
         </a-entity>
 
         <a-entity movement-controls="fly: true" position="100 0 -80">

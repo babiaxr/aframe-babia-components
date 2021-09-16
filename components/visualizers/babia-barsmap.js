@@ -1,5 +1,6 @@
 let findProdComponent = require('../others/common').findProdComponent;
 let updateTitle = require('../others/common').updateTitle;
+let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
 /* global AFRAME */
@@ -80,7 +81,8 @@ AFRAME.registerComponent('babia-barsmap', {
         this.bar_array = []
 
         if (data.data && oldData.data !== data.data) {
-            this.processData(data.data);
+            let _data = parseJson(data.data);
+            this.processData(_data);
         } else if (this.data.from !== oldData.from) {
             // Unregister from old producer
             if (this.prodComponent) {
@@ -318,13 +320,7 @@ AFRAME.registerComponent('babia-barsmap', {
     */
     processData: function (data) {
         console.log("processData", this);
-        let object;
-        if (typeof(data) === 'string' || data instanceof String) {
-            object = JSON.parse(data);
-        } else {
-            object = data;
-        };
-        this.newData = object;
+        this.newData = data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
 
         if (!this.data.incremental){

@@ -184,10 +184,21 @@ let updateTitle = (data, titleRotation) => {
     return titleEl
 }
 
+let parseJson = (json) => {
+    let object;
+    if (typeof(json) === 'string' || json instanceof String) {
+        object = JSON.parse(json);
+    } else {
+        object = json;
+    };
+    return object;
+}
+
 module.exports.dataReadyToSend = dataReadyToSend;
 module.exports.dispatchEventOnElement = dispatchEventOnElement;
 module.exports.findDataComponent = findDataComponent;
 module.exports.findProdComponent = findProdComponent;
 module.exports.colors = colors;
 module.exports.updateTitle = updateTitle;
+module.exports.parseJson = parseJson;
 

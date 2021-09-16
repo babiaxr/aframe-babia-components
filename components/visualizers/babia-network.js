@@ -25,6 +25,7 @@ SOFTWARE.
  */
 
 let findProdComponent = require('../others/common').findProdComponent;
+let parseJson = require('../others/common').parseJson;
 
 /* global AFRAME */
 
@@ -43,12 +44,6 @@ if ('default' in ThreeForceGraph) {
   // unwrap default export
   ThreeForceGraph = ThreeForceGraph.default;
 }
-
-let parseJson = function (prop) {
-  return (typeof prop === 'string')
-    ? JSON.parse(prop)
-    : prop; // already parsed
-};
 
 let parseFn = function (prop) {
   if (typeof prop === 'function') return prop; // already a function
@@ -226,16 +221,19 @@ AFRAME.registerComponent('babia-network', {
     */
     // Highest priority to data
     if(elData.data && oldData.data !== elData.data){
-      this.processData(elData.data)
+      let _data = parseJson(elData.data);
+      this.processData(_data);
 
     } else {
       // Second highest priority to nodes and links
       if (elData.nodes){
         if(oldData.nodes !== elData.nodes){
-          this.processNodes(elData.nodes)
+          let _nodes = parseJson(elData.nodes);
+          this.processNodes(_nodes);
         }
         if (oldData.links !== elData.links){
-          this.processLinks(elData.links)
+          let _links = parseJson(elData.links);
+          this.processLinks(_links)
         }
       // Data from querier
       } else {
@@ -290,9 +288,11 @@ AFRAME.registerComponent('babia-network', {
         // If changed whatever, re-print with the current data
         if (elData !== oldData) {
           if (elData.data){
-            this.processData(elData.data)
+            let _data = parseJson(elData.data);
+            this.processData(_data)
           } else if (elData.nodes){
-            this.processNodes(elData.nodes)
+            let _nodes = parseJson(elData.nodes);
+            this.processNodes(_nodes)
           }
         }
       }
@@ -462,12 +462,7 @@ AFRAME.registerComponent('babia-network', {
   processData: function (_data) {
     console.log("processData", this);
     let elData = this.data
-    if (typeof(_data) === 'string' || _data instanceof String) {
-      elData.data = JSON.parse(_data);
-    } else {
-      elData.data = _data;
-    };
-
+    elData.data = _data;
     elData = this.elDataFromData(elData);
     this.data = elData
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
@@ -478,17 +473,14 @@ AFRAME.registerComponent('babia-network', {
   processNodes: function (nodes){
     console.log("processNodes", this);
     let elData = this.data
-    if (typeof(nodes) === 'string' || nodes instanceof String) {
-      elData.nodes = JSON.parse(nodes);
-    } else {
-      elData.nodes = nodes;
-    };
+    elData.nodes = nodes
     this.data.nodes = elData.nodes
     elData = this.elDataFromNodesAndLinks(elData)
 
     if (!elData){
       if (this.data.links) {
-        this.processLinks(this.data.links)
+        let _links = parseJson(this.data.links);
+        this.processLinks(_links)
       } else if (this.data.linksFrom){
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
@@ -515,7 +507,8 @@ AFRAME.registerComponent('babia-network', {
 
     if (!elData){
       if (this.data.nodes) {
-        this.processLinks(this.data.nodes)
+        let _nodes = parseJson(this.data.nodes);
+        this.processLinks(_nodes)
       } else if (this.data.nodesFrom){
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
