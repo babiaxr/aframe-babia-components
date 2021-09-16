@@ -1,3 +1,6 @@
+let findProdComponent = require('../others/common').findProdComponent;
+let parseJson = require('../others/common').parseJson;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
@@ -38,18 +41,19 @@ AFRAME.registerComponent('babia-filter', {
 
     // Highest priority to data
     if (data.data && (oldData.data !== data.data || data.filter !== oldData.filter)) {
-      this.processData(data.data)
+      let _data = parseJson(data.data);
+      this.processData(_data);
     } else if (data.from !== oldData.from || data.filter !== oldData.filter) {
         // Unregister from old notiBuffer
-        if(this.producerComponent) {
-          this.producerComponent.notiBuffer.unregister(this.notiBufferId)
+        if(this.prodComponent) {
+          this.prodComponent.notiBuffer.unregister(this.notiBufferId)
         };
 
         // Register for the new one
         // (It will also invoke processData once if there is already data)
-        findProducer(data, el, this)
-        if (this.producerComponent.notiBuffer){
-          this.notiBufferId = this.producerComponent.notiBuffer.register(this.processData.bind(this))
+        this.prodComponent = findProdComponent(data, el)
+        if (this.prodComponent.notiBuffer){
+          this.notiBufferId = this.prodComponent.notiBuffer.register(this.processData.bind(this))
         }
     }
   },
@@ -74,27 +78,19 @@ AFRAME.registerComponent('babia-filter', {
   /**
    * Producer component
    */
-  producerComponent: undefined,
+  prodComponent: undefined,
 
   /**
    * NotiBuffer identifier
    */
   notiBufferId: undefined,
 
-  processData: function (data) {
-    // Obtain data
-    let object;
-    if (typeof(data) === 'string' || data instanceof String) {
-        object = JSON.parse(data);
-    } else {
-        object = data;
-    };
-
+  processData: function (_data) {
     // Filter data and save it
     let filter = this.data.filter.split('=')
     let dataFiltered;
     if (filter[0] && filter[1]) {
-      dataFiltered = object.filter((key) => key[filter[0]] == filter[1])
+      dataFiltered = _data.filter((key) => key[filter[0]] == filter[1])
       this.notiBuffer.set(dataFiltered);
     } else {
       console.error("Error on filter, please use key=value syntax")
@@ -102,16 +98,16 @@ AFRAME.registerComponent('babia-filter', {
   },
 })
 
-let findProducer = (data, el, self) => {
+/*let findProducer = (data, el, self) => {
   if (data.from) {
     // Save the reference to the querier
     let querierElement = document.getElementById(data.from)
     if (querierElement.components['babia-queryjson']) {
-      self.producerComponent = querierElement.components['babia-queryjson']
+      self.prodComponent = querierElement.components['babia-queryjson']
     } else if (querierElement.components['babia-queryes']) {
-      self.producerComponent = querierElement.components['babia-queryes']
+      self.prodComponent = querierElement.components['babia-queryes']
     } else if (querierElement.components['babia-querygithub']) {
-      self.producerComponent = querierElement.components['babia-querygithub']
+      self.prodComponent = querierElement.components['babia-querygithub']
     } else {
       console.error("Problem registering to the querier")
       return
@@ -119,23 +115,23 @@ let findProducer = (data, el, self) => {
   } else {
     // Look for a querier in the same element and register
     if (el.components['babia-queryjson']) {
-      self.producerComponent = el.components['babia-queryjson']
+      self.prodComponent = el.components['babia-queryjson']
     } else if (el.components['babia-queryes']) {
-      self.producerComponent = el.components['babia-queryes']
+      self.prodComponent = el.components['babia-queryes']
     } else if (el.components['babia-querygithub']) {
-      self.producerComponent = el.components['babia-querygithub']
+      self.prodComponent = el.components['babia-querygithub']
     } else {
       // Look for a querier in the scene
       if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.producerComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
+        self.prodComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
       } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.producerComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
+        self.prodComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
       } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-        self.producerComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
+        self.prodComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
       } else {
         console.error("Error, querier not found")
         return
       }
     }
   }
-}
+}*/
