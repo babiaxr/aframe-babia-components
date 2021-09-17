@@ -80,8 +80,19 @@ The steps to reproduce and deploy a dev server for developing babiaXR are:
         ```
         npm run ssldev
         ```
+    - With SSL, access from all hosts
+        ```
+        npm run ssldevall
+        ```
 
 Each change in a file will automatically update the dev server.
+
+**Warning notice:** `npm run ssldevall` will listen connections in 0.0.0.0,
+which means "all network devices in this host, including localhost2".
+This implies that the HTTPS server will accept connections from anywhere
+in Internet. While this is quite convenient for connecting external
+devices (eg, a VR device), it also exposes your directory to anyone
+with HTTPS access to the 8080 port in your host. Use at your own risk.
 
 
 ## Build distribution files
@@ -141,3 +152,22 @@ or
 ```
 npm run test:chrome
 ```
+
+## Certificates for npm sun ssldev to work
+
+This repository comes with certificates that are used by webpack to configure the HTTPS server.
+They are self-signed, which means they need to be accepted in the browser: usually you
+will get a warning about certificates not being correct, and will be prompted to acept them.
+These certificates have been built as follows:
+
+```
+openssl genrsa -out babia_key.pem
+openssl req -new -key babia_key.pem -out csr.pem
+openssl x509 -req -days 9999 -in csr.pem -signkey babia_key.pem -out babia_cert.pem
+rm csr.pem
+```
+
+More details in [How to create a HTTPS server](https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/), in the Node documentation.
+
+We are using those certificates to avoid Webpack generating new certificates with every new run,
+which means having to accept them in browser with every new run.
