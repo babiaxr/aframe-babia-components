@@ -55,3 +55,5 @@ You need the `babia-navigator` to manage the progress.
 | data          | Embedded data to filter. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
 
 **NOTE:** You can use multiple visualizers with the same selector component. Only indicating its id in `from` of any visualizer. All of them will be managed by the same navigator component.
+
+**IMPORTANT:** If you use this component with other filters, the correct order is: `Querier > Filters > Selector`. For `babia-boats` you need treebuilder component too, so the order is: `Querier > Filters > Selector > Treebuilder`. Not following this order can not work.

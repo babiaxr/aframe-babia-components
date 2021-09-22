@@ -114,6 +114,9 @@ AFRAME.registerComponent('babia-boats', {
      * 
      */
     duration: 2000,
+    figures_del: [],
+    figures_in: [],
+    animation: false,
 
     /**
     * Called when component is attached and when component data changes.
@@ -237,9 +240,28 @@ AFRAME.registerComponent('babia-boats', {
     play: function () { },
 
     onDataLoaded: function (items) {
+
+        console.log('Data Loaded.');
+        let t = { x: 0, y: 0, z: 0 };
+
+        // when animation not finished, delete figures and opa 1 to inserted
+        if (this.animation){
+            this.figures_del.forEach(figure => {
+                let entity = document.getElementById(figure.id);
+                setOpacity(entity, 0.0);
+            })
+            this.figures_in.forEach(figure => {
+                let entity = document.getElementById(figure.id);
+                setOpacity(entity, 1.0);
+            })
+            this.setFigures(this.figures, t);
+            this.animation = false;
+            this.figures_del = [];
+            this.figures_in = [];
+        }
+
         this.figures_old = this.figures;
         this.figures = [];
-        console.log('Data Loaded.');
 
         let el = this.el;
         let elements = items
@@ -256,8 +278,9 @@ AFRAME.registerComponent('babia-boats', {
         }
 
         // Register all figures before drawing
-        let t = { x: 0, y: 0, z: 0 };
         [x, y, t, this.figures] = this.generateElements(elements, this.figures, t, increment);
+
+        console.log(this.figures)
 
         // Draw figures
         t.x = 0;
@@ -798,6 +821,12 @@ AFRAME.registerComponent('babia-boats', {
                     }
                     setOpacity(entity, opacity);
 
+                    // If animation stops before finish
+                    let cond = 'id=' + figures[i].id
+                    if (findIndex(self.figures_in, cond) < 0){
+                        self.figures_in.push(figures[i])
+                    }
+
                 } else { 
                     // find index in old_figures
                     let cond = 'id=' + figures[i].id
@@ -846,7 +875,6 @@ AFRAME.registerComponent('babia-boats', {
 
                 element.appendChild(new_entity);
                 figures[i].inserted = true;
-
             }
         }
 
@@ -856,6 +884,9 @@ AFRAME.registerComponent('babia-boats', {
             let cond = 'id=' + figures_old[i].id
             let index = findIndex(figures, cond)
             if (index < 0){
+                if (findIndex(self.figures_del, cond) < 0){
+                    self.figures_del.push(figures_old[i])
+                }
                 let entity_del = document.getElementById(figures_old[i].id)
                 let opacity = parseFloat(entity_del.getAttribute('material').opacity);
                 if (opacity - opa_dec > 0) {
@@ -869,7 +900,33 @@ AFRAME.registerComponent('babia-boats', {
 
         if ((new_time - this.start_time) > this.duration) {
             this.animation = false;
+            // Fix bugs when change instante quickly
+            this.setFigures(this.figures, translate);
         }
+    },
+
+    setFigures: function (figures, translate){
+        figures.forEach(figure => {
+            let entity = document.getElementById(figure.id);
+            if (entity.getAttribute('width') != figure.width) {
+                entity.setAttribute('width', figure.width);
+            }
+            if (entity.getAttribute('height') != figure.height) {
+                entity.setAttribute('height', figure.height);
+            }
+            if (entity.getAttribute('depth') != figure.depth) {
+                entity.setAttribute('depth', figure.depth);
+            }
+            entity.setAttribute('position', {
+                x: figure.posX - translate.x,
+                y: (figure.height + translate.y) / 2,
+                z: - figure.posY + translate.z
+            });
+
+            if (figure.children){
+                this.setFigures(figure.children, figure.translate_matrix);
+            }
+        });
     },
 
     resize: function (entity, new_time, delta, figure, figure_old) {
@@ -932,33 +989,36 @@ AFRAME.registerComponent('babia-boats', {
 
     traslate: function (entity, new_time, delta, figure, figure_old, translate, translate_old) {
         let dist_x = (figure_old.posX - translate_old.x) - (figure.posX - translate.x);
-        let dist_y = (figure_old.posY - translate_old.z) - (figure.posY - translate.z);
+        let dist_y = (figure.height - figure_old.height);
+        let dist_z = (figure_old.posY - translate_old.z) - (figure.posY - translate.z);
 
-        if (dist_x != 0 || dist_y != 0) {
+        if (dist_x != 0 || dist_y != 0 || dist_z != 0) {
             if ((new_time - this.start_time) < this.duration) {
                 // Calculate increment positions
                 let inc_x = (delta * dist_x) / this.duration;
-                let inc_z = (delta * dist_y) / this.duration;
+                let inc_y = (delta * dist_y) / (2 * this.duration);
+                let inc_z = (delta * dist_z) / this.duration;
 
                 let last_x = entity.getAttribute('position').x;
+                let last_y = entity.getAttribute('position').y;
                 let last_z = entity.getAttribute('position').z;
 
                 let new_x = last_x - inc_x;
+                let new_y = last_y + inc_y;
                 let new_z = last_z + inc_z;
 
-                let new_height = entity.getAttribute('height');
 
                 // Update entity
                 entity.setAttribute('position', {
                     x: new_x,
-                    y: new_height / 2,
+                    y: new_y,
                     z: new_z
                 });
 
             } else if ((new_time - this.start_time) > this.duration) {
                 entity.setAttribute('position', {
                     x: figure.posX - translate.x,
-                    y: figure.height / 2,
+                    y: (figure.height + translate.y) / 2,
                     z: - figure.posY + translate.z
                 });
             }

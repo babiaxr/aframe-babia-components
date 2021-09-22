@@ -142,5 +142,11 @@
         "date":"2015-10",
         "area": 8,
         "height": 1
+    },
+    {
+        "id": "Root/BlockA/BlockA3/A3C",
+        "date":"2015-11",
+        "area": 8,
+        "height": 1
     }
 ]
