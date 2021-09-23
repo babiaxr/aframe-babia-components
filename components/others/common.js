@@ -85,7 +85,7 @@ let findDataComponent = (data, el, self) => {
     return eventName
 }
 
-let findProdComponent = (data, el) => {
+let findProdComponent = (data, el, selfProducer) => {
     let prodComponent;
     if (data.from) {
         // Save the reference to the querier or filterdata
@@ -142,15 +142,15 @@ let findProdComponent = (data, el) => {
         
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babia-filter']) {
+        if (el.components['babia-filter'] && selfProducer != 'babia-filter') {
             prodComponent = el.components['babia-filter']
-        } else if (el.components['babia-queryjson']) {
+        } else if (el.components['babia-queryjson'] && selfProducer != 'babia-queryjson') {
             prodComponent = el.components['babia-queryjson']
-        } else if (el.components['babia-queryes']) {
+        } else if (el.components['babia-queryes'] && selfProducer != 'babia-queryes') {
             prodComponent = el.components['babia-queryes']
-        } else if (el.components['babia-querygithub']) {
+        } else if (el.components['babia-querygithub'] && selfProducer != 'babia-querygithub') {
             prodComponent = el.components['babia-querygithub']
-        } else if (el.components['babia-selector']) {
+        } else if (el.components['babia-selector'] && selfProducer != 'babia-selector') {
             prodComponent = el.components['babia-selector'];
         } else {
             // Look for a querier or filterdata in the scene
@@ -171,6 +171,34 @@ let findProdComponent = (data, el) => {
         }
     }
     return prodComponent;
+}
+
+let findNavComponent = (data, el) => {
+    let navComponent;
+    if (data.controller) {
+        // Save the reference to the querier or filterdata
+        let navElement = document.getElementById(data.controller)
+        if (navElement.components['babia-navigator']) {
+            navComponent = navElement.components['babia-navigator']
+        } else {
+            console.error("Problem registering to the navigator", el);
+            return
+        }
+    } else {
+        // Look for a navigator in the same element and register
+        if (el.components['babia-navigator']) {
+            navComponent = el.components['babia-navigator']
+        } else {
+            // Look for a navigator in the scene
+            if (document.querySelectorAll("[babia-navigator]").length > 0) {
+                navComponent = document.querySelectorAll("[babia-navigator]")[0].components['babia-navigator']
+            }else {
+                console.error("Error, navigator not found", el, el.components, el.components['babia-navigator']);
+                return
+            }
+        }
+    }
+    return navComponent;
 }
 
 let updateTitle = (data, titleRotation) => {
@@ -198,6 +226,7 @@ module.exports.dataReadyToSend = dataReadyToSend;
 module.exports.dispatchEventOnElement = dispatchEventOnElement;
 module.exports.findDataComponent = findDataComponent;
 module.exports.findProdComponent = findProdComponent;
+module.exports.findNavComponent = findNavComponent;
 module.exports.colors = colors;
 module.exports.updateTitle = updateTitle;
 module.exports.parseJson = parseJson;

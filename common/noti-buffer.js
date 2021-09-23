@@ -11,10 +11,13 @@ class NotiBuffer {
      *  - key: identifier (unique integer)
      *  - value: notify function
      */
-    constructor() {
+    constructor(func1, func2) {
         this.currentId = 0;
         this.notifiers = {};
         this.data;
+        // Optional: Functions to be executed by producer if details are received when registering
+        this.function1 = func1; 
+        this.function2 = func2;
     }
 
     /*
@@ -35,7 +38,7 @@ class NotiBuffer {
      *  data is the data stored in the buffer
      *  Returns the id of the notifier
      */
-    register(notify) {
+    register(notify, details) {
         if (this.data !== undefined) {
             console.log("Data was ready");
             notify(this.data);
@@ -43,6 +46,11 @@ class NotiBuffer {
         let id = this.currentId;
         this.notifiers[id] = notify;
         this.currentId ++;
+
+        // Optional: Details from consumer and function to be executed by producer
+        if (details && this.function1) {
+            this.function1(details);
+        }
         return id;
     }
 
@@ -50,8 +58,13 @@ class NotiBuffer {
      * Unregister a notifier for the buffer
      *  id is the the identifier returned when registering
      */
-    unregister(id) {
+    unregister(id, details) {
         delete(this.notifiers[id]);
+
+        // Optional: Details from consumer and function to be executed by producer
+        if (details && this.function2) {
+            this.function2(details);
+        }
     }
 }
 

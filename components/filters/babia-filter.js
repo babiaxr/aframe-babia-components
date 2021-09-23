@@ -7,6 +7,7 @@ if (typeof AFRAME === 'undefined') {
 }
 const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
+
 /**
 * A-Charts component for A-Frame.
 */
@@ -51,7 +52,7 @@ AFRAME.registerComponent('babia-filter', {
 
         // Register for the new one
         // (It will also invoke processData once if there is already data)
-        this.prodComponent = findProdComponent(data, el)
+        this.prodComponent = findProdComponent(data, el, "babia-filter")
         if (this.prodComponent.notiBuffer){
           this.notiBufferId = this.prodComponent.notiBuffer.register(this.processData.bind(this))
         }
@@ -85,53 +86,15 @@ AFRAME.registerComponent('babia-filter', {
    */
   notiBufferId: undefined,
 
-  processData: function (_data) {
+  processData: function (data) {
     // Filter data and save it
     let filter = this.data.filter.split('=')
     let dataFiltered;
     if (filter[0] && filter[1]) {
-      dataFiltered = _data.filter((key) => key[filter[0]] == filter[1])
+      dataFiltered = data.filter((key) => key[filter[0]] == filter[1])
       this.notiBuffer.set(dataFiltered);
     } else {
       console.error("Error on filter, please use key=value syntax")
     }  
   },
 })
-
-/*let findProducer = (data, el, self) => {
-  if (data.from) {
-    // Save the reference to the querier
-    let querierElement = document.getElementById(data.from)
-    if (querierElement.components['babia-queryjson']) {
-      self.prodComponent = querierElement.components['babia-queryjson']
-    } else if (querierElement.components['babia-queryes']) {
-      self.prodComponent = querierElement.components['babia-queryes']
-    } else if (querierElement.components['babia-querygithub']) {
-      self.prodComponent = querierElement.components['babia-querygithub']
-    } else {
-      console.error("Problem registering to the querier")
-      return
-    }
-  } else {
-    // Look for a querier in the same element and register
-    if (el.components['babia-queryjson']) {
-      self.prodComponent = el.components['babia-queryjson']
-    } else if (el.components['babia-queryes']) {
-      self.prodComponent = el.components['babia-queryes']
-    } else if (el.components['babia-querygithub']) {
-      self.prodComponent = el.components['babia-querygithub']
-    } else {
-      // Look for a querier in the scene
-      if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.prodComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
-      } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-        self.prodComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-      } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-        self.prodComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
-      } else {
-        console.error("Error, querier not found")
-        return
-      }
-    }
-  }
-}*/

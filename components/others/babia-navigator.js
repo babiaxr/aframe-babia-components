@@ -3,6 +3,9 @@ if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
+
 AFRAME.registerComponent('babia-navigator', {
     schema: {},
 
@@ -18,62 +21,10 @@ AFRAME.registerComponent('babia-navigator', {
      * Initial creation and setting of the mesh.
      */
     init: function () {
+        this.notiBuffer = new NotiBuffer(this.registerBack.bind(this), this.unregisterBack.bind(this));
+
         this.toPresent = true
         this.isPaused = false
-
-        // NEED: wait for 'babiaSelectorDataReady'
-        this.el.addEventListener('babiaSelectorDataReady', _listener = (e) => {
-            this.selector = e.detail
-            this.initializeControls();
-        });
-
-        this.el.addEventListener('babiaSelectorDataUpdated', _listener = (e) => {
-            if (this.toPresent){
-                this.current = e.detail.selectable.current - 1
-            } else {
-                this.current = e.detail.selectable.current + 1
-            }
-            
-            if ((this.current >= this.sliderEl.min) && (this.current <= this.sliderEl.max)){
-                this.sliderEl.setAttribute('babia-slider', 'value', this.current)
-            }
-        });
-
-
-        // Listener of the other events (should be re-sended to selector)
-        let events = ['babiaContinue', 'babiaStop', 'babiaToPresent', 'babiaToPast', 'babiaSpeedUpdated', 'babiaSetPosition', 'babiaSetStep', 'babiaSetSpeed']
-        events.forEach(evt => {
-            this.el.addEventListener(evt, _listener = (e) => {
-                // Re-send event                
-                if (e.target == this.el){
-                    this.selector.el.emit(evt, e.detail)
-                }
-
-                if(evt === 'babiaContinue'){
-                    this.isPaused = false
-                } else if (evt === 'babiaStop'){
-                    this.isPaused = true
-                    if (this.controlsEl.querySelector('.babiaPause')){
-                        this.controlsEl.querySelector('.babiaPause').emit('click')
-                    }
-                }
-
-                if(evt === 'babiaToPresent'){
-                    this.toPresent = true
-                } else if (evt === 'babiaToPast'){
-                    this.toPresent = false
-                }
-            });
-        })
-
-        let skip_events = ['babiaSkipNext', 'babiaSkipPrev']
-        skip_events.forEach (evt => {
-            this.el.addEventListener(evt, _listener = (e) => {
-                // Update Slider
-                this.isPaused = true
-                this.updateSlider(evt)
-            });
-        })
     },
 
     /**
@@ -94,7 +45,8 @@ AFRAME.registerComponent('babia-navigator', {
             min: this.sliderEl.min,
             max: this.sliderEl.max,
             value: this.current
-        }); // When implement with selector, add the attributes
+        }); 
+        // When implement with selector, add the attributes
         this.sliderEl.classList.add("babiaxraycasterclass");
         this.sliderEl.id = "timeline"
         this.sliderEl.setAttribute('scale', {x:2.3, y:2.3, z:2.3})
@@ -121,7 +73,6 @@ AFRAME.registerComponent('babia-navigator', {
         this.speedControllerEl.classList.add("babiaxraycasterclass");
         this.speedControllerEl.object3D.position.x = 3;
         this.el.appendChild(this.speedControllerEl);
-
     },
 
     updateSlider: function(evt){
@@ -135,10 +86,87 @@ AFRAME.registerComponent('babia-navigator', {
         if ((value >= 0) && (value <= this.sliderEl.max)){
             this.sliderEl.setAttribute('babia-slider', 'value', value)
         } else {
-            this.el.querySelector('.babiaPause').emit('click')
+            if (this.controlsEl.querySelector('.babiaPause')){
+                this.el.querySelector('.babiaPause').emit('click')
+            }
         }
+        this.notiBuffer.set('babiaSetPosition' + value)
+    },
+    registerBack: function(prodComponent){
+        this.selector = prodComponent;
+        this.prodComponent = prodComponent;
 
-        this.selector.el.emit('babiaSetPosition', value)
+        // Register for the new one
+        if (this.prodComponent.navNotiBuffer){
+            this.navNotiBufferId = this.prodComponent.navNotiBuffer.register(this.processData.bind(this));
+        }
+    },
+
+    unregisterBack: function(prodComponent) {
+        prodComponent.navNotiBuffer.unregister(this.navNotiBufferId)
+    },
+
+    processData: function(data){
+        if (data == 'babiaStop'){
+            this.isPaused = true
+            if (this.controlsEl.querySelector('.babiaPause')){
+                this.controlsEl.querySelector('.babiaPause').emit('click')
+            }
+        }else {
+            if (!this.sliderEl){
+                this.initializeControls()
+            }
+            if (this.toPresent){
+                this.current = data - 1
+            } else {
+                this.current = data + 1
+            }
+            
+            if ((this.current >= this.sliderEl.min) && (this.current <= this.sliderEl.max)){
+                this.sliderEl.setAttribute('babia-slider', 'value', this.current)
+            }
+        }
+    },
+
+    /**
+    * Producer component
+    */
+    prodComponent: undefined,
+
+    /**
+    * NotiBuffer identifier
+    */
+    navNotiBufferId: undefined,
+
+    /**
+    *  Control components
+    */
+    sliderComp: undefined,
+    controlsComp: undefined,
+    stepComp: undefined,
+    speedComp: undefined,
+
+    controlNavigator: function (evt, value) {
+        console.log ('Navigator control: ', evt)
+        if (evt == 'babiaSkipNext' || evt == 'babiaSkipPrev') {
+            // Update Slider
+            this.isPaused = true
+            this.updateSlider(evt)
+        } else {
+            this.notiBuffer.set(evt + value)
+            if(evt === 'babiaContinue'){
+                this.isPaused = false
+            } else if (evt === 'babiaStop'){
+                this.isPaused = true
+                if (this.controlsEl.querySelector('.babiaPause')){
+                    this.controlsEl.querySelector('.babiaPause').emit('click')
+                }
+            } else if (evt === 'babiaToPresent'){
+                this.toPresent = true
+            } else if (evt === 'babiaToPast'){
+                this.toPresent = false
+            }
+        } 
     },
 
 })

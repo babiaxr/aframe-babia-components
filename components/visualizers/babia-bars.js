@@ -215,9 +215,7 @@ AFRAME.registerComponent('babia-bars', {
         // Update title
         this.updateTitle();
 
-        let maxValue = Math.max.apply(Math, dataToPrint.map(function (o) {
-            return o[data.height];
-        }));
+        let maxValue = Math.max.apply(Math, dataToPrint.map(function (o) {return o[data.height];}));
 
         if (!this.lengthY) {
             this.lengthY = data.chartHeight;
@@ -252,11 +250,12 @@ AFRAME.registerComponent('babia-bars', {
             } else {
                 barEl = document.createElement('a-entity');
                 barEl.setAttribute('babia-name', xLabel);
+                barEl.id = item[data.index];
                 barEl.object3D.position.x = posX;
                 chartEl.appendChild(barEl);
             }
             barEl.setAttribute('babia-bar', {
-                'height': item[data.height] * this.lengthY / maxValue,
+                'height': item[data.height] * this.lengthY / this.maxValue,
                 'width': this.widthBars,
                 'depth': this.widthBars,
                 'color': colors.get(colorId, palette),
@@ -294,18 +293,19 @@ AFRAME.registerComponent('babia-bars', {
         };
         //Print axis
         const lengthX = this.widthBars * (dataToPrint.length * 1.25);
-        this.updateAxis(xLabels, xTicks, lengthX, maxValue);
+        this.updateAxis(xLabels, xTicks, lengthX, this.maxValue);
     },
 
     /*
     * Process data obtained from producer
     */
-    processData: function (data) {
+    processData: function (_data) {
         console.log("processData", this);
-        this.newData = data;
+        let data = this.data;
+        this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
 
-        if (!this.data.incremental){
+        if (!data.incremental){
             this.currentData = JSON.parse(JSON.stringify(this.newData))
             // Update chart
             this.updateChart()
@@ -314,7 +314,7 @@ AFRAME.registerComponent('babia-bars', {
             this.newData.forEach(bar => {
                 let found = false
                 for(let i in this.currentData){
-                    if (this.currentData[i][this.data.index] == bar[this.data.index]){
+                    if (this.currentData[i][data.index] == bar[data.index]){
                         this.currentData[i] = bar
                         found = true
                     }
@@ -324,27 +324,28 @@ AFRAME.registerComponent('babia-bars', {
                 }
             });
             // If Keep Height (need to re-draw all)
-            if (this.data.keepHeight){
+            if (data.keepHeight){
                 // To calculate maxValue you need all data before
-                this.maxValue = Math.max.apply(Math, this.currentData.map(function (o) { return o[this.data.height]; }))
+                this.maxValue = Math.max.apply(Math, this.currentData.map(function (o) { return o[data.height]; 
+                }))
                 console.log("Re-draw the chart")
                 this.updateChart()
             } else {
                 this.newData.forEach(bar => {
                     if (!bar._not){
-                        if (this.chartEl.querySelector('#' + bar[this.data.index])){
+                        if (this.chartEl.querySelector('#' + bar[data.index])){
                             // Update bar
-                            this.chartEl.querySelector('#' + bar[this.data.index]).setAttribute('babia-bar', 
+                            this.chartEl.querySelector('#' + bar[data.index]).setAttribute('babia-bar', 
                             {
-                                'height': bar[this.data.height] * this.data.chartHeight / this.maxValue,
-                                'labelText': bar[this.data.index] + ': ' + bar[this.data.height]
+                                'height': bar[data.height] * data.chartHeight / this.maxValue,
+                                'labelText': bar[data.index] + ': ' + bar[data.height]
                             })
                         } else {
                             // Find last bar and get its position
                             let colorId = this.chartEl.querySelectorAll('[babia-bar]').length
                             let posX = this.chartEl.querySelectorAll('[babia-bar]')[colorId - 1].getAttribute('position').x + this.widthBars + this.widthBars / 4
                             // Create new bar
-                            let barEntity = generateBar(this, this.data, bar, colorId, this.data.palette, posX);
+                            let barEntity = generateBar(this, data, bar, colorId, data.palette, posX);
                             this.chartEl.appendChild(barEntity)
                             // Add label and tick
                             this.xLabels.push(barEntity.id)
@@ -352,17 +353,16 @@ AFRAME.registerComponent('babia-bars', {
                         }
                     } else {
                         // Delete bar
-                        this.chartEl.querySelector("#" + bar[this.data.index]).setAttribute('babia-bar', 'height', -0.1)
-                        //document.getElementById(bar[this.data.index]).remove()
+                        this.chartEl.querySelector("#" + bar[data.index]).setAttribute('babia-bar', 'height', -0.1)
                     }
                 });
 
                 // Update axis
                 let len_x = this.xTicks[this.xTicks.length - 1] + this.widthBars * 3 / 4
-                if (!this.data.chartHeight || !this.data.keepHeight){
+                if (!data.chartHeight || !data.keepHeight){
                     // Calculate new maxValue and lengthY
-                    let maxValue_new = Math.max.apply(Math, this.currentData.map(function (o) { return o[this.data.height]; }))
-                    this.lengthY = maxValue_new * this.data.chartHeight / this.maxValue
+                    let maxValue_new = Math.max.apply(Math, this.currentData.map(function (o) { return o[data.height]; }))
+                    this.lengthY = maxValue_new * data.chartHeight / this.maxValue
                     this.maxValue = maxValue_new
                 }
                 this.updateAxis(this.xLabels, this.xTicks, len_x, this.maxValue)

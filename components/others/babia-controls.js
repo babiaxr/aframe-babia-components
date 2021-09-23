@@ -114,7 +114,7 @@ AFRAME.registerComponent('babia-controls', {
     },
 
     emitEvents: function(element, event){
-        self = this
+        let self = this
         element.addEventListener('click', function () {
             if (element.classList.contains('babiaPlay')){
                 this.parentEl.removeChild(this)
@@ -142,7 +142,8 @@ AFRAME.registerComponent('babia-controls', {
                 changeMaterial(forward, forward.color)
             }
             //console.log('Emit... ' + event)
-            self.el.parentEl.emit(event)
+            //self.el.parentEl.emit(event)
+            self.el.parentEl.components['babia-navigator'].controlNavigator(event)
         });
     }
 

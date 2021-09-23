@@ -1,5 +1,3 @@
-const { ThreeForceGraphGeneric } = require("three-forcegraph");
-
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -49,10 +47,7 @@ AFRAME.registerComponent('babia-slider', {
             let maxText = this.createTextGeometry(this.data.max, this.data.size / 2 + .08, -.025)
             chassis.add(minText)
             chassis.add(maxText) 
-            //this.setTextGeometry(this.data.value)
         })
-
-        //this.setValue(this.data.value);
       },
 
       createTextGeometry: function(text, x, y) {
@@ -146,7 +141,6 @@ AFRAME.registerComponent('babia-slider', {
         this.value = value;
     
         lever.position.x = this.valueToLeverPosition(value);
-        //this.setTextGeometry(value.toFixed(this.data.precision))
         this.setTextGeometry(value)
       },
 
@@ -181,7 +175,6 @@ AFRAME.registerComponent('babia-slider', {
     
             if (Math.abs(handWorld.x) > sliderRange / 2) {
                 lever.position.x = sliderRange / 2 * Math.sign(lever.position.x);
-            // this.el.emit('rangeout');
             } else {
                 lever.position.x = handWorld.x;
             }    
@@ -191,7 +184,7 @@ AFRAME.registerComponent('babia-slider', {
                 value = Math.round(value)
                 this.value = value;
                 this.setTextGeometry(value)
-                this.el.parentEl.emit('babiaSetPosition', this.value)
+                this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetPosition', this.value)
             }
         }
       },
@@ -241,7 +234,14 @@ AFRAME.registerComponent('babia-slider', {
             value = this.mouseyPositionToValue(mouse.y);
           }
           this.setValue(Math.round(value));
-          this.el.parentEl.emit('babiaSetPosition', Math.round(value))
+          
+          if (this.el.parentEl.components['babia-navigator']){
+            this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetPosition', Math.round(value))
+          } else if (this.el.parentEl.components['babia-step-controller']){
+            this.el.parentEl.components['babia-step-controller'].controlStep(Math.round(value))
+          } else if (this.el.parentEl.components['babia-speed-controller']){
+            this.el.parentEl.components['babia-speed-controller'].controlSpeed(Math.round(value))
+          }
         })
       }
 })
@@ -256,11 +256,6 @@ AFRAME.registerComponent('babia-step-controller', {
     
       init: function () {
         this.createSlider()
-
-        this.el.addEventListener('babiaSetPosition', _listener = (e) => {
-          this.step = e.detail
-          this.el.parentEl.emit('babiaSetStep', this.step)
-        });
       },
 
       createSlider: function(){
@@ -275,9 +270,12 @@ AFRAME.registerComponent('babia-step-controller', {
         this.sliderEl.classList.add("babiaxraycasterclass");
         this.sliderEl.id = "step-controller"
         this.el.appendChild(this.sliderEl);
+      },
+
+      controlStep: function(value){
+        this.step = value
+        this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetStep', this.step)
       }
-
-
 })
 
 
@@ -291,11 +289,6 @@ AFRAME.registerComponent('babia-speed-controller', {
 
   init: function () {
     this.createSlider()
-
-    this.el.addEventListener('babiaSetPosition', _listener = (e) => {
-      this.speed = e.detail
-      this.el.parentEl.emit('babiaSetSpeed', this.speed)
-    });
   },
 
   createSlider: function(){
@@ -310,7 +303,9 @@ AFRAME.registerComponent('babia-speed-controller', {
     this.sliderEl.classList.add("babiaxraycasterclass");
     this.sliderEl.id = "speed-controller"
     this.el.appendChild(this.sliderEl);
+  },
+  controlSpeed: function(value){
+    this.speed = value
+    this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetSpeed', this.speed)
   }
-
-
 })
