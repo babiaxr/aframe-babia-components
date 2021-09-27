@@ -3,6 +3,8 @@ let updateTitle = require('../others/common').updateTitle;
 let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -53,6 +55,8 @@ AFRAME.registerComponent('babia-barsmap', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () {
+        this.notiBuffer = new NotiBuffer();
+
         // Build chartEl
         this.chartEl = document.createElement('a-entity');
         this.chartEl.classList.add('babiaxrChart')
@@ -93,6 +97,11 @@ AFRAME.registerComponent('babia-barsmap', {
                 this.notiBufferId = this.prodComponent.notiBuffer
                     .register(this.processData.bind(this))
             }
+        }
+        // If changed whatever, re-print with the current data
+        else if (data !== oldData && this.newData) {
+            this.slice_array = []
+            this.processData(this.newData);
         }
     },
 
@@ -321,6 +330,7 @@ AFRAME.registerComponent('babia-barsmap', {
         let data = this.data;
         this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
+        this.notiBuffer.set(this.newData)
 
         if (!data.incremental){
             this.currentData = JSON.parse(JSON.stringify(this.newData))

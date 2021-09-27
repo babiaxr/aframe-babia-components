@@ -3,6 +3,8 @@ let updateTitle = require('../others/common').updateTitle;
 let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
@@ -43,7 +45,12 @@ AFRAME.registerComponent('babia-cylsmap', {
   * Set if component needs multiple instancing.
   */
   multiple: false,
-
+  /**
+  * Called once when component is attached. Generally for initial setup.
+  */
+  init: function () {
+    this.notiBuffer = new NotiBuffer();
+  },
   /**
   * Called when component is attached and when component data changes.
   * Generally modifies the entity based on the data.
@@ -71,8 +78,7 @@ AFRAME.registerComponent('babia-cylsmap', {
     } 
     // If changed whatever, re-print with the current data
     else if (data !== oldData && this.newData) {
-      let _data = parseJson(data.data)
-      this.processData(_data)
+      this.processData(this.newData)
     }
   },
 
@@ -275,6 +281,7 @@ AFRAME.registerComponent('babia-cylsmap', {
       this.el.firstChild.remove();
     console.log("Generating cylsmap...")
     this.updateChart()
+    this.notiBuffer.set(this.newData)
   }
 })
 

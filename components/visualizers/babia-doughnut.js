@@ -3,6 +3,8 @@ let updateTitle = require('../others/common').updateTitle;
 let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -35,7 +37,12 @@ AFRAME.registerComponent('babia-doughnut', {
     * Set if component needs multiple instancing.
     */
     multiple: false,
-
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        this.notiBuffer = new NotiBuffer();
+    },
     /**
     * Called when component is attached and when component data changes.
     * Generally modifies the entity based on the data.
@@ -66,8 +73,7 @@ AFRAME.registerComponent('babia-doughnut', {
         // If changed whatever, re-print with the current data
         else if (data !== oldData && this.newData) {
             this.slice_array = []
-            let _data = parseJson(data.data)
-            this.processData(_data)
+            this.processData(this.newData)
         }
     },
 
@@ -212,6 +218,7 @@ AFRAME.registerComponent('babia-doughnut', {
         console.log("Generating doughnut...")
         this.updateChart()
         this.loaded = true
+        this.notiBuffer.set(this.newData)
     }
 })
 

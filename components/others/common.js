@@ -200,6 +200,44 @@ let findNavComponent = (data, el) => {
     }
     return navComponent;
 }
+let findTargetComponent = (data, self) => {
+    let targetComponent;
+    if (data.target) {
+        // Save the reference to the querier or filterdata
+        let targetElement = document.getElementById(data.target)
+        if (targetElement != null) { 
+            if (targetElement.components['babia-bars']) {
+                targetComponent = targetElement.components['babia-bars']
+            } else if (targetElement.components['babia-barsmap']) {
+                targetComponent = targetElement.components['babia-barsmap']
+            } else if (targetElement.components['babia-cyls']) {
+                targetComponent = targetElement.components['babia-cyls']
+            } else if (targetElement.components['babia-cylsmap']) {
+                targetComponent = targetElement.components['babia-cylsmap']
+            } else if (targetElement.components['babia-pie']) {
+                targetComponent = targetElement.components['babia-pie']
+            } else if (targetElement.components['babia-doughnut']) {
+                targetComponent = targetElement.components['babia-doughnut']
+            } else if (targetElement.components['babia-bubbles']) {
+                targetComponent = targetElement.components['babia-bubbles']
+            } else if (targetElement.components['babia-city']) {
+                targetComponent = targetElement.components['babia-city']
+            } else if (targetElement.components['babia-boats']) {
+                targetComponent = targetElement.components['babia-boats']
+            } else {
+                console.error("Visualizer not found.")
+                return
+            }
+        } else {
+            console.error("Target not exist.")
+            return
+        }
+    } else {
+        console.error("Error: Target not inserted. ")
+        return
+    }
+    return targetComponent;
+}
 
 let updateTitle = (data, titleRotation) => {
     let titleEl = document.createElement('a-entity');
@@ -227,6 +265,7 @@ module.exports.dispatchEventOnElement = dispatchEventOnElement;
 module.exports.findDataComponent = findDataComponent;
 module.exports.findProdComponent = findProdComponent;
 module.exports.findNavComponent = findNavComponent;
+module.exports.findTargetComponent = findTargetComponent;
 module.exports.colors = colors;
 module.exports.updateTitle = updateTitle;
 module.exports.parseJson = parseJson;

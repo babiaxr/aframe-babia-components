@@ -3,6 +3,8 @@ let updateTitle = require('../others/common').updateTitle;
 let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -72,8 +74,7 @@ AFRAME.registerComponent('babia-bubbles', {
         } 
         // If changed whatever, re-print with the current data
         else if (data !== oldData && this.newData) {
-            let _data = parseJson(data.data)
-            this.processData(_data)
+            this.processData(this.newData)
         }
     },
 
@@ -276,6 +277,7 @@ AFRAME.registerComponent('babia-bubbles', {
             this.el.firstChild.remove();
         console.log("Generating bubbles...")
         this.updateChart()
+        this.notiBuffer.set(this.newData)
     }
 })
 

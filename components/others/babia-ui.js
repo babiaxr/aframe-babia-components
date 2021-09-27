@@ -1,3 +1,5 @@
+let findTargetComponent = require('../others/common').findTargetComponent;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -33,141 +35,89 @@ AFRAME.registerComponent('babia-ui', {
     update: function (oldData) {
         const self = this
         let data = this.data
-        let el = this.el
 
-        // Find the component
-        let eventName = findVisualizerComponent(data, self) 
+        // Unregister from old producer
+        if (this.targetComponent) {
+            this.targetComponent.notiBuffer.unregister(this.notiBufferId)
+        };
+
+        // Find the target component
+        self.targetComponent = findTargetComponent(data, this)
 
         // Find querier components
-        findQuerierComponents(self)
+        this.findQuerierComponents(this)
 
         // Target component properties
-        if (self.targetComponent.visProperties) { 
-            self.targetComponentVisProperties = self.targetComponent.visProperties
+        if (this.targetComponent.visProperties) { 
+            this.targetComponentVisProperties = this.targetComponent.visProperties
         }
 
-        // Assign new eventName
-        self.targetComponentEventName = eventName
-
-        // Attach to the events of the target component
-        el.addEventListener(self.targetComponentEventName, function _listener(e) {
-            console.log("Visualizer is Updated.")
-            updateInterfaceEventCallback(self, e)
-        });
-
-        // Register for the new one
-        self.targetComponent.register(el)
+        // Register to target component notiBuffer
+        if (this.targetComponent.notiBuffer) {
+            this.notiBufferId = this.targetComponent.notiBuffer
+                .register(this.updateInterfaceEventCallback.bind(this))
+        }
     },
 
     targetComponent: undefined,
-    targetComponentEventName: undefined,
     targetComponentVisProperties: undefined,
     dataMetrics: undefined,
     interface: undefined,
     dataQueriers: undefined,
     handController: undefined,
 
-     /**
-     * Property of the visualizer where the data is saved
-     */
-    dataComponentDataPropertyName: "babiaData",
-
-})
-
-let findQuerierComponents = (self) => {
-    self.dataQueriers = []
-    // All queriers and filterdatas of the scene
-    document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
-        // Skip querier data when the target visualizer has included filtered data too.
-        if (querier.id != self.data.target || ( querier.id == self.data.target && !self.targetComponent.dataComponent.attrName == 'babia-filter')){
-            self.dataQueriers.push(querier.id)
-        } 
-    });
-    document.querySelectorAll('[babia-queryes]').forEach(querier => { 
-        self.dataQueriers.push(querier.id)
-    });
-    document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
-        self.dataQueriers.push(querier.id)
-    });
-    document.querySelectorAll('[babia-filter]').forEach(querier => { 
-        self.dataQueriers.push(querier.id)
-    });
-}
-
-let findVisualizerComponent = (data, self) => {
-    let eventName = "babiaVisualizerUpdated"
-    if (data.target) {
-        // Save the reference to the querier or filterdata
-        let targetElement = document.getElementById(data.target)
-        if (targetElement != null) { 
-            if (targetElement.components['babia-bars']) {
-                self.targetComponent = targetElement.components['babia-bars']
-            } else if (targetElement.components['babia-barsmap']) {
-                self.targetComponent = targetElement.components['babia-barsmap']
-            } else if (targetElement.components['babia-cyls']) {
-                self.targetComponent = targetElement.components['babia-cyls']
-            } else if (targetElement.components['babia-cylsmap']) {
-                self.targetComponent = targetElement.components['babia-cylsmap']
-            } else if (targetElement.components['babia-pie']) {
-                self.targetComponent = targetElement.components['babia-pie']
-            } else if (targetElement.components['babia-doughnut']) {
-                self.targetComponent = targetElement.components['babia-doughnut']
-            } else if (targetElement.components['babia-bubbles']) {
-                self.targetComponent = targetElement.components['babia-bubbles']
-            } else if (targetElement.components['babia-city']) {
-                self.targetComponent = targetElement.components['babia-city']
-            } else if (targetElement.components['babia-boats']) {
-                self.targetComponent = targetElement.components['babia-boats']
-            } else {
-                console.error("Visualizer not found.")
-                return
-            }
-        } else {
-            console.error("Target not exist.")
-            return
+    updateInterfaceEventCallback: function(data) {
+        let self = this;
+        if(data){
+            getDataMetrics(self,data, self.targetComponentVisProperties)
         }
-    } else {
-        console.error("Error: Target not inserted. ")
-        return
-    }
-    return eventName
-}
-
-let updateInterfaceEventCallback = (self, e) => {
-    // Get the data from the info of the event (propertyName)
-    self.dataComponentDataPropertyName = e.detail
-    if(self.targetComponent[e.detail].data){
-        // Inserted data manually in the visualizer 
-        getDataMetrics(self, JSON.parse(self.targetComponent[e.detail].data), self.targetComponentVisProperties)
-    } else {
-        getDataMetrics(self, self.targetComponent[e.detail], self.targetComponentVisProperties)
-    }
-    
-    while (self.el.firstChild)
-        self.el.firstChild.remove();
-    
-    // Generate interface
-    console.log('Generating interface...')
-    if (document.querySelector('#babia-menu-hand')) {
-        let hand_ui = document.querySelector('#babia-menu-hand')
-        hand_ui.parentNode.removeChild(hand_ui)
-        insertInterfaceOnHand(self, self.handController)
-    } else {
-        self.interface = generateInterface(self, self.dataMetrics, self.el)
-    }
-    
-    document.addEventListener('controllerconnected', (event) => {
+        
         while (self.el.firstChild)
             self.el.firstChild.remove();
-        // event.detail.name ----> which VR controller
-        controller = event.detail.name;
-        let hand = event.target.getAttribute(controller).hand
-        if (hand === 'left' && !document.querySelector('#babia-menu-hand')){
-            self.handController = event.target.id
+        
+        // Generate interface
+        console.log('Generating interface...')
+        if (document.querySelector('#babia-menu-hand')) {
+            let hand_ui = document.querySelector('#babia-menu-hand')
+            hand_ui.parentNode.removeChild(hand_ui)
             insertInterfaceOnHand(self, self.handController)
-        }    
-    });
-}
+        } else {
+            self.interface = generateInterface(self, self.dataMetrics, self.el)
+        }
+        
+        document.addEventListener('controllerconnected', (event) => {
+            while (self.el.firstChild)
+                self.el.firstChild.remove();
+            // event.detail.name ----> which VR controller
+            controller = event.detail.name;
+            let hand = event.target.getAttribute(controller).hand
+            if (hand === 'left' && !document.querySelector('#babia-menu-hand')){
+                self.handController = event.target.id
+                insertInterfaceOnHand(self, self.handController)
+            }    
+        });
+    },
+
+    findQuerierComponents: function() {
+        this.dataQueriers = []
+        // All queriers and filterdatas of the scene
+        document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
+            // Skip querier data when the target visualizer has included filtered data too.
+            if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+                this.dataQueriers.push(querier.id)
+            } 
+        });
+        document.querySelectorAll('[babia-queryes]').forEach(querier => { 
+            this.dataQueriers.push(querier.id)
+        });
+        document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
+            this.dataQueriers.push(querier.id)
+        });
+        document.querySelectorAll('[babia-filter]').forEach(querier => { 
+            this.dataQueriers.push(querier.id)
+        });
+    }
+})
 
 let insertInterfaceOnHand = (self, hand) => {
     let hand_entity = document.getElementById(hand)
@@ -355,7 +305,6 @@ let selection_events = (entity, visualizer, isData) =>{
             visualizer.el.setAttribute(visualizer.attrName, "from", entity.from )
         }
     });
-
 }
 
 let createProperty = (property, positionX, positionY) =>{
@@ -394,7 +343,7 @@ let createDataSelect = (self, id, positionX, positionY) =>{
     text.setAttribute('position', "0 0 0.01")
     entity.appendChild(text)
 
-    if (self.targetComponent.data.from && self.targetComponent.data.from == id){
+    if (self.targetComponent.prodComponent && self.targetComponent.prodComponent.el.id == id){
         entity.setAttribute('color', '#555555')
     } else {
         entity.setAttribute('color', '#FFFFFF')
