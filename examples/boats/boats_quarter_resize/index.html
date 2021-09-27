@@ -13,12 +13,10 @@
   <body>
     <a-scene environment="preset: yavapai" renderer="antialias: true">
 
-        <a-assets> 
-            <a-asset-item id="data" src="data1.json"></a-asset-item> 
-            <a-asset-item id="data2" src="data2.json"></a-asset-item> 
-        </a-assets>
+        <a-entity id="data1" babia-queryjson="url: data1.json;"></a-entity>
+        <a-entity id="data2" babia-queryjson="url: data2.json;"></a-entity>
 
-        <a-entity id="boats" babia-boats="data: #data" position="0 1 0"></a-entity>  
+        <a-entity id="boats" babia-boats="from: data1" position="0 1 0"></a-entity>  
 
         <a-entity movement-controls="fly: true" position="5 20 0" rotation="-90 0 0">
             <a-entity camera look-controls></a-entity>
@@ -64,7 +62,7 @@
           setTimeout(updateData, 2000);
 
           function updateData () {
-            document.getElementById('boats').setAttribute('babia-boats', 'data', '#data2');
+            document.getElementById('boats').setAttribute('babia-boats', 'from', 'data2');
           }
     </script>
   </body>

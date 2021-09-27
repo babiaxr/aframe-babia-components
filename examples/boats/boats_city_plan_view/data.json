@@ -1,9 +1,292 @@
-[{
+[
+  {
   "id": "GrimoireLab",
   "children": [
     {
-      "id": "https://github.com/chaoss/grimoirelab-sortinghat",
+      "id": "https://github.com/chaoss/grimoirelab-perceval",
       "children": [
+        {
+          "id": "/perceval",
+          "children": [
+            {
+              "id": "/perceval/backends",
+              "children": [
+                {
+                  "id": "/perceval/backends/core",
+                  "children": [
+                    {
+                      "id": "/perceval/backends/core/.",
+                      "children": [
+                        {
+                          "id": "perceval/backends/core/confluence.py",
+                          "area": 4.826388888888889,
+                          "max_area": 4.826388888888889,
+                          "height": 0.37299987859657635
+                        },
+                        {
+                          "id": "perceval/backends/core/github.py",
+                          "area": 11.270833333333334,
+                          "max_area": 11.270833333333334,
+                          "height": 0.9093359232730361
+                        },
+                        {
+                          "id": "perceval/backends/core/mbox.py",
+                          "area": 5.631944444444445,
+                          "max_area": 6.034722222222222,
+                          "height": 0.3959511958237222
+                        },
+                        {
+                          "id": "perceval/backends/core/mediawiki.py",
+                          "area": 6.236111111111112,
+                          "max_area": 6.4375,
+                          "height": 0.5711059851887823
+                        },
+                        {
+                          "id": "perceval/backends/core/redmine.py",
+                          "area": 5.833333333333334,
+                          "max_area": 6.236111111111112,
+                          "height": 0.38991137550078914
+                        },
+                        {
+                          "id": "perceval/backends/core/supybot.py",
+                          "area": 4.826388888888889,
+                          "max_area": 5.027777777777778,
+                          "height": 0.38870341143620246
+                        },
+                        {
+                          "id": "perceval/backends/core/bugzilla.py",
+                          "area": 7.243055555555555,
+                          "max_area": 7.444444444444445,
+                          "height": 0.4998361053781716
+                        },
+                        {
+                          "id": "perceval/backends/core/bugzillarest.py",
+                          "area": 6.034722222222222,
+                          "max_area": 6.4375,
+                          "height": 0.4309821536967342
+                        },
+                        {
+                          "id": "perceval/backends/core/jira.py",
+                          "area": 5.833333333333334,
+                          "max_area": 5.833333333333334,
+                          "height": 0.40923880053417505
+                        },
+                        {
+                          "id": "perceval/backends/core/pipermail.py",
+                          "area": 3.8194444444444446,
+                          "max_area": 3.8194444444444446,
+                          "height": 0.30897778317348545
+                        },
+                        {
+                          "id": "perceval/backends/core/stackexchange.py",
+                          "area": 4.222222222222222,
+                          "max_area": 4.423611111111111,
+                          "height": 0.33676095665897776
+                        },
+                        {
+                          "id": "perceval/backends/core/rss.py",
+                          "area": 3.618055555555556,
+                          "max_area": 3.8194444444444446,
+                          "height": 0.20992472987738253
+                        },
+                        {
+                          "id": "perceval/backends/core/gerrit.py",
+                          "area": 5.631944444444445,
+                          "max_area": 5.631944444444445,
+                          "height": 0.508291853830278
+                        },
+                        {
+                          "id": "perceval/backends/core/askbot.py",
+                          "area": 5.631944444444445,
+                          "max_area": 6.236111111111112,
+                          "height": 0.47326089595726595
+                        },
+                        {
+                          "id": "perceval/backends/core/slack.py",
+                          "area": 5.430555555555555,
+                          "max_area": 5.430555555555555,
+                          "height": 0.4031989802112419
+                        },
+                        {
+                          "id": "perceval/backends/core/dockerhub.py",
+                          "area": 3.618055555555556,
+                          "max_area": 3.8194444444444446,
+                          "height": 0.23287604710452833
+                        },
+                        {
+                          "id": "perceval/backends/core/git.py",
+                          "area": 12.07638888888889,
+                          "max_area": 12.07638888888889,
+                          "height": 1.053083646958844
+                        },
+                        {
+                          "id": "perceval/backends/core/telegram.py",
+                          "area": 4.423611111111111,
+                          "max_area": 4.625,
+                          "height": 0.31743353162559185
+                        },
+                        {
+                          "id": "perceval/backends/core/discourse.py",
+                          "area": 5.229166666666667,
+                          "max_area": 5.229166666666667,
+                          "height": 0.3911193395653757
+                        },
+                        {
+                          "id": "perceval/backends/core/phabricator.py",
+                          "area": 7.847222222222222,
+                          "max_area": 7.847222222222222,
+                          "height": 0.5384909554449435
+                        },
+                        {
+                          "id": "perceval/backends/core/hyperkitty.py",
+                          "area": 3.416666666666667,
+                          "max_area": 3.618055555555556,
+                          "height": 0.2860264659463396
+                        },
+                        {
+                          "id": "perceval/backends/core/nntp.py",
+                          "area": 5.833333333333334,
+                          "max_area": 6.034722222222222,
+                          "height": 0.339176884788151
+                        },
+                        {
+                          "id": "perceval/backends/core/jenkins.py",
+                          "area": 4.020833333333334,
+                          "max_area": 4.020833333333334,
+                          "height": 0.3524644894986039
+                        },
+                        {
+                          "id": "perceval/backends/core/meetup.py",
+                          "area": 5.027777777777778,
+                          "max_area": 5.229166666666667,
+                          "height": 0.4321901177613209
+                        },
+                        {
+                          "id": "perceval/backends/core/gitlab.py",
+                          "area": 8.25,
+                          "max_area": 8.25,
+                          "height": 0.6906944275828577
+                        },
+                        {
+                          "id": "perceval/backends/core/launchpad.py",
+                          "area": 7.645833333333334,
+                          "max_area": 8.652777777777779,
+                          "height": 0.4551414349884666
+                        },
+                        {
+                          "id": "perceval/backends/core/groupsio.py",
+                          "area": 4.222222222222222,
+                          "max_area": 4.222222222222222,
+                          "height": 0.34280077698191086
+                        },
+                        {
+                          "id": "perceval/backends/core/mattermost.py",
+                          "area": 5.430555555555555,
+                          "max_area": 5.430555555555555,
+                          "height": 0.40561490834041514
+                        },
+                        {
+                          "id": "perceval/backends/core/twitter.py",
+                          "area": 4.222222222222222,
+                          "max_area": 4.222222222222222,
+                          "height": 0.38507951924244255
+                        },
+                        {
+                          "id": "perceval/backends/core/googlehits.py",
+                          "area": 3.618055555555556,
+                          "max_area": 3.8194444444444446,
+                          "height": 0.27273886123588686
+                        },
+                        {
+                          "id": "perceval/backends/core/__init__.py",
+                          "area": 1,
+                          "max_area": 1,
+                          "height": 0.10241592812917324
+                        },
+                        {
+                          "id": "perceval/backends/core/gitter.py",
+                          "area": 4.423611111111111,
+                          "max_area": 4.423611111111111,
+                          "height": 0.3585043098215369
+                        },
+                        {
+                          "id": "perceval/backends/core/pagure.py",
+                          "area": 5.229166666666667,
+                          "max_area": 5.229166666666667,
+                          "height": 0.3911193395653757
+                        },
+                        {
+                          "id": "perceval/backends/core/githubql.py",
+                          "area": 3.2152777777777777,
+                          "max_area": 3.2152777777777777,
+                          "height": 0.5179555663469709
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/perceval/backends/.",
+                  "children": [
+                    {
+                      "id": "perceval/backends/__init__.py",
+                      "area": 1,
+                      "max_area": 1.8055555555555556,
+                      "height": 0.10120796406458663
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "/perceval/.",
+              "children": [
+                {
+                  "id": "perceval/backend.py",
+                  "area": 11.472222222222223,
+                  "max_area": 11.472222222222223,
+                  "height": 0.9069199951438629
+                },
+                {
+                  "id": "perceval/errors.py",
+                  "area": 1.8055555555555556,
+                  "max_area": 1.8055555555555556,
+                  "height": 0.1507344907126381
+                },
+                {
+                  "id": "perceval/utils.py",
+                  "area": 3.013888888888889,
+                  "max_area": 4.625,
+                  "height": 0.24616365181498118
+                },
+                {
+                  "id": "perceval/_version.py",
+                  "area": 1,
+                  "max_area": 1,
+                  "height": 0.10120796406458663
+                },
+                {
+                  "id": "perceval/client.py",
+                  "area": 3.416666666666667,
+                  "max_area": 3.416666666666667,
+                  "height": 0.32951317227145804
+                },
+                {
+                  "id": "perceval/archive.py",
+                  "area": 4.423611111111111,
+                  "max_area": 4.423611111111111,
+                  "height": 0.41648658492169477
+                },
+                {
+                  "id": "perceval/__init__.py",
+                  "area": 1,
+                  "max_area": 1,
+                  "height": 0.10120796406458663
+                }
+              ]
+            }
+          ]
+        },
         {
           "id": "/tests",
           "children": [
@@ -11,439 +294,2256 @@
               "id": "/tests/data",
               "children": [
                 {
-                  "id": "/tests/data/.",
+                  "id": "/tests/data/phabricator",
                   "children": [
                     {
-                      "id": "tests/data/identities_format_not_supported.json",
-                      "area": 1.0621468926553672,
-                      "max_area": 1.0621468926553672,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_orgs.json",
-                      "area": 1.9856739305891848,
-                      "max_area": 1.9856739305891848,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_identities_source.json",
-                      "area": 3.4311945117029863,
-                      "max_area": 3.4311945117029863,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_identities_valid.json",
-                      "area": 5.519168684422922,
-                      "max_area": 5.519168684422922,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_orgs_valid.json",
-                      "area": 2.1462873284907182,
-                      "max_area": 2.1462873284907182,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_valid_no_gender.json",
-                      "area": 3.6319612590799033,
-                      "max_area": 3.6319612590799033,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/mailmap_invalid.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/mailmap_orgs.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/stackalytics_ids_missing_keys.json",
-                      "area": 1.9053672316384183,
-                      "max_area": 1.9053672316384183,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/stackalytics_valid.json",
-                      "area": 2.1462873284907182,
-                      "max_area": 2.1462873284907182,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_valid.yml",
-                      "area": 2.0258272800645685,
-                      "max_area": 2.0258272800645685,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_email_to_employer_invalid.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_ids_missing_keys.json",
-                      "area": 6.402542372881356,
-                      "max_area": 6.402542372881356,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_ids_invalid_is_bot.json",
-                      "area": 6.442695722356739,
-                      "max_area": 6.442695722356739,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_valid_updated.json",
-                      "area": 7.04499596448749,
-                      "max_area": 7.04499596448749,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_orgs_invalid_domains_list_with_empty_value.yml",
-                      "area": 1.0219935431799838,
-                      "max_area": 1.0219935431799838,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid.yml",
-                      "area": 1.3833736884584342,
-                      "max_area": 1.3833736884584342,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_datetime.yml",
-                      "area": 1.5038337368845844,
-                      "max_area": 1.5038337368845844,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_email.yml",
-                      "area": 1.4235270379338176,
-                      "max_area": 1.4235270379338176,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/mozillians_invalid.json",
-                      "area": 10.217110573042778,
-                      "max_area": 10.217110573042778,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_ids_invalid_date.json",
-                      "area": 6.442695722356739,
-                      "max_area": 6.442695722356739,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_orgs_invalid_comments.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/eclipse_identities_invalid_file.json",
-                      "area": 0.5200766747376917,
-                      "max_area": 1.784907183212268,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/eclipse_invalid.json",
-                      "area": 1.8250605326876514,
-                      "max_area": 1.8250605326876514,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/eclipse_identities_missing_keys.json",
-                      "area": 0.5200766747376917,
-                      "max_area": 1.9856739305891848,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/eclipse_valid.json",
-                      "area": 3.7524213075060535,
-                      "max_area": 3.7524213075060535,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_enrollment_periods.yml",
-                      "area": 1.3030669895076676,
-                      "max_area": 1.3030669895076676,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/identities_invalid_json_file.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/domains_orgs_invalid_comments.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/domains_orgs_valid_alt.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/eclipse_identities_valid.json",
-                      "area": 0.5200766747376917,
-                      "max_area": 2.0258272800645685,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/domains_orgs_invalid_entries.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/sortinghat_orgs_invalid_json.json",
-                      "area": 1.9856739305891848,
-                      "max_area": 1.9856739305891848,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_orgs_invalid_top.json",
-                      "area": 1.9856739305891848,
-                      "max_area": 1.9856739305891848,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_orgs_missing_keys.json",
-                      "area": 1.9455205811138017,
-                      "max_area": 1.9455205811138017,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_valid.json",
-                      "area": 6.763922518159807,
-                      "max_area": 6.763922518159807,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_orgs_invalid_empty_domains.yml",
-                      "area": 0.9416868442292171,
-                      "max_area": 0.9416868442292171,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_missing_organization_name.yml",
-                      "area": 1.7046004842615012,
-                      "max_area": 1.7046004842615012,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_orgs_invalid_missing_key.yml",
-                      "area": 0.9416868442292171,
-                      "max_area": 0.9416868442292171,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_orgs_valid.yml",
-                      "area": 1.0219935431799838,
-                      "max_area": 1.0219935431799838,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_ids_dates_out_of_bounds.json",
-                      "area": 3.792574656981437,
-                      "max_area": 3.792574656981437,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/mailmap_identities.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_email_to_employer_valid.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_email_aliases_valid.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_orgs_invalid_entries.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/eclipse_orgs_missing_keys.json",
-                      "area": 2.8288942695722357,
-                      "max_area": 2.8288942695722357,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/identities_valid_json.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/grimoire_identities_missing_keys.json",
-                      "area": 1.5038337368845844,
-                      "max_area": 1.5038337368845844,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_invalid.json",
-                      "area": 5.398708635996772,
-                      "max_area": 5.398708635996772,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_orgs_valid_alt.json",
-                      "area": 2.226594027441485,
-                      "max_area": 2.226594027441485,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/domains_orgs_valid.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/mock_config_file.cfg",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_missing_profile_name_isbot.yml",
-                      "area": 1.7046004842615012,
-                      "max_area": 1.7046004842615012,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_orgs_invalid_wrong_domains_type.yml",
-                      "area": 0.9416868442292171,
-                      "max_area": 0.9416868442292171,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/stackalytics_orgs_missing_keys.json",
-                      "area": 2.1061339790153353,
-                      "max_area": 2.1061339790153353,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_orgs_valid.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_identities_profiles.json",
-                      "area": 6.32223567393059,
-                      "max_area": 6.32223567393059,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoire_identities_valid.json",
-                      "area": 1.5439870863599678,
-                      "max_area": 1.5439870863599678,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/unify_matches.log",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_no_strict_valid.json",
-                      "area": 1.8652138821630349,
-                      "max_area": 1.8652138821630349,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/sortinghat_blacklist_empty_strings.json",
-                      "area": 6.442695722356739,
-                      "max_area": 6.442695722356739,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/mozillians_valid.json",
-                      "area": 10.578490718321227,
-                      "max_area": 10.578490718321227,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_orgs_invalid_key_with_no_value.yml",
-                      "area": 0.9818401937046005,
-                      "max_area": 0.9818401937046005,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_structure.yml",
-                      "area": 1.343220338983051,
-                      "max_area": 1.343220338983051,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_orgs_valid_alt.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/gitdm_orgs_invalid_entries_alt.txt",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/identities_missing_keys_json.txt",
-                      "area": 0.5200766747376917,
-                      "max_area": 0.5200766747376917,
-                      "height": -0.2
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_missing_accounts.yml",
-                      "area": 1.4235270379338176,
-                      "max_area": 1.4235270379338176,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/grimoirelab_invalid_missing_profile.yml",
-                      "area": 1.5841404358353512,
-                      "max_area": 1.5841404358353512,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/eclipse_ids_missing_keys.json",
-                      "area": 2.0258272800645685,
-                      "max_area": 2.0258272800645685,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/stackalytics_invalid.json",
-                      "area": 2.1462873284907182,
-                      "max_area": 2.1462873284907182,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "tests/data/mozillians_ids_missing_keys.json",
-                      "area": 10.056497175141244,
-                      "max_area": 10.056497175141244,
-                      "height": 0.11474074074074075
+                      "id": "/tests/data/phabricator/.",
+                      "children": [
+                        {
+                          "id": "tests/data/phabricator/phabricator_tasks_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.16643802355226417
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_user_jrae.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12174335316255919
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_user_jsmith.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10603982032293312
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_transactions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.877928857593784
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_transactions_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4031989802112419
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_phid_herald.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11811946096879933
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_phids.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1289911375500789
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_project_devel.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11811946096879933
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_tasks.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.24495568775039456
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_user_jdoe.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1229513172271458
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_error.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10603982032293312
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_tasks_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12053538909797257
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_users.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1676459876168508
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_user_jane.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1229513172271458
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_user_janesmith.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12174335316255919
+                        },
+                        {
+                          "id": "tests/data/phabricator/phabricator_project_bugreport.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11811946096879933
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/confluence",
+                  "children": [
+                    {
+                      "id": "/tests/data/confluence/.",
+                      "children": [
+                        {
+                          "id": "tests/data/confluence/confluence_content_att_v1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1845574845210635
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_content_1_v3.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1905973048439966
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_contents.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.24012383149204805
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_content_1_v2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2014689814252762
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_contents_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11328760471045284
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_contents_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14227874226053175
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_content_2_v1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2014689814252762
+                        },
+                        {
+                          "id": "tests/data/confluence/confluence_content_1_v1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2014689814252762
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/dockerhub",
+                  "children": [
+                    {
+                      "id": "/tests/data/dockerhub/.",
+                      "children": [
+                        {
+                          "id": "tests/data/dockerhub/dockerhub_repository_1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12778317348549229
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/git",
+                  "children": [
+                    {
+                      "id": "/tests/data/git/.",
+                      "children": [
+                        {
+                          "id": "tests/data/git/git_bad_cr.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/gittest-top-sub.tar.gz",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/git_bad_encoding.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/git_log_empty.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/gitdetached.tar.gz",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/gittest_no_refs.tar.gz",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4273582615029743
+                        },
+                        {
+                          "id": "tests/data/git/git_log.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/gittest.tar.gz",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/git_log_merge.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/gittestempty.tar.gz",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/gittest-sub.tar.gz",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/git_log_incompleted.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/git/git_log_trailers.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/nntp",
+                  "children": [
+                    {
+                      "id": "/tests/data/nntp/.",
+                      "children": [
+                        {
+                          "id": "tests/data/nntp/nntp_2.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/nntp/nntp_1.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/nntp/nntp_parsing_error.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/slack",
+                  "children": [
+                    {
+                      "id": "/tests/data/slack/.",
+                      "children": [
+                        {
+                          "id": "tests/data/slack/slack_error.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10483185625834648
+                        },
+                        {
+                          "id": "tests/data/slack/slack_history.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.17610173606895713
+                        },
+                        {
+                          "id": "tests/data/slack/slack_info.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14952652664805147
+                        },
+                        {
+                          "id": "tests/data/slack/slack_user_U0002.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14348670632511837
+                        },
+                        {
+                          "id": "tests/data/slack/slack_user_U0001.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14711059851887823
+                        },
+                        {
+                          "id": "tests/data/slack/slack_members1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2304601189753551
+                        },
+                        {
+                          "id": "tests/data/slack/slack_history_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/slack/slack_user_U0003.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14107077819594513
+                        },
+                        {
+                          "id": "tests/data/slack/slack_info_archived.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14952652664805147
+                        },
+                        {
+                          "id": "tests/data/slack/slack_members2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.18697341265023673
+                        },
+                        {
+                          "id": "tests/data/slack/slack_history_20150323.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1386548500667719
+                        },
+                        {
+                          "id": "tests/data/slack/slack_history_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1229513172271458
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/hyperkitty",
+                  "children": [
+                    {
+                      "id": "/tests/data/hyperkitty/.",
+                      "children": [
+                        {
+                          "id": "tests/data/hyperkitty/hyperkitty_2016_april.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/hyperkitty/hyperkitty_2016_march.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/github",
+                  "children": [
+                    {
+                      "id": "/tests/data/github/.",
+                      "children": [
+                        {
+                          "id": "tests/data/github/github_issue_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_1_comment_2_reactions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_2_comments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/rate_limit",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_empty_request",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_comments_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_repo",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_2_commits",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_requested_reviewers_ghost",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_events_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_comments_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_orgs",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_1_commits",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/rate_limit_bbb",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_2_reviews",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_1_reviews",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_1_comments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_requested_reviewers",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_enterprise_request_requested_reviewers",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_comment_2_reactions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_login",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_from_2016_03_01",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request_pull_request_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/rate_limit_aaa",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_events_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_2_with_pr",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/abuse_rate_limit",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_2_reactions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_request",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_events_error",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/github/github_issue_comment_1_reactions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/gitlab",
+                  "children": [
+                    {
+                      "id": "/tests/data/gitlab/.",
+                      "children": [
+                        {
+                          "id": "tests/data/gitlab/issue_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/issue_4",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/issue_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_page_outdated",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/empty_response",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_3_versions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_1_versions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/commits_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_page_updated",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/empty_emoji",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/project",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/issue_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/notes_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_1_version_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_3_version_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/issue_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/issue_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/notes_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/notes_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/commits_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_2_version_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_2_versions",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/emoji",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/notes_4",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/commits_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_1_version_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitlab/merge_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/askbot",
+                  "children": [
+                    {
+                      "id": "/tests/data/askbot/.",
+                      "children": [
+                        {
+                          "id": "tests/data/askbot/askbot_question_multipage_2.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.8430921451984945
+                        },
+                        {
+                          "id": "tests/data/askbot/html_country_and_website.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.6413621464125288
+                        },
+                        {
+                          "id": "tests/data/askbot/html_16_multicomment_answer_1_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.9759681923030228
+                        },
+                        {
+                          "id": "tests/data/askbot/askbot_2481_multicomments.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2666990409129537
+                        },
+                        {
+                          "id": "tests/data/askbot/html_24396_multipage_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 2.923012018938934
+                        },
+                        {
+                          "id": "tests/data/askbot/html_24396_multipage_3_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 3.063135850430982
+                        },
+                        {
+                          "id": "tests/data/askbot/askbot_question.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.8273886123588683
+                        },
+                        {
+                          "id": "tests/data/askbot/html_24396_multipage_4_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.6993444215126865
+                        },
+                        {
+                          "id": "tests/data/askbot/html_26830_comments_question_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 2.1776981910889885
+                        },
+                        {
+                          "id": "tests/data/askbot/askbot_api_questions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1398628141313585
+                        },
+                        {
+                          "id": "tests/data/askbot/askbot_question_empty.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4829246084739589
+                        },
+                        {
+                          "id": "tests/data/askbot/html_7893_answer_3_updated.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 3.2020517178584433
+                        },
+                        {
+                          "id": "tests/data/askbot/askbot_question_multipage_1.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 3.2262109991501755
+                        },
+                        {
+                          "id": "tests/data/askbot/html_148_comments_answer_2_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 2.740609445186354
+                        },
+                        {
+                          "id": "tests/data/askbot/html_24396_multipage_2_openstack.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 2.960458904941119
+                        },
+                        {
+                          "id": "tests/data/askbot/askbot_api_questions_2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1507344907126381
+                        },
+                        {
+                          "id": "tests/data/askbot/api_24396_openstack.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1688539516814374
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/gerrit",
+                  "children": [
+                    {
+                      "id": "/tests/data/gerrit/.",
+                      "children": [
+                        {
+                          "id": "tests/data/gerrit/gerrit_reviews_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gerrit/gerrit_version_313",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gerrit/gerrit_version_unknown",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gerrit/gerrit_version_214",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gerrit/gerrit_reviews_page_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gerrit/gerrit_reviews_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/redmine",
+                  "children": [
+                    {
+                      "id": "/tests/data/redmine/.",
+                      "children": [
+                        {
+                          "id": "tests/data/redmine/redmine_issue_2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1688539516814374
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_issue_5.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1688539516814374
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_issue_7311.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.6085528711909675
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_issue_9.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1688539516814374
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_issues_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_issues_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14952652664805147
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_user_3.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11449556877503946
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_user_25.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11449556877503946
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_user_4.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11449556877503946
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_issues.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.22804419084618185
+                        },
+                        {
+                          "id": "tests/data/redmine/redmine_user_24.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11449556877503946
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/meetup",
+                  "children": [
+                    {
+                      "id": "/tests/data/meetup/.",
+                      "children": [
+                        {
+                          "id": "tests/data/meetup/meetup_events.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4358140099550807
+                        },
+                        {
+                          "id": "tests/data/meetup/meetup_events_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.27636275342964667
+                        },
+                        {
+                          "id": "tests/data/meetup/meetup_rsvps.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2751547893650601
+                        },
+                        {
+                          "id": "tests/data/meetup/meetup_events_range.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.27636275342964667
+                        },
+                        {
+                          "id": "tests/data/meetup/meetup_comments.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1555663469709846
+                        },
+                        {
+                          "id": "tests/data/meetup/meetup_events_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10120796406458663
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/launchpad",
+                  "children": [
+                    {
+                      "id": "/tests/data/launchpad/.",
+                      "children": [
+                        {
+                          "id": "tests/data/launchpad/launchpad_empty_issue_activities",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_empty_issue_attachments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_empty_issue_comments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_activities_next_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_comments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_comments_next_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_comments_no_entries",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_2_activities",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_activities",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issues_page_1_no_next",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issues_page_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_attachments_next_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_attachments_next_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_expected",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_2_comments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_2_expected",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_3_expected",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issues_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issues_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_empty_issues",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_attachments",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_attachments_no_entries",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_expected_no_entries",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_activities_no_entries",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_comments_next_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issues_page_1_no_entries",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_no_entries",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_1_activities_next_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_issue_3",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/launchpad/launchpad_user_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/mbox",
+                  "children": [
+                    {
+                      "id": "/tests/data/mbox/.",
+                      "children": [
+                        {
+                          "id": "tests/data/mbox/mbox_iso8859_encoding.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/mbox/mbox_unknown_encoding.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/mbox/mbox_complex.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/mbox/mbox_single.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/mbox/mbox_unixfrom_encoding.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/mbox/mbox_no_fields.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/mbox/mbox_multipart.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/bugzilla",
+                  "children": [
+                    {
+                      "id": "/tests/data/bugzilla/.",
+                      "children": [
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bug_activity_empty_alt.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.3923273036299624
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_buglist.csv",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_attachments.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.13019910161466552
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_error.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bugs_details_next.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.21234065800655577
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bugs_invalid_chars.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4261502974383877
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_no_version.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_attachments_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10362389219375986
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bug_activity_empty.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.3923273036299624
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bugs_details.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.3862874833070292
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bugs_details_not_valid.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2207964064586621
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2884423940755129
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bug.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.20509287361903605
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bug_activity.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.38145562704868274
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_bug_activity_not_valid.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.38870341143620246
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_buglist_next.csv",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.3005220347213791
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_comments.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.22442029865242197
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_comments_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10845574845210636
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_history.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.22200437052324873
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_rest_bugs_history_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1108716765812796
+                        },
+                        {
+                          "id": "tests/data/bugzilla/bugzilla_version.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10845574845210636
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/discourse",
+                  "children": [
+                    {
+                      "id": "/tests/data/discourse/.",
+                      "children": [
+                        {
+                          "id": "tests/data/discourse/discourse_posts.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10120796406458663
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topic_1149.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.3611144834284326
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topics_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11207964064586622
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topics_pinned.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2932742503338594
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topic_1148.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 2.438618429039699
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_post.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1555663469709846
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topics.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.23529197523370157
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topic_1150.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.3611144834284326
+                        },
+                        {
+                          "id": "tests/data/discourse/discourse_topics_last_posted_at_null.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.21838047832948887
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/jenkins",
+                  "children": [
+                    {
+                      "id": "/tests/data/jenkins/.",
+                      "children": [
+                        {
+                          "id": "tests/data/jenkins/jenkins_job_builds.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 8.253757435959692
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_jobs.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.13623892193759865
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_workflow_jobs.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.17126987981061065
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_job_no_builds.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 1.937313342236251
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_workflow_job_builds.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 3.0232730362996234
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_build.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.31622556756100517
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_jobs_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10120796406458663
+                        },
+                        {
+                          "id": "tests/data/jenkins/jenkins_job_builds_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10120796406458663
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/mediawiki",
+                  "children": [
+                    {
+                      "id": "/tests/data/mediawiki/.",
+                      "children": [
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_page_476583_revisions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 4.891993444215125
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_pages_allrevisions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.18334952045647687
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_page_476589_revisions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12174335316255919
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_page_476590_revisions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12174335316255919
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_namespaces.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.46480514750515955
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_page_592384_revisions.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.13744688600218527
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_pages_all_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1108716765812796
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_pages_all.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.13019910161466552
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_pages_allrevisions_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11691149690421271
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_pages_recent_changes.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.17730970013354375
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_siteinfo_1.23.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1845574845210635
+                        },
+                        {
+                          "id": "tests/data/mediawiki/mediawiki_siteinfo_1.28.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.214756586135729
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/rss",
+                  "children": [
+                    {
+                      "id": "/tests/data/rss/.",
+                      "children": [
+                        {
+                          "id": "tests/data/rss/rss_entries.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12657520942090567
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/stackexchange",
+                  "children": [
+                    {
+                      "id": "/tests/data/stackexchange/.",
+                      "children": [
+                        {
+                          "id": "tests/data/stackexchange/stackexchange_question_backoff_page",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/stackexchange/__init__.py",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": -0.2
+                        },
+                        {
+                          "id": "tests/data/stackexchange/stackexchange_question",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/stackexchange/stackexchange_question_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/stackexchange/stackexchange_question_parse",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/stackexchange/stackexchange_question_page",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/supybot",
+                  "children": [
+                    {
+                      "id": "/tests/data/supybot/.",
+                      "children": [
+                        {
+                          "id": "tests/data/supybot/supybot_invalid_date.log",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/supybot/supybot_invalid_msg.log",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/supybot/supybot_2012_10_17.log",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/supybot/supybot_valid.log",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/supybot/supybot_2012_10_18.log",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/jira",
+                  "children": [
+                    {
+                      "id": "/tests/data/jira/.",
+                      "children": [
+                        {
+                          "id": "tests/data/jira/jira_comments_issue_page_2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.20509287361903605
+                        },
+                        {
+                          "id": "tests/data/jira/jira_issues_page_1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.42977418963214753
+                        },
+                        {
+                          "id": "tests/data/jira/jira_issues_page_2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.2666990409129537
+                        },
+                        {
+                          "id": "tests/data/jira/jira_issues_page_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/jira/jira_comments_issue_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10724778438751974
+                        },
+                        {
+                          "id": "tests/data/jira/jira_issues_parse_expected.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4225264052446278
+                        },
+                        {
+                          "id": "tests/data/jira/jira_comments_issue_page_1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.20509287361903605
+                        },
+                        {
+                          "id": "tests/data/jira/jira_fields.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.9455748452106348
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/googlehits",
+                  "children": [
+                    {
+                      "id": "/tests/data/googlehits/.",
+                      "children": [
+                        {
+                          "id": "tests/data/googlehits/hits_zero",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/googlehits/hits_bitergia",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/googlehits/hits_bitergia_grimoirelab",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/twitter",
+                  "children": [
+                    {
+                      "id": "/tests/data/twitter/.",
+                      "children": [
+                        {
+                          "id": "tests/data/twitter/tweets_page_1.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.7124377807454169
+                        },
+                        {
+                          "id": "tests/data/twitter/tweets_page_2.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.7619643073934683
+                        },
+                        {
+                          "id": "tests/data/twitter/tweets_page_3.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11570353283962609
+                        },
+                        {
+                          "id": "tests/data/twitter/tweets.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 20
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/mattermost",
+                  "children": [
+                    {
+                      "id": "/tests/data/mattermost/.",
+                      "children": [
+                        {
+                          "id": "tests/data/mattermost/mattermost_erros.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10845574845210636
+                        },
+                        {
+                          "id": "tests/data/mattermost/mattermost_user_valcos.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.14107077819594513
+                        },
+                        {
+                          "id": "tests/data/mattermost/mattermost_user_sduenas.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12536724535631905
+                        },
+                        {
+                          "id": "tests/data/mattermost/mattermost_channel.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.12174335316255919
+                        },
+                        {
+                          "id": "tests/data/mattermost/mattermost_posts_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10483185625834648
+                        },
+                        {
+                          "id": "tests/data/mattermost/mattermost_posts.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.22321233458783535
+                        },
+                        {
+                          "id": "tests/data/mattermost/mattermost_posts_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.20388490955444943
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/pagure",
+                  "children": [
+                    {
+                      "id": "/tests/data/pagure/.",
+                      "children": [
+                        {
+                          "id": "tests/data/pagure/pagure_empty_request",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pagure/pagure_repo_only_issue_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pagure/pagure_repo_issue_from_2020_03_07",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pagure/pagure_namespace_issue_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pagure/pagure_repo_issue_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pagure/pagure_repo_issue_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/groupsio",
+                  "children": [
+                    {
+                      "id": "/tests/data/groupsio/.",
+                      "children": [
+                        {
+                          "id": "tests/data/groupsio/subscriptions_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/groupsio/messages.zip",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/groupsio/subscriptions_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/groupsio/login",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/groupsio/empty.zip",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/gitter",
+                  "children": [
+                    {
+                      "id": "/tests/data/gitter/.",
+                      "children": [
+                        {
+                          "id": "tests/data/gitter/message_page_1",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitter/message_empty",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitter/rooms",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/gitter/message_page_2",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/pipermail",
+                  "children": [
+                    {
+                      "id": "/tests/data/pipermail/.",
+                      "children": [
+                        {
+                          "id": "tests/data/pipermail/pipermail_2016_march.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pipermail/pipermail_index.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.15919023916474445
+                        },
+                        {
+                          "id": "tests/data/pipermail/pipermail_apache_index.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.17006191574602403
+                        },
+                        {
+                          "id": "tests/data/pipermail/pipermail_2015_november.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pipermail/pipermail_2016_april.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/pipermail/pipermail_index_empty.html",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1229513172271458
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/telegram",
+                  "children": [
+                    {
+                      "id": "/tests/data/telegram/.",
+                      "children": [
+                        {
+                          "id": "tests/data/telegram/telegram_messages_next.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.17126987981061065
+                        },
+                        {
+                          "id": "tests/data/telegram/telegram_messages.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.17126987981061065
+                        },
+                        {
+                          "id": "tests/data/telegram/telegram_messages_empty.json",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.10120796406458663
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/data/utils",
+                  "children": [
+                    {
+                      "id": "/tests/data/utils/.",
+                      "children": [
+                        {
+                          "id": "tests/data/utils/email_multipart_encoding.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/utils/email_multipart_no_encoding.txt",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/utils/bugzilla_bug.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.20509287361903605
+                        },
+                        {
+                          "id": "tests/data/utils/bugzilla_bugs_invalid_chars.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.4261502974383877
+                        },
+                        {
+                          "id": "tests/data/utils/mbox_single.mbox",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.1
+                        },
+                        {
+                          "id": "tests/data/utils/xml_invalid.xml",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11570353283962609
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "/tests/mocked_package",
+              "children": [
+                {
+                  "id": "/tests/mocked_package/nested_package",
+                  "children": [
+                    {
+                      "id": "/tests/mocked_package/nested_package/.",
+                      "children": [
+                        {
+                          "id": "tests/mocked_package/nested_package/nested_backend_c.py",
+                          "area": 1.4027777777777777,
+                          "max_area": 1.4027777777777777,
+                          "height": 0.11328760471045284
+                        },
+                        {
+                          "id": "tests/mocked_package/nested_package/nested_backend_b.py",
+                          "area": 1.4027777777777777,
+                          "max_area": 1.4027777777777777,
+                          "height": 0.11328760471045284
+                        },
+                        {
+                          "id": "tests/mocked_package/nested_package/__init__.py",
+                          "area": 1,
+                          "max_area": 1,
+                          "height": 0.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "/tests/mocked_package/.",
+                  "children": [
+                    {
+                      "id": "tests/mocked_package/backend.py",
+                      "area": 1.4027777777777777,
+                      "max_area": 1.4027777777777777,
+                      "height": 0.11570353283962609
+                    },
+                    {
+                      "id": "tests/mocked_package/__init__.py",
+                      "area": 1,
+                      "max_area": 1,
+                      "height": 0.1
                     }
                   ]
                 }
@@ -453,739 +2553,249 @@
               "id": "/tests/.",
               "children": [
                 {
-                  "id": "tests/test_api.py",
-                  "area": 100,
-                  "max_area": 100,
-                  "height": 20
+                  "id": "tests/test_bugzilla.py",
+                  "area": 8.854166666666668,
+                  "max_area": 8.854166666666668,
+                  "height": 1.1497207721257738
                 },
                 {
-                  "id": "tests/test_exceptions.py",
-                  "area": 4.675948345439871,
-                  "max_area": 4.876715092816788,
-                  "height": 3.342962962962963
+                  "id": "tests/test_git.py",
+                  "area": 15.5,
+                  "max_area": 15.5,
+                  "height": 1.5906276556998906
+                },
+                {
+                  "id": "tests/test_jenkins.py",
+                  "area": 6.638888888888889,
+                  "max_area": 6.638888888888889,
+                  "height": 0.8477297559791185
+                },
+                {
+                  "id": "tests/test_mediawiki.py",
+                  "area": 8.45138888888889,
+                  "max_area": 8.45138888888889,
+                  "height": 0.7474687386184289
+                },
+                {
+                  "id": "tests/test_telegram.py",
+                  "area": 5.631944444444445,
+                  "max_area": 5.631944444444445,
+                  "height": 0.4720529318926793
+                },
+                {
+                  "id": "tests/test_stackexchange.py",
+                  "area": 5.833333333333334,
+                  "max_area": 5.833333333333334,
+                  "height": 0.5372829913803568
+                },
+                {
+                  "id": "tests/test_github.py",
+                  "area": 14.291666666666668,
+                  "max_area": 14.291666666666668,
+                  "height": 4.439006919995143
+                },
+                {
+                  "id": "tests/test_confluence.py",
+                  "area": 6.236111111111112,
+                  "max_area": 6.236111111111112,
+                  "height": 0.6749908947432317
+                },
+                {
+                  "id": "tests/test_bugzillarest.py",
+                  "area": 6.4375,
+                  "max_area": 6.4375,
+                  "height": 0.6991501760349641
+                },
+                {
+                  "id": "tests/test_supybot.py",
+                  "area": 5.833333333333334,
+                  "max_area": 5.833333333333334,
+                  "height": 0.5252033507344906
                 },
                 {
                   "id": "tests/test_utils.py",
-                  "area": 8.45036319612591,
-                  "max_area": 8.69128329297821,
-                  "height": 2.7533333333333334
+                  "area": 3.8194444444444446,
+                  "max_area": 6.638888888888889,
+                  "height": 0.3186414956901784
                 },
                 {
-                  "id": "tests/test_cmd_enroll.py",
-                  "area": 10.417877320419693,
-                  "max_area": 11.140637610976595,
-                  "height": 1.8688888888888888
+                  "id": "tests/test_mbox.py",
+                  "area": 7.444444444444445,
+                  "max_area": 7.444444444444445,
+                  "height": 0.5892254461575815
                 },
                 {
-                  "id": "tests/test_cmd_withdraw.py",
-                  "area": 7.446529459241324,
-                  "max_area": 8.169289749798224,
-                  "height": 1.5740740740740742
+                  "id": "tests/test_pipermail.py",
+                  "area": 6.840277777777778,
+                  "max_area": 6.840277777777778,
+                  "height": 0.6145926915139006
                 },
                 {
-                  "id": "tests/test_cmd_load.py",
-                  "area": 29.16949152542373,
-                  "max_area": 29.330104923325266,
-                  "height": 3.4903703703703703
+                  "id": "tests/test_discourse.py",
+                  "area": 8.45138888888889,
+                  "max_area": 8.45138888888889,
+                  "height": 1.0881146048318562
                 },
                 {
-                  "id": "tests/test_matcher.py",
-                  "area": 7.085149313962874,
-                  "max_area": 7.125302663438257,
-                  "height": 2.3111111111111113
+                  "id": "tests/test_backend.py",
+                  "area": 30,
+                  "max_area": 30,
+                  "height": 2.157162801991016
                 },
                 {
-                  "id": "tests/run_tests.py",
-                  "area": 0.7409200968523002,
-                  "max_area": 0.7409200968523002,
-                  "height": 0.1
+                  "id": "tests/test_errors.py",
+                  "area": 3.2152777777777777,
+                  "max_area": 3.2152777777777777,
+                  "height": 0.16402209542309093
                 },
                 {
-                  "id": "tests/test_cmd_log.py",
-                  "area": 6.482849071832123,
-                  "max_area": 7.085149313962874,
-                  "height": 2.4585185185185185
+                  "id": "tests/test_askbot.py",
+                  "area": 6.4375,
+                  "max_area": 6.4375,
+                  "height": 0.7003581400995507
                 },
                 {
-                  "id": "tests/test_cmd_add.py",
-                  "area": 7.085149313962874,
-                  "max_area": 7.205609362389024,
-                  "height": 1.7214814814814816
+                  "id": "tests/test_hyperkitty.py",
+                  "area": 5.229166666666667,
+                  "max_area": 5.229166666666667,
+                  "height": 0.38507951924244255
                 },
                 {
-                  "id": "tests/test_cmd_show.py",
-                  "area": 9.29358353510896,
-                  "max_area": 9.574656981436643,
-                  "height": 2.016296296296296
+                  "id": "tests/test_jira.py",
+                  "area": 6.4375,
+                  "max_area": 6.4375,
+                  "height": 0.9093359232730361
                 },
                 {
-                  "id": "tests/test_parser_sh.py",
-                  "area": 10.819410815173528,
-                  "max_area": 11.261097659402745,
-                  "height": 1.2792592592592593
+                  "id": "tests/test_meetup.py",
+                  "area": 8.04861111111111,
+                  "max_area": 10.0625,
+                  "height": 1.0095969406337257
                 },
                 {
-                  "id": "tests/__init__.py",
-                  "area": 0.5803066989507668,
-                  "max_area": 0.5803066989507668,
-                  "height": 0.1
+                  "id": "tests/test_nntp.py",
+                  "area": 7.645833333333334,
+                  "max_area": 7.645833333333334,
+                  "height": 0.48050868034478567
                 },
                 {
-                  "id": "tests/test_cmd_affiliate.py",
-                  "area": 4.274414850686037,
-                  "max_area": 4.957021791767555,
-                  "height": 1.1318518518518519
+                  "id": "tests/test_dockerhub.py",
+                  "area": 4.020833333333334,
+                  "max_area": 4.222222222222222,
+                  "height": 0.2751547893650601
                 },
                 {
-                  "id": "tests/test_cmd_autoprofile.py",
-                  "area": 4.153954802259888,
-                  "max_area": 4.153954802259888,
-                  "height": 0.9844444444444443
+                  "id": "tests/test_phabricator.py",
+                  "area": 7.041666666666667,
+                  "max_area": 7.041666666666667,
+                  "height": 1.0204686172150053
                 },
                 {
-                  "id": "tests/test_cmd_export.py",
-                  "area": 13.268765133171915,
-                  "max_area": 13.670298627925748,
-                  "height": 2.6059259259259258
+                  "id": "tests/test_slack.py",
+                  "area": 6.638888888888889,
+                  "max_area": 6.638888888888889,
+                  "height": 0.8827607138521305
                 },
                 {
-                  "id": "tests/test_db_api.py",
-                  "area": 51.25383373688459,
-                  "max_area": 51.25383373688459,
-                  "height": 10.418518518518518
+                  "id": "tests/test_gitlab.py",
+                  "area": 12.881944444444445,
+                  "max_area": 12.881944444444445,
+                  "height": 1.8068532232608958
                 },
                 {
-                  "id": "tests/test_cmd_unify.py",
-                  "area": 14.553672316384182,
-                  "max_area": 14.553672316384182,
-                  "height": 4.3748148148148145
+                  "id": "tests/test_redmine.py",
+                  "area": 6.034722222222222,
+                  "max_area": 6.034722222222222,
+                  "height": 0.6689510744202986
                 },
                 {
-                  "id": "tests/test_matcher_email.py",
-                  "area": 16.360573042776434,
-                  "max_area": 16.360573042776434,
-                  "height": 2.7533333333333334
+                  "id": "tests/test_gerrit.py",
+                  "area": 6.4375,
+                  "max_area": 6.4375,
+                  "height": 0.5288272429282506
                 },
                 {
-                  "id": "tests/test_matcher_username.py",
-                  "area": 11.100484261501212,
-                  "max_area": 11.140637610976595,
-                  "height": 2.1637037037037037
+                  "id": "tests/test_client.py",
+                  "area": 4.826388888888889,
+                  "max_area": 4.826388888888889,
+                  "height": 0.48171664440937234
                 },
                 {
-                  "id": "tests/tests.conf.sample",
-                  "area": 0.5,
-                  "max_area": 0.5,
-                  "height": 0.11474074074074075
-                },
-                {
-                  "id": "tests/test_cmd_organizations.py",
-                  "area": 14.352905569007264,
-                  "max_area": 16.1999596448749,
-                  "height": 3.9325925925925924
-                },
-                {
-                  "id": "tests/test_cmd_init.py",
-                  "area": 5.278248587570622,
-                  "max_area": 5.278248587570622,
-                  "height": 1.7214814814814816
-                },
-                {
-                  "id": "tests/test_cmd_profile.py",
-                  "area": 3.4713478611783697,
-                  "max_area": 4.07364810330912,
-                  "height": 0.837037037037037
-                },
-                {
-                  "id": "tests/test_parser_grimoirelab.py",
-                  "area": 12.345238095238097,
-                  "max_area": 12.345238095238097,
-                  "height": 2.016296296296296
-                },
-                {
-                  "id": "tests/test_parser_mozilla.py",
-                  "area": 5.719935431799839,
-                  "max_area": 5.880548829701373,
-                  "height": 0.9844444444444443
-                },
-                {
-                  "id": "tests/test_cmd_blacklist.py",
-                  "area": 8.771589991928975,
-                  "max_area": 10.538337368845845,
-                  "height": 3.1955555555555555
-                },
-                {
-                  "id": "tests/test_cmd_config.py",
-                  "area": 6.001008878127522,
-                  "max_area": 6.20177562550444,
-                  "height": 1.4266666666666667
-                },
-                {
-                  "id": "tests/test_cmd_countries.py",
-                  "area": 2.7887409200968523,
-                  "max_area": 3.511501210653753,
-                  "height": 0.9844444444444443
-                },
-                {
-                  "id": "tests/test_cmd_move.py",
-                  "area": 3.511501210653753,
-                  "max_area": 4.2342615012106535,
-                  "height": 1.2792592592592593
-                },
-                {
-                  "id": "tests/test_matcher_email_name.py",
-                  "area": 13.951372074253431,
-                  "max_area": 13.991525423728815,
-                  "height": 2.1637037037037037
-                },
-                {
-                  "id": "tests/test_cmd_merge.py",
-                  "area": 3.913034705407587,
-                  "max_area": 4.6357949959644875,
-                  "height": 0.9844444444444443
-                },
-                {
-                  "id": "tests/test_cmd_remove.py",
-                  "area": 3.270581113801453,
-                  "max_area": 3.993341404358354,
-                  "height": 1.1318518518518519
-                },
-                {
-                  "id": "tests/test_model.py",
-                  "area": 16.962873284907186,
-                  "max_area": 17.685633575464085,
-                  "height": 5.111851851851851
-                },
-                {
-                  "id": "tests/test_parser_eclipse.py",
-                  "area": 5.960855528652139,
-                  "max_area": 6.121468926553673,
-                  "height": 0.9844444444444443
-                },
-                {
-                  "id": "tests/test_matcher_github.py",
-                  "area": 11.180790960451978,
-                  "max_area": 11.220944309927361,
-                  "height": 2.1637037037037037
+                  "id": "tests/test_launchpad.py",
+                  "area": 6.236111111111112,
+                  "max_area": 6.236111111111112,
+                  "height": 1.107442029865242
                 },
                 {
                   "id": "tests/base.py",
-                  "area": 3.511501210653753,
-                  "max_area": 3.511501210653753,
-                  "height": 1.4266666666666667
+                  "area": 1.6041666666666667,
+                  "max_area": 1.6041666666666667,
+                  "height": 0.12778317348549229
                 },
                 {
-                  "id": "tests/test_parser_gitdm.py",
-                  "area": 18.609160613397904,
-                  "max_area": 18.769774011299436,
-                  "height": 2.016296296296296
+                  "id": "tests/test_rss.py",
+                  "area": 4.423611111111111,
+                  "max_area": 4.625,
+                  "height": 0.3234733519485249
                 },
                 {
-                  "id": "tests/test_cmd_autogender.py",
-                  "area": 15.035512510088783,
-                  "max_area": 15.115819209039548,
-                  "height": 2.3111111111111113
+                  "id": "tests/test_twitter.py",
+                  "area": 5.631944444444445,
+                  "max_area": 5.631944444444445,
+                  "height": 0.46963700376350603
                 },
                 {
-                  "id": "tests/test_parser_mailmap.py",
-                  "area": 7.727602905569007,
-                  "max_area": 7.888216303470541,
-                  "height": 0.6896296296296296
+                  "id": "tests/test_googlehits.py",
+                  "area": 4.222222222222222,
+                  "max_area": 4.222222222222222,
+                  "height": 0.3548804176277771
                 },
                 {
-                  "id": "tests/test_register.py",
-                  "area": 0.5200766747376917,
-                  "max_area": 12.305084745762713,
-                  "height": -0.2
+                  "id": "tests/test_groupsio.py",
+                  "area": 7.243055555555555,
+                  "max_area": 7.243055555555555,
+                  "height": 0.5372829913803568
                 },
                 {
-                  "id": "tests/test_matcher_simple.py",
-                  "area": 0.5200766747376917,
-                  "max_area": 3.069814366424536,
-                  "height": -0.2
+                  "id": "tests/test_mattermost.py",
+                  "area": 5.833333333333334,
+                  "max_area": 5.833333333333334,
+                  "height": 0.6496236493869126
                 },
                 {
-                  "id": "tests/test_parser_stackalytics.py",
-                  "area": 6.161622276029056,
-                  "max_area": 6.32223567393059,
-                  "height": 0.9844444444444443
+                  "id": "tests/run_tests.py",
+                  "area": 1,
+                  "max_area": 1,
+                  "height": 0.10966371251669298
                 },
                 {
-                  "id": "tests/config.py",
-                  "area": 0.5200766747376917,
-                  "max_area": 0.7409200968523002,
-                  "height": -0.2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "/sortinghat",
-          "children": [
-            {
-              "id": "/sortinghat/cmd",
-              "children": [
-                {
-                  "id": "/sortinghat/cmd/.",
-                  "children": [
-                    {
-                      "id": "sortinghat/cmd/enroll.py",
-                      "area": 4.1941081517352705,
-                      "max_area": 4.1941081517352705,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/log.py",
-                      "area": 2.9895076674737693,
-                      "max_area": 2.9895076674737693,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/add.py",
-                      "area": 5.318401937046005,
-                      "max_area": 5.318401937046005,
-                      "height": 1.2792592592592593
-                    },
-                    {
-                      "id": "sortinghat/cmd/show.py",
-                      "area": 2.7887409200968523,
-                      "max_area": 2.7887409200968523,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/merge.py",
-                      "area": 2.427360774818402,
-                      "max_area": 2.427360774818402,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/affiliate.py",
-                      "area": 3.0296610169491527,
-                      "max_area": 3.0296610169491527,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/load.py",
-                      "area": 15.316585956416466,
-                      "max_area": 15.316585956416466,
-                      "height": 3.1955555555555555
-                    },
-                    {
-                      "id": "sortinghat/cmd/withdraw.py",
-                      "area": 2.9895076674737693,
-                      "max_area": 2.9895076674737693,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/__init__.py",
-                      "area": 2.186440677966102,
-                      "max_area": 2.2667473769168685,
-                      "height": 0.1
-                    },
-                    {
-                      "id": "sortinghat/cmd/organizations.py",
-                      "area": 5.840395480225989,
-                      "max_area": 5.840395480225989,
-                      "height": 1.1318518518518519
-                    },
-                    {
-                      "id": "sortinghat/cmd/config.py",
-                      "area": 4.354721549636804,
-                      "max_area": 4.475181598062955,
-                      "height": 1.1318518518518519
-                    },
-                    {
-                      "id": "sortinghat/cmd/export.py",
-                      "area": 6.442695722356739,
-                      "max_area": 6.442695722356739,
-                      "height": 2.4585185185185185
-                    },
-                    {
-                      "id": "sortinghat/cmd/profile.py",
-                      "area": 3.6319612590799033,
-                      "max_area": 3.8728813559322037,
-                      "height": 0.9844444444444443
-                    },
-                    {
-                      "id": "sortinghat/cmd/init.py",
-                      "area": 3.6319612590799033,
-                      "max_area": 3.6319612590799033,
-                      "height": 1.1318518518518519
-                    },
-                    {
-                      "id": "sortinghat/cmd/blacklist.py",
-                      "area": 3.7524213075060535,
-                      "max_area": 3.7524213075060535,
-                      "height": 1.1318518518518519
-                    },
-                    {
-                      "id": "sortinghat/cmd/unify.py",
-                      "area": 8.490516545601292,
-                      "max_area": 8.490516545601292,
-                      "height": 2.7533333333333334
-                    },
-                    {
-                      "id": "sortinghat/cmd/autogender.py",
-                      "area": 5.157788539144471,
-                      "max_area": 5.197941888619855,
-                      "height": 0.9844444444444443
-                    },
-                    {
-                      "id": "sortinghat/cmd/countries.py",
-                      "area": 2.2667473769168685,
-                      "max_area": 2.2667473769168685,
-                      "height": 0.6896296296296296
-                    },
-                    {
-                      "id": "sortinghat/cmd/move.py",
-                      "area": 2.507667473769169,
-                      "max_area": 2.507667473769169,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/remove.py",
-                      "area": 2.628127522195319,
-                      "max_area": 2.628127522195319,
-                      "height": 0.837037037037037
-                    },
-                    {
-                      "id": "sortinghat/cmd/autoprofile.py",
-                      "area": 4.113801452784504,
-                      "max_area": 4.113801452784504,
-                      "height": 0.9844444444444443
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "/sortinghat/db",
-              "children": [
-                {
-                  "id": "/sortinghat/db/.",
-                  "children": [
-                    {
-                      "id": "sortinghat/db/model.py",
-                      "area": 10.698950766747378,
-                      "max_area": 11.140637610976595,
-                      "height": 3.785185185185185
-                    },
-                    {
-                      "id": "sortinghat/db/api.py",
-                      "area": 9.41404358353511,
-                      "max_area": 9.41404358353511,
-                      "height": 3.342962962962963
-                    },
-                    {
-                      "id": "sortinghat/db/database.py",
-                      "area": 7.04499596448749,
-                      "max_area": 7.04499596448749,
-                      "height": 2.4585185185185185
-                    },
-                    {
-                      "id": "sortinghat/db/__init__.py",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.1
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "/sortinghat/templates",
-              "children": [
-                {
-                  "id": "/sortinghat/templates/.",
-                  "children": [
-                    {
-                      "id": "sortinghat/templates/organizations.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/merge.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/move.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/show.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/log.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/add.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/remove.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/match.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/affiliate.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/countries.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/profile.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/blacklist.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/load_domains.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/config.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/autogender.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/autoprofile.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/unify.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    },
-                    {
-                      "id": "sortinghat/templates/load_blacklist.tmpl",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "/sortinghat/parsing",
-              "children": [
-                {
-                  "id": "/sortinghat/parsing/.",
-                  "children": [
-                    {
-                      "id": "sortinghat/parsing/__init__.py",
-                      "area": 0.5,
-                      "max_area": 0.7810734463276836,
-                      "height": 0.1
-                    },
-                    {
-                      "id": "sortinghat/parsing/sh.py",
-                      "area": 6.763922518159807,
-                      "max_area": 7.04499596448749,
-                      "height": 1.5740740740740742
-                    },
-                    {
-                      "id": "sortinghat/parsing/gitdm.py",
-                      "area": 9.092816787732042,
-                      "max_area": 9.373890234059726,
-                      "height": 2.1637037037037037
-                    },
-                    {
-                      "id": "sortinghat/parsing/grimoirelab.py",
-                      "area": 9.735270379338177,
-                      "max_area": 9.735270379338177,
-                      "height": 2.3111111111111113
-                    },
-                    {
-                      "id": "sortinghat/parsing/eclipse.py",
-                      "area": 5.920702179176756,
-                      "max_area": 6.20177562550444,
-                      "height": 1.4266666666666667
-                    },
-                    {
-                      "id": "sortinghat/parsing/mozilla.py",
-                      "area": 4.354721549636804,
-                      "max_area": 4.6357949959644875,
-                      "height": 1.4266666666666667
-                    },
-                    {
-                      "id": "sortinghat/parsing/stackalytics.py",
-                      "area": 5.117635189669088,
-                      "max_area": 5.398708635996772,
-                      "height": 1.4266666666666667
-                    },
-                    {
-                      "id": "sortinghat/parsing/mailmap.py",
-                      "area": 5.358555286521389,
-                      "max_area": 5.639628732849072,
-                      "height": 1.4266666666666667
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "/sortinghat/data",
-              "children": [
-                {
-                  "id": "/sortinghat/data/.",
-                  "children": [
-                    {
-                      "id": "sortinghat/data/countries.csv",
-                      "area": 0.5,
-                      "max_area": 0.5,
-                      "height": 0.11474074074074075
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "/sortinghat/matching",
-              "children": [
-                {
-                  "id": "/sortinghat/matching/.",
-                  "children": [
-                    {
-                      "id": "sortinghat/matching/github.py",
-                      "area": 3.792574656981437,
-                      "max_area": 3.8327280064568203,
-                      "height": 1.4266666666666667
-                    },
-                    {
-                      "id": "sortinghat/matching/username.py",
-                      "area": 3.8327280064568203,
-                      "max_area": 3.8728813559322037,
-                      "height": 1.4266666666666667
-                    },
-                    {
-                      "id": "sortinghat/matching/__init__.py",
-                      "area": 0.9416868442292171,
-                      "max_area": 1.0219935431799838,
-                      "height": 0.1
-                    },
-                    {
-                      "id": "sortinghat/matching/email.py",
-                      "area": 4.2342615012106535,
-                      "max_area": 4.354721549636804,
-                      "height": 1.4266666666666667
-                    },
-                    {
-                      "id": "sortinghat/matching/email_name.py",
-                      "area": 4.957021791767555,
-                      "max_area": 4.957021791767555,
-                      "height": 1.5740740740740742
-                    },
-                    {
-                      "id": "sortinghat/matching/simple.py",
-                      "area": 0.5200766747376917,
-                      "max_area": 1.9053672316384183,
-                      "height": -0.2
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "id": "/sortinghat/.",
-              "children": [
-                {
-                  "id": "sortinghat/api.py",
-                  "area": 19.813761097659405,
-                  "max_area": 24.792776432606942,
-                  "height": 4.3748148148148145
+                  "id": "tests/test_archive.py",
+                  "area": 5.833333333333334,
+                  "max_area": 5.833333333333334,
+                  "height": 0.5203714944761442
                 },
                 {
-                  "id": "sortinghat/utils.py",
-                  "area": 2.7887409200968523,
-                  "max_area": 3.150121065375303,
-                  "height": 0.6896296296296296
+                  "id": "tests/test_gitter.py",
+                  "area": 6.034722222222222,
+                  "max_area": 6.034722222222222,
+                  "height": 0.5034599975719315
                 },
                 {
-                  "id": "sortinghat/matcher.py",
-                  "area": 7.165456012913641,
-                  "max_area": 7.165456012913641,
-                  "height": 2.3111111111111113
+                  "id": "tests/test_pagure.py",
+                  "area": 6.236111111111112,
+                  "max_area": 6.236111111111112,
+                  "height": 0.7233094573266965
                 },
                 {
-                  "id": "sortinghat/command.py",
-                  "area": 2.1462873284907182,
-                  "max_area": 2.427360774818402,
-                  "height": 1.2792592592592593
+                  "id": "tests/test_githubql.py",
+                  "area": 4.625,
+                  "max_area": 4.625,
+                  "height": 0.7257253854558697
                 },
                 {
-                  "id": "sortinghat/exceptions.py",
-                  "area": 3.3107344632768365,
-                  "max_area": 3.71226795803067,
-                  "height": 0.6896296296296296
-                },
-                {
-                  "id": "sortinghat/register.py",
-                  "area": 0.5200766747376917,
-                  "max_area": 3.1099677158999195,
-                  "height": -0.2
-                },
-                {
-                  "id": "sortinghat/_version.py",
-                  "area": 0.5401533494753834,
-                  "max_area": 0.5401533494753834,
-                  "height": 0.1
-                },
-                {
-                  "id": "sortinghat/parser.py",
-                  "area": 1.2227602905569008,
-                  "max_area": 1.2227602905569008,
-                  "height": 0.5422222222222222
-                },
-                {
-                  "id": "sortinghat/__init__.py",
-                  "area": 0.5401533494753834,
-                  "max_area": 0.6204600484261501,
+                  "id": "tests/__init__.py",
+                  "area": 1,
+                  "max_area": 1,
                   "height": 0.1
                 }
               ]
@@ -1199,74 +2809,99 @@
               "id": "/bin/.",
               "children": [
                 {
-                  "id": "bin/sortinghat",
-                  "area": 4.555488297013721,
-                  "max_area": 4.555488297013721,
-                  "height": 0.11474074074074075
-                },
-                {
-                  "id": "bin/mg2sh",
-                  "area": 4.314568200161421,
-                  "max_area": 6.001008878127522,
-                  "height": 0.11474074074074075
-                },
-                {
-                  "id": "bin/sh2mg",
-                  "area": 5.920702179176756,
-                  "max_area": 6.20177562550444,
-                  "height": 0.11474074074074075
+                  "id": "bin/perceval",
+                  "area": 1.020138888888889,
+                  "max_area": 1.020138888888889,
+                  "height": 0.17851766419813037
                 }
               ]
             }
           ]
         },
         {
-          "id": "/misc",
+          "id": "/docs",
           "children": [
             {
-              "id": "/misc/.",
+              "id": "/docs/.",
               "children": [
                 {
-                  "id": "misc/mailmap2sh",
-                  "area": 3.993341404358354,
-                  "max_area": 4.153954802259888,
-                  "height": 0.11474074074074075
+                  "id": "docs/conf.py",
+                  "area": 1,
+                  "max_area": 1,
+                  "height": 0.1459026344542916
                 },
                 {
-                  "id": "misc/grimoirelab2sh",
-                  "area": 4.716101694915254,
-                  "max_area": 4.716101694915254,
-                  "height": 0.11474074074074075
+                  "id": "docs/index.rst",
+                  "area": 1.020138888888889,
+                  "max_area": 1.020138888888889,
+                  "height": 0.1
                 },
                 {
-                  "id": "misc/gitdm2sh",
-                  "area": 4.675948345439871,
-                  "max_area": 4.836561743341405,
-                  "height": 0.11474074074074075
+                  "id": "docs/howto_pkg.rst",
+                  "area": 1.020138888888889,
+                  "max_area": 1.020138888888889,
+                  "height": 0.1
                 },
                 {
-                  "id": "misc/eclipse2sh",
-                  "area": 3.511501210653753,
-                  "max_area": 3.6721146085552867,
-                  "height": 0.11474074074074075
+                  "id": "docs/howto_doc.rst",
+                  "area": 1.020138888888889,
+                  "max_area": 1.020138888888889,
+                  "height": 0.1
                 },
                 {
-                  "id": "misc/mozilla2sh",
-                  "area": 3.511501210653753,
-                  "max_area": 3.6721146085552867,
-                  "height": 0.11474074074074075
+                  "id": "docs/Makefile",
+                  "area": 1.020138888888889,
+                  "max_area": 1.020138888888889,
+                  "height": 0.2884423940755129
                 },
                 {
-                  "id": "misc/mozilla2sh.py",
-                  "area": 0.5200766747376917,
-                  "max_area": 3.6319612590799033,
-                  "height": -0.2
+                  "id": "docs/contributing.rst",
+                  "area": 1.020138888888889,
+                  "max_area": 1.020138888888889,
+                  "height": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "/docker",
+          "children": [
+            {
+              "id": "/docker/images",
+              "children": [
+                {
+                  "id": "/docker/images/master",
+                  "children": [
+                    {
+                      "id": "/docker/images/master/.",
+                      "children": [
+                        {
+                          "id": "docker/images/master/Dockerfile",
+                          "area": 1.020138888888889,
+                          "max_area": 1.020138888888889,
+                          "height": 0.11691149690421271
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "id": "misc/stackalytics2sh",
-                  "area": 3.7524213075060535,
-                  "max_area": 3.913034705407587,
-                  "height": 0.11474074074074075
+                  "id": "/docker/images/.",
+                  "children": [
+                    {
+                      "id": "docker/images/Makefile",
+                      "area": 1.020138888888889,
+                      "max_area": 1.020138888888889,
+                      "height": 0.12053538909797257
+                    },
+                    {
+                      "id": "docker/images/README.md",
+                      "area": 1.020138888888889,
+                      "max_area": 1.020138888888889,
+                      "height": 0.12657520942090567
+                    }
+                  ]
                 }
               ]
             }
@@ -1277,81 +2912,75 @@
           "children": [
             {
               "id": "README.md",
-              "area": 21.17897497982244,
-              "max_area": 21.17897497982244,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": ".travis.yml",
-              "area": 1.5038337368845844,
-              "max_area": 1.8250605326876514,
-              "height": 0.11474074074074075
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.4442697584071871
             },
             {
               "id": "setup.py",
-              "area": 3.792574656981437,
-              "max_area": 3.993341404358354,
-              "height": 0.39481481481481484
-            },
-            {
-              "id": "MANIFEST.in",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "README",
-              "area": 0.5200766747376917,
-              "max_area": 0.5200766747376917,
-              "height": -0.2
-            },
-            {
-              "id": "NEWS",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "LICENSE",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "Dockerfile",
-              "area": 0.7007667473769169,
-              "max_area": 0.7007667473769169,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "requirements.txt",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "requirements_setup.txt",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "AUTHORS",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
-            },
-            {
-              "id": "requirements_tests.txt",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
+              "area": 1.4027777777777777,
+              "max_area": 1.6041666666666667,
+              "height": 0.18818137671482335
             },
             {
               "id": ".gitignore",
-              "area": 0.5,
-              "max_area": 0.5,
-              "height": 0.11474074074074075
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": "NEWS",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": ".travis.yml",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.12415928129173243
+            },
+            {
+              "id": "setup.cfg",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": "requirements_tests.txt",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": "AUTHORS",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": "requirements.txt",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": "MANIFEST.in",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": "LICENSE",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
+            },
+            {
+              "id": ".gitattributes",
+              "area": 1.020138888888889,
+              "max_area": 1.020138888888889,
+              "height": 0.1
             }
           ]
         }
