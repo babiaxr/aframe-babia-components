@@ -100,6 +100,8 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponent = prodElement.components['babia-querygithub']
         } else if (prodElement.components['babia-selector']) {
             prodComponent = prodElement.components['babia-selector'];
+        } else if (prodElement.components['babia-treebuilder']) {
+            prodComponent = prodElement.components['babia-treebuilder'];
         } else {
             console.error("Problem registering to the querier", el);
             return
@@ -115,8 +117,6 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponentNodes = prodElementNodes.components['babia-queryes']
         } else if (prodElementNodes.components['babia-querygithub']) {
             prodComponentNodes = prodElementNodes.components['babia-querygithub']
-        } else if (prodElementNodes.components['babia-selector']) {
-            prodComponentNodes = prodElementNodes.components['babia-selector'];
         } else {
             console.error("Problem registering to the querier", el);
             return
@@ -132,8 +132,6 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponentLinks = prodElementLinks.components['babia-queryes']
         } else if (prodElementLinks.components['babia-querygithub']) {
             prodComponentLinks = prodElementLinks.components['babia-querygithub']
-        } else if (prodElementLinks.components['babia-selector']) {
-            prodComponentLinks = prodElementLinks.components['babia-selector'];
         } else {
             console.error("Problem registering to the querier", el);
             return
@@ -152,6 +150,8 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponent = el.components['babia-querygithub']
         } else if (el.components['babia-selector'] && selfProducer != 'babia-selector') {
             prodComponent = el.components['babia-selector'];
+        } else if (el.components['babia-treebuilder']) {
+            prodComponent = el.components['babia-treebuilder'];
         } else {
             // Look for a querier or filterdata in the scene
             if (document.querySelectorAll("[babia-filter]").length > 0) {
@@ -164,6 +164,8 @@ let findProdComponent = (data, el, selfProducer) => {
                 prodComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
             } else if (document.querySelectorAll('[babia-selector]').length > 0) {
                 prodComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
+            } else if (document.querySelectorAll('[babia-treebuilder]').length > 0) {
+                prodComponent = document.querySelectorAll('[babia-treebuilder]')[0].components['babia-treebuilder'];
             } else {
                 console.error("Error, querier not found", el, el.components, el.components['babia-selector']);
                 return
