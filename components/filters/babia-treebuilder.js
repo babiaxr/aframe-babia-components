@@ -1,3 +1,7 @@
+let findProdComponent = require('../others/common').findProdComponent;
+let parseJson = require('../others/common').parseJson;
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -21,284 +25,91 @@ AFRAME.registerComponent('babia-treebuilder', {
     multiple: false,
 
     /**
+     * Producer component
+     */
+    prodComponent: undefined,
+
+    /**
+     * NotiBuffer identifier
+     */
+    notiBufferId: undefined,
+
+    /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { },
+    init: function () { 
+        this.notiBuffer = new NotiBuffer();
+    },
 
     /**
     * Called when component is attached and when component data changes.
     * Generally modifies the entity based on the data.
     */
-
-    update: function (oldData) {
+    update: function (oldData){
         let data = this.data;
         let el = this.el;
-        let self = this;
 
-        // Highest priority to data
-        if (data.data && oldData.data !== data.data) {
-            let rawData = parseEmbeddedJSONData(data.data)
+        if (data.data && (oldData.data !== data.data || data.field !== oldData.field || data.split_by !== oldData.split_by)){
+            let _data = parseJson(data.data);
+            this.processData(_data);         
+        } else if ((data.from !== oldData.from || data.field !== oldData.field || data.split_by !== oldData.split_by)){
+            // Unregister from old notiBuffer
+            if(this.prodComponent) {
+                this.prodComponent.notiBuffer.unregister(this.notiBufferId)
+            };
 
-            // Generating tree, save the references
-            let dataTreeFormat = generateTree(data, rawData)
-            self.babiaData = dataTreeFormat
-            self.babiaMetadata = {
-                id: self.babiaMetadata.id++
+            // Register for the new one
+            // (It will also invoke processData once if there is already data)
+            this.prodComponent = findProdComponent(data, el, "babia-treebuilder")
+            if (this.prodComponent.notiBuffer){
+            this.notiBufferId = this.prodComponent.notiBuffer.register(this.processData.bind(this))
             }
+        }
+    },
 
-            // Dispatch interested events
-            dataReadyToSend("babiaData", self)
-        } else {
+    // Generate the datatree and save it
+    processData: function (paths) {
+        let data = this.data;
+        let tree = [];
 
-            if (data.from !== oldData.from) {
-                // Unregister for old querier/filterdata
-                if (self.dataComponent) { self.dataComponent.unregister(el) }
-
-                // Find the component and get if querier or filterdata by the event               
-                let eventName = findDataComponent(data, el, self)
-                // If changed to filterdata or to querier
-                if (self.dataComponentEventName && self.dataComponentEventName !== eventName) {
-                    el.removeEventListener(self.dataComponentEventName, _listener, true)
-                }
-                // Assign new eventName
-                self.dataComponentEventName = eventName
-
-                // Attach to the events of the data component
-                el.addEventListener(self.dataComponentEventName, _listener = (e) => {
-                    // Get again the raw data from the querier/filterdata
-                    self.dataComponentDataPropertyName = e.detail
-                    let rawData = JSON.parse(JSON.stringify(self.dataComponent[self.dataComponentDataPropertyName]))
-                    
-                    // Generate Tree, save the new references
-                    let dataTreeFormat = generateTree(data, rawData)
-                    self.babiaData = dataTreeFormat
-                    self.babiaMetadata = {
-                        id: self.babiaMetadata.id++
+        for (let i = 0; i < paths.length; i++) {
+            let path = paths[i][data.field].split(data.split_by);
+            let currentLevel = tree;
+            for (let j = 0; j < path.length; j++) {
+                // Check if starts with the split char
+                if (!path[j]) { continue }
+    
+                let part = path[j];
+                let existingPath = findWhere(currentLevel, 'uid', part);
+    
+                if (existingPath) {
+                    currentLevel = existingPath.children;
+                } else {
+                    let newPart = {}
+                    if (j === path.length - 1) {
+                        newPart = paths[i]
+                        newPart['id'] = part
+                    } else {
+                        newPart['children'] = []
+                        newPart['id'] = paths[i][data.field].split(part)[0] + part
                     }
-
-                    // Dispatch interested events
-                    dataReadyToSend("babiaData", self)
-                });
-
-                // Register for the new one
-                self.dataComponent.register(el)
-                return
-            }
-
-            // If changed splitter (is mandatory, so it has been defined, first time is undefined)
-            if ((oldData.split_by && data.split_by !== oldData.split_by)
-                || (oldData.field && data.field !== oldData.field)) {
-                // Get again the raw data from the querier/filterdata
-                let rawData = JSON.parse(JSON.stringify(self.dataComponent[self.dataComponentDataPropertyName]))
-
-                // Generate Tree, save the new references
-                let dataTreeFormat = generateTree(data, rawData)
-                self.babiaData = dataTreeFormat
-                self.babiaMetadata = {
-                    id: self.babiaMetadata.id++
+                    newPart['uid'] = part                  
+                    currentLevel.push(newPart);
+                    currentLevel = newPart.children;
                 }
-
-                // Dispatch interested events
-                dataReadyToSend("babiaData", self)
             }
         }
-    },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
-
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-    /**
-    * Querier/filterdata component target
-    */
-    dataComponent: undefined,
-
-    /**
-     * Property of the querier/filterdata where the data is saved
-     */
-    dataComponentDataPropertyName: "babiaData",
-
-    /**
-     * Event name to difference between querier and filterdata
-     */
-    dataComponentEventName: undefined,
-
-    /**
-     * Where the data is gonna be stored
-     */
-    babiaData: undefined,
-
-    /**
-     * Where the metaddata is gonna be stored
-     */
-    babiaMetadata: {
-        id: 0
-    },
-
-    /**
-     * Register function
-     */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
-
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchEventOnElement(interestedElem, "babiaData")
-        }
-    },
-
-    /**
-     * Unregister function
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-            this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements
-     */
-    interestedElements: [],
+        this.notiBuffer.set(tree);
+    }
 })
 
-let findDataComponent = (data, el, self) => {
-    let eventName = "babiaQuerierDataReady"
-    if (data.from) {
-        // Save the reference to the querier or filterdata
-        let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babia-filter']) {
-            self.dataComponent = dataElement.components['babia-filter']
-            eventName = "babiaFilterDataReady"
-        } else if (dataElement.components['babia-selector']) {
-            self.dataComponent = dataElement.components['babia-selector']
-            eventName = "babiaSelectorDataReady"
-        } else if (dataElement.components['babia-queryjson']) {
-            self.dataComponent = dataElement.components['babia-queryjson']
-        } else if (dataElement.components['babia-queryes']) {
-            self.dataComponent = dataElement.components['babia-queryes']
-        } else if (dataElement.components['babia-querygithub']) {
-            self.dataComponent = dataElement.components['babia-querygithub']
-        } else {
-            console.error("Problem registering to the querier")
-            return
-        }
+function findWhere(array, key, value) {
+    t = 0;
+    // find the index where the id is the as the a value
+    while (t < array.length && array[t][key] !== value) { t++ };
+    if (t < array.length) {
+        return array[t]
     } else {
-        // Look for a querier or filterdata in the same element and register
-        if (el.components['babia-filter']) {
-            self.dataComponent = el.components['babia-filter']
-            eventName = "babiaFilterDataReady"
-        } else if (el.components['babia-selector']) {
-            self.dataComponent = el.components['babia-selector']
-            eventName = "babiaSelectorDataReady"
-        } else if (el.components['babia-queryjson']) {
-            self.dataComponent = el.components['babia-queryjson']
-        } else if (el.components['babia-queryes']) {
-            self.dataComponent = el.components['babia-queryes']
-        } else if (el.components['babia-querygithub']) {
-            self.dataComponent = el.components['babia-querygithub']
-        } else {
-            // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babia-filter]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
-                eventName = "babiaFilterDataReady"
-            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
-            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-            } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
-            } else {
-                console.error("Error, querier not found")
-                return
-            }
-        }
+        return false;
     }
-    return eventName
-}
-
-
-function generateTree(data, paths) {
-    let tree = [];
-
-    for (let i = 0; i < paths.length; i++) {
-        let path = paths[i][data.field].split(data.split_by);
-        let currentLevel = tree;
-        for (let j = 0; j < path.length; j++) {
-            // Check if starts with the split char
-            if (!path[j]) {
-                continue
-            }
-
-            let part = path[j];
-
-            let existingPath = findWhere(currentLevel, 'uid', part);
-
-            if (existingPath) {
-                currentLevel = existingPath.children;
-            } else {
-                let newPart = {}
-                if (j === path.length - 1) {
-                    newPart = paths[i]
-                    newPart['id'] = part
-                } else {
-                    newPart['children'] = []
-                    newPart['id'] = paths[i][data.field].split(part)[0] + part
-                }
-                newPart['uid'] = part
-                                
-                currentLevel.push(newPart);
-                currentLevel = newPart.children;
-            }
-        }
-    }
-    return tree;
-
-    function findWhere(array, key, value) {
-        t = 0; // t is used as a counter
-        while (t < array.length && array[t][key] !== value) { t++; }; // find the index where the id is the as the aValue
-
-        if (t < array.length) {
-            return array[t]
-        } else {
-            return false;
-        }
-    }
-}
-
-let parseEmbeddedJSONData = (embedded) => {
-    let dataRetrieved = JSON.parse(embedded)
-    return dataRetrieved
-}
-
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-        dispatchEventOnElement(element, propertyName)
-    });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaTreeDataReady", propertyName)
 }
