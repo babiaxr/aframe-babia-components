@@ -15,20 +15,20 @@
 
 <body>
   <a-scene environment="preset: yavapai" renderer="antialias: true">
-    <!-- 1 Querier -->
+     <!-- 1 Slider -->
+    <a-entity id="nav" babia-navigator position="5 3 4" rotation="0 0 0"></a-entity>
+    
+    <!-- 2 Querier -->
     <a-entity id="queriertest" babia-queryjson="url: ./commits2.json;"></a-entity>
-
-    <!-- 2 Selector -->
+   
+    <!-- 3 Selector -->
     <a-entity id="selectortest" babia-selector="from: queriertest; controller: nav" ></a-entity>
 
-    <!-- 3 Treebuilder -->
+    <!-- 4 Treebuilder -->
     <a-entity id="treetest" babia-treebuilder="field: id; split_by: /; from: selectortest"></a-entity>
 
-    <!-- Boats Visualizer -->
+    <!-- 5 Boats Visualizer -->
     <a-entity scale="0.4 1 0.4" babia-boats="from: treetest; area: area" position="0 1 0"></a-entity>
-
-    <!-- Slider -->
-    <a-entity id="nav" babia-navigator position="5 3 4" rotation="0 0 0"></a-entity>
 
     <a-entity movement-controls="fly: true" position="0 5 10" rotation="0 0 0">
       <a-entity camera look-controls></a-entity>

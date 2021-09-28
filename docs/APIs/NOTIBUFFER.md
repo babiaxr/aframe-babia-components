@@ -33,7 +33,9 @@ An instance of this class can be added to any producer component that fetches or
 
 It is important to remember that a component can be both a producer and a consumer, since it might receive the data from a previous producer and its data might be accessed by another consumer.
 
-It is also possible that two components need to read from each other (like in the case of babia-navigator and babia-selector). This is why two optional parameters have been added to the NotiBuffer constructor and an extra "details" one has been added to the register and unregister functions. To know more about the usage of these components, go to the [last section](#other). 
+It is also possible that two components need to read from each other (like in the case of babia-navigator and babia-selector). This is why two optional parameters have been added to the NotiBuffer constructor and an extra "details" one has been added to the register and unregister functions. To know more about the usage of these components, go to the [last section](#other).
+
+><mark>Important:</mark> The producer and consumer components can be both part of the same entity, in which case the order of appearance is not important. But in case they are in different entities, it is very important to respect the order **Producer-Consumer**. The consumer needs the producer to be initialized and therefore must be declared after it.
 
 ## Components
 
