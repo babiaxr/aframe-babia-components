@@ -25,7 +25,7 @@
     <a-entity id="selectortest" babia-selector="from: queriertest; controller: nav" ></a-entity>
 
     <!-- 4 Treebuilder -->
-    <a-entity id="treetest" babia-treebuilder="field: id; split_by: /; from: selectortest"></a-entity>
+    <a-entity id="treetest" babia-treebuilder="field: path; split_by: /; from: selectortest"></a-entity>
 
     <!-- 5 Boats Visualizer -->
     <a-entity scale="0.4 1 0.4" babia-boats="from: treetest; area: area" position="0 1 0"></a-entity>
