@@ -21,9 +21,26 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | 1.1.2 |
 | One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | 1.1.3 |
 | Pokemon        | 2021-06-07   |  2021-06-26 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/17) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Pokemon) | [Link](#pokemon)  | 1.1.4 |
+| Queens Blade        | 2021-06-26   |  2021-09-29 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/18) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Queens%20Blade) | [Link](#queens-blade)  | 1.2.0 |
 
 
 ## Release notes
+
+### Queens Blade
+
+> NPM 1.2.0 version
+
+#### Async
+
+All components works using NOTIBUFFER and ASYNC calls, big new feautre that improves performance, see [NOTIBUFFER API](./APIs/NOTIBUFFER.md)
+
+#### Time evolution boats
+
+Time evolution boats has been added, used with a selector, see this [tutorial](./Tutorials/temporal_evol_with_boats.md)
+
+#### Selector
+
+Selector adapted to all the components
 
 ### Pokemon
 
