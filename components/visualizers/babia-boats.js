@@ -100,14 +100,12 @@ AFRAME.registerComponent('babia-boats', {
                     this.notiBufferId = this.prodComponent.notiBuffer
                         .register(this.processData.bind(this))
                 }
-
-            // If changed whatever, re-print with the current data
-            if (data !== oldData && this.newData) {
-                console.log("Generating city...")
-                this.processData(this.newData)
-            }
         }
-        return
+        // If changed whatever, re-print with the current data
+        else if (data !== oldData && this.newData) {
+            console.log("Generating city...")
+            this.processData(this.newData)
+        }
     },
  
     /**
@@ -310,8 +308,8 @@ AFRAME.registerComponent('babia-boats', {
             let figure
             if (elements[i].children) {
                 figure = {
-                    id: "boat-" + elements[i].id,
-                    name: elements[i].id,
+                    id: "boat-" + elements[i].uid,
+                    name: elements[i].uid,
                     posX: posX,
                     posY: posY,
                     width: element.width,
@@ -323,8 +321,8 @@ AFRAME.registerComponent('babia-boats', {
             } else {
                 if (this.data.area) {
                     figure = {
-                        id: "boat-" + elements[i].id,
-                        name: elements[i].id,
+                        id: "boat-" + elements[i].uid,
+                        name: elements[i].uid,
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(element.area),
@@ -333,8 +331,8 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 } else {
                     figure = {
-                        id: "boat-" + elements[i].id,
-                        name: elements[i].id,
+                        id: "boat-" + elements[i].uid,
+                        name: elements[i].uid,
                         posX: posX,
                         posY: posY,
                         width: element.width,
@@ -953,7 +951,7 @@ AFRAME.registerComponent('babia-boats', {
     * Process data obtained from producer
     */
     processData: function (_data) {
-        console.log("processData", this);
+        console.log("processData", _data);
         let data = this.data;
         this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };

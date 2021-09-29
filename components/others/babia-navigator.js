@@ -85,12 +85,14 @@ AFRAME.registerComponent('babia-navigator', {
         // Out of range
         if ((value >= 0) && (value <= this.sliderEl.max)){
             this.sliderEl.setAttribute('babia-slider', 'value', value)
+            this.notiBuffer.set('babiaSetPosition' + value)
         } else {
             if (this.controlsEl.querySelector('.babiaPause')){
+                this.notiBuffer.set('babiaSetPosition' + value)
                 this.el.querySelector('.babiaPause').emit('click')
             }
         }
-        this.notiBuffer.set('babiaSetPosition' + value)
+        
     },
     registerBack: function(prodComponent){
         this.selector = prodComponent;

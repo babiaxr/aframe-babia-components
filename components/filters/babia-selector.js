@@ -32,6 +32,7 @@ class Selectable {
         } else {
             this.current = this.length
         }
+        console.log("next: ", this.data)
         return(selected);
     }
 
@@ -42,12 +43,14 @@ class Selectable {
         } else {
             this.current = 0
         }
+        console.log("prev: ", this.data)
         return(selected);
     }
 
     setValue(value)  {
         let selected = this.data[this.selectors[value]];
         this.current = value + 1;
+        console.log("setValue: ", this.data)
         return(selected);
     }
 };
@@ -146,27 +149,24 @@ AFRAME.registerComponent('babia-selector', {
         if (this.selectable.current > this.selectable.length - 1){
             this.selectable.current = this.selectable.length - 1
             this.isPaused = true
-
             this.navNotiBuffer.set('babiaStop')
+        } else {
+            this.newData = this.selectable.next();
+            this.notiBuffer.set(this.newData);
+            this.navNotiBuffer.set(this.selectable.current)
+            this.babiaMetadata = { id: this.selectable.current};
         }
-        this.newData = this.selectable.next();
-        this.notiBuffer.set(this.newData);
-
-        this.navNotiBuffer.set(this.selectable.current)
-        this.babiaMetadata = { id: this.selectable.current};
     },
 
     prevSelect: function() {
         if (this.selectable.current >= 0){
             this.newData = this.selectable.prev();
-            this.babiaMetadata = { id: this.selectable.current };
-            
             this.notiBuffer.set(this.newData);
             this.navNotiBuffer.set(this.selectable.current)
+            this.babiaMetadata = { id: this.selectable.current };
         } else {
             this.selectable.current = 0
             this.isPaused = true
-
             this.navNotiBuffer.set('babiaStop')
         } 
     },
