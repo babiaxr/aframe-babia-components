@@ -1,3 +1,5 @@
+let findProdComponent = require('../others/common').findProdComponent;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -36,55 +38,14 @@ AFRAME.registerComponent('babia-boats', {
     entitiesWithLegend: [],
 
     /**
-    * Register function when I'm updated
-    */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
-
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchEventOnElement(interestedElem, "babiaData")
-        }
-    },
-
-    /**
-     * Unregister function when I'm updated
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-            this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements when I'm updated
-     */
-    interestedElements: [],
-
-    /**
     * Querier component target
     */
     dataComponent: undefined,
 
     /**
-     * Property of the querier where the data is saved
-     */
-    dataComponentDataPropertyName: "babiaData",
-
-    /**
-     * Event name to difference between querier and filterdata
-     */
-    dataComponentEventName: undefined,
-
-
-    /**
      * Where the data is gonna be stored
      */
-    babiaData: undefined,
+    newData: undefined,
 
     /**
      * Where the metaddata is gonna be stored
@@ -104,13 +65,6 @@ AFRAME.registerComponent('babia-boats', {
     multiple: false,
 
     /**
-    * Called once when component is attached. Generally for initial setup.
-    */
-    init: function () {
-
-    },
-
-    /**
      * 
      */
     duration: 2000,
@@ -126,7 +80,6 @@ AFRAME.registerComponent('babia-boats', {
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
-        let self = this;
         if (!this.figures){
             this.figures = [];
         }
@@ -134,113 +87,44 @@ AFRAME.registerComponent('babia-boats', {
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
             // Get from the json or embedded
-            let rawData
-            if (typeof data.data == 'string') {
-                if (data.data.endsWith('json')) {
-                    rawData = requestJSONDataFromURL(data)
-                } else {
-                    rawData = parseEmbeddedJSONData(data.data)
-                }
-            } else {
-                rawData = data.data;
-            };
-            // And save it            
-            self.babiaData = rawData
-            self.babiaMetadata = {
-                id: self.babiaMetadata.id++
-            }
-
-            // If color metric activated, save in the metadata the max and min value for mapping
-            if (data.color) {
-                let [color_max, color_min] = getMaxMinColorValues(rawData, data.color)
-                self.babiaMetadata['color_max'] = color_max
-                self.babiaMetadata['color_min'] = color_min
-            }
-
-            // Create city
-            self.chart = self.onDataLoaded(rawData)
-
-        } else {
-
-            if (data.from !== oldData.from) {
+            let _data = JSON.parse(data.data);
+            this.processData(_data);
+        } else if (data.from !== oldData.from) {
                 // Unregister for old treegenerator
-                if (self.dataComponent) { self.dataComponent.unregister(el) }
-
+                if (this.prodComponent) {
+                    this.prodComponent.notiBuffer.unregister(this.notiBufferId) 
+                };
                 // Register for the new one
-                findTreeGenerator(data, el, self)
-
-                // Attach to the event of the querier
-                el.addEventListener('babiaTreeDataReady', function (e) {
-                    // Get the data from the info of the event (propertyName)
-                    self.querierDataPropertyName = e.detail
-                    let rawData = self.dataComponent[self.querierDataPropertyName]
-                    self.babiaData = rawData
-                    self.babiaMetadata = {
-                        id: self.babiaMetadata.id++
-                    }
-
-                    // If color metric activated, save in the metadata the max and min value for mapping
-                    if (self.data.color) {
-                        let [color_max, color_min] = getMaxMinColorValues(rawData, self.data.color)
-                        self.babiaMetadata['color_max'] = color_max
-                        self.babiaMetadata['color_min'] = color_min
-                    }
-
-                    // Create city
-                    self.chart = self.onDataLoaded(self.babiaData)
-
-                    // Dispatch interested events
-                    dataReadyToSend("babiaData", self)
-                });
-
-                // Register to the querier
-                self.dataComponent.register(el)
-            }
-
-            // If changed whatever, re-print with the current data
-            if (data !== oldData && self.babiaData) {
-                while (self.el.firstChild)
-                    self.el.firstChild.remove();
-                console.log("Generating city...")
-                self.chart = self.onDataLoaded(self.babiaData)
-
-                // Dispatch interested events because I updated my visualization
-                dataReadyToSend("babiaData", self)
-            }
+                this.prodComponent = findProdComponent(data, el)
+                if (this.prodComponent.notiBuffer){
+                    this.notiBufferId = this.prodComponent.notiBuffer
+                        .register(this.processData.bind(this))
+                }
         }
-        return
-
+        // If changed whatever, re-print with the current data
+        else if (data !== oldData && this.newData) {
+            console.log("Generating city...")
+            this.processData(this.newData)
+        }
     },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
-
+ 
     /**
     * Called on each scene tick.
     */
     tick: function (t, delta) {
         if (this.animation) {
             let t = { x: 0, y: 0, z: 0 };
-            this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
+            if ((Date.now() - this.start_time) > this.duration) {
+                this.animation = false;
+                // Fix bugs when change instante quickly
+                this.setFigures(this.figures, t);
+            } else {
+                this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
+            }
         }
     },
 
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-    onDataLoaded: function (items) {
-
+    updateChart: function (items) {
         console.log('Data Loaded.');
         let t = { x: 0, y: 0, z: 0 };
 
@@ -279,8 +163,6 @@ AFRAME.registerComponent('babia-boats', {
 
         // Register all figures before drawing
         [x, y, t, this.figures] = this.generateElements(elements, this.figures, t, increment);
-
-        console.log(this.figures)
 
         // Draw figures
         t.x = 0;
@@ -334,7 +216,7 @@ AFRAME.registerComponent('babia-boats', {
          * Then save all data in figures array
          */
         for (let i = 0; i < elements.length; i++) {
-            // To do not overwrite babiaData
+            // To do not overwrite newData
             let element = {}
             if (this.data.width) {
                 element.width = elements[i][this.data.width] || 0.5
@@ -430,8 +312,8 @@ AFRAME.registerComponent('babia-boats', {
             let figure
             if (elements[i].children) {
                 figure = {
-                    id: "boat-" + elements[i].id,
-                    name: elements[i].id,
+                    id: "boat-" + elements[i].uid,
+                    name: elements[i].uid,
                     posX: posX,
                     posY: posY,
                     width: element.width,
@@ -443,8 +325,8 @@ AFRAME.registerComponent('babia-boats', {
             } else {
                 if (this.data.area) {
                     figure = {
-                        id: "boat-" + elements[i].id,
-                        name: elements[i].id,
+                        id: "boat-" + elements[i].uid,
+                        name: elements[i].uid,
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(element.area),
@@ -453,8 +335,8 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 } else {
                     figure = {
-                        id: "boat-" + elements[i].id,
-                        name: elements[i].id,
+                        id: "boat-" + elements[i].uid,
+                        name: elements[i].uid,
                         posX: posX,
                         posY: posY,
                         width: element.width,
@@ -804,6 +686,7 @@ AFRAME.registerComponent('babia-boats', {
         let self = this
         let new_time = Date.now();
         let entity;
+
         for (let i in figures) {
             if (document.getElementById(figures[i].id)) {
                 // If exists
@@ -897,12 +780,6 @@ AFRAME.registerComponent('babia-boats', {
                 setOpacity(entity_del, opacity);
             }
         }
-
-        if ((new_time - this.start_time) > this.duration) {
-            this.animation = false;
-            // Fix bugs when change instante quickly
-            this.setFigures(this.figures, translate);
-        }
     },
 
     setFigures: function (figures, translate){
@@ -919,7 +796,7 @@ AFRAME.registerComponent('babia-boats', {
             }
             entity.setAttribute('position', {
                 x: figure.posX - translate.x,
-                y: (figure.height + translate.y) / 2,
+                y: (parseFloat(figure.height) + translate.y) / 2,
                 z: - figure.posY + translate.z
             });
 
@@ -999,9 +876,9 @@ AFRAME.registerComponent('babia-boats', {
                 let inc_y = (delta * dist_y) / (2 * this.duration);
                 let inc_z = (delta * dist_z) / this.duration;
 
-                let last_x = entity.getAttribute('position').x;
-                let last_y = entity.getAttribute('position').y;
-                let last_z = entity.getAttribute('position').z;
+                let last_x = parseFloat(entity.getAttribute('position').x);
+                let last_y = parseFloat(entity.getAttribute('position').y);
+                let last_z = parseFloat(entity.getAttribute('position').z);
 
                 let new_x = last_x - inc_x;
                 let new_y = last_y + inc_y;
@@ -1018,7 +895,7 @@ AFRAME.registerComponent('babia-boats', {
             } else if ((new_time - this.start_time) > this.duration) {
                 entity.setAttribute('position', {
                     x: figure.posX - translate.x,
-                    y: (figure.height + translate.y) / 2,
+                    y: (parseFloat(figure.height) + translate.y) / 2,
                     z: - figure.posY + translate.z
                 });
             }
@@ -1067,14 +944,28 @@ AFRAME.registerComponent('babia-boats', {
         });
 
         return entity;
-    }
-})
+    },
 
-// TODO: legend scale fix
-let countDecimals = function (value) {
-    if (Math.floor(value) === value) return 0;
-    return value.toString().split(".")[1].length || 0;
-}
+    /*
+    * Process data obtained from producer
+    */
+    processData: function (_data) {
+        console.log("processData", _data);
+        let data = this.data;
+        this.newData = _data;
+        this.babiaMetadata = { id: this.babiaMetadata.id++ };
+      
+        // If color metric activated, save in the metadata the max and min value for mapping
+        if (data.color) {
+            let [color_max, color_min] = getMaxMinColorValues(this.newData, data.color)
+            this.babiaMetadata['color_max'] = color_max
+            this.babiaMetadata['color_min'] = color_min
+        }
+
+        // Create city
+        this.updateChart(this.newData)
+    },
+})
 
 /**
  * This function generate a plane at the top of the building with the desired text
@@ -1166,88 +1057,6 @@ let getLevels = (elements, levels) => {
         }
     }
     return max_level;
-}
-
-/**
- * Request a JSON url
- */
-let requestJSONDataFromURL = (data) => {
-    let items = data.data
-    let raw_items
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Initialize a request
-    request.open('get', items, false)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            ////// console.log("data OK in request.response", request.response)
-            // Save data
-            if (typeof request.response === 'string' || request.response instanceof String) {
-                raw_items = JSON.parse(request.response)
-
-            } else {
-                raw_items = request.response
-            }
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        }
-    };
-
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-    };
-    request.send();
-
-    return raw_items
-}
-
-let findTreeGenerator = (data, el, self) => {
-    if (data.from) {
-        // Save the reference to the querier
-        let querierElement = document.getElementById(data.from)
-        if (querierElement.components['babia-treebuilder']) {
-            self.dataComponent = querierElement.components['babia-treebuilder']
-        } else {
-            console.error("Problem registering to the treegenerator")
-            return
-        }
-    } else {
-        // Look for a querier in the same element and register
-        if (el.components['babia-treebuilder']) {
-            self.dataComponent = el.components['babia-treebuilder']
-        } else {
-            // Look for a querier in the scene
-            if (document.querySelectorAll("[babia-treebuilder]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-treebuilder]")[0].components['babia-treebuilder']
-            } else {
-                console.error("Error, treegenerator not found")
-                return
-            }
-        }
-    }
-}
-
-let parseEmbeddedJSONData = (embedded) => {
-    let dataRetrieved = JSON.parse(embedded)
-    return dataRetrieved
-}
-
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-        dispatchEventOnElement(element, propertyName)
-    });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaVisualizerUpdated", propertyName)
 }
 
 let getMaxMinColorValues = (data, colorfield, max, min) => {

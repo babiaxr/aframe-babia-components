@@ -1,4 +1,6 @@
-let findDataComponent = require('../others/common').findDataComponent;
+let findProdComponent = require('../others/common').findProdComponent;
+let findNavComponent = require('../others/common').findNavComponent;
+let parseJson = require('../others/common').parseJson;
 
 class Selectable {
     /*
@@ -30,6 +32,7 @@ class Selectable {
         } else {
             this.current = this.length
         }
+        console.log("next: ", this.data)
         return(selected);
     }
 
@@ -40,12 +43,14 @@ class Selectable {
         } else {
             this.current = 0
         }
+        console.log("prev: ", this.data)
         return(selected);
     }
 
     setValue(value)  {
         let selected = this.data[this.selectors[value]];
         this.current = value + 1;
+        console.log("setValue: ", this.data)
         return(selected);
     }
 };
@@ -54,6 +59,8 @@ class Selectable {
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
+
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
 /**
 * Selector component for BabiaXR.
@@ -83,45 +90,170 @@ AFRAME.registerComponent('babia-selector', {
     * Called once when component is attached. Generally for initial setup.
     */
     init: function () { 
+        this.notiBuffer = new NotiBuffer();
+        this.navNotiBuffer = new NotiBuffer();
 
         this.isPaused = false
         this.toPresent = true
         this.speed = 1
+    },
 
-        this.el.addEventListener('babiaStop',  _listener = (e) => {
+    /**
+    * Called when component is attached and when component data changes.
+    * Generally modifies the entity based on the data.
+    */
+
+    babiaMetadata: { id: 0 },
+
+    update: function (oldData) {
+        let data = this.data;
+        let el = this.el;
+    
+        // Highest priority to data
+        if (data.data && oldData.data !== data.data) {
+            let _data = parseJson(data.data);
+            this.processData(_data)
+        
+        } else {
+            if (data.from !== oldData.from) {
+                // Unregister for old producer
+                if (this.prodComponent) { 
+                    this.prodComponent.notiBuffer.unregister(this.notiBufferId) 
+                };
+                // Register for the new one
+                this.prodComponent = findProdComponent(data, el, 'babia-selector')
+                if (this.prodComponent.notiBuffer){
+                    this.notiBufferId = this.prodComponent.notiBuffer.register(this.processData.bind(this))
+                }
+            };    
+        }
+
+        // find controller
+        if (data.controller){
+            this.selectorController = document.querySelector('#' + data.controller)
+            // Unregister for old navigator
+            if (this.navComponent) { 
+                this.navComponent.notiBuffer.unregister(this.navNotiBufferId, this) 
+            };
+            // Register for the new one
+            this.navComponent = findNavComponent(data, el)
+            if (this.navComponent.notiBuffer){
+                this.navNotiBufferId = this.navComponent.notiBuffer.register(this.processEvent.bind(this), this)
+            }
+        }
+        
+        
+    },
+
+    nextSelect: function() {
+        if (this.selectable.current > this.selectable.length - 1){
+            this.selectable.current = this.selectable.length - 1
             this.isPaused = true
-        })
+            this.navNotiBuffer.set('babiaStop')
+        } else {
+            this.newData = this.selectable.next();
+            this.notiBuffer.set(this.newData);
+            this.navNotiBuffer.set(this.selectable.current)
+            this.babiaMetadata = { id: this.selectable.current};
+        }
+    },
 
-        this.el.addEventListener('babiaContinue',  _listener = (e) => {
+    prevSelect: function() {
+        if (this.selectable.current >= 0){
+            this.newData = this.selectable.prev();
+            this.notiBuffer.set(this.newData);
+            this.navNotiBuffer.set(this.selectable.current)
+            this.babiaMetadata = { id: this.selectable.current };
+        } else {
+            this.selectable.current = 0
+            this.isPaused = true
+            this.navNotiBuffer.set('babiaStop')
+        } 
+    },
+
+    setSelect: function(value) {
+        if (((value != this.selectable.current - 1) && this.toPresent) || ((value != this.selectable.current + 1) && !this.toPresent)) {
+            this.newData = this.selectable.setValue(value);
+            if (this.toPresent) {
+                this.babiaMetadata = { id: value++ };
+            } else {
+                this.babiaMetadata = { id: value-- };
+                this.selectable.current -=2
+            }
+            this.notiBuffer.set(this.newData);
+            this.navNotiBuffer.set(value);
+        }
+    },
+
+    loop: function() {
+        if (!this.isPaused){
+            if(this.toPresent){
+                this.nextSelect();
+            } else {
+                this.prevSelect();
+            }
+        }
+    },
+
+    /**
+    * Producer component
+    */
+    prodComponent: undefined,
+
+    /**
+    * Navigation component
+    */
+    navComponent: undefined,
+
+    /**
+    * Producer NotiBuffer identifier
+    */
+    prodNotiBufferId: undefined,
+
+    /**
+    * Navigation NotiBuffer identifier
+    */
+    navNotiBufferId: undefined,
+
+    /**
+     * Where new data is stored
+     */
+    newData: undefined,
+
+    processData: function (_data) {
+        // Create a Selectable object, and set the updating interval
+        this.selectable = new Selectable(_data, this.data.select); 
+        this.navNotiBuffer.set(this.selectable.current)
+        let self = this;
+        this.nextSelect();
+        this.interval = window.setInterval(function () {
+            self.loop()
+        }, self.data.timeout * self.speed);
+      },
+
+      processEvent: function(event){
+        if(event.includes('babiaStop')) {
+            this.isPaused = true
+        } else if (event.includes('babiaContinue')) {
             this.isPaused = false
-        })
-
-        this.el.addEventListener('babiaToPresent',  _listener = (e) => {
+        } else if (event.includes('babiaToPresent')) {
             this.toPresent = true
             if (this.selectable.current != this.selectable.length){
                 this.selectable.current += 2
             }
-        })
-
-        this.el.addEventListener('babiaToPast',  _listener = (e) => {
+        } else if (event.includes('babiaToPast')) {
             this.toPresent = false
             if (this.selectable.current < 1){
                 this.selectable.current = 0
             } else {
                 this.selectable.current -= 2
             }
-        })
-
-        this.el.addEventListener('babiaSetPosition',  _listener = (e) => {
-            if (e.target == this.el){
+        } else if (event.includes('babiaSetPosition')) {
                 this.isPaused = true
-                this.setSelect(e.detail)
-                this.selectorController.emit('babiaStop')
-            }
-        })
-
-        this.el.addEventListener('babiaSetStep',  _listener = (e) => {
-            this.selectable.step = e.detail
+                this.setSelect(parseInt(event.substring(16), 10))
+                this.navNotiBuffer.set('babiaStop')
+        } else if (event.includes('babiaSetStep')) {
+            this.selectable.step = parseInt(event.substring(12), 10)
             if (this.toPresent){
                 if (this.current + this.selectable.step > this.selectable.length){
                     this.current = this.selectable.length - 1
@@ -136,205 +268,17 @@ AFRAME.registerComponent('babia-selector', {
                 }
                 
             }
-        })
+        }
 
-        this.el.addEventListener('babiaSetSpeed',  _listener = (e) => {
-            this.speed = e.detail
+        if (event.includes('babiaSetSpeed')) {
+            this.speed = parseInt(event.substring(13), 10)
             let timeout = this.data.timeout / this.speed
             let self = this
             clearInterval(this.interval);
             this.interval = window.setInterval(function () {
-                self.loop(self)
+                self.loop()
             }, timeout);
-        })
-
-    },
-
-    /**
-    * Called when component is attached and when component data changes.
-    * Generally modifies the entity based on the data.
-    */
-
-    babiaMetadata: { id: 0 },
-
-    update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-        let self = this;
-    
-        // find controller
-        if (data.controller){
-            this.selectorController = document.querySelector('#' + data.controller)
         }
-        
-        // Highest priority to data
-        if (data.data && oldData.data !== data.data) {
-            let rawData = JSON.parse(data.data);
-            this.selectable = new Selectable(rawData, data.select);
-
-            if (this.selectorController){
-                this.selectorController.emit("babiaSelectorDataReady")
-            }
-
-            self.nextSelect();
-            self.interval = window.setInterval(function () {
-                self.loop(self)
-            }, data.timeout * self.speed);
-            
-        } else {
-            if (data.from !== oldData.from) {
-                // Unregister for old querier
-                if (this.dataComponent) { this.dataComponent.unregister(el) };
-                // Find the new component and check if querier or filterdata from the event               
-                let eventName = findDataComponent(this.data, el, this);
-                // If changed to filterdata or to querier
-                if (this.dataComponentEventName && this.dataComponentEventName !== eventName) {
-                    el.removeEventListener(this.dataComponentEventName, _listener, true)
-                }
-                // Assign new eventName
-                this.dataComponentEventName = eventName
-
-                // Attach to the events of the data component
-                el.addEventListener(this.dataComponentEventName, _listener = (e) => {
-
-                    // Get the data from the info of the event (propertyName)
-                    self.dataComponentDataPropertyName = e.detail
-                    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
-    
-                    // Create a Selectable object, and set the updating interval
-                    self.selectable = new Selectable(rawData, data.select);
-
-                    if (this.selectorController){
-                        this.selectorController.emit("babiaSelectorDataReady", self)
-                    }
-
-                    self.nextSelect();
-                    self.interval = window.setInterval(function () {
-                        self.loop(self)
-                    }, data.timeout * self.speed);
-    
-                    // Dispatch interested events
-                    //dataReadyToSend("babiaData", self)
-
-                });
-                // If there is data in the data component, get it
-                if (self.dataComponent[self.dataComponentDataPropertyName]) {
-                    let rawData = self.dataComponent[self.dataComponentDataPropertyName]
-        
-                    self.babiaData = rawData;
-                    self.babiaMetadata = {
-                        id: self.babiaMetadata.id++
-                    }
-        
-                    // Dispatch interested events
-                    dataReadyToSend("babiaData", self);
-                };
-
-                // Register to get an event when there is new data in the data component
-                this.dataComponent.register(el);
-            };    
-        }
-    },
-
-    nextSelect: function() {
-        if (this.selectable.current > this.selectable.length - 1){
-            this.selectable.current = this.selectable.length - 1
-            this.isPaused = true
-            this.selectorController.emit('babiaStop')
-        }
-        this.babiaData = this.selectable.next();
-        this.babiaMetadata = { id: this.selectable.current };
-        // Dispatch interested events
-        dataReadyToSend("babiaData", this);
-        this.selectorController.emit("babiaSelectorDataUpdated", this)
-    },
-
-    prevSelect: function() {
-        if (this.selectable.current >= 0){
-            this.babiaData = this.selectable.prev();
-            this.babiaMetadata = { id: this.selectable.current };
-            // Dispatch interested events
-            dataReadyToSend("babiaData", this);  
-            this.selectorController.emit("babiaSelectorDataUpdated", this)
-        } else {
-            this.selectable.current = 0
-            this.isPaused = true
-            this.selectorController.emit('babiaStop')
-        }
-    },
-
-    setSelect: function(value) {
-        if (((value != this.selectable.current - 1) && this.toPresent) || ((value != this.selectable.current + 1) && !this.toPresent)) {
-            this.babiaData = this.selectable.setValue(value);
-            if (this.toPresent) {
-                this.babiaMetadata = { id: value++ };
-            } else {
-                this.babiaMetadata = { id: value-- };
-                this.selectable.current -=2
-            }
-            // Dispatch interested events
-            dataReadyToSend("babiaData", this);
-            this.selectorController.emit("babiaSelectorDataUpdated", this)
-        }
-    },
-
-    /**
-     * Register function
-     */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
-
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchSelectorEventOnElement(interestedElem, "babiaData")
-        }
-    },
-
-    /**
-     * Unregister function
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-        this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements
-     */
-    interestedElements: [],
-
-    /**
-     * Selector Controller
-     */
-    selectorController: undefined,
-
-    loop: function(self) {
-        if (!self.isPaused){
-            if (self.selectorController){
-                self.selectorController.emit("babiaSelectorDataUpdated", self)
-            }
-
-            if(self.toPresent){
-                self.nextSelect();
-            } else {
-                self.prevSelect();
-            }
-        }
-    },
-
+      },
 });
 
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-      dispatchEventOnElement(element, propertyName)
-    });
-  }
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaSelectorDataReady", propertyName)
-}

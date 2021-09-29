@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NotiBuffer Test</title>
+    <meta name="description" content="NotiBuffer test" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+    <script src="../../dist/aframe-babia-components.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <a-entity environment="preset: yavapai; skyType: color; skyColor: #358DF8 "></a-entity>
+        <a-light type="point" intensity="1" position="0 5 0"></a-light>
+
+        <a-entity id="querier" babia-queryjson="url: ./data_vaccination_2.json"></a-entity>
+
+        <a-entity id="bars_1" babia-bars="animation: false; from: querier; legend: true; axis: true; height: population" position="-5 2 10" rotation="0 180 0"scale="0.25 0.25 0.25">
+        </a-entity>
+
+        <a-entity id="bars_2" babia-bars="from: querier; legend: true; axis: true; height: population" position="2 2 5" rotation="0 180 0"scale="0.25 0.25 0.25">
+        </a-entity>
+
+        <a-entity movement-controls="fly: true" position="0 5 0" rotation="0 180 0">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+    </a-scene>
+
+
+    <script>
+        let querier = document.getElementById("querier");
+        changeUrl();
+        addBars();
+
+        async function changeUrl() {
+            for (let i = 0; i < 10; i++) {
+                await delay3()
+                if (i == 0 || i % 2 == 0) {
+                    querier.setAttribute('babia-queryjson', { 'url': './data_vaccination_1.json' });
+                    console.log("Url: " + querier.getAttribute('babia-queryjson')['url'])
+                } else {
+                    querier.setAttribute('babia-queryjson', { 'url': './data_vaccination_2.json' });
+                    console.log("Url: " + querier.getAttribute('babia-queryjson')['url'])
+                }
+            }
+        }
+        async function addBars(){
+            await delay10();
+            let bars_3 = document.createElement("a-entity");
+            bars_3.setAttribute("id", "bars_3");
+            bars_3.setAttribute("babia-bars", "from", "querier")
+            bars_3.setAttribute("position", "0 2 20");
+            bars_3.setAttribute("rotation", "0 180 0");
+            bars_3.setAttribute("scale", "0.25 0.25 0.25");
+            bars_3.setAttribute("babia-bars", "height", "population");
+            document.getElementById("AframeScene").appendChild(bars_3);
+
+            let bars_4 = document.createElement("a-entity");
+            bars_4.setAttribute("id", "bars_4");
+            bars_4.setAttribute("babia-bars", "from", "querier")
+            bars_4.setAttribute("babia-bars", "animation", "false")
+            bars_4.setAttribute("position", "5 2 15");
+            bars_4.setAttribute("rotation", "0 180 0");
+            bars_4.setAttribute("scale", "0.25 0.25 0.25");
+            bars_4.setAttribute("babia-bars", "height", "population");
+            document.getElementById("AframeScene").appendChild(bars_4);
+
+        }
+
+
+        function delay3() {
+            return new Promise(resolve => setTimeout(resolve, 3000));
+        }
+        function delay10() {
+            return new Promise(resolve => setTimeout(resolve, 10000));
+        }
+    </script>
+</body>
+
+</html>

@@ -13,7 +13,8 @@
   <body>
     <a-scene environment="preset: yavapai" renderer="antialias: true">
 
-        <a-entity babia-boats="data: data2.json; area: area; building_separation: 0.5; border: 0.05" 
+        <a-entity id="queriertest" babia-queryjson="url: data.json;"></a-entity>
+        <a-entity babia-boats="from: queriertest; area: area; building_separation: 0.5; border: 0.05" 
         position="-8 3 2" scale= "0.2 1 0.2"></a-entity>  
 
         <a-entity position="18 3 0" id="codecity" 

@@ -1,24 +1,24 @@
 [ 
     {
-        "id": "/barrio",
+        "uid": "/barrio",
         "children": [
             {
-                "id": "/barrio/002",
+                "uid": "/barrio/002",
                 "width": "4",
                 "height": "10",
                 "depth": "4"
             },
             {
-                "id": "/barrio/003",
+                "uid": "/barrio/003",
                 "children": [
                     {
-                        "id": "barrio/003/block1",
+                        "uid": "barrio/003/block1",
                         "width": "5",
                         "height": "2",
                         "depth": "5"
                     },
                     {
-                        "id": "barrio/003/block2",
+                        "uid": "barrio/003/block2",
                         "width": "3",
                         "height": "1",
                         "depth": "3"

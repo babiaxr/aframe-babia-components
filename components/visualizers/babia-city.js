@@ -1,5 +1,6 @@
-/* global AFRAME */
+let findProdComponent = require('../others/common').findProdComponent;
 
+/* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
@@ -144,152 +145,39 @@ AFRAME.registerComponent('babia-city', {
     multiple: false,
 
     /**
-     * Called once when component is attached. Generally for initial setup.
-     */
-    init: function () { },
-
-    /**
      * Called when component is attached and when component data changes.
      * Generally modifies the entity based on the data.
      */
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
-        let self = this;
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
             // Get from the json or embedded
-            let rawData
-            if (typeof data.data == 'string') {
-                if (data.data.endsWith('json')) {
-                    rawData = requestJSONDataFromURL(data);
-                } else {
-                    rawData = parseEmbeddedJSONData(data.data)
-                }
-            } else {
-                rawData = data.data;
+            let _data = JSON.parse(data.data);
+            this.processData(_data);
+        } else if (data.from !== oldData.from) {
+            // Unregister for old treegenerator
+            if (this.prodComponent) {
+                this.prodComponent.notiBuffer.unregister(this.notiBufferId) 
             };
-            // And save it            
-            self.babiaData = rawData
-            self.babiaMetadata = {
-                id: self.babiaMetadata.id++
-            }
 
-            // Create city
-            self.chart = generateCity(self, rawData)
-
-        } else {
-
-            if (data.from !== oldData.from) {
-                // Unregister for old treegenerator
-                if (self.dataComponent) { self.dataComponent.unregister(el) }
-
-                // Register for the new one
-                findTreeGenerator(data, el, self)
-
-                // Attach to the event of the querier
-                el.addEventListener('babiaTreeDataReady', function (e) {
-                    // Get the data from the info of the event (propertyName)
-                    self.querierDataPropertyName = e.detail
-                    let rawData = self.dataComponent[self.querierDataPropertyName]
-
-                    let toSave
-                    if (rawData.length > 0) {
-                        toSave = {
-                            id: "init",
-                            children: rawData
-                        }
-                    } else {
-                        toSave = rawData[0]
-                    }
-
-                    self.babiaData = toSave
-                    self.babiaMetadata = {
-                        id: self.babiaMetadata.id++
-                    }
-
-                    // Create city
-                    self.chart = generateCity(self, toSave)
-
-                    // Dispatch interested events
-                    dataReadyToSend("babiaData", self)
-                });
-
-                // Register to the querier
-                self.dataComponent.register(el)
+            // Register for the new one
+            this.prodComponent = findProdComponent(data, el)
+            if (this.prodComponent.notiBuffer){
+                this.notiBufferId = this.prodComponent.notiBuffer
+                    .register(this.processData.bind(this))
             }
 
             // If changed whatever, re-print with the current data
-            if (data !== oldData && self.babiaData) {
-                while (self.el.firstChild)
-                    self.el.firstChild.remove();
+            if (data !== oldData && this.newData) {
                 console.log("Generating city...")
-                self.chart = generateCity(self, self.babiaData)
-
-                // Dispatch interested events because I updated my visualization
-                dataReadyToSend("babiaData", self)
+                this.processData(this.newData)
             }
         }
-
         return
-
-
-
     },
-
-    /**
-     * Called when a component is removed (e.g., via removeAttribute).
-     * Generally undoes all modifications to the entity.
-     */
-    remove: function () { },
-
-    /**
-     * Called on each scene tick.
-     */
-    // tick: function (t) { },
-
-    /**
-     * Called when entity pauses.
-     * Use to stop or remove any dynamic or background behavior such as events.
-     */
-    // pause: function () { },
-
-    /**
-     * Called when entity resumes.
-     * Use to continue or add any dynamic or background behavior such as events.
-     */
-    play: function () { },
-
-    /**
-    * Register function when I'm updated
-    */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
-
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchEventOnElement(interestedElem, "babiaData")
-        }
-    },
-
-    /**
-     * Unregister function when I'm updated
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-            this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements when I'm updated
-     */
-    interestedElements: [],
 
     /**
     * Querier component target
@@ -323,6 +211,30 @@ AFRAME.registerComponent('babia-city', {
      * List of visualization properties
      */
     visProperties: ['fheight', 'farea'],
+
+    /*
+    * Process data obtained from producer
+    */
+    processData: function (_data) {
+        console.log("processData", this);
+        this.newData = _data;
+        this.babiaMetadata = { id: this.babiaMetadata.id++ };
+      
+        let toSave 
+        if (this.newData.length > 0) {
+            toSave = {
+                id: "init",
+                children: this.newData
+            }
+        } else if (this.newData.length <= 0) {
+            toSave = this.newData[0]
+        } else {
+            toSave = this.newData
+        }
+        // Create city 
+        generateCity(this, toSave)
+    },
+
 });
 
 let generateCity = (self, raw_items) => {
@@ -1262,7 +1174,6 @@ let generateLegend = (name, colorPlane, colorText, data, fheight, farea) => {
 
     let entity = document.createElement('a-plane');
     entity.setAttribute('babia-lookat', "[camera]");
-
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', '1');
     entity.setAttribute('width', width);
@@ -1363,7 +1274,6 @@ function time_evol() {
 
 let loopLogic = (maxFiles, i) => {
     console.log("Loop number", i)
-
     changeCity()
 
     if (time_evolution_past_present) {
@@ -1384,7 +1294,6 @@ let loopLogic = (maxFiles, i) => {
 
 let changeCity = (bigStepCommitByCommit) => {
     let key = "data_" + (index + 1)
-
     //key2 only for commit by commit analysis
     let key2
     if (bigStepCommitByCommit) {
@@ -1708,46 +1617,4 @@ function hslToRgb(h, s, l) {
     }
 
     return [r * 255, g * 255, b * 255];
-}
-
-let parseEmbeddedJSONData = (embedded) => {
-    let dataRetrieved = JSON.parse(embedded)
-    return dataRetrieved
-}
-
-
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-        dispatchEventOnElement(element, propertyName)
-    });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaVisualizerUpdated", propertyName)
-}
-
-let findTreeGenerator = (data, el, self) => {
-    if (data.from) {
-        // Save the reference to the querier
-        let querierElement = document.getElementById(data.from)
-        if (querierElement.components['babia-treebuilder']) {
-            self.dataComponent = querierElement.components['babia-treebuilder']
-        } else {
-            console.error("Problem registering to the treegenerator")
-            return
-        }
-    } else {
-        // Look for a querier in the same element and register
-        if (el.components['babia-treebuilder']) {
-            self.dataComponent = el.components['babia-treebuilder']
-        } else {
-            // Look for a querier in the scene
-            if (document.querySelectorAll("[babia-treebuilder]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-treebuilder]")[0].components['babia-treebuilder']
-            } else {
-                console.error("Error, treegenerator not found")
-                return
-            }
-        }
-    }
 }

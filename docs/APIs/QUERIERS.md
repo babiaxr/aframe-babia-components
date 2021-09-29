@@ -38,7 +38,7 @@ This component will put the data retrieved into the `babiaData` attribute of the
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ------ |
 | url             | Url of the file with the JSON data  | string | - |
-| embedded        | JSON data directly stringified in the property | string   | - |
+| data        | JSON data directly stringified in the property | string   | - |
 
 
 ### babia-querygithub component
