@@ -114,7 +114,13 @@ AFRAME.registerComponent('babia-boats', {
     tick: function (t, delta) {
         if (this.animation) {
             let t = { x: 0, y: 0, z: 0 };
-            this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
+            if ((Date.now() - this.start_time) > this.duration) {
+                this.animation = false;
+                // Fix bugs when change instante quickly
+                this.setFigures(this.figures, t);
+            } else {
+                this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
+            }
         }
     },
 
@@ -157,8 +163,6 @@ AFRAME.registerComponent('babia-boats', {
 
         // Register all figures before drawing
         [x, y, t, this.figures] = this.generateElements(elements, this.figures, t, increment);
-
-        console.log(this.figures)
 
         // Draw figures
         t.x = 0;
@@ -682,6 +686,7 @@ AFRAME.registerComponent('babia-boats', {
         let self = this
         let new_time = Date.now();
         let entity;
+
         for (let i in figures) {
             if (document.getElementById(figures[i].id)) {
                 // If exists
@@ -775,12 +780,6 @@ AFRAME.registerComponent('babia-boats', {
                 setOpacity(entity_del, opacity);
             }
         }
-
-        if ((new_time - this.start_time) > this.duration) {
-            this.animation = false;
-            // Fix bugs when change instante quickly
-            this.setFigures(this.figures, translate);
-        }
     },
 
     setFigures: function (figures, translate){
@@ -797,7 +796,7 @@ AFRAME.registerComponent('babia-boats', {
             }
             entity.setAttribute('position', {
                 x: figure.posX - translate.x,
-                y: (figure.height + translate.y) / 2,
+                y: (parseFloat(figure.height) + translate.y) / 2,
                 z: - figure.posY + translate.z
             });
 
@@ -877,9 +876,9 @@ AFRAME.registerComponent('babia-boats', {
                 let inc_y = (delta * dist_y) / (2 * this.duration);
                 let inc_z = (delta * dist_z) / this.duration;
 
-                let last_x = entity.getAttribute('position').x;
-                let last_y = entity.getAttribute('position').y;
-                let last_z = entity.getAttribute('position').z;
+                let last_x = parseFloat(entity.getAttribute('position').x);
+                let last_y = parseFloat(entity.getAttribute('position').y);
+                let last_z = parseFloat(entity.getAttribute('position').z);
 
                 let new_x = last_x - inc_x;
                 let new_y = last_y + inc_y;
@@ -896,7 +895,7 @@ AFRAME.registerComponent('babia-boats', {
             } else if ((new_time - this.start_time) > this.duration) {
                 entity.setAttribute('position', {
                     x: figure.posX - translate.x,
-                    y: (figure.height + translate.y) / 2,
+                    y: (parseFloat(figure.height) + translate.y) / 2,
                     z: - figure.posY + translate.z
                 });
             }
