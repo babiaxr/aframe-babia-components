@@ -139,11 +139,15 @@ AFRAME.registerComponent('babia-boats', {
         if (this.animation){
             this.figures_del.forEach(figure => {
                 let entity = document.getElementById(figure.id);
-                setOpacity(entity, 0.0);
+                if (entity){
+                    entity.remove();
+                }
             })
             this.figures_in.forEach(figure => {
                 let entity = document.getElementById(figure.id);
-                setOpacity(entity, 1.0);
+                if (entity){
+                    setOpacity(entity, 1.0);           
+                }
             })
             this.setFigures(this.figures, t);
             this.animation = false;
@@ -402,7 +406,6 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     drawElements: function (element, figures, translate) {
-        let self = this
 
         for (let i in figures) {
 
@@ -416,178 +419,8 @@ AFRAME.registerComponent('babia-boats', {
             }
 
             let entity = this.createElement(figures[i], position);
-
-            if (figures[i].children) {
-                // Quarter
-                let legend;
-                let transparentBox;
-                entity.addEventListener('click', function (e) {
-                    // Just launch the event on the child
-                    if (e.target !== this)
-                        return;
-
-                    if (legend) {
-                        entity.removeChild(transparentBox)
-                        self.el.parentElement.removeChild(legend)
-                        legend = undefined
-                        transparentBox = undefined
-
-                        // Remove from the array that has the entity activated
-                        const index = self.entitiesWithLegend.indexOf(entity);
-                        if (index > -1) {
-                            self.entitiesWithLegend.splice(index, 1);
-                        }
-                    } else {
-                        transparentBox = document.createElement('a-entity');
-                        transparentBox.setAttribute('class', 'babialegend')
-                        let oldGeometry = entity.getAttribute('geometry')
-                        let scale = self.el.getAttribute("scale")
-                        let tsBoxHeight = oldGeometry.height + self.data.height_quarter_legend_box
-                        if (scale) {
-                            tsBoxHeight = ((oldGeometry.height + self.data.height_quarter_legend_box) / scale.y)
-                        }
-                        transparentBox.setAttribute('geometry', {
-                            height: tsBoxHeight,
-                            depth: oldGeometry.depth,
-                            width: oldGeometry.width
-                        });
-                        transparentBox.setAttribute('material', {
-                            'visible': true,
-                            'opacity': 0.4
-                        });
-                        entity.appendChild(transparentBox)
-
-                        legend = generateLegend(figures[i].name, self.data.legend_scale, 'black', 'white');
-                        let worldPos = new THREE.Vector3();
-                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                        let coordinatesFinal = {
-                            x: coordinates.x,
-                            y: self.data.height_quarter_legend_title,
-                            z: coordinates.z
-                        }
-                        legend.setAttribute('position', coordinatesFinal)
-                        legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(legend)
-
-                        // Add to the elements that has the legend activated
-                        self.entitiesWithLegend.push(entity)
-                    }
-                })
-
-                this.drawElements(entity, figures[i].children, figures[i].translate_matrix);
-            } else {
-                // Building
-                let legend;
-                let entityGeometry;
-                let alreadyActive = false;
-
-                entity.addEventListener('click', function (e) {
-                    if (e.target !== this)
-                        return;
-
-                    if (alreadyActive) {
-                        legend.setAttribute('visible', false);
-                        entity.setAttribute('geometry', {
-                            height: entityGeometry.height - 0.1,
-                            depth: entityGeometry.depth - 0.1,
-                            width: entityGeometry.width - 0.1
-                        });
-                        entity.setAttribute('material', {
-                            'color': entity.getAttribute('babiaxrFirstColor')
-                        });
-                        self.el.parentElement.removeChild(legend)
-                        legend = undefined
-                        alreadyActive = false
-
-                        // Remove from the array that has the entity activated
-                        const index = self.entitiesWithLegend.indexOf(entity);
-                        if (index > -1) {
-                            self.entitiesWithLegend.splice(index, 1);
-                        }
-                    } else {
-                        alreadyActive = true
-
-                        // If clicked again but not mouseover
-                        if (!legend) {
-                            // COPY FROM 626
-                            entityGeometry = entity.getAttribute('geometry')
-                            let boxPosition = entity.getAttribute("position")
-                            entity.setAttribute('position', boxPosition)
-                            entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
-                            entity.setAttribute('material', {
-                                'color': 'white'
-                            });
-                            entity.setAttribute('geometry', {
-                                height: entityGeometry.height + 0.1,
-                                depth: entityGeometry.depth + 0.1,
-                                width: entityGeometry.width + 0.1
-                            });
-                            legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
-                            let worldPos = new THREE.Vector3();
-                            let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                            let height_real = new THREE.Box3().setFromObject(entity.object3D)
-                            let coordinatesFinal = {
-                                x: coordinates.x,
-                                y: height_real.max.y + 1 + self.data.height_building_legend,
-                                z: coordinates.z
-                            }
-                            legend.setAttribute('position', coordinatesFinal)
-                            legend.setAttribute('visible', true);
-                            self.el.parentElement.appendChild(legend);
-                        }
-
-                        // Add to the elements that has the legend activated
-                        self.entitiesWithLegend.push(entity)
-                    }
-
-                })
-
-                entity.addEventListener('mouseenter', function () {
-                    if (!alreadyActive) {
-                        entityGeometry = entity.getAttribute('geometry')
-                        let boxPosition = entity.getAttribute("position")
-                        entity.setAttribute('position', boxPosition)
-                        entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
-                        entity.setAttribute('material', {
-                            'color': 'white'
-                        });
-                        entity.setAttribute('geometry', {
-                            height: entityGeometry.height + 0.1,
-                            depth: entityGeometry.depth + 0.1,
-                            width: entityGeometry.width + 0.1
-                        });
-                        legend = generateLegend(figures[i].name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
-                        let worldPos = new THREE.Vector3();
-                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                        let height_real = new THREE.Box3().setFromObject(entity.object3D)
-                        let coordinatesFinal = {
-                            x: coordinates.x,
-                            y: height_real.max.y + 1 + self.data.height_building_legend,
-                            z: coordinates.z
-                        }
-                        legend.setAttribute('position', coordinatesFinal)
-                        legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(legend);
-                    }
-
-                });
-                entity.addEventListener('mouseleave', function () {
-                    if (!alreadyActive && legend) {
-                        legend.setAttribute('visible', false);
-                        entity.setAttribute('geometry', {
-                            height: entityGeometry.height - 0.1,
-                            depth: entityGeometry.depth - 0.1,
-                            width: entityGeometry.width - 0.1
-                        });
-                        entity.setAttribute('material', {
-                            'color': entity.getAttribute('babiaxrFirstColor')
-                        });
-                        self.el.parentElement.removeChild(legend)
-                        legend = undefined
-                    }
-                });
-            }
-
+            this.addEvents(entity, figures[i]);
+            
             element.appendChild(entity);
         }
 
@@ -756,6 +589,7 @@ AFRAME.registerComponent('babia-boats', {
                 }
 
                 let new_entity = this.createElement(figures[i], position);
+                this.addEvents(new_entity, figures[i]);
                 if (figures[i].children) {
                     this.drawElements(new_entity, figures[i].children, figures[i].translate_matrix);
                 }
@@ -771,6 +605,7 @@ AFRAME.registerComponent('babia-boats', {
         // Delete figures
         let opa_dec = delta / this.duration;
         for (let i in figures_old){
+            let deleted = false;
             let cond = 'id=' + figures_old[i].id
             let index = findIndex(figures, cond)
             if (index < 0){
@@ -778,13 +613,20 @@ AFRAME.registerComponent('babia-boats', {
                     self.figures_del.push(figures_old[i])
                 }
                 let entity_del = document.getElementById(figures_old[i].id)
-                let opacity = parseFloat(entity_del.getAttribute('material').opacity);
-                if (opacity - opa_dec > 0) {
-                    opacity -= opa_dec;
-                } else {
-                    opacity = 0.0;
+                if (entity_del){
+                    let opacity = parseFloat(entity_del.getAttribute('material').opacity);
+                    if (opacity - opa_dec > 0) {
+                        opacity -= opa_dec;
+                    } else {
+                        opacity = 0.0;
+                        deleted = true; 
+                        self.figures_del.pop(figures_old[i]); 
+                    }
+                    setOpacity(entity_del, opacity);
+                    if (deleted) {
+                        entity_del.remove();
+                    }
                 }
-                setOpacity(entity_del, opacity);
             }
         }
     },
@@ -792,23 +634,25 @@ AFRAME.registerComponent('babia-boats', {
     setFigures: function (figures, translate){
         figures.forEach(figure => {
             let entity = document.getElementById(figure.id);
-            if (entity.getAttribute('width') != figure.width) {
-                entity.setAttribute('width', figure.width);
-            }
-            if (entity.getAttribute('height') != figure.height) {
-                entity.setAttribute('height', figure.height);
-            }
-            if (entity.getAttribute('depth') != figure.depth) {
-                entity.setAttribute('depth', figure.depth);
-            }
-            entity.setAttribute('position', {
-                x: figure.posX - translate.x,
-                y: (parseFloat(figure.height) + translate.y) / 2,
-                z: - figure.posY + translate.z
-            });
-
-            if (figure.children){
-                this.setFigures(figure.children, figure.translate_matrix);
+            if (entity){
+                if (entity.getAttribute('width') != figure.width) {
+                    entity.setAttribute('width', figure.width);
+                }
+                if (entity.getAttribute('height') != figure.height) {
+                    entity.setAttribute('height', figure.height);
+                }
+                if (entity.getAttribute('depth') != figure.depth) {
+                    entity.setAttribute('depth', figure.depth);
+                }
+                entity.setAttribute('position', {
+                    x: figure.posX - translate.x,
+                    y: (parseFloat(figure.height) + translate.y) / 2,
+                    z: - figure.posY + translate.z
+                });
+    
+                if (figure.children){
+                    this.setFigures(figure.children, figure.translate_matrix);
+                }
             }
         });
     },
@@ -970,8 +814,181 @@ AFRAME.registerComponent('babia-boats', {
         }
         this.notiBuffer.set(this.newData)
         // Create city
-        this.updateChart(this.newData)
-        
+        this.updateChart(this.newData)  
+    },
+
+    addEvents: function (entity, figure) {
+        let self = this;
+        if (figure.children) {
+            // Quarter
+            let legend;
+            let transparentBox;
+            entity.addEventListener('click', function (e) {
+                // Just launch the event on the child
+                if (e.target !== this)
+                    return;
+
+                if (legend) {
+                    entity.removeChild(transparentBox)
+                    self.el.parentElement.removeChild(legend)
+                    legend = undefined
+                    transparentBox = undefined
+
+                    // Remove from the array that has the entity activated
+                    const index = self.entitiesWithLegend.indexOf(entity);
+                    if (index > -1) {
+                        self.entitiesWithLegend.splice(index, 1);
+                    }
+                } else {
+                    transparentBox = document.createElement('a-entity');
+                    transparentBox.setAttribute('class', 'babialegend')
+                    let oldGeometry = entity.getAttribute('geometry')
+                    let scale = self.el.getAttribute("scale")
+                    let tsBoxHeight = oldGeometry.height + self.data.height_quarter_legend_box
+                    if (scale) {
+                        tsBoxHeight = ((oldGeometry.height + self.data.height_quarter_legend_box) / scale.y)
+                    }
+                    transparentBox.setAttribute('geometry', {
+                        height: tsBoxHeight,
+                        depth: oldGeometry.depth,
+                        width: oldGeometry.width
+                    });
+                    transparentBox.setAttribute('material', {
+                        'visible': true,
+                        'opacity': 0.4
+                    });
+                    entity.appendChild(transparentBox)
+
+                    legend = generateLegend(figure.name, self.data.legend_scale, 'black', 'white');
+                    let worldPos = new THREE.Vector3();
+                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                    let coordinatesFinal = {
+                        x: coordinates.x,
+                        y: self.data.height_quarter_legend_title,
+                        z: coordinates.z
+                    }
+                    legend.setAttribute('position', coordinatesFinal)
+                    legend.setAttribute('visible', true);
+                    self.el.parentElement.appendChild(legend)
+
+                    // Add to the elements that has the legend activated
+                    self.entitiesWithLegend.push(entity)
+                }
+            })
+
+            this.drawElements(entity, figure.children, figure.translate_matrix);
+        } else {
+            // Building
+            let legend;
+            let entityGeometry;
+            let alreadyActive = false;
+
+            entity.addEventListener('click', function (e) {
+                if (e.target !== this)
+                    return;
+
+                if (alreadyActive) {
+                    legend.setAttribute('visible', false);
+                    entity.setAttribute('geometry', {
+                        height: entityGeometry.height - 0.1,
+                        depth: entityGeometry.depth - 0.1,
+                        width: entityGeometry.width - 0.1
+                    });
+                    entity.setAttribute('material', {
+                        'color': entity.getAttribute('babiaxrFirstColor')
+                    });
+                    self.el.parentElement.removeChild(legend)
+                    legend = undefined
+                    alreadyActive = false
+
+                    // Remove from the array that has the entity activated
+                    const index = self.entitiesWithLegend.indexOf(entity);
+                    if (index > -1) {
+                        self.entitiesWithLegend.splice(index, 1);
+                    }
+                } else {
+                    alreadyActive = true
+
+                    // If clicked again but not mouseover
+                    if (!legend) {
+                        // COPY FROM 626
+                        entityGeometry = entity.getAttribute('geometry')
+                        let boxPosition = entity.getAttribute("position")
+                        entity.setAttribute('position', boxPosition)
+                        entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
+                        entity.setAttribute('material', {
+                            'color': 'white'
+                        });
+                        entity.setAttribute('geometry', {
+                            height: entityGeometry.height + 0.1,
+                            depth: entityGeometry.depth + 0.1,
+                            width: entityGeometry.width + 0.1
+                        });
+                        legend = generateLegend(figure.name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: height_real.max.y + 1 + self.data.height_building_legend,
+                            z: coordinates.z
+                        }
+                        legend.setAttribute('position', coordinatesFinal)
+                        legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(legend);
+                    }
+
+                    // Add to the elements that has the legend activated
+                    self.entitiesWithLegend.push(entity)
+                }
+
+            })
+
+            entity.addEventListener('mouseenter', function () {
+                if (!alreadyActive) {
+                    entityGeometry = entity.getAttribute('geometry')
+                    let boxPosition = entity.getAttribute("position")
+                    entity.setAttribute('position', boxPosition)
+                    entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
+                    entity.setAttribute('material', {
+                        'color': 'white'
+                    });
+                    entity.setAttribute('geometry', {
+                        height: entityGeometry.height + 0.1,
+                        depth: entityGeometry.depth + 0.1,
+                        width: entityGeometry.width + 0.1
+                    });
+                    legend = generateLegend(figure.name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                    let worldPos = new THREE.Vector3();
+                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                    let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                    let coordinatesFinal = {
+                        x: coordinates.x,
+                        y: height_real.max.y + 1 + self.data.height_building_legend,
+                        z: coordinates.z
+                    }
+                    legend.setAttribute('position', coordinatesFinal)
+                    legend.setAttribute('visible', true);
+                    self.el.parentElement.appendChild(legend);
+                }
+
+            });
+            entity.addEventListener('mouseleave', function () {
+                if (!alreadyActive && legend) {
+                    legend.setAttribute('visible', false);
+                    entity.setAttribute('geometry', {
+                        height: entityGeometry.height - 0.1,
+                        depth: entityGeometry.depth - 0.1,
+                        width: entityGeometry.width - 0.1
+                    });
+                    entity.setAttribute('material', {
+                        'color': entity.getAttribute('babiaxrFirstColor')
+                    });
+                    self.el.parentElement.removeChild(legend)
+                    legend = undefined
+                }
+            });
+        }
     },
 })
 
