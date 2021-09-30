@@ -1,5 +1,7 @@
 let findProdComponent = require('../others/common').findProdComponent;
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -71,7 +73,12 @@ AFRAME.registerComponent('babia-boats', {
     figures_del: [],
     figures_in: [],
     animation: false,
-
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        this.notiBuffer = new NotiBuffer();
+    },
     /**
     * Called when component is attached and when component data changes.
     * Generally modifies the entity based on the data.
@@ -961,9 +968,10 @@ AFRAME.registerComponent('babia-boats', {
             this.babiaMetadata['color_max'] = color_max
             this.babiaMetadata['color_min'] = color_min
         }
-
+        this.notiBuffer.set(this.newData)
         // Create city
         this.updateChart(this.newData)
+        
     },
 })
 
