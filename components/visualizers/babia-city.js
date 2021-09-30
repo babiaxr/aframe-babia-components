@@ -1,5 +1,7 @@
 let findProdComponent = require('../others/common').findProdComponent;
 
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -143,7 +145,12 @@ AFRAME.registerComponent('babia-city', {
      * Set if component needs multiple instancing.
      */
     multiple: false,
-
+    /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+    init: function () {
+        this.notiBuffer = new NotiBuffer();
+    },
     /**
      * Called when component is attached and when component data changes.
      * Generally modifies the entity based on the data.
@@ -169,14 +176,14 @@ AFRAME.registerComponent('babia-city', {
                 this.notiBufferId = this.prodComponent.notiBuffer
                     .register(this.processData.bind(this))
             }
-
-            // If changed whatever, re-print with the current data
-            if (data !== oldData && this.newData) {
-                console.log("Generating city...")
-                this.processData(this.newData)
-            }
         }
-        return
+        // If changed whatever, re-print with the current data
+        else if (data !== oldData && this.newData) {
+            console.log("Generating city...")
+            while (this.el.firstChild)
+                    this.el.firstChild.remove();
+            this.processData(this.newData)
+        }
     },
 
     /**
@@ -216,7 +223,7 @@ AFRAME.registerComponent('babia-city', {
     * Process data obtained from producer
     */
     processData: function (_data) {
-        console.log("processData", this);
+        console.log("processData", _data);
         this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
       
@@ -231,8 +238,11 @@ AFRAME.registerComponent('babia-city', {
         } else {
             toSave = this.newData
         }
+        console.log("toSave", toSave);
+        this.notiBuffer.set(toSave)
         // Create city 
         generateCity(this, toSave)
+        
     },
 
 });
