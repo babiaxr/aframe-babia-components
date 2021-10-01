@@ -302,6 +302,7 @@ This component shows a city in boats.
 | building_color          | Color of the buildings | color | #E6B9A1 |
 | base_color          | Quarter color | color | #98e690 |
 | data          | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
+| field | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**) | string   | `uid` |
 
 #### Data format example
 ```json
