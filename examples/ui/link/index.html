@@ -18,31 +18,32 @@
         <a-entity environment="playArea: 2"></a-entity>
         <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
-        <a-entity id="graph" babia-queryjson="url: ./data.json;" 
-                babia-filter="filter: name2=Jesus" 
-                babia-bars='legend: true; axis: true' 
-                position="-15 0 0" rotation="0 0 0"></a-entity>
+        <a-entity id="querier" babia-queryjson="url: ./data.json;" ></a-entity>
+        <a-entity id="filter" babia-filter="from: querier; filter: name2=Jesus" ></a-entity>
+       
+        <a-entity id="graph"
+            babia-bars='from: filter; legend: true; axis: true' 
+            position="-15 0 0" rotation="0 0 0"></a-entity>
 
         <!-- Button outside of the entity with target-->
         <a-entity babia-ui-link="viz: graph; ui: interface" position="-4.5 3 6"></a-entity>
 
         <a-entity id="graph2" 
-        babia-bars='from: graph; legend: true; axis: true' 
-        position="-0.5 0 0" rotation="0 0 0"></a-entity>
+            babia-bars='from: filter; legend: true; axis: true' 
+            position="-0.5 0 0" rotation="0 0 0"></a-entity>
 
         <!-- Button outside of the entity without target-->
         <a-entity babia-ui-link="viz: graph2" position="6 3 6"></a-entity>
 
         <!-- Button intside of the entity without target-->
         <a-entity id="graph3" 
-        babia-bars='from: graph; legend: true; axis: true' 
-        babia-ui-link
-        position="-25 3 0" rotation="0 0 0"></a-entity>
+            babia-bars='from: filter; legend: true; axis: true' 
+            babia-ui-link position="-25 3 0" rotation="0 0 0"></a-entity>
 
         <!-- Chart create babia-ui-link without target (without id)-->
         <a-entity 
-        babia-bars='from: graph; legend: true; axis: true; uiLink: true' 
-        position="18 0 0" rotation="0 0 0"></a-entity>
+            babia-bars='from: filter; legend: true; axis: true; uiLink: true' 
+            position="18 0 0" rotation="0 0 0"></a-entity>
         
         <a-entity id="interface" babia-ui="target: graph" position="0 0 10" scale="0.5 0.5 0.5"></a-entity>
         
