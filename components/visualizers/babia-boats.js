@@ -32,6 +32,7 @@ AFRAME.registerComponent('babia-boats', {
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
+        field: { type: 'string', default: 'uid'},
     },
 
     /**
@@ -322,8 +323,8 @@ AFRAME.registerComponent('babia-boats', {
             let figure
             if (elements[i].children) {
                 figure = {
-                    id: "boat-" + elements[i].uid,
-                    name: elements[i].uid,
+                    id: "boat-" + elements[i][this.data.field],
+                    name: elements[i][this.data.field],
                     posX: posX,
                     posY: posY,
                     width: element.width,
@@ -335,8 +336,8 @@ AFRAME.registerComponent('babia-boats', {
             } else {
                 if (this.data.area) {
                     figure = {
-                        id: "boat-" + elements[i].uid,
-                        name: elements[i].uid,
+                        id: "boat-" + elements[i][this.data.field],
+                        name: elements[i][this.data.field],
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(element.area),
@@ -345,8 +346,8 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 } else {
                     figure = {
-                        id: "boat-" + elements[i].uid,
-                        name: elements[i].uid,
+                        id: "boat-" + elements[i][this.data.field],
+                        name: elements[i][this.data.field],
                         posX: posX,
                         posY: posY,
                         width: element.width,
