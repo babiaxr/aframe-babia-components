@@ -21,14 +21,18 @@ This doc gathers all the information about the releases made by the Springs/Mile
 | Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | 1.1.2 |
 | One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | 1.1.3 |
 | Pokemon        | 2021-06-07   |  2021-06-26 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/17) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Pokemon) | [Link](#pokemon)  | 1.1.4 |
-| Queens Blade        | 2021-06-26   |  2021-09-29 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/18) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Queens%20Blade) | [Link](#queens-blade)  | 1.2.0 |
+| Queens Blade        | 2021-06-26   |  2021-09-29 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/18) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Queens%20Blade) | [Link](#queens-blade)  | 1.2.1 |
 
 
 ## Release notes
 
 ### Queens Blade
 
-> NPM 1.2.0 version
+> NPM 1.2.1 version
+
+#### Hot fixes in 1.2.1
+
+Bugs related to boats and UI
 
 #### Async
 
