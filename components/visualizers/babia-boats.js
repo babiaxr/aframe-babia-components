@@ -123,7 +123,6 @@ AFRAME.registerComponent('babia-boats', {
             let t = { x: 0, y: 0, z: 0 };
             if ((Date.now() - this.start_time) > this.duration) {
                 this.animation = false;
-                // Fix bugs when change instante quickly
                 this.setFigures(this.figures, t);
             } else {
                 this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
@@ -590,9 +589,6 @@ AFRAME.registerComponent('babia-boats', {
 
                 let new_entity = this.createElement(figures[i], position);
                 this.addEvents(new_entity, figures[i]);
-                if (figures[i].children) {
-                    this.drawElements(new_entity, figures[i].children, figures[i].translate_matrix);
-                }
 
                 //Opacity 0
                 setOpacity(new_entity, 0);
