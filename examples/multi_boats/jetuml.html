@@ -122,10 +122,7 @@
         }
 
         let selector = document.getElementById('selector')
-        
-        function onConnect () {
-            console.log("onConnect", new Date());
-            document.body.addEventListener('entityCreated', function (event) {
+        document.body.addEventListener('entityCreated', function (event) {
                 console.log(event.detail.el)
                 if (event.detail.el.getAttribute('class') === "selector") {
                     if (selector.components.networked.data.owner == 'scene'){
@@ -133,6 +130,13 @@
                     }       
                 };
             });
+        function onConnect () {
+            console.log("onConnect", new Date());
+            if (selector.components.networked){
+                if (selector.components.networked.data.owner == 'scene'){
+                    NAF.utils.takeOwnership(selector)
+                }  
+            }       
         }
         
         
