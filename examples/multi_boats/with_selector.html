@@ -59,23 +59,23 @@
 
         <!-- No sync entities -->
         <!-- Slider -->
-        <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale= "0.5 0.5 0.5"></a-entity>    
+        <a-entity id="nav" babia-navigator position="6 1 1" rotation="0 0 0" scale= "0.5 0.5 0.5"></a-entity>    
 
         <!-- Sync entities, persistent -->
         <!-- Querier -->
-        <a-entity id="datajetuml" babia-queryjson="url: ./jetuml_code_data.json;"
+        <a-entity id="datajetuml" babia-queryjson="url: ../selector_boats/commits2.json;"
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
         <!-- 3 Selector -->
         <a-entity id="selector" babia-selector="from: datajetuml; controller: nav" 
             networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>    
         <!-- Treebuilder -->
-        <a-entity id="treedata" babia-treebuilder="field: file_path; split_by: /; from: selector"
+        <a-entity id="treedata" babia-treebuilder="field: path; split_by: /; from: selector"
             networked="template:#treebuilder-template; networkId:treebuilder; persistent: true; owner: scene"></a-entity>
 
         <!-- Boats Visualizer -->
-        <a-entity babia-boats="from: treedata; area: num_funs; height: loc_per_function; color: ccn" 
+        <a-entity babia-boats="from: treedata; area: area" 
             networked="template:#boats-template; networkId:boats; persistent: true; owner: scene"
-            position="0 0.1 0" scale="0.03 0.03 0.03" ></a-entity>
+            position="1 0.1 0" scale="0.3 0.3 0.3" ></a-entity>
 
         <!--Sync entities, not persistent-->
         <!-- Camera -->
