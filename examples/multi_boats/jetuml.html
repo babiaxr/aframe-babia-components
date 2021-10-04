@@ -142,6 +142,13 @@
                 }  
             }       
         }
+
+        selector.addEventListener('ownership-gained', e => {
+            console.log("Selector ownership gained")
+        });
+        selector.addEventListener('ownership-lost', e => {
+            console.log("Selector ownership lost")
+        });
         
         
     </script>
