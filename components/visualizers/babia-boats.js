@@ -111,7 +111,6 @@ AFRAME.registerComponent('babia-boats', {
         }
         // If changed whatever, re-print with the current data
         else if (data !== oldData && this.newData) {
-            console.log("Generating city...")
             this.processData(this.newData)
         }
     },
@@ -323,7 +322,7 @@ AFRAME.registerComponent('babia-boats', {
             let figure
             if (elements[i].children) {
                 figure = {
-                    id: "boat-" + elements[i][this.data.field],
+                    id: id = "boat-" + elements[i][this.data.field],
                     name: elements[i][this.data.field],
                     posX: posX,
                     posY: posY,
@@ -609,7 +608,7 @@ AFRAME.registerComponent('babia-boats', {
                 if (findIndex(self.figures_del, cond) < 0){
                     self.figures_del.push(figures_old[i])
                 }
-                let entity_del = document.getElementById(figures_old[i].id)
+                let entity_del = document.getElementById(figures_old[i].id);
                 if (entity_del){
                     let opacity = parseFloat(entity_del.getAttribute('material').opacity);
                     if (opacity - opa_dec > 0) {
@@ -655,7 +654,6 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     resize: function (entity, new_time, delta, figure, figure_old) {
-        //console.log(entity.id)
         if (((new_time - this.start_time) < this.duration) &&
             ((figure.width != figure_old.width) ||
                 (figure.height != figure_old.height) ||

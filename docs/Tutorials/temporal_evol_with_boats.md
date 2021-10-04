@@ -63,6 +63,7 @@ First we will import the data using the querier `babia-queryjson`. In this tutor
 In order to add the temporal evolution of the data we will need the component `babia-selector`. This component will filter the data by dates in order to see the value of the data on that date. In addition, we will need `babia-navigator` to be able to control the component selector (without it it will not work).
 
 This tutorial focuses on using `babia-boats` to visualize the data, therefore we will also need the `babia-treebuilder` component that will pass the data to a data tree parsing the path field.
+>Note: You need indicate the **SAME** attribute `field` in `babia-boats` and `babia-treebuilder` (eg. `field: path;`).
 
 So the correct order would be:
 
@@ -85,8 +86,8 @@ Using these components, we will create a scene like this:
 
 <head>
   <meta charset="utf-8">
-  <title>A-Frame Boats Component </title>
-  <meta name="description" content="Temporal Evolution for Boats component.">
+    <title>A-Frame Boats Component </title>
+    <meta name="description" content="Temporal Evolution for Boats component.">
   </meta>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
@@ -104,10 +105,10 @@ Using these components, we will create a scene like this:
     <a-entity id="selector" babia-selector="from: querier; controller: nav" ></a-entity>
 
     <!-- 3 Treebuilder -->
-    <a-entity id="tree" babia-treebuilder="field: id; split_by: /; from: selector"></a-entity>
+    <a-entity id="tree" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
 
     <!-- Boats Visualizer -->
-    <a-entity scale="0.4 1 0.4" babia-boats="from: tree; area: area" position="0 1 0"></a-entity>
+    <a-entity scale="0.4 1 0.4" babia-boats="from: tree; area: area; field: path" position="0 1 0"></a-entity>
 
     <!-- Navigator -->
     <a-entity id="nav" babia-navigator position="5 3 4" rotation="0 0 0"></a-entity>
