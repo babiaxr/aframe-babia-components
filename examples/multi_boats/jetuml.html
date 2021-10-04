@@ -48,7 +48,9 @@
             </template>
 
             <!-- Querier , Selector and treebuilder -->
-            
+            <template id="querier-template">
+                <a-entity class="querier"></a-entity>
+            </template>
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
@@ -65,21 +67,18 @@
             <!-- Sync entities, persistent -->
             <!-- Querier -->
             <a-entity id="datajetuml" babia-queryjson="url: ../selector_boats/jetuml_evol_data.json;"
-                ></a-entity>
-            <!-- 3 Selector -->
+            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
+            <!-- Selector -->
             <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
                 networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
-            <a-entity id="treedata" babia-treebuilder="field: path; split_by: /; from: selector"
-                >
-            </a-entity>
+            <a-entity id="treedata" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
 
             <!-- Boats Visualizer -->
             <a-entity babia-boats="from: treedata; area: num_funs; height: loc_per_function; color: ccn"
-                 position="0 0.1 0"
-                scale="0.03 0.03 0.03"></a-entity>
+                position="0 0.1 0" scale="0.03 0.03 0.03"></a-entity>
 
-            <!--Sync entities, not persistent-->
+            <!-- Sync entities, not persistent-->
             <!-- Camera -->
             <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0"
                 networked="template:#rig-template; attachTemplateToLocal:false">
@@ -120,7 +119,12 @@
                 color += digits[Math.floor(Math.random() * 16)];
             }
             return color;
+        }
 
+        let selector = document.getElementById('selector')
+        if (selector.components.networked.data.owner == 'scene'){
+            NAF.utils.takeOwnership(selector)
+            
         }
     </script>
     <script>
@@ -163,12 +167,12 @@
         });
 
 
-       /* NAF.schemas.add({
+        NAF.schemas.add({
             template: '#querier-template',
             components: [
                 'babia-queryjson'
             ]
-        })*/
+        })
 
         NAF.schemas.add({
             template: '#selector-template',
