@@ -48,23 +48,11 @@
             </template>
 
             <!-- Querier , Selector and treebuilder -->
-            <template id="querier-template">
-                <a-entity class="querier"></a-entity>
-            </template>
-            <template id="navigator-template">
-                <a-entity class="navigator"></a-entity>
-            </template>
+            
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
-            <template id="treebuilder-template">
-                <a-entity class="treebuilder"></a-entity>
-            </template>
-
-            <!-- Boats -->
-            <template id="boats-template">
-                <a-entity class="boats"></a-entity>
-            </template>
+           
         </a-assets>
 
         <!-- Environment -->
@@ -72,13 +60,12 @@
 
             <!-- No sync entities -->
             <!-- Slider -->
-            <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
-                ></a-entity>
+            <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
 
             <!-- Sync entities, persistent -->
             <!-- Querier -->
             <a-entity id="datajetuml" babia-queryjson="url: ../selector_boats/jetuml_evol_data.json;"
-               ></a-entity>
+                ></a-entity>
             <!-- 3 Selector -->
             <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
                 networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
@@ -89,7 +76,7 @@
 
             <!-- Boats Visualizer -->
             <a-entity babia-boats="from: treedata; area: num_funs; height: loc_per_function; color: ccn"
-                position="0 0.1 0"
+                 position="0 0.1 0"
                 scale="0.03 0.03 0.03"></a-entity>
 
             <!--Sync entities, not persistent-->
@@ -121,9 +108,6 @@
     <script>
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
-        let navigator = document.getElementById('navigator')
-        let selector = document.getElementById('selector')
-        //let boats = document.getElementById('boats')
 
         let color = getRandomColor();
         usernameTag.setAttribute('value', color)
@@ -136,14 +120,8 @@
                 color += digits[Math.floor(Math.random() * 16)];
             }
             return color;
-        }
 
-        navigator.addEventListener('click', function (event) {
-            console.log("CLICK ON NAVIGATOR")
-            if (!NAF.utils.isMine(selector)) {
-                NAF.utils.takeOwnership(selector)
-            }
-        });
+        }
     </script>
     <script>
         // Schemas with components and attributes for syncronization
@@ -185,18 +163,13 @@
         });
 
 
-        NAF.schemas.add({
+       /* NAF.schemas.add({
             template: '#querier-template',
             components: [
                 'babia-queryjson'
             ]
-        })
-        NAF.schemas.add({
-            template: '#navigator-template',
-            components: [
-                'babia-navigator'
-            ]
-        })
+        })*/
+
         NAF.schemas.add({
             template: '#selector-template',
             components: [
@@ -204,7 +177,7 @@
             ]
         })
 
-        NAF.schemas.add({
+        /*NAF.schemas.add({
             template: '#treebuilder-template',
             components: [
                 'babia-treebuilder'
@@ -219,7 +192,7 @@
                 'scale',
                 'babia-boats'
             ]
-        });
+        });*/
 
     </script>
 
