@@ -31,7 +31,7 @@
     </a-assets>
         <a-entity environment="preset: japan"></a-entity>
 
-        <a-entity id="graph" babia-queryjson="url: ../temporal_evol/bars/data.json;" 
+        <a-entity id="bars" babia-queryjson="url: ../temporal_evol/bars/data.json;" 
             babia-bars='legend: true; axis: true; keepHeight: true' 
             position="-5 0 0.1" rotation="0 0 0"
             networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"></a-entity>
@@ -43,19 +43,9 @@
         </a-entity>
     </a-scene>
     <script>
-        setTimeout(updateData, 4000);
-        setTimeout(updateData1, 4000);
-        setTimeout(updateData2, 4000);
+        
   
-        function updateData () {
-          document.getElementById('graph').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data2.json');
-        }
-        function updateData1 () {
-          document.getElementById('graph').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data3.json');
-        }
-        function updateData2 () {
-          document.getElementById('graph').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data.json');
-        }
+        
 
         let bars = document.getElementById('bars')
         document.body.addEventListener('clientConnected', function (event) {
@@ -71,11 +61,26 @@
                     let imCreator = false
                     if (myTime < otherTime){
                         NAF.utils.takeOwnership(bars)
-                        bars.setAttribute("scale", "0.1 0.1 0.1")
+                        bars.setAttribute("scale", "0.5 0.5 0.5")
+                        setTimeout(updateData, 4000);
+                        setTimeout(updateData1, 4000);
+                        setTimeout(updateData2, 4000);
                     }
                 }
             }
         });
+
+        function updateData () {
+          document.getElementById('bars').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data2.json');
+        }
+        function updateData1 () {
+          document.getElementById('bars').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data3.json');
+        }
+        function updateData2 () {
+          document.getElementById('bars').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data.json');
+        }
+    </script>
+    <script>
         NAF.schemas.add({
             template: '#bars-template',
             components: [
