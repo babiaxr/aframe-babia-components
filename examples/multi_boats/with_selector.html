@@ -79,12 +79,12 @@
             <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
                 networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
-            <a-entity id="treedata" babia-treebuilder="field: path; split_by: /; from: selector"
+            <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"
                 networked="template:#treebuilder-template; networkId:treebuilder; persistent: true; owner: scene">
             </a-entity>
 
             <!-- Boats Visualizer -->
-            <a-entity babia-boats="from: treedata; area: area"
+            <a-entity babia-boats="from: treebuilder; area: area"
                 networked="template:#boats-template; networkId:boats; persistent: true; owner: scene" position="1 0.1 0"
                 scale="0.3 0.3 0.3"></a-entity>
 
