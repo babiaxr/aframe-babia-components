@@ -63,7 +63,6 @@ First we will import the data using the querier `babia-queryjson`. In this tutor
 In order to add the temporal evolution of the data we will need the component `babia-selector`. This component will filter the data by dates in order to see the value of the data on that date. In addition, we will need `babia-navigator` to be able to control the component selector (without it it will not work).
 
 This tutorial focuses on using `babia-boats` to visualize the data, therefore we will also need the `babia-treebuilder` component that will pass the data to a data tree parsing the path field.
->Note: You need indicate the **SAME** attribute `field` in `babia-boats` and `babia-treebuilder` (eg. `field: path;`).
 
 So the correct order would be:
 
