@@ -55,8 +55,8 @@
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
-            <template id="navigator-template">
-                <a-entity class="navigator"></a-entity>
+            <template id="nav-template">
+                <a-entity class="nav"></a-entity>
             </template>
              <template id="treebuilder-template">
                 <a-entity class="treebuilder"></a-entity>
@@ -72,8 +72,8 @@
 
             <!-- No sync entities -->
             <!-- Slider -->
-            <a-entity id="navigator" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
-            networked="template:#navigator-template; networkId:navigator; persistent: true; owner: scene"></a-entity>
+            <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
+            networked="template:#nav-template; networkId:nav; persistent: true; owner: scene"></a-entity>
 
             <!-- Sync entities, persistent -->
             <!-- Querier -->
@@ -81,7 +81,7 @@
             <a-entity id="datajetuml" babia-queryjson="url:../selector_boats/jetuml_evol_data.json; "
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
             <!-- Selector -->
-            <a-entity id="selector" babia-selector="from: datajetuml; controller: navigator"
+            <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
                 networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
             <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"
@@ -145,7 +145,7 @@
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
             console.log("Selector owner: ", selector.components.networked.data.owner);
-            if (navigator.components.networked.data.owner == 'scene'){
+            if (nav.components.networked.data.owner == 'scene'){
                 for (client in NAF.connection.getConnectedClients()){
                     let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
                     let myTime = NAF.connection.adapter._myRoomJoinTime
@@ -153,7 +153,7 @@
                     console.log("Mine: ", myTime)
                     let imCreator = false
                     if (myTime < otherTime){
-                        NAF.utils.takeOwnership(navigator)
+                        NAF.utils.takeOwnership(nav)
                         NAF.utils.takeOwnership(selector)
                         NAF.utils.takeOwnership(treebuilder)
                         NAF.utils.takeOwnership(boats)
@@ -242,7 +242,7 @@
         })
 
         NAF.schemas.add({
-            template: '#navigator-template',
+            template: '#nav-template',
             components: [
             'position',
                 'rotation',
