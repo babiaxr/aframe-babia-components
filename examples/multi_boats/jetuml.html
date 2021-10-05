@@ -14,7 +14,7 @@
     <script src="../../dist/aframe-babia-components.js"></script>
     <!-- Mulituser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
-    <script src="./easyrtc.js"></script>
+    <script src="./easyrtc_bueno.js"></script>
     <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
     <!-- Gitlab Corner -->
     <link rel="stylesheet" href="../assets/gitlab-corner.css">
@@ -25,9 +25,10 @@
         room: demo_jetuml;
         adapter: easyrtc;
         debug: true;
-        audio: true;
-        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/">
-
+        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/
+        "
+        >
+       <!--audio:true -->
         <a-assets>
             <!-- Dummy asset to make the scene sync (WIP)-->
             <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
@@ -54,6 +55,12 @@
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
+             <template id="treebuilder-template">
+                <a-entity class="treebuilder"></a-entity>
+            </template>
+            <template id="boats-template">
+                <a-entity class="boats"></a-entity>
+            </template>
            
         </a-assets>
 
@@ -62,21 +69,25 @@
 
             <!-- No sync entities -->
             <!-- Slider -->
-            <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+            <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
+            ></a-entity>
 
             <!-- Sync entities, persistent -->
             <!-- Querier -->
-            <a-entity id="datajetuml" babia-queryjson="url: ../selector_boats/jetuml_evol_data.json;"
+
+            <a-entity id="datajetuml" babia-queryjson="url:../selector_boats/jetuml_evol_data.json; "
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
             <!-- Selector -->
             <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
                 networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
-            <a-entity id="treedata" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
+            <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"
+            networked="template:#treebuilder-template; networkId:treebuilder; persistent: true; owner: scene"></a-entity>
 
             <!-- Boats Visualizer -->
-            <a-entity babia-boats="from: treedata; area: num_funs; height: loc_per_function; color: ccn"
-                position="0 0.1 0" scale="0.03 0.03 0.03"></a-entity>
+            <a-entity id="boats" babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn"
+                position="0 0.1 0" scale="0.03 0.03 0.03"
+                networked="template:#boats-template; networkId:boats; persistent: true; owner: scene"></a-entity>
 
             <!-- Sync entities, not persistent-->
             <!-- Camera -->
@@ -122,25 +133,33 @@
         }
 
         let selector = document.getElementById('selector')
+        let treebuilder = document.getElementById('treebuilder')
+        let boats = document.getElementById('boats')
         let scene = document.getElementById('AframeScene')
-        
-        document.body.addEventListener('entityCreated', function (event) {
-            if (event.detail.el.getAttribute('class') === "selector") {
-                console.log("Selector created: ", event.detail.el)
-                if (scene.components['networked-scene']){
-                    if (selector.components.networked.data.owner == 'scene'){
+
+        // Client Connected
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            console.log("Selector owner: ", selector.components.networked.data.owner);
+            if (selector.components.networked.data.owner == 'scene'){
+                for (client in NAF.connection.getConnectedClients()){
+                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
+                    let myTime = NAF.connection.adapter._myRoomJoinTime
+                    console.log("Other: ", otherTime)
+                    console.log("Mine: ", myTime)
+                    let imCreator = false
+                    if (myTime < otherTime){
                         NAF.utils.takeOwnership(selector)
+                        NAF.utils.takeOwnership(treebuilder)
+                        NAF.utils.takeOwnership(boats)
                     }
-                }                     
-            };
+                }
+            }
         });
-        function onConnect () {
-            console.log("onConnect", new Date());
-            if (selector.components.networked){
-                if (selector.components.networked.data.owner == 'scene'){
-                    NAF.utils.takeOwnership(selector)
-                }  
-            }       
+
+        async function getConnectedUsers(){
+            await NAF.connection.getConnectedClients()
         }
 
         selector.addEventListener('ownership-gained', e => {
@@ -148,6 +167,18 @@
         });
         selector.addEventListener('ownership-lost', e => {
             console.log("Selector ownership lost")
+        });
+        treebuilder.addEventListener('ownership-gained', e => {
+            console.log("Treebuilder ownership gained")
+        });
+        treebuilder.addEventListener('ownership-lost', e => {
+            console.log("Treebuilder ownership lost")
+        });
+        boats.addEventListener('ownership-gained', e => {
+            console.log("Boats ownership gained")
+        });
+        boats.addEventListener('ownership-lost', e => {
+            console.log("Boats ownership lost")
         });
         
         
@@ -207,6 +238,13 @@
         })
 
         /*NAF.schemas.add({
+            template: '#navigator-template',
+            components: [
+                'babia-navigator'
+            ]
+        })*/
+
+        NAF.schemas.add({
             template: '#treebuilder-template',
             components: [
                 'babia-treebuilder'
@@ -221,10 +259,9 @@
                 'scale',
                 'babia-boats'
             ]
-        });*/
+        });
 
     </script>
-
 
 
     <!-- GITLAB CORNER-->
