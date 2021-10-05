@@ -81,7 +81,7 @@
             <a-entity id="datajetuml" babia-queryjson="url:../selector_boats/jetuml_evol_data.json; "
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
             <!-- Selector -->
-            <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
+            <a-entity id="selector" babia-selector="from: datajetuml; controller: navigator"
                 networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
             <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"
