@@ -65,7 +65,7 @@
         </a-assets>
 
         <!-- Environment -->
-        <a-entity environment="preset: yavapai" renderer="antialias: true">
+        <a-entity environment="preset: yavapai" renderer="antialias: true"></a-entity>
 
             <!-- No sync entities -->
             <!-- Slider -->
@@ -110,7 +110,6 @@
                 raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
-        </a-entity>
 
     </a-scene>
 
@@ -129,8 +128,50 @@
                 color += digits[Math.floor(Math.random() * 16)];
             }
             return color;
-
         }
+
+        let selector = document.getElementById('selector')
+        let treebuilder = document.getElementById('treebuilder')
+        let boats = document.getElementById('boats')
+
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            console.log("Selector owner: ", selector.components.networked.data.owner);
+            if (selector.components.networked.data.owner == 'scene'){
+                for (client in NAF.connection.getConnectedClients()){
+                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
+                    let myTime = NAF.connection.adapter._myRoomJoinTime
+                    console.log("Other: ", otherTime)
+                    console.log("Mine: ", myTime)
+                    let imCreator = false
+                    if (myTime < otherTime){
+                        NAF.utils.takeOwnership(selector)
+                        NAF.utils.takeOwnership(treebuilder)
+                        NAF.utils.takeOwnership(boats)
+                    }
+                }
+            }
+        });
+
+        selector.addEventListener('ownership-gained', e => {
+            console.log("Selector ownership gained")
+        });
+        selector.addEventListener('ownership-lost', e => {
+            console.log("Selector ownership lost")
+        });
+        treebuilder.addEventListener('ownership-gained', e => {
+            console.log("Treebuilder ownership gained")
+        });
+        treebuilder.addEventListener('ownership-lost', e => {
+            console.log("Treebuilder ownership lost")
+        });
+        boats.addEventListener('ownership-gained', e => {
+            console.log("Boats ownership gained")
+        });
+        boats.addEventListener('ownership-lost', e => {
+            console.log("Boats ownership lost")
+        });
     </script>
     <script>
         // Schemas with components and attributes for syncronization
