@@ -126,7 +126,7 @@
         let boats = document.getElementById('boats')
         let scene = document.getElementById('AframeScene')
 
-        document.body.nav.addEventListener('entityCreated', function (event) {
+        document.body.addEventListener('entityCreated', function (event) {
             console.log(event.detail.el)
             let el = event.detail.el;
             let comp;
