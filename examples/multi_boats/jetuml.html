@@ -136,7 +136,18 @@
         }
 
         let nav = document.getElementById('nav')
-        for (child in nav.children){
+        
+
+
+        let selector = document.getElementById('selector')
+        let treebuilder = document.getElementById('treebuilder')
+        let boats = document.getElementById('boats')
+        let scene = document.getElementById('AframeScene')
+
+        document.body.addEventListener('entityCreated', function (event) {
+            console.log(event.detail.el)
+            if (event.detail.el = nav){
+                for (child in nav.children){
             let comp;
             let template;
             if (child.components['babia-slider']){
@@ -159,12 +170,8 @@
                 "owner": "scene"
             })
         }
-
-
-        let selector = document.getElementById('selector')
-        let treebuilder = document.getElementById('treebuilder')
-        let boats = document.getElementById('boats')
-        let scene = document.getElementById('AframeScene')
+            }
+        });
 
         // Client Connected
         document.body.addEventListener('clientConnected', function (event) {
