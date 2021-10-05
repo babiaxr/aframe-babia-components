@@ -74,14 +74,13 @@ AFRAME.registerComponent('babia-treebuilder', {
 
         for (let i = 0; i < paths.length; i++) {
             let path = paths[i][data.field].split(data.split_by);
-            //console.log(path)
             let currentLevel = tree;
             for (let j = 0; j < path.length; j++) {
                 // Check if starts with the split char
                 if (!path[j]) { continue }
     
                 let part = path[j];
-                let existingPath = findWhere(currentLevel, 'uid', part);
+                let existingPath = findWhere(currentLevel, 'name', part);
     
                 if (existingPath) {
                     currentLevel = existingPath.children;
@@ -93,10 +92,8 @@ AFRAME.registerComponent('babia-treebuilder', {
                     } else {
                         newPart['children'] = []
                         newPart['uid'] = paths[i][data.field].split(part)[0] + part
-                        // NO BORRAR
-                        newPart[data.field] = newPart['uid'];
                     }
-                    newPart['uid'] = part                  
+                    newPart['name'] = part                  
                     currentLevel.push(newPart);
                     currentLevel = newPart.children;
                 }
