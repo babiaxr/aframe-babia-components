@@ -35,36 +35,21 @@
 
             <!-- Templates -->
             <!-- Camara -->
-            <template id="rig-template">
-                <a-entity class="rig"></a-entity>
-            </template>
-            <template id="camera-template">
-                <a-entity class="camera"></a-entity>
-            </template>
-            <template id="avatar-template">
-                <a-sphere class="avatar" networked-audio-source></a-sphere>
-            </template>
-            <template id="username-tag-template">
-                <a-text class="username-tag"></a-text>
-            </template>
+            <template id="rig-template"><a-entity class="rig"></a-entity></template>
+            <template id="camera-template"><a-entity class="camera"></a-entity></template>
+            <template id="avatar-template"><a-sphere class="avatar" networked-audio-source></a-sphere></template>
+            <template id="username-tag-template"><a-text class="username-tag"></a-text></template>
 
             <!-- Querier , Selector and treebuilder -->
-            <template id="querier-template">
-                <a-entity class="querier"></a-entity>
-            </template>
-            <template id="selector-template">
-                <a-entity class="selector"></a-entity>
-            </template>
-            <template id="nav-template">
-                <a-entity class="nav"></a-entity>
-            </template>
-             <template id="treebuilder-template">
-                <a-entity class="treebuilder"></a-entity>
-            </template>
-            <template id="boats-template">
-                <a-entity class="boats"></a-entity>
-            </template>
-           
+            <template id="querier-template"><a-entity class="querier"></a-entity></template>
+            <template id="selector-template"><a-entity class="selector"></a-entity></template>
+            <template id="nav-template"><a-entity class="nav"></a-entity></template>
+            <template id="slider-template"><a-entity class="nav"></a-entity></template>
+            <template id="controls-template"><a-entity class="controls"></a-entity></template>
+            <template id="step-controller-template"><a-entity class="step-controller"></a-entity></template>
+            <template id="speed-controller-template"><a-entity class="speed-controller"></a-entity></template>
+            <template id="treebuilder-template"><a-entity class="treebuilder"></a-entity></template>
+            <template id="boats-template"><a-entity class="boats"></a-entity></template>
         </a-assets>
 
         <!-- Environment -->
@@ -141,7 +126,7 @@
         let boats = document.getElementById('boats')
         let scene = document.getElementById('AframeScene')
 
-        /*document.body.addEventListener('entityCreated', function (event) {
+        document.body.addEventListener('entityCreated', function (event) {
             console.log(event.detail.el)
             if (event.detail.el = nav){
                 for (child in nav.children){
@@ -168,7 +153,7 @@
             })
         }
             }
-        });*/
+        });
 
         // Client Connected
         document.body.addEventListener('clientConnected', function (event) {
@@ -184,9 +169,9 @@
                     let imCreator = false
                     if (myTime < otherTime){
                         NAF.utils.takeOwnership(nav)
-                        /*for (child in nav.children){
+                        for (child in nav.children){
                             NAF.utils.takeOwnership(child)
-                        }*/
+                        }
                         NAF.utils.takeOwnership(selector)
                         NAF.utils.takeOwnership(treebuilder)
                         NAF.utils.takeOwnership(boats)
@@ -283,6 +268,42 @@
                 'rotation',
                 'scale',
                 'babia-navigator'
+            ]
+        })
+        NAF.schemas.add({
+            template: '#slider-template',
+            components: [
+            'position',
+                'rotation',
+                'scale',
+                'babia-slider'
+            ]
+        })
+        NAF.schemas.add({
+            template: '#controls-template',
+            components: [
+            'position',
+                'rotation',
+                'scale',
+                'babia-controls'
+            ]
+        })
+        NAF.schemas.add({
+            template: '#step-controller-template',
+            components: [
+            'position',
+                'rotation',
+                'scale',
+                'babia-step-controller'
+            ]
+        })
+        NAF.schemas.add({
+            template: '#speed-controller-template',
+            components: [
+            'position',
+                'rotation',
+                'scale',
+                'babia-speed-controller'
             ]
         })
 
