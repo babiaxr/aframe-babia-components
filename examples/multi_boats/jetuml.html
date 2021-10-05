@@ -126,33 +126,30 @@
         let boats = document.getElementById('boats')
         let scene = document.getElementById('AframeScene')
 
-        document.body.addEventListener('entityCreated', function (event) {
+        document.body.nav.addEventListener('entityCreated', function (event) {
             console.log(event.detail.el)
-            if (event.detail.el = nav){
-                for (child in nav.children){
+            let el = event.detail.el;
             let comp;
             let template;
-            if (child.components['babia-slider']){
+            if (el.components['babia-slider']){
                 comp = 'babia-slider';
                 template = 'slider-template';
-            } else if (child.components['babia-controls']){
+            } else if (el.components['babia-controls']){
                 comp = 'babia-contols';
                 template = 'controls-template';
-            }else if (child.components['babia-step-controller']){
+            }else if (el.components['babia-step-controller']){
                 comp = 'babia-step-contoller';
                 template = 'step-controller-template';
-            }else if (child.components['babia-speed-controller']){
+            }else if (el.components['babia-speed-controller']){
                 comp = 'babia-speed-contoller';
                 template = 'speed-controller-template';
             }
-            child.setAttribute("networked", {
+            el.setAttribute("networked", {
                 "template": template,
                 "networkId": comp,
                 "persistent": "true",
                 "owner": "scene"
             })
-        }
-            }
         });
 
         // Client Connected
