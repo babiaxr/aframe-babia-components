@@ -68,7 +68,7 @@
         </a-assets>
 
         <!-- Environment -->
-        <a-entity environment="preset: yavapai" renderer="antialias: true">
+        <a-entity environment="preset: yavapai" renderer="antialias: true"> </a-entity>
 
             <!-- No sync entities -->
             <!-- Slider -->
@@ -114,7 +114,7 @@
                 raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
-        </a-entity>
+       
 
     </a-scene>
 
@@ -136,15 +136,12 @@
         }
 
         let nav = document.getElementById('nav')
-        
-
-
         let selector = document.getElementById('selector')
         let treebuilder = document.getElementById('treebuilder')
         let boats = document.getElementById('boats')
         let scene = document.getElementById('AframeScene')
 
-        document.body.addEventListener('entityCreated', function (event) {
+        /*document.body.addEventListener('entityCreated', function (event) {
             console.log(event.detail.el)
             if (event.detail.el = nav){
                 for (child in nav.children){
@@ -171,7 +168,7 @@
             })
         }
             }
-        });
+        });*/
 
         // Client Connected
         document.body.addEventListener('clientConnected', function (event) {
@@ -187,9 +184,9 @@
                     let imCreator = false
                     if (myTime < otherTime){
                         NAF.utils.takeOwnership(nav)
-                        for (child in nav.children){
+                        /*for (child in nav.children){
                             NAF.utils.takeOwnership(child)
-                        }
+                        }*/
                         NAF.utils.takeOwnership(selector)
                         NAF.utils.takeOwnership(treebuilder)
                         NAF.utils.takeOwnership(boats)
@@ -198,10 +195,12 @@
             }
         });
 
-        async function getConnectedUsers(){
-            await NAF.connection.getConnectedClients()
-        }
-
+        nav.addEventListener('ownership-gained', e => {
+            console.log("Navigator ownership gained")
+        });
+        nav.addEventListener('ownership-lost', e => {
+            console.log("Navigator ownership lost")
+        });
         selector.addEventListener('ownership-gained', e => {
             console.log("Selector ownership gained")
         });
