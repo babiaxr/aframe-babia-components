@@ -1,0 +1,15 @@
+[
+    {
+      "x_axis": "A",
+      "height": 25
+    },
+    {
+      "x_axis": "C",
+      "height": 17,
+      "_not": true
+    },
+    {
+      "x_axis": "D",
+      "height": 8
+    }
+]

@@ -31,10 +31,11 @@
     </a-assets>
         <a-entity environment="preset: japan"></a-entity>
 
-        <a-entity id="bars" babia-queryjson="url: ../temporal_evol/bars/data.json;" 
+        <a-entity id="bars" babia-queryjson="url: data.json;" 
             babia-bars='legend: true; axis: true; keepHeight: true' 
             position="-5 0 0.1" rotation="0 0 0"
-            networked="template:#bars-template; networkId:bars; persistent: true; owner: scene"></a-entity>
+            networked="template:#bars-template; networkId:bars; persistent: true; owner: scene">
+        </a-entity>
 
         <a-entity movement-controls="fly: true" position="2 5 15">
             <a-entity camera position="0 0 0" look-controls></a-entity>
@@ -43,9 +44,6 @@
         </a-entity>
     </a-scene>
     <script>
-        
-  
-        
 
         let bars = document.getElementById('bars')
         document.body.addEventListener('clientConnected', function (event) {
@@ -71,13 +69,13 @@
         });
 
         function updateData () {
-          document.getElementById('bars').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data2.json');
+          document.getElementById('bars').setAttribute('babia-queryjson', 'url', 'data2.json');
         }
         function updateData1 () {
-          document.getElementById('bars').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data3.json');
+          document.getElementById('bars').setAttribute('babia-queryjson', 'url', 'data3.json');
         }
         function updateData2 () {
-          document.getElementById('bars').setAttribute('babia-queryjson', 'url', '../temporal_evol/bars/data.json');
+          document.getElementById('bars').setAttribute('babia-queryjson', 'url', 'data.json');
         }
     </script>
     <script>
