@@ -26,13 +26,19 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
-### Queens Blade
+### ReLIFE
 
-> NPM 1.2.1 version
+> NPM 1.2.2 version
+
+#### Hot fixes in 1.2.2
+
+Bugs related to boats and load GLTF with webpack4
 
 #### Hot fixes in 1.2.1
 
 Bugs related to boats and UI
+
+### Queens Blade
 
 #### Async
 
