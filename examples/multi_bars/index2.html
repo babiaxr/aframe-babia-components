@@ -59,13 +59,18 @@
                     console.log("Mine: ", myTime)
                     let imCreator = false
                     if (myTime < otherTime){
-                        NAF.utils.takeOwnership(bars)
-                        bars.setAttribute("scale", "0.5 0.5 0.5")
-                        setTimeout(updateData, 4000);
+                        setTimeout(updateScale, 4000);
+
                     }
                 }
             }
         });
+
+        function updateScale() {
+            NAF.utils.takeOwnership(bars)
+            bars.setAttribute("scale", "0.5 0.5 0.5")
+            setTimeout(updateData, 4000);
+        }
 
         function updateData () {
             bars.setAttribute('babia-queryjson', 'url', 'data2.json');
