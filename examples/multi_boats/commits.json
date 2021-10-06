@@ -1,0 +1,33 @@
+[
+    {
+        "path": "Root/BlockA/BlockA0/A0A",
+        "date":"2015-08",
+        "area": 2,
+        "height": 1
+    },
+    {
+        "path": "Root/BlockA/BlockA0/A0A",
+        "date":"2015-09",
+        "area": 2,
+        "height": 7
+    },
+    {
+        "path": "Root/BlockA/BlockA0/A0B",
+        "date":"2015-09",
+        "area": 5,
+        "height": 5
+    },
+    {
+        "path": "Root/BlockA/BlockA0/A0B",
+        "date":"2015-10",
+        "area": 10,
+        "height": 5
+    }
+    ,
+    {
+        "path": "Root/BlockA/BlockA0/A0C",
+        "date":"2015-10",
+        "area": 1,
+        "height": 7
+    }
+]
