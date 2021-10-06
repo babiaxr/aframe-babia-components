@@ -32,3 +32,9 @@ require('./components/others/babia-navigator')
 require('./components/others/babia-slider')
 require('./components/others/babia-ui-link')
 require('./common/noti-buffer')
+
+// Assets
+pauseButton = require('./components/others/models/pause_button.gltf')
+playButton = require('./components/others/models/play_button.gltf')
+skipButton = require('./components/others/models/skip_button.gltf')
+rewindButton = require('./components/others/models/rewind_button.gltf')

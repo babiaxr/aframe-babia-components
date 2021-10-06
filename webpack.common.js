@@ -13,7 +13,16 @@ module.exports = {
         include: [path.resolve(__dirname, "components")],
         exclude: [path.resolve(__dirname, "node_modules")],
         loader: "babel-loader"
-      }
+      },
+      {
+        test: /\.(glb|gltf)$/,
+        use:
+          [
+            {
+              loader: 'url-loader',
+            }
+          ]
+      },
     ]
   },
   resolve: {
