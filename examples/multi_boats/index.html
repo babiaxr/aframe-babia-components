@@ -31,8 +31,7 @@
     </a-assets>
         <a-entity environment="preset: japan"></a-entity>
 
-        <a-entity id="boats" babia-queryjson="url: ./commits.json;"
-            babia-treebuilder="field: path; split_by: /;"
+        <a-entity id="boats" babia-queryjson="url: ./data1.json;"
             babia-boats="area: num_funs; height: loc_per_function; color: ccn"
             position="-5 0 0.1" rotation="0 0 0"
             networked="template:#boats-template; networkId:boats; persistent: true; owner: scene">
@@ -73,15 +72,15 @@
         }
 
         function updateData () {
-            boats.setAttribute('babia-queryjson', 'url', 'commits2.json');
+            boats.setAttribute('babia-queryjson', 'url', 'data2.json');
             setTimeout(updateData1, 4000);
         }
         function updateData1 () {
-            boats.setAttribute('babia-queryjson', 'url', 'commits.json');
+            boats.setAttribute('babia-queryjson', 'url', 'data1.json');
             setTimeout(updateData2, 4000);
         }
         function updateData2 () {
-            boats.setAttribute('babia-queryjson', 'url', 'commits2.json');
+            boats.setAttribute('babia-queryjson', 'url', 'data2.json');
         }
     </script>
     <script>
@@ -93,7 +92,6 @@
                 'scale',
                 'babia-boats',
                 'babia-queryjson',
-                'babia-treebuilder'
             ]
         });
     </script>
