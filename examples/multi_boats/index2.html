@@ -58,7 +58,6 @@
                     let imCreator = false
                     if (myTime < otherTime){
                         NAF.utils.takeOwnership(boats)
-                        setTimeout(updateData, 4000);
                     }
                 }
             }
@@ -67,45 +66,45 @@
         setTimeout(updateData, 4000)
 
         function updateData () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data2.json');
             }
             setTimeout(updateData1, 4000);
         }
         function updateData1 () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data3.json');
             }
             setTimeout(updateData2, 4000);
         }
         function updateData2 () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data4.json');
             }
             setTimeout(updateData3, 4000);
 
         }
         function updateData3 () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data1.json');
             }
             setTimeout(updateData4, 4000);
         }
         function updateData4 () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data2.json');
             }
             setTimeout(updateData5, 4000);
         }
         function updateData5 () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data3.json');
             }
             setTimeout(updateData6, 4000);
 
         }
         function updateData6 () {
-            if (NAF.utils.isMine(boats)){
+            if (NAF.utils.isMine(boats) || boats.components.networked.data.owner == 'scene'){
                 boats.setAttribute('babia-queryjson', 'url', 'data2.json');
             }
         }
