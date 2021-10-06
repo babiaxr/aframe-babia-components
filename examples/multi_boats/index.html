@@ -32,8 +32,7 @@
         <a-entity environment="preset: japan"></a-entity>
 
         <a-entity id="boats" babia-queryjson="url: ./data1.json;"
-            babia-boats="area: num_funs; height: loc_per_function; color: ccn"
-            position="-5 0 0.1" rotation="0 0 0"
+            babia-boats position="0 1 0"
             networked="template:#boats-template; networkId:boats; persistent: true; owner: scene">
         </a-entity>
 
@@ -58,18 +57,12 @@
                     console.log("Mine: ", myTime)
                     let imCreator = false
                     if (myTime < otherTime){
-                        setTimeout(updateScale, 4000);
-
+                        NAF.utils.takeOwnership(boats)
+                        setTimeout(updateData, 4000);
                     }
                 }
             }
         });
-
-        function updateScale() {
-            NAF.utils.takeOwnership(boats)
-            boats.setAttribute("scale", "0.5 0.5 0.5")
-            setTimeout(updateData, 4000);
-        }
 
         function updateData () {
             boats.setAttribute('babia-queryjson', 'url', 'data2.json');
