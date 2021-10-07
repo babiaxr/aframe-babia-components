@@ -84,7 +84,14 @@ AFRAME.registerComponent('babia-navigator', {
         }
         // Out of range
         if ((value >= 0) && (value <= this.sliderEl.max)){
-            this.sliderEl.setAttribute('babia-slider', 'value', value)
+            if (this.data.label){
+                this.sliderEl.setAttribute('babia-slider', {
+                    label: this.data.label,
+                    value: this.current
+            })    
+            } else {
+                this.sliderEl.setAttribute('babia-slider', 'value', this.current)
+            }
             this.notiBuffer.set('babiaSetPosition' + value)
         } else {
             if (this.controlsEl.querySelector('.babiaPause')){
@@ -115,17 +122,25 @@ AFRAME.registerComponent('babia-navigator', {
                 this.controlsEl.querySelector('.babiaPause').emit('click')
             }
         }else {
+
             if (!this.sliderEl){
                 this.initializeControls()
             }
             if (this.toPresent){
-                this.current = data - 1
+                this.current = data.value - 1
             } else {
-                this.current = data + 1
+                this.current = data.value + 1
             }
             
             if ((this.current >= this.sliderEl.min) && (this.current <= this.sliderEl.max)){
-                this.sliderEl.setAttribute('babia-slider', 'value', this.current)
+                if (data.label){
+                    this.sliderEl.setAttribute('babia-slider', {
+                        label: data.label,
+                        value: this.current
+                })    
+                } else {
+                    this.sliderEl.setAttribute('babia-slider', 'value', this.current)
+                }
             }
         }
     },
@@ -149,7 +164,6 @@ AFRAME.registerComponent('babia-navigator', {
     speedComp: undefined,
 
     controlNavigator: function (evt, value) {
-        console.log ('Navigator control: ', evt)
         if (evt == 'babiaSkipNext' || evt == 'babiaSkipPrev') {
             // Update Slider
             this.isPaused = true

@@ -12,7 +12,8 @@ AFRAME.registerComponent('babia-slider', {
         value: { type: 'number', default: -5 },
         innerSize: { type: 'number', default: 0.8 },
         precision: { type: 'number', default: 2 },
-        vertical: {type: 'boolean', default: false}
+        vertical: {type: 'boolean', default: false},
+        label: {type: 'string'}
       },
     
       multiple: true,
@@ -141,7 +142,12 @@ AFRAME.registerComponent('babia-slider', {
         this.value = value;
     
         lever.position.x = this.valueToLeverPosition(value);
-        this.setTextGeometry(value)
+        if (!this.data.label){
+          this.setTextGeometry(value)
+        } else {
+          this.setTextGeometry(this.data.label)
+        }
+        
       },
 
       valueToLeverPosition: function(value) {
@@ -171,8 +177,7 @@ AFRAME.registerComponent('babia-slider', {
     
           var handWorld = new THREE.Vector3().setFromMatrixPosition(hand.matrixWorld);
           lever.parent.worldToLocal(handWorld);
-          
-    
+           
             if (Math.abs(handWorld.x) > sliderRange / 2) {
                 lever.position.x = sliderRange / 2 * Math.sign(lever.position.x);
             } else {
@@ -233,7 +238,7 @@ AFRAME.registerComponent('babia-slider', {
           } else {
             value = this.mouseyPositionToValue(mouse.y);
           }
-          this.setValue(Math.round(value));
+          //this.setValue(Math.round(value));
           
           if (this.el.parentEl.components['babia-navigator']){
             this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetPosition', Math.round(value))

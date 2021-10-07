@@ -32,7 +32,6 @@ class Selectable {
         } else {
             this.current = this.length
         }
-        console.log("next: ", this.data)
         return(selected);
     }
 
@@ -43,14 +42,12 @@ class Selectable {
         } else {
             this.current = 0
         }
-        console.log("prev: ", this.data)
         return(selected);
     }
 
     setValue(value)  {
         let selected = this.data[this.selectors[value]];
         this.current = value + 1;
-        console.log("setValue: ", this.data)
         return(selected);
     }
 };
@@ -153,7 +150,7 @@ AFRAME.registerComponent('babia-selector', {
         } else {
             this.newData = this.selectable.next();
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set(this.selectable.current)
+            this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
             this.babiaMetadata = { id: this.selectable.current};
         }
     },
@@ -162,7 +159,7 @@ AFRAME.registerComponent('babia-selector', {
         if (this.selectable.current >= 0){
             this.newData = this.selectable.prev();
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set(this.selectable.current)
+            this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current+1]})
             this.babiaMetadata = { id: this.selectable.current };
         } else {
             this.selectable.current = 0
@@ -181,7 +178,7 @@ AFRAME.registerComponent('babia-selector', {
                 this.selectable.current -=2
             }
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set(value);
+            this.navNotiBuffer.set({value: value, label: this.selectable.selectors[value-1]});
         }
     },
 
@@ -223,7 +220,7 @@ AFRAME.registerComponent('babia-selector', {
     processData: function (_data) {
         // Create a Selectable object, and set the updating interval
         this.selectable = new Selectable(_data, this.data.select); 
-        this.navNotiBuffer.set(this.selectable.current)
+        this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
         let self = this;
         this.nextSelect();
         this.interval = window.setInterval(function () {
