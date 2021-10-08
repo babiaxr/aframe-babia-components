@@ -98,7 +98,6 @@
                 }
                 if (imFirst) {
                     NAF.utils.takeOwnership(selector)
-                    selector.setAttribute('babia-selector', 'multi_value', selector.components['babia-selector'].selectable.current)
                  
                     /*selector.setAttribute('networked', {
                         'template': '#selector-template',
@@ -111,6 +110,12 @@
                 }
             }
         });
+
+        selector.addEventListener('ownership-gained', e => {
+            console.log("Selector ownership gained")
+            selector.setAttribute('babia-selector', 'multi_value', selector.components['babia-selector'].selectable.current)
+        });
+
         /*document.body.addEventListener('entityCreated', function (event){
             let entity = event.detail.el
             if (entity.components["networked"]){
