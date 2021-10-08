@@ -7,7 +7,7 @@ class Selectable {
      * @param list {array} List of items to select from
      * @param field {string} Field name used to select (present in all items)
      */
-    constructor(list, field) {
+    constructor(list, field, current) {
         this.data = {};
         for (let item of list) {
             let selector = item[field];
@@ -19,7 +19,7 @@ class Selectable {
         }
         this.selectors = Object.keys(this.data).sort();
         this.length = this.selectors.length;
-        this.current = 0;
+        //this.current = 0;
         this.step = 1
     }
 
@@ -73,7 +73,9 @@ AFRAME.registerComponent('babia-selector', {
         // Timeout for moving to the next selection
         timeout: { type: 'number', default: 6000 },
         // data, for debugging, highest priority
-        data: { type: 'string' }
+        data: { type: 'string' },
+        // Current value of to start from if in multiuser mode
+        multi_value: { type: 'number', default: 0}
     },
 
     multiple: false,
@@ -138,8 +140,10 @@ AFRAME.registerComponent('babia-selector', {
                 this.navNotiBufferId = this.navComponent.notiBuffer.register(this.processEvent.bind(this), this)
             }
         }
-        
-        
+
+        if (data.multi_value != oldData.multi_value) {
+            this.setSelect(data.multi_value)
+        }  
     },
 
     nextSelect: function() {
@@ -219,7 +223,7 @@ AFRAME.registerComponent('babia-selector', {
 
     processData: function (_data) {
         // Create a Selectable object, and set the updating interval
-        this.selectable = new Selectable(_data, this.data.select); 
+        this.selectable = new Selectable(_data, this.data.select, this.data.multi_value); 
         this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
         let self = this;
         this.nextSelect();

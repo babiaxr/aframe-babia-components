@@ -25,7 +25,7 @@
         room: multi_boats_selector;
         adapter: easyrtc;
         debug: true;
-        audio: true;
+        audio: false;
         serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/">
 
         <a-assets>
@@ -33,34 +33,8 @@
             <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
 
             <!-- Templates -->
-            <!-- Camara -->
-            <template id="rig-template">
-                <a-entity class="rig"></a-entity>
-            </template>
-            <template id="camera-template">
-                <a-entity class="camera"></a-entity>
-            </template>
-            <template id="avatar-template">
-                <a-sphere class="avatar" networked-audio-source></a-sphere>
-            </template>
-            <template id="username-tag-template">
-                <a-text class="username-tag"></a-text>
-            </template>
-
-            <!-- Querier , Selector and treebuilder -->
-            <template id="querier-template">
-                <a-entity class="querier"></a-entity>
-            </template>
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
-            </template>
-            <template id="treebuilder-template">
-                <a-entity class="treebuilder"></a-entity>
-            </template>
-
-            <!-- Boats -->
-            <template id="boats-template">
-                <a-entity class="boats"></a-entity>
             </template>
         </a-assets>
 
@@ -73,32 +47,24 @@
 
             <!-- Sync entities, persistent -->
             <!-- Querier -->
-            <a-entity id="datajetuml" babia-queryjson="url: ../selector_boats/commits2.json;"
-                networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
+            <a-entity id="querier" babia-queryjson="url: ./commits2.json;"></a-entity>
             <!-- 3 Selector -->
-            <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
-                networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
+            <a-entity id="selector" babia-selector="from: querier; controller: nav"
+            networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
-            <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"
-                networked="template:#treebuilder-template; networkId:treebuilder; persistent: true; owner: scene">
-            </a-entity>
+            <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
 
             <!-- Boats Visualizer -->
-            <a-entity id="boats" babia-boats="from: treebuilder; area: area"
-                networked="template:#boats-template; networkId:boats; persistent: true; owner: scene" position="1 0.1 0"
-                scale="0.3 0.3 0.3"></a-entity>
+            <a-entity id="boats" babia-boats="from: treebuilder; area: area" 
+            position="1 0.1 0" scale="0.3 0.3 0.3"></a-entity>
 
             <!--Sync entities, not persistent-->
             <!-- Camera -->
-            <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0"
-                networked="template:#rig-template; attachTemplateToLocal:false">
-                <a-entity id="camera" camera look-controls wasd-controls="fly: false"
-                    networked="template:#camera-template;attachTemplateToLocal:false;">
-                    <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
-                        networked="template:#avatar-template;attachTemplateToLocal:false;">
-                        <a-text id="username-tag"
-                            networked="template:#username-tag-template; attachTemplateToLocal:false"
-                            position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
+            <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0">
+                <a-entity id="camera" camera look-controls wasd-controls="fly: false">
+                    <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25">
+                        <a-text id="username-tag" 
+                        position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
                     </a-sphere>
                 </a-entity>
             </a-entity>
@@ -114,174 +80,57 @@
     </a-scene>
 
     <script>
-        let avatar = document.getElementById('avatar')
-        let usernameTag = document.getElementById('username-tag')
-
-        let color = getRandomColor();
-        usernameTag.setAttribute('value', color)
-        avatar.setAttribute('color', color)
-
-        function getRandomColor() {
-            var digits = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += digits[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
         let selector = document.getElementById('selector')
-        let treebuilder = document.getElementById('treebuilder')
-        let boats = document.getElementById('boats')
-
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
             console.log("Selector owner: ", selector.components.networked.data.owner);
+            let imFirst = true
             if (selector.components.networked.data.owner == 'scene'){
                 for (client in NAF.connection.getConnectedClients()){
                     let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
                     let myTime = NAF.connection.adapter._myRoomJoinTime
                     console.log("Other: ", otherTime)
                     console.log("Mine: ", myTime)
-                    let imCreator = false
-                    if (myTime < otherTime){
-                        NAF.utils.takeOwnership(selector)
-                        NAF.utils.takeOwnership(treebuilder)
-                        NAF.utils.takeOwnership(boats)
-                        boats.setAttribute("scale", "0.1 0.1 0.1")
+                    if (myTime > otherTime){
+                        imFirst = false;
                     }
+                }
+                if (imFirst) {
+                    NAF.utils.takeOwnership(selector)
+                    selector.setAttribute('babia-selector', 'multi_value', selector.selectable.current)
+                 
+                    /*selector.setAttribute('networked', {
+                        'template': '#selector-template',
+                        'attachTemplateToLocal': 'false',
+                        'networkId': 'sharedSelector',
+                        'creator': NAF.clientId
+                    })*/
+                } else { 
+                    console.log("I'm not creator")
                 }
             }
         });
-
-        selector.addEventListener('ownership-gained', e => {
-            console.log("Selector ownership gained")
-        });
-        selector.addEventListener('ownership-lost', e => {
-            console.log("Selector ownership lost")
-        });
-        treebuilder.addEventListener('ownership-gained', e => {
-            console.log("Treebuilder ownership gained")
-        });
-        treebuilder.addEventListener('ownership-lost', e => {
-            console.log("Treebuilder ownership lost")
-        });
-        boats.addEventListener('ownership-gained', e => {
-            console.log("Boats ownership gained")
-        });
-        boats.addEventListener('ownership-lost', e => {
-            console.log("Boats ownership lost")
-        });
+        /*document.body.addEventListener('entityCreated', function (event){
+            let entity = event.detail.el
+            if (entity.components["networked"]){
+                if (entity.components.networked.attrValue.networkId == "sharedSelector" && entity.components.networked.data.creator != NAF.clientId) {
+                    console.log(entity.components.networked.attrValue.networkId)
+                    let selector = document.getElementById('selector')
+                    selector.parentNode.removeChild(selector);
+                    treebuilder.setAttribute('babia-treebuilder','from','naf-sharedSelector')
+                } 
+          }
+        })*/
     </script>
     <script>
-        // Schemas with components and attributes for syncronization
-        NAF.schemas.add({
-            template: '#rig-template',
-            components: [
-                'position',
-                'rotation'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#camera-template',
-            components: [
-                'position',
-                'rotation'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#avatar-template',
-            components: [
-                'position',
-                'rotation',
-                'color',
-                'scale'
-            ]
-        });
-
-        NAF.schemas.add({
-            template: '#username-tag-template',
-            components: [
-                'value',
-                'color',
-                'width',
-                'position',
-                'rotation'
-            ]
-        });
-
-
-        NAF.schemas.add({
-            template: '#querier-template',
-            components: [
-                'babia-queryjson'
-            ]
-        })
-
         NAF.schemas.add({
             template: '#selector-template',
             components: [
                 'babia-selector'
             ]
         })
-
-        NAF.schemas.add({
-            template: '#treebuilder-template',
-            components: [
-                'babia-treebuilder'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#boats-template',
-            components: [
-                'position',
-                'rotation',
-                'scale',
-                'babia-boats'
-            ]
-        });
-
     </script>
-
-    <!-- GITLAB CORNER-->
-    <div class="gitlab-corner-wrapper"><a
-            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/multi_boats_selector/index.html"
-            class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
-                <g id="g44">
-                    <path id="path46" class="cls-1"
-                        d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
-                </g>
-                <g id="g48">
-                    <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
-                </g>
-                <g id="g56">
-                    <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
-                </g>
-                <g id="g64">
-                    <path id="path66" class="cls-3"
-                        d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
-                </g>
-                <g id="g72">
-                    <path id="path74" class="cls-2"
-                        d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
-                </g>
-                <g id="g76">
-                    <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
-                </g>
-                <g id="g80">
-                    <path id="path82" class="cls-3"
-                        d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
-                </g>
-                <g id="g84">
-                    <path id="path86" class="cls-2"
-                        d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
-                </g>
-            </svg></a></div>
 </body>
 
 </html>
