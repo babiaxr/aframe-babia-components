@@ -15,7 +15,7 @@
 
 <body>
     <a-scene rain background="color: #ECECEC" networked-scene="
-    room: multi_boats_2;
+    room:multi_boats_queryjson_2;
     adapter: easyrtc;
     debug: true;
     audio: false;
@@ -50,15 +50,18 @@
             console.log('clientConnected event. clientId =', clientId);
             console.log("Bars owner: ", boats.components.networked.data.owner);
             if (boats.components.networked.data.owner == 'scene'){
+                let imCreator = true;
                 for (client in NAF.connection.getConnectedClients()){
                     let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
                     let myTime = NAF.connection.adapter._myRoomJoinTime
                     console.log("Other: ", otherTime)
                     console.log("Mine: ", myTime)
-                    let imCreator = false
-                    if (myTime < otherTime){
-                        NAF.utils.takeOwnership(boats)
+                    if (myTime > otherTime){
+                        imCreator = false;
                     }
+                }
+                if (imCreator){
+                    NAF.utils.takeOwnership(boats)
                 }
             }
         });
