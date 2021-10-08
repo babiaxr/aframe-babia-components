@@ -20,7 +20,12 @@ class Selectable {
         this.selectors = Object.keys(this.data).sort();
         this.length = this.selectors.length;
         //this.current = 0;
-        this.step = 1
+        this.step = 1;
+        if (current == -1){
+            this.current = 0
+        } else {
+            this.current = current;
+        }
     }
 
     next() {
@@ -75,7 +80,7 @@ AFRAME.registerComponent('babia-selector', {
         // data, for debugging, highest priority
         data: { type: 'string' },
         // Current value of to start from if in multiuser mode
-        multi_value: { type: 'number', default: 0}
+        multi_value: { type: 'number', default: -1}
     },
 
     multiple: false,
@@ -140,10 +145,14 @@ AFRAME.registerComponent('babia-selector', {
                 this.navNotiBufferId = this.navComponent.notiBuffer.register(this.processEvent.bind(this), this)
             }
         }
-
-        if (data.multi_value != oldData.multi_value) {
-            this.setSelect(data.multi_value)
-        }  
+        if (el.components.networked) {
+            if (el.components.networked.data.owner != NAF.clientId){
+                if (data.multi_value != -1 && data.multi_value != oldData.multi_value) {
+                    this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
+                    this.setSelect(data.multi_value - 1)
+                }  
+            }
+        }
     },
 
     nextSelect: function() {
@@ -223,7 +232,9 @@ AFRAME.registerComponent('babia-selector', {
 
     processData: function (_data) {
         // Create a Selectable object, and set the updating interval
-        this.selectable = new Selectable(_data, this.data.select, this.data.multi_value); 
+        if (!this.selectable){
+            this.selectable = new Selectable(_data, this.data.select, this.data.multi_value); 
+        }
         this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
         let self = this;
         this.nextSelect();

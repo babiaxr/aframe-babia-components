@@ -26,7 +26,7 @@
         adapter: easyrtc;
         debug: true;
         audio: false;
-        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/">
+        serverURL: http://localhost:8000/">
 
         <a-assets>
             <!-- Dummy asset to make the scene sync (WIP)-->
@@ -81,6 +81,7 @@
 
     <script>
         let selector = document.getElementById('selector')
+        let nav = document.getElementById('nav')
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
@@ -98,35 +99,59 @@
                 }
                 if (imFirst) {
                     NAF.utils.takeOwnership(selector)
-                 
-                    /*selector.setAttribute('networked', {
-                        'template': '#selector-template',
-                        'attachTemplateToLocal': 'false',
-                        'networkId': 'sharedSelector',
-                        'creator': NAF.clientId
-                    })*/
+                    NAF.utils.takeOwnership(nav)
                 } else { 
                     console.log("I'm not creator")
                 }
             }
         });
+        
+        
+        // TODO: multiuser navigator interaction
+        /*nav.addEventListener('click', function () {
+            let el = event.detail.intersection.object.el;
+            if (el.components['babia-slider']){
+                if (el.id = 'timeline'){
+
+                } else if (el.id = '') {
+
+                } else if (el.id = '') {
+
+                }
+            } else if (el.className.contains('babiaSkipPrev')) {
+
+            } else if (el.className.contains('babiaSkipNext')) {
+
+            } else if (el.className.contains('babiaSkipPlay')) {
+
+            } else if (el.className.contains('babiaSkipPrev'))
+            if (!NAF.utils.isMine(nav)){
+                NAF.utils.takeOwnership(nav)
+            } else {
+                if (!NAF.utils.isMine(selector)){
+                    NAF.utils.takeOwnership(selector)
+                } else {
+                    setSelectorValue()
+                }
+            }
+        })*/
 
         selector.addEventListener('ownership-gained', e => {
             console.log("Selector ownership gained")
-            selector.setAttribute('babia-selector', 'multi_value', selector.components['babia-selector'].selectable.current)
+            setSelectorValue()
         });
 
-        /*document.body.addEventListener('entityCreated', function (event){
-            let entity = event.detail.el
-            if (entity.components["networked"]){
-                if (entity.components.networked.attrValue.networkId == "sharedSelector" && entity.components.networked.data.creator != NAF.clientId) {
-                    console.log(entity.components.networked.attrValue.networkId)
-                    let selector = document.getElementById('selector')
-                    selector.parentNode.removeChild(selector);
-                    treebuilder.setAttribute('babia-treebuilder','from','naf-sharedSelector')
-                } 
-          }
-        })*/
+        /*
+        // TODO: multiuser navigator interaction
+        nav.addEventListener('ownership-gained', e => {
+            console.log("Navigator ownership gained")
+            setSelectorValue()
+        });*/
+
+        function setSelectorValue(){
+            console.log ("Set multi_value: " + selector.components['babia-selector'].selectable.current)
+            selector.setAttribute('babia-selector', 'multi_value', selector.components['babia-selector'].selectable.current)
+        }
     </script>
     <script>
         NAF.schemas.add({
