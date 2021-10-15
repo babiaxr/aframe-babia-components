@@ -7,7 +7,7 @@ class Selectable {
      * @param list {array} List of items to select from
      * @param field {string} Field name used to select (present in all items)
      */
-    constructor(list, field, current) {
+    constructor(list, field, current, step, speed) {
         this.data = {};
         for (let item of list) {
             let selector = item[field];
@@ -19,8 +19,16 @@ class Selectable {
         }
         this.selectors = Object.keys(this.data).sort();
         this.length = this.selectors.length;
-        //this.current = 0;
-        this.step = 1;
+        if (!step){
+            this.step = 1
+        } else {
+            this.step = step;
+        }
+        if (!speed){
+            this.speed = 1
+        } else {
+            this.speed = speed;
+        }
         if (current == -1){
             this.current = 0
         } else {
@@ -79,15 +87,19 @@ AFRAME.registerComponent('babia-selector', {
         timeout: { type: 'number', default: 6000 },
         // data, for debugging, highest priority
         data: { type: 'string' },
-        // Current value of to start from if in multiuser mode
-        multi_value: { type: 'number', default: -1}
+        // Current value of timeline
+        current_value: { type: 'number', default: 0},
+        // Current speed
+        speed: { type: 'number', default: 0},
+        // Current step
+        step: { type: 'number', default: 0},
+        // Current direction
+        direction: { type: 'string', default: ''},
+        // Current state
+        state: { type: 'string', default: ''},
     },
 
     multiple: false,
-
-    isPaused: undefined,
-    toPresent: undefined,
-    speed: undefined,
     interval: undefined,
 
     /**
@@ -96,10 +108,6 @@ AFRAME.registerComponent('babia-selector', {
     init: function () { 
         this.notiBuffer = new NotiBuffer();
         this.navNotiBuffer = new NotiBuffer();
-
-        this.isPaused = false
-        this.toPresent = true
-        this.speed = 1
     },
 
     /**
@@ -133,7 +141,7 @@ AFRAME.registerComponent('babia-selector', {
         }
 
         // find controller
-        if (data.controller){
+        if (data.controller != oldData.controller){
             this.selectorController = document.querySelector('#' + data.controller)
             // Unregister for old navigator
             if (this.navComponent) { 
@@ -145,12 +153,57 @@ AFRAME.registerComponent('babia-selector', {
                 this.navNotiBufferId = this.navComponent.notiBuffer.register(this.processEvent.bind(this), this)
             }
         }
-        if (el.components.networked) {
-            if (el.components.networked.data.owner != NAF.clientId){
-                if (data.multi_value != -1 && data.multi_value != oldData.multi_value) {
-                    this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
-                    this.setSelect(data.multi_value - 1)
-                }  
+        if (data.current_value && data.current_value != oldData.current_value) {
+            this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
+            this.setSelect(data.current_value - 1)
+        }
+        if ((data.direction) && (data.direction != oldData.direction)) {
+            if (data.direction != 'rewind') {
+                if (this.selectable.current != this.selectable.length){
+                    this.selectable.current += 2
+                }
+            } else {
+                if (this.selectable.current < 1){
+                    this.selectable.current = 0
+                } else {
+                    this.selectable.current -= 2
+                }
+            }
+        }
+        
+        if (data.step && (data.step != oldData.step)) {
+            this.selectable.step = data.step
+            this.navNotiBuffer.set({type: 'step', value: data.step})
+            if (this.data.direction != 'rewind') {
+                if (this.selectable.current + data.step >= this.selectable.length){
+                    this.selectable.current = this.selectable.length - 1
+                } else {
+                    this.selectable.current += data.step - 1
+                }
+            } else {
+                if (this.selectable.current - data.step <= 0){
+                    this.selectable.current = 0
+                } else {
+                    this.selectable.current -= data.step + 1
+                }
+            }
+        }
+        if (data.speed && (data.speed != oldData.speed)){
+                let timeout = this.data.timeout / data.speed
+                this.navNotiBuffer.set({type: 'speed', value: data.speed})
+                let self = this
+                clearInterval(this.interval);
+                this.interval = window.setInterval(function () {
+                    self.loop()
+                }, timeout);
+        }
+
+
+        if (el.components.networked){
+            if ((el.components.networked.data.owner != NAF.clientId) && (el.components.networked.data.owner != 'scene')){
+                if ((data.state == 'pause') && (data.state != oldData.state)) {
+                    this.navNotiBuffer.set('pause')
+                }
             }
         }
     },
@@ -158,12 +211,12 @@ AFRAME.registerComponent('babia-selector', {
     nextSelect: function() {
         if (this.selectable.current > this.selectable.length - 1){
             this.selectable.current = this.selectable.length - 1
-            this.isPaused = true
-            this.navNotiBuffer.set('babiaStop')
+            this.el.setAttribute('babia-selector','state', 'pause');
+            this.navNotiBuffer.set('pause')
         } else {
             this.newData = this.selectable.next();
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
+            this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
             this.babiaMetadata = { id: this.selectable.current};
         }
     },
@@ -172,32 +225,32 @@ AFRAME.registerComponent('babia-selector', {
         if (this.selectable.current >= 0){
             this.newData = this.selectable.prev();
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current+1]})
+            this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current+1]})
             this.babiaMetadata = { id: this.selectable.current };
         } else {
             this.selectable.current = 0
-            this.isPaused = true
-            this.navNotiBuffer.set('babiaStop')
+            this.el.setAttribute('babia-selector','state', 'pause');
+            this.navNotiBuffer.set('pause')
         } 
     },
 
     setSelect: function(value) {
-        if (((value != this.selectable.current - 1) && this.toPresent) || ((value != this.selectable.current + 1) && !this.toPresent)) {
+        if (((value != this.selectable.current - 1) && (this.data.direction != 'rewind')) || ((value != this.selectable.current + 1) && (this.data.direction === 'rewind'))) {
             this.newData = this.selectable.setValue(value);
-            if (this.toPresent) {
+            if (this.data.direction != 'rewind') {
                 this.babiaMetadata = { id: value++ };
             } else {
                 this.babiaMetadata = { id: value-- };
                 this.selectable.current -=2
             }
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set({value: value, label: this.selectable.selectors[value-1]});
+            this.navNotiBuffer.set({type: 'position', value: value, label: this.selectable.selectors[value-1]});
         }
     },
 
     loop: function() {
-        if (!this.isPaused){
-            if(this.toPresent){
+        if (this.data.state != 'pause') {
+            if (this.data.direction != 'rewind') {
                 this.nextSelect();
             } else {
                 this.prevSelect();
@@ -233,64 +286,34 @@ AFRAME.registerComponent('babia-selector', {
     processData: function (_data) {
         // Create a Selectable object, and set the updating interval
         if (!this.selectable){
-            this.selectable = new Selectable(_data, this.data.select, this.data.multi_value); 
+            this.selectable = new Selectable(_data, this.data.select, this.data.current_value, this.data.step); 
         }
-        this.navNotiBuffer.set({value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
+        this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
         let self = this;
         this.nextSelect();
         this.interval = window.setInterval(function () {
             self.loop()
-        }, self.data.timeout * self.speed);
+        }, self.data.timeout * self.selectable.speed);
       },
 
       processEvent: function(event){
-        if(event.includes('babiaStop')) {
-            this.isPaused = true
-        } else if (event.includes('babiaContinue')) {
-            this.isPaused = false
-        } else if (event.includes('babiaToPresent')) {
-            this.toPresent = true
-            if (this.selectable.current != this.selectable.length){
-                this.selectable.current += 2
-            }
-        } else if (event.includes('babiaToPast')) {
-            this.toPresent = false
-            if (this.selectable.current < 1){
-                this.selectable.current = 0
-            } else {
-                this.selectable.current -= 2
-            }
-        } else if (event.includes('babiaSetPosition')) {
-                this.isPaused = true
+            if(event.includes('pause')) {
+                this.el.setAttribute('babia-selector','state', 'pause');
+            } else if (event.includes('play')) {
+                this.el.setAttribute('babia-selector','state', 'play');
+            } else if (event.includes('forward')) {
+                this.el.setAttribute('babia-selector','direction', 'forward');
+            } else if (event.includes('rewind')) {
+                this.el.setAttribute('babia-selector','direction', 'rewind');
+            } else if (event.includes('babiaSetPosition')) {
+                this.el.setAttribute('babia-selector','state','pause');
                 this.setSelect(parseInt(event.substring(16), 10))
-                this.navNotiBuffer.set('babiaStop')
-        } else if (event.includes('babiaSetStep')) {
-            this.selectable.step = parseInt(event.substring(12), 10)
-            if (this.toPresent){
-                if (this.current + this.selectable.step > this.selectable.length){
-                    this.current = this.selectable.length - 1
-                } else {
-                    this.current += this.selectable.step - 1
-                }
-            } else {
-                if (this.current - this.selectable.step < 0){
-                    this.current = 0
-                } else {
-                    this.current -= this.selectable.step + 1
-                }
-                
+                this.navNotiBuffer.set('pause')
+            } else if (event.includes('babiaSetStep')) {
+                this.el.setAttribute('babia-selector', 'step', parseInt(event.substring(12), 10))
+            } else if (event.includes('babiaSetSpeed')) {
+                this.el.setAttribute('babia-selector', 'speed', parseInt(event.substring(13), 10))
             }
-        }
-
-        if (event.includes('babiaSetSpeed')) {
-            this.speed = parseInt(event.substring(13), 10)
-            let timeout = this.data.timeout / this.speed
-            let self = this
-            clearInterval(this.interval);
-            this.interval = window.setInterval(function () {
-                self.loop()
-            }, timeout);
-        }
-      },
+    },
 });
 

@@ -26,7 +26,9 @@
         adapter: easyrtc;
         debug: true;
         audio: false;
-        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/">
+        serverURL: http://localhost:8000;
+        ">
+        <!-- serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/-->
 
         <a-assets>
             <!-- Dummy asset to make the scene sync (WIP)-->
@@ -36,6 +38,12 @@
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
+            <template id="nav-template">
+                <a-entity class="nav"></a-entity>
+            </template>
+            <template id="controls-template">
+                <a-entity class="controls"></a-entity>
+            </template>
         </a-assets>
 
         <!-- Environment -->
@@ -43,7 +51,8 @@
 
             <!-- No sync entities -->
             <!-- Slider -->
-            <a-entity id="nav" babia-navigator position="6 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+            <a-entity id="nav" babia-navigator position="6 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
+            networked="template:#nav-template; networkId:nav; persistent: true; owner: scene"></a-entity>
 
             <!-- Sync entities, persistent -->
             <!-- Querier -->
@@ -82,6 +91,20 @@
     <script>
         let selector = document.getElementById('selector')
         let nav = document.getElementById('nav')
+        /*let controls;
+
+    document.body.addEventListener('entityCreated', function (event) {
+        if(event.detail.el === nav){
+            controls = nav.children[1]
+            controls.setAttribute('networked',{
+            "template": "#controls-template",
+            "networkId": "controls",
+            "persistent": true,
+            "owner": "scene"
+        })
+        }
+    });*/
+        
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
@@ -100,57 +123,46 @@
                 if (imFirst) {
                     NAF.utils.takeOwnership(selector)
                     NAF.utils.takeOwnership(nav)
+                   // NAF.utils.takeOwnership(controls)
                 } else { 
                     console.log("I'm not creator")
+                    nav.children[1].setAttribute('visible', false)
+                    nav.children[2].setAttribute('visible', false)
+                    nav.children[3].setAttribute('visible', false)
                 }
             }
         });
         
         
-        // TODO: multiuser navigator interaction
-        /*nav.addEventListener('click', function () {
-            let el = event.detail.intersection.object.el;
-            if (el.components['babia-slider']){
-                if (el.id = 'timeline'){
-
-                } else if (el.id = '') {
-
-                } else if (el.id = '') {
-
-                }
-            } else if (el.className.contains('babiaSkipPrev')) {
-
-            } else if (el.className.contains('babiaSkipNext')) {
-
-            } else if (el.className.contains('babiaSkipPlay')) {
-
-            } else if (el.className.contains('babiaSkipPrev'))
-            if (!NAF.utils.isMine(nav)){
+        nav.addEventListener('click', function () {
+            if (!NAF.utils.isMine(selector) && !NAF.utils.isMine(nav)){
+                NAF.utils.takeOwnership(selector)
                 NAF.utils.takeOwnership(nav)
+               // NAF.utils.takeOwnership(controls)
             } else {
-                if (!NAF.utils.isMine(selector)){
-                    NAF.utils.takeOwnership(selector)
-                } else {
-                    setSelectorValue()
-                }
-            }
-        })*/
+                setSelectorValue()
+            }          
+        })
 
         selector.addEventListener('ownership-gained', e => {
             console.log("Selector ownership gained")
             setSelectorValue()
+            nav.children[1].setAttribute('visible', true)
+            nav.children[2].setAttribute('visible', true)
+            nav.children[3].setAttribute('visible', true)
         });
 
-        /*
-        // TODO: multiuser navigator interaction
-        nav.addEventListener('ownership-gained', e => {
-            console.log("Navigator ownership gained")
-            setSelectorValue()
-        });*/
+
+        selector.addEventListener('ownership-lost', e => {
+            console.log("Selector ownership lost")
+            nav.children[1].setAttribute('visible', false)
+            nav.children[2].setAttribute('visible', false)
+            nav.children[3].setAttribute('visible', false)
+        });
 
         function setSelectorValue(){
-            console.log ("Set multi_value: " + selector.components['babia-selector'].selectable.current)
-            selector.setAttribute('babia-selector', 'multi_value', selector.components['babia-selector'].selectable.current)
+            console.log ("Set current_value: " + selector.components['babia-selector'].selectable.current)
+            selector.setAttribute('babia-selector', 'current_value', selector.components['babia-selector'].selectable.current)
         }
     </script>
     <script>
@@ -160,6 +172,19 @@
                 'babia-selector'
             ]
         })
+        NAF.schemas.add({
+            template: '#nav-template',
+            components: [
+                'babia-navigator'
+            ]
+        })
+        /*
+        NAF.schemas.add({
+            template: '#controls-template',
+            components: [
+                'babia-controls'
+            ]
+        })*/
     </script>
 </body>
 

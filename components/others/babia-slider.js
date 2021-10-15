@@ -189,7 +189,14 @@ AFRAME.registerComponent('babia-slider', {
                 value = Math.round(value)
                 this.value = value;
                 this.setTextGeometry(value)
-                this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetPosition', this.value)
+               // this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetPosition', this.value)
+                if (this.el.parentEl.components['babia-navigator']){
+                  this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetPosition', Math.round(value))
+                } else if (this.el.parentEl.components['babia-step-controller']){
+                  this.el.parentEl.components['babia-step-controller'].controlStep(Math.round(value))
+                } else if (this.el.parentEl.components['babia-speed-controller']){
+                  this.el.parentEl.components['babia-speed-controller'].controlSpeed(Math.round(value))
+                }
             }
         }
       },
@@ -252,7 +259,9 @@ AFRAME.registerComponent('babia-slider', {
 })
 
 AFRAME.registerComponent('babia-step-controller', {
-      schema: {},
+      schema: {
+        value: { type: 'number', default: -5 },
+      },
 
       multiple: true,
 
@@ -261,6 +270,11 @@ AFRAME.registerComponent('babia-step-controller', {
     
       init: function () {
         this.createSlider()
+      },
+      update: function(old) {
+        if(this.data.value !== old.value) {
+          this.sliderEl.setAttribute('babia-slider','value', this.data.value);
+        }
       },
 
       createSlider: function(){
@@ -285,7 +299,9 @@ AFRAME.registerComponent('babia-step-controller', {
 
 
 AFRAME.registerComponent('babia-speed-controller', {
-  schema: {},
+  schema: {
+    value: { type: 'number', default: -5 },
+  },
 
   multiple: true,
 
@@ -294,6 +310,12 @@ AFRAME.registerComponent('babia-speed-controller', {
 
   init: function () {
     this.createSlider()
+  },
+  
+  update: function(old) {
+    if(this.data.value !== old.value) {
+      this.sliderEl.setAttribute('babia-slider','value', this.data.value);
+    }
   },
 
   createSlider: function(){
@@ -309,6 +331,7 @@ AFRAME.registerComponent('babia-speed-controller', {
     this.sliderEl.id = "speed-controller"
     this.el.appendChild(this.sliderEl);
   },
+  
   controlSpeed: function(value){
     this.speed = value
     this.el.parentEl.components['babia-navigator'].controlNavigator('babiaSetSpeed', this.speed)
