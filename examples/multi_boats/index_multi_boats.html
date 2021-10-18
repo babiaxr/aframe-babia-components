@@ -50,7 +50,7 @@
         </a-assets>
 
         <!-- Environment -->
-        <a-entity environment="preset: yavapai" renderer="antialias: true">
+        <a-entity environment="preset: yavapai" renderer="antialias: true"></a-entity>
 
             <!-- Querier -->
             <a-entity id="datajetuml" babia-queryjson="url: ./jetuml_code_data.json;"></a-entity>
@@ -72,16 +72,17 @@
                             position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
                     </a-sphere>
                 </a-entity>
-            </a-entity>
-            <!-- Hand Controls -->
+                <!-- Hand Controls -->
             <a-entity id="leftHand" oculus-touch-controls="hand: left"
-                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
-                        hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
+            teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
+                    hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
                 raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
         </a-entity>
+            
+        
 
         <!-- Audio Button -->
         <a-plane id="audio_button" position="7 2.5 0" rotation="0 0 0" height="0.5" width="1.5" color="#000" scale="0.5 0.5 0.5">
