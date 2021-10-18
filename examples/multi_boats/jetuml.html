@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>A-Frame Boats Component - Animated (Front)</title>
-    <meta name="description" content="Temporal Evolution for Boats component.">
+    <title>BabiaXR - Multiuser Babia-boats Demo</title>
+    <meta name="description" content="Babiaxr multiuser demo using babia-boats.">
     </meta>
     <!-- Aframe -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -22,64 +22,71 @@
 
 <body>
     <a-scene id="AframeScene" networked-scene="
-        room: demo_jetuml;
+        room: multi_boats_jetuml;
         adapter: easyrtc;
         debug: true;
-        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/
-        "
-        >
-       <!--audio:true -->
+        audio: true;
+        serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/;
+        ">
+
         <a-assets>
             <!-- Dummy asset to make the scene sync (WIP)-->
             <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
 
             <!-- Templates -->
-            <!-- Camara -->
-            <template id="rig-template"><a-entity class="rig"></a-entity></template>
-            <template id="camera-template"><a-entity class="camera"></a-entity></template>
-            <template id="avatar-template"><a-sphere class="avatar" networked-audio-source></a-sphere></template>
-            <template id="username-tag-template"><a-text class="username-tag"></a-text></template>
 
-            <!-- Querier , Selector and treebuilder -->
-            <template id="querier-template"><a-entity class="querier"></a-entity></template>
-            <template id="selector-template"><a-entity class="selector"></a-entity></template>
-            <template id="nav-template"><a-entity class="nav"></a-entity></template>
-            <template id="slider-template"><a-entity class="nav"></a-entity></template>
-            <template id="controls-template"><a-entity class="controls"></a-entity></template>
-            <template id="step-controller-template"><a-entity class="step-controller"></a-entity></template>
-            <template id="speed-controller-template"><a-entity class="speed-controller"></a-entity></template>
-            <template id="treebuilder-template"><a-entity class="treebuilder"></a-entity></template>
-            <template id="boats-template"><a-entity class="boats"></a-entity></template>
+            <!-- Selector and navigator -->
+            <template id="selector-template">
+                <a-entity class="selector"></a-entity>
+            </template>
+            <template id="nav-template">
+                <a-entity class="nav"></a-entity>
+            </template>
+           <!--<template id="controls-template">
+                <a-entity class="controls"></a-entity>
+            </template>
+            -->
+            
+
+            <!-- Camera -->
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-sphere class="avatar" networked-audio-source></a-sphere>
+            </template>
+            <template id="username-tag-template">
+                <a-text class="username-tag"></a-text>
+            </template>
         </a-assets>
 
         <!-- Environment -->
-        <a-entity environment="preset: yavapai" renderer="antialias: true"> </a-entity>
+        <a-entity environment="preset: yavapai" renderer="antialias: true"></a-entity>
 
             <!-- No sync entities -->
             <!-- Slider -->
-            <a-entity id="nav" babia-navigator position="6.5 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
+            <a-entity id="nav" babia-navigator position="6 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
             networked="template:#nav-template; networkId:nav; persistent: true; owner: scene"></a-entity>
 
             <!-- Sync entities, persistent -->
             <!-- Querier -->
-
-            <a-entity id="datajetuml" babia-queryjson="url:../selector_boats/jetuml_evol_data.json; "
-            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
-            <!-- Selector -->
-            <a-entity id="selector" babia-selector="from: datajetuml; controller: nav"
-                networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
+            <a-entity id="querier" babia-queryjson="url:../selector_boats/jetuml_evol_data.json;"></a-entity>
+            <!-- 3 Selector -->
+            <a-entity id="selector" babia-selector="from: querier; controller: nav"
+            networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
             <!-- Treebuilder -->
-            <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"
-            networked="template:#treebuilder-template; networkId:treebuilder; persistent: true; owner: scene"></a-entity>
+            <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
 
             <!-- Boats Visualizer -->
             <a-entity id="boats" babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn"
-                position="0 0.1 0" scale="0.03 0.03 0.03"
-                networked="template:#boats-template; networkId:boats; persistent: true; owner: scene"></a-entity>
+            position="1 0.1 0" scale="0.03 0.03 0.03"></a-entity>
 
-            <!-- Sync entities, not persistent-->
+            <!--Sync entities, not persistent-->
             <!-- Camera -->
-            <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0"
+            <a-entity id="rig" position="4 1.6 3" rotation="0 0 0"
                 networked="template:#rig-template; attachTemplateToLocal:false">
                 <a-entity id="camera" camera look-controls wasd-controls="fly: false"
                     networked="template:#camera-template;attachTemplateToLocal:false;">
@@ -90,23 +97,122 @@
                             position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
                     </a-sphere>
                 </a-entity>
+        <!-- Hand Controls -->
+            <a-entity id="leftHand" interaction-hands aabb-collider="objects: .grabbable" 
+                hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"
+                teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: .environmentGround;
+                hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: grip">
+                <a-entity id="tooltip_trigger_L" class="tips" tooltip="text: Grab; width: 0.07; height: 0.03; targetPosition: 0.002 -0.02 -0.014; lineHorizontalAlign: right; rotation: -90 0 0; src:assets/tooltip.png"
+                position="-0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_L" class="tips" tooltip="text: Teleport; width: 0.08; height: 0.04; targetPosition: 0.006 -0.008 0.033; rotation: -90 0 0; src:assets/tooltip.png"
+                position="0.085 -0.01 0.07"></a-entity>
             </a-entity>
-            <!-- Hand Controls -->
-            <a-entity id="leftHand" oculus-touch-controls="hand: left"
-                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
-                    hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
-            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
-                raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
+            <a-entity id="rightHand" interaction-hands aabb-collider="objects: .grabbable" 
+                hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"
+                laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass, #audio_button">
+                <a-entity id="tooltip_trigger_R" class="tips" tooltip="text: Click/Grab ; width: 0.07; height: 0.03; targetPosition: 0.005 -0.02 -0.014; lineHorizontalAlign: left; rotation: -90 0 0; src:assets/tooltip.png"
+                position="0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_R" class="tips" tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
+                position="-0.085 -0.01 0.07"></a-entity>
+            </a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
-       
+        </a-entity>
+
+        <!-- Audio Button -->
+
+        <a-plane id="audio_button" position="6 5 1" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
+            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+
 
     </a-scene>
 
     <script>
+        let selector = document.getElementById('selector')
+        let nav = document.getElementById('nav')
+        /*let controls;
+
+    document.body.addEventListener('entityCreated', function (event) {
+        if(event.detail.el === nav){
+            controls = nav.children[1]
+            controls.setAttribute('networked',{
+            "template": "#controls-template",
+            "networkId": "controls",
+            "persistent": true,
+            "owner": "scene"
+        })
+        }
+    });*/
+        
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            console.log("Selector owner: ", selector.components.networked.data.owner);
+            let imFirst = true
+            if (selector.components.networked.data.owner == 'scene'){
+                for (client in NAF.connection.getConnectedClients()){
+                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
+                    let myTime = NAF.connection.adapter._myRoomJoinTime
+                    console.log("Other: ", otherTime)
+                    console.log("Mine: ", myTime)
+                    if (myTime > otherTime){
+                        imFirst = false;
+                    }
+                }
+                if (imFirst) {
+                    NAF.utils.takeOwnership(selector)
+                    NAF.utils.takeOwnership(nav)
+                   // NAF.utils.takeOwnership(controls)
+                } else { 
+                    console.log("I'm not creator")
+                    nav.children[1].setAttribute('visible', false)
+                    nav.children[2].setAttribute('visible', false)
+                    nav.children[3].setAttribute('visible', false)
+                }
+            }
+        });
+        
+        
+        nav.addEventListener('click', function () {
+            if (!NAF.utils.isMine(selector) && !NAF.utils.isMine(nav)){
+                NAF.utils.takeOwnership(selector)
+                NAF.utils.takeOwnership(nav)
+               // NAF.utils.takeOwnership(controls)
+            } else {
+                setSelectorValue()
+            }          
+        })
+
+        selector.addEventListener('ownership-gained', e => {
+            console.log("Selector ownership gained")
+            setSelectorValue()
+            nav.children[1].setAttribute('visible', true)
+            nav.children[2].setAttribute('visible', true)
+            nav.children[3].setAttribute('visible', true)
+        });
+
+
+        selector.addEventListener('ownership-lost', e => {
+            console.log("Selector ownership lost")
+            nav.children[1].setAttribute('visible', false)
+            nav.children[2].setAttribute('visible', false)
+            nav.children[3].setAttribute('visible', false)
+        });
+
+        function setSelectorValue(){
+            console.log ("Set current_value: " + selector.components['babia-selector'].selectable.current)
+            selector.setAttribute('babia-selector', 'current_value', selector.components['babia-selector'].selectable.current)
+        }
+    </script>
+
+    <script>
+        /* Camera */
+        let rig = document.getElementById('rig')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
-
+        
         let color = getRandomColor();
         usernameTag.setAttribute('value', color)
         avatar.setAttribute('color', color)
@@ -120,92 +226,59 @@
             return color;
         }
 
-        let nav = document.getElementById('nav')
-        let selector = document.getElementById('selector')
-        let treebuilder = document.getElementById('treebuilder')
-        let boats = document.getElementById('boats')
-        let scene = document.getElementById('AframeScene')
+        /* Audio */
+        let audioButton = document.getElementById('audio_button');
+        let audioLabel = document.getElementById('audio_label');
 
-        document.body.addEventListener('entityCreated', function (event) {
-            console.log(event.detail.el)
-            let el = event.detail.el;
-            let comp;
-            let template;
-            if (el.components['babia-slider']){
-                comp = 'babia-slider';
-                template = 'slider-template';
-            } else if (el.components['babia-controls']){
-                comp = 'babia-contols';
-                template = 'controls-template';
-            }else if (el.components['babia-step-controller']){
-                comp = 'babia-step-contoller';
-                template = 'step-controller-template';
-            }else if (el.components['babia-speed-controller']){
-                comp = 'babia-speed-contoller';
-                template = 'speed-controller-template';
-            }
-            el.setAttribute("networked", {
-                "template": template,
-                "networkId": comp,
-                "persistent": "true",
-                "owner": "scene"
-            })
-        });
-
-        // Client Connected
-        document.body.addEventListener('clientConnected', function (event) {
-            let clientId = event.detail.clientId;
-            console.log('clientConnected event. clientId =', clientId);
-            console.log("Selector owner: ", selector.components.networked.data.owner);
-            if (nav.components.networked.data.owner == 'scene'){
-                for (client in NAF.connection.getConnectedClients()){
-                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
-                    let myTime = NAF.connection.adapter._myRoomJoinTime
-                    console.log("Other: ", otherTime)
-                    console.log("Mine: ", myTime)
-                    let imCreator = false
-                    if (myTime < otherTime){
-                        NAF.utils.takeOwnership(nav)
-                        for (child in nav.children){
-                            NAF.utils.takeOwnership(child)
-                        }
-                        NAF.utils.takeOwnership(selector)
-                        NAF.utils.takeOwnership(treebuilder)
-                        NAF.utils.takeOwnership(boats)
-                    }
-                }
+        audioButton.addEventListener('click', function (event) {
+            if (audioLabel.getAttribute('value') === 'Stop Audio') {
+                stopAudio();
+            } else {
+                turnOnAudio();
             }
         });
+        function turnOnAudio() {
+            NAF.connection.adapter.enableMicrophone(true);
+            audioButton.setAttribute('color', '#E44B00');
+            audioLabel.setAttribute('value', 'Stop Audio');
+        }
 
-        nav.addEventListener('ownership-gained', e => {
-            console.log("Navigator ownership gained")
-        });
-        nav.addEventListener('ownership-lost', e => {
-            console.log("Navigator ownership lost")
-        });
-        selector.addEventListener('ownership-gained', e => {
-            console.log("Selector ownership gained")
-        });
-        selector.addEventListener('ownership-lost', e => {
-            console.log("Selector ownership lost")
-        });
-        treebuilder.addEventListener('ownership-gained', e => {
-            console.log("Treebuilder ownership gained")
-        });
-        treebuilder.addEventListener('ownership-lost', e => {
-            console.log("Treebuilder ownership lost")
-        });
-        boats.addEventListener('ownership-gained', e => {
-            console.log("Boats ownership gained")
-        });
-        boats.addEventListener('ownership-lost', e => {
-            console.log("Boats ownership lost")
-        });
-        
-        
+        function stopAudio() {
+            NAF.connection.adapter.enableMicrophone(false);
+            audioButton.setAttribute('color', '#F8F6F2');
+            audioLabel.setAttribute('value', 'Turn on Audio');
+        }
+
+
+        /* Update avatar height in VR */
+
+        document.addEventListener('controllerconnected', (event) => {
+            rig.setAttribute('position', { x: 4, y: 1.6, z: 3 })
+        })
+
     </script>
     <script>
-        // Schemas with components and attributes for syncronization
+        NAF.schemas.add({
+            template: '#selector-template',
+            components: [
+                'babia-selector'
+            ]
+        })
+        NAF.schemas.add({
+            template: '#nav-template',
+            components: [
+                'babia-navigator'
+            ]
+        })
+        /*
+        NAF.schemas.add({
+            template: '#controls-template',
+            components: [
+                'babia-controls'
+            ]
+        })*/
+
+        // Avatar
         NAF.schemas.add({
             template: '#rig-template',
             components: [
@@ -242,123 +315,6 @@
                 'rotation'
             ]
         });
-
-
-        NAF.schemas.add({
-            template: '#querier-template',
-            components: [
-                'babia-queryjson'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#selector-template',
-            components: [
-                'babia-selector'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#nav-template',
-            components: [
-            'position',
-                'rotation',
-                'scale',
-                'babia-navigator'
-            ]
-        })
-        NAF.schemas.add({
-            template: '#slider-template',
-            components: [
-            'position',
-                'rotation',
-                'scale',
-                'babia-slider'
-            ]
-        })
-        NAF.schemas.add({
-            template: '#controls-template',
-            components: [
-            'position',
-                'rotation',
-                'scale',
-                'babia-controls'
-            ]
-        })
-        NAF.schemas.add({
-            template: '#step-controller-template',
-            components: [
-            'position',
-                'rotation',
-                'scale',
-                'babia-step-controller'
-            ]
-        })
-        NAF.schemas.add({
-            template: '#speed-controller-template',
-            components: [
-            'position',
-                'rotation',
-                'scale',
-                'babia-speed-controller'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#treebuilder-template',
-            components: [
-                'babia-treebuilder'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#boats-template',
-            components: [
-                'position',
-                'rotation',
-                'scale',
-                'babia-boats'
-            ]
-        });
-
     </script>
-
-
-    <!-- GITLAB CORNER-->
-    <div class="gitlab-corner-wrapper"><a
-            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/selector_boats/index.html"
-            class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
-                <g id="g44">
-                    <path id="path46" class="cls-1"
-                        d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
-                </g>
-                <g id="g48">
-                    <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
-                </g>
-                <g id="g56">
-                    <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
-                </g>
-                <g id="g64">
-                    <path id="path66" class="cls-3"
-                        d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
-                </g>
-                <g id="g72">
-                    <path id="path74" class="cls-2"
-                        d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
-                </g>
-                <g id="g76">
-                    <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
-                </g>
-                <g id="g80">
-                    <path id="path82" class="cls-3"
-                        d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
-                </g>
-                <g id="g84">
-                    <path id="path86" class="cls-2"
-                        d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
-                </g>
-            </svg></a></div>
 </body>
-
 </html>
