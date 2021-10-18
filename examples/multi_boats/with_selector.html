@@ -126,6 +126,7 @@
             </a-text>
         </a-plane>
 
+
     </a-scene>
 
     <script>
@@ -208,6 +209,7 @@
 
     <script>
         /* Camera */
+        let rig = document.getElementById('rig')
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
         
@@ -246,6 +248,13 @@
             audioButton.setAttribute('color', '#F8F6F2');
             audioLabel.setAttribute('value', 'Turn on Audio');
         }
+
+
+        /* Update avatar height in VR */
+
+        document.addEventListener('controllerconnected', (event) => {
+            rig.setAttribute('position', { x: 4, y: 1.6, z: 3 })
+        })
 
     </script>
     <script>
