@@ -66,12 +66,10 @@
         <!-- Environment -->
         <a-entity environment="preset: yavapai" renderer="antialias: true"></a-entity>
 
-            <!-- No sync entities -->
             <!-- Slider -->
             <a-entity id="nav" babia-navigator position="6 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
             networked="template:#nav-template; networkId:nav; persistent: true; owner: scene"></a-entity>
 
-            <!-- Sync entities, persistent -->
             <!-- Querier -->
             <a-entity id="querier" babia-queryjson="url:../selector_boats/jetuml_evol_data.json;"></a-entity>
             <!-- 3 Selector -->
@@ -84,7 +82,6 @@
             <a-entity id="boats" babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn"
             position="1 0.1 0" scale="0.03 0.03 0.03"></a-entity>
 
-            <!--Sync entities, not persistent-->
             <!-- Camera -->
             <a-entity id="rig" position="4 1.6 3" rotation="0 0 0"
                 networked="template:#rig-template; attachTemplateToLocal:false">
@@ -120,9 +117,8 @@
         </a-entity>
 
         <!-- Audio Button -->
-
-        <a-plane id="audio_button" position="6 5 1" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
-            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
+        <a-plane id="audio_button" position="7 2.5 0" rotation="0 0 0" height="0.5" width="1.5" color="#000" scale="0.5 0.5 0.5">
+            <a-text id="audio_label" value="Stop Audio" color="#fff" width="4" position="-0.5 0 0" rotation="0 0 0">
             </a-text>
         </a-plane>
 
@@ -239,13 +235,15 @@
         });
         function turnOnAudio() {
             NAF.connection.adapter.enableMicrophone(true);
-            audioButton.setAttribute('color', '#E44B00');
+            audioButton.setAttribute('color', '#000');
+            audioLabel.setAttribute('color', '#fff');
             audioLabel.setAttribute('value', 'Stop Audio');
         }
 
         function stopAudio() {
             NAF.connection.adapter.enableMicrophone(false);
-            audioButton.setAttribute('color', '#F8F6F2');
+            audioButton.setAttribute('color', '#fff');
+            audioLabel.setAttribute('color', '#000');
             audioLabel.setAttribute('value', 'Turn on Audio');
         }
 
@@ -316,5 +314,41 @@
             ]
         });
     </script>
+
+    <!-- GITLAB CORNER-->
+    <div class="gitlab-corner-wrapper"><a
+        href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/multi_boats/jetuml.html"
+        class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+            <g id="g44">
+                <path id="path46" class="cls-1"
+                    d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+            </g>
+            <g id="g48">
+                <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+            </g>
+            <g id="g56">
+                <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+            </g>
+            <g id="g64">
+                <path id="path66" class="cls-3"
+                    d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+            </g>
+            <g id="g72">
+                <path id="path74" class="cls-2"
+                    d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+            </g>
+            <g id="g76">
+                <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+            </g>
+            <g id="g80">
+                <path id="path82" class="cls-3"
+                    d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+            </g>
+            <g id="g84">
+                <path id="path86" class="cls-2"
+                    d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+            </g>
+        </svg></a></div>
 </body>
 </html>

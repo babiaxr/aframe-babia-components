@@ -47,39 +47,19 @@
                 <a-text class="username-tag"></a-text>
             </template>
 
-            <!-- Querier and treebuilder -->
-            <template id="querier-template">
-                <a-entity class="querier"></a-entity>
-            </template>
-            <template id="treebuilder-template">
-                <a-entity class="treebuilder"></a-entity>
-            </template>
-
-            <!-- Boats -->
-            <template id="boats-template">
-                <a-entity class="boats"></a-entity>
-            </template>
         </a-assets>
 
         <!-- Environment -->
         <a-entity environment="preset: yavapai" renderer="antialias: true">
 
-
-            <!-- Sync entities, persistent -->
             <!-- Querier -->
-            <a-entity id="datajetuml" babia-queryjson="url: ./jetuml_code_data.json;"
-                networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"></a-entity>
+            <a-entity id="datajetuml" babia-queryjson="url: ./jetuml_code_data.json;"></a-entity>
             <!-- Treebuilder -->
-            <a-entity id="treedata" babia-treebuilder="field: file_path; split_by: /; from: datajetuml"
-                networked="template:#treebuilder-template; networkId:treebuilder; persistent: true; owner: scene">
-            </a-entity>
-
+            <a-entity id="treedata" babia-treebuilder="field: file_path; split_by: /; from: datajetuml"></a-entity>
             <!-- Boats Visualizer -->
             <a-entity babia-boats="from: treedata; area: num_funs; height: loc_per_function; color: ccn"
-                networked="template:#boats-template; networkId:boats; persistent: true; owner: scene" position="0 0.1 0"
-                scale="0.03 0.03 0.03"></a-entity>
+                position="0 0.1 0"scale="0.03 0.03 0.03"></a-entity>
 
-            <!--Sync entities, not persistent-->
             <!-- Camera -->
             <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0"
                 networked="template:#rig-template; attachTemplateToLocal:false">
@@ -103,9 +83,16 @@
             </a-entity>
         </a-entity>
 
+        <!-- Audio Button -->
+        <a-plane id="audio_button" position="7 2.5 0" rotation="0 0 0" height="0.5" width="1.5" color="#000" scale="0.5 0.5 0.5">
+            <a-text id="audio_label" value="Stop Audio" color="#fff" width="4" position="-0.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
+
     </a-scene>
 
     <script>
+        /* Avatar */
         let avatar = document.getElementById('avatar')
         let usernameTag = document.getElementById('username-tag')
         
@@ -122,6 +109,37 @@
             return color;
 
         }
+
+        /* Audio */
+        let audioButton = document.getElementById('audio_button');
+        let audioLabel = document.getElementById('audio_label');
+
+        audioButton.addEventListener('click', function (event) {
+            if (audioLabel.getAttribute('value') === 'Stop Audio') {
+                stopAudio();
+            } else {
+                turnOnAudio();
+            }
+        });
+        function turnOnAudio() {
+            NAF.connection.adapter.enableMicrophone(true);
+            audioButton.setAttribute('color', '#000');
+            audioLabel.setAttribute('color', '#fff');
+            audioLabel.setAttribute('value', 'Stop Audio');
+        }
+
+        function stopAudio() {
+            NAF.connection.adapter.enableMicrophone(false);
+            audioButton.setAttribute('color', '#fff');
+            audioLabel.setAttribute('color', '#000');
+            audioLabel.setAttribute('value', 'Turn on Audio');
+        }
+
+        /* Update avatar height in VR */
+
+        document.addEventListener('controllerconnected', (event) => {
+            rig.setAttribute('position', { x: 4, y: 1.6, z: 3 })
+        })
     </script>
     <script>
         // Schemas with components and attributes for syncronization
@@ -162,35 +180,11 @@
             ]
         });
 
-        NAF.schemas.add({
-            template: '#querier-template',
-            components: [
-                'babia-queryjson'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#treebuilder-template',
-            components: [
-                'babia-treebuilder'
-            ]
-        })
-
-        NAF.schemas.add({
-            template: '#boats-template',
-            components: [
-                'position',
-                'rotation',
-                'scale',
-                'babia-boats'
-            ]
-        });
-
     </script>
 
     <!-- GITLAB CORNER-->
     <div class="gitlab-corner-wrapper"><a
-            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/multi_boats/index.html"
+            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/multi_boats/index_multi_boats.html"
             class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
                 <g id="g44">
