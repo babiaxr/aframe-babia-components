@@ -109,7 +109,7 @@
             </a-entity>
             <a-entity id="rightHand" interaction-hands aabb-collider="objects: .grabbable" 
                 hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"
-                laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass">
+                laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass, #audio_button">
                 <a-entity id="tooltip_trigger_R" class="tips" tooltip="text: Click/Grab ; width: 0.07; height: 0.03; targetPosition: 0.005 -0.02 -0.014; lineHorizontalAlign: left; rotation: -90 0 0; src:assets/tooltip.png"
                 position="0.09 -0.04 -0.08"></a-entity>
                 <a-entity id="tooltip_grip_R" class="tips" tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
@@ -118,6 +118,13 @@
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
         </a-entity>
+
+        <!-- Audio Button -->
+
+        <a-plane id="audio_button" position="5 1.5 -10" rotation="0 -45 0" height="0.5" width="1.5" color="#E44B00">
+            <a-text id="audio_label" value="Stop Audio" color="#0582B5" width="4" position="-0.5 0 0" rotation="0 0 0">
+            </a-text>
+        </a-plane>
 
     </a-scene>
 
@@ -215,8 +222,31 @@
                 color += digits[Math.floor(Math.random() * 16)];
             }
             return color;
-
         }
+
+        /* Audio */
+        let audioButton = document.getElementById('audio_button');
+        let audioLabel = document.getElementById('audio_label');
+
+        audioButton.addEventListener('click', function (event) {
+            if (audioLabel.getAttribute('value') === 'Stop Audio') {
+                stopAudio();
+            } else {
+                turnOnAudio();
+            }
+        });
+        function turnOnAudio() {
+            NAF.connection.adapter.enableMicrophone(true);
+            audioButton.setAttribute('color', '#E44B00');
+            audioLabel.setAttribute('value', 'Stop Audio');
+        }
+
+        function stopAudio() {
+            NAF.connection.adapter.enableMicrophone(false);
+            audioButton.setAttribute('color', '#F8F6F2');
+            audioLabel.setAttribute('value', 'Turn on Audio');
+        }
+
     </script>
     <script>
         NAF.schemas.add({
