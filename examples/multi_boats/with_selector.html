@@ -25,7 +25,7 @@
         room: multi_boats_selector;
         adapter: easyrtc;
         debug: true;
-        audio: false;
+        audio: true;
         serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/;
         ">
 
@@ -34,14 +34,32 @@
             <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
 
             <!-- Templates -->
+
+            <!-- Selector and navigator -->
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
             <template id="nav-template">
                 <a-entity class="nav"></a-entity>
             </template>
-            <template id="controls-template">
+           <!--<template id="controls-template">
                 <a-entity class="controls"></a-entity>
+            </template>
+            -->
+            
+
+            <!-- Camera -->
+            <template id="rig-template">
+                <a-entity class="rig"></a-entity>
+            </template>
+            <template id="camera-template">
+                <a-entity class="camera"></a-entity>
+            </template>
+            <template id="avatar-template">
+                <a-sphere class="avatar" networked-audio-source></a-sphere>
+            </template>
+            <template id="username-tag-template">
+                <a-text class="username-tag"></a-text>
             </template>
         </a-assets>
 
@@ -68,11 +86,15 @@
 
             <!--Sync entities, not persistent-->
             <!-- Camera -->
-            <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0">
-                <a-entity id="camera" camera look-controls wasd-controls="fly: false">
-                    <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25">
-                        <a-text id="username-tag" 
-                        position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
+            <a-entity id="rig" position="2.25 1.6 3" rotation="0 0 0"
+                networked="template:#rig-template; attachTemplateToLocal:false">
+                <a-entity id="camera" camera look-controls wasd-controls="fly: false"
+                    networked="template:#camera-template;attachTemplateToLocal:false;">
+                    <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
+                        networked="template:#avatar-template;attachTemplateToLocal:false;">
+                        <a-text id="username-tag"
+                            networked="template:#username-tag-template; attachTemplateToLocal:false"
+                            position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
                     </a-sphere>
                 </a-entity>
             </a-entity>
@@ -84,6 +106,7 @@
                 raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
+        </a-entity>
 
     </a-scene>
 
@@ -164,6 +187,26 @@
             selector.setAttribute('babia-selector', 'current_value', selector.components['babia-selector'].selectable.current)
         }
     </script>
+
+    <script>
+        /* Camera */
+        let avatar = document.getElementById('avatar')
+        let usernameTag = document.getElementById('username-tag')
+        
+        let color = getRandomColor();
+        usernameTag.setAttribute('value', color)
+        avatar.setAttribute('color', color)
+
+        function getRandomColor() {
+            var digits = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += digits[Math.floor(Math.random() * 16)];
+            }
+            return color;
+
+        }
+    </script>
     <script>
         NAF.schemas.add({
             template: '#selector-template',
@@ -186,5 +229,4 @@
         })*/
     </script>
 </body>
-
 </html>
