@@ -99,11 +99,23 @@
                 </a-entity>
             </a-entity>
             <!-- Hand Controls -->
-            <a-entity id="leftHand" oculus-touch-controls="hand: left"
-                teleport-controls="cameraRig: #rig; teleportOrigin: #avatar;  collisionEntities: #environmentGround;
-                        hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"></a-entity>
-            <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right"
-                raycaster="objects: .babiaxraycasterclass, #audio_button"></a-entity>
+            <a-entity id="leftHand" interaction-hands aabb-collider="objects: .grabbable" 
+                hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"
+                teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: .environmentGround;
+                hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: grip">
+                <a-entity id="tooltip_trigger_L" class="tips" tooltip="text: Grab; width: 0.07; height: 0.03; targetPosition: 0.002 -0.02 -0.014; lineHorizontalAlign: right; rotation: -90 0 0; src:assets/tooltip.png"
+                position="-0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_L" class="tips" tooltip="text: Teleport; width: 0.08; height: 0.04; targetPosition: 0.006 -0.008 0.033; rotation: -90 0 0; src:assets/tooltip.png"
+                position="0.085 -0.01 0.07"></a-entity>
+            </a-entity>
+            <a-entity id="rightHand" interaction-hands aabb-collider="objects: .grabbable" 
+                hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"
+                laser-controls="hand: right" raycaster="objects: .babiaxraycasterclass">
+                <a-entity id="tooltip_trigger_R" class="tips" tooltip="text: Click/Grab ; width: 0.07; height: 0.03; targetPosition: 0.005 -0.02 -0.014; lineHorizontalAlign: left; rotation: -90 0 0; src:assets/tooltip.png"
+                position="0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_R" class="tips" tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
+                position="-0.085 -0.01 0.07"></a-entity>
+            </a-entity>
             <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
             </a-entity>
         </a-entity>
