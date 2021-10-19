@@ -32,7 +32,7 @@ AFRAME.registerComponent('babia-boats', {
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
-        field: { type: 'string', default: 'uid'},
+        field: { type: 'string', default: 'uid' },
     },
 
     /**
@@ -88,7 +88,7 @@ AFRAME.registerComponent('babia-boats', {
     update: function (oldData) {
         let data = this.data;
         let el = this.el;
-        if (!this.figures){
+        if (!this.figures) {
             this.figures = [];
         }
 
@@ -98,23 +98,23 @@ AFRAME.registerComponent('babia-boats', {
             let _data = JSON.parse(data.data);
             this.processData(_data);
         } else if (data.from !== oldData.from) {
-                // Unregister for old treegenerator
-                if (this.prodComponent) {
-                    this.prodComponent.notiBuffer.unregister(this.notiBufferId) 
-                };
-                // Register for the new one
-                this.prodComponent = findProdComponent(data, el)
-                if (this.prodComponent.notiBuffer){
-                    this.notiBufferId = this.prodComponent.notiBuffer
-                        .register(this.processData.bind(this))
-                }
+            // Unregister for old treegenerator
+            if (this.prodComponent) {
+                this.prodComponent.notiBuffer.unregister(this.notiBufferId)
+            };
+            // Register for the new one
+            this.prodComponent = findProdComponent(data, el)
+            if (this.prodComponent.notiBuffer) {
+                this.notiBufferId = this.prodComponent.notiBuffer
+                    .register(this.processData.bind(this))
+            }
         }
         // If changed whatever, re-print with the current data
         else if (data !== oldData && this.newData) {
             this.processData(this.newData)
         }
     },
- 
+
     /**
     * Called on each scene tick.
     */
@@ -135,17 +135,17 @@ AFRAME.registerComponent('babia-boats', {
         let t = { x: 0, y: 0, z: 0 };
 
         // when animation not finished, delete figures and opa 1 to inserted
-        if (this.animation){
+        if (this.animation) {
             this.figures_del.forEach(figure => {
                 let entity = document.getElementById(figure.id);
-                if (entity){
+                if (entity) {
                     entity.remove();
                 }
             })
             this.figures_in.forEach(figure => {
                 let entity = document.getElementById(figure.id);
-                if (entity){
-                    setOpacity(entity, 1.0);           
+                if (entity) {
+                    setOpacity(entity, 1.0);
                 }
             })
             this.setFigures(this.figures, t);
@@ -183,7 +183,7 @@ AFRAME.registerComponent('babia-boats', {
                 this.el.firstChild.remove();
             this.drawElements(el, this.figures, t);
         } else {
-            if (this.figures_old !== this.figures){
+            if (this.figures_old !== this.figures) {
                 this.animation = true;
                 this.start_time = Date.now();
             }
@@ -419,7 +419,7 @@ AFRAME.registerComponent('babia-boats', {
 
             let entity = this.createElement(figures[i], position);
             this.addEvents(entity, figures[i]);
-            
+
             element.appendChild(entity);
         }
 
@@ -532,28 +532,30 @@ AFRAME.registerComponent('babia-boats', {
                 entity = document.getElementById(figures[i].id);
                 // Creating... (next ticks)
                 if (figures[i].inserted) {
+
+                    //TODO: This code increments the opacity in the animation part, but it adds several performance issues
                     //Increment opacity
-                    let opa_inc = delta / this.duration;
-                    let opacity = parseFloat(entity.getAttribute('material').opacity);
-                    if (opacity + opa_inc < 1) {
-                        opacity += opa_inc;
-                    } else {
-                        opacity = 1.0;
-                        figures[i].inserted = false;
-                    }
-                    setOpacity(entity, opacity);
+                    // let opa_inc = delta / this.duration;
+                    // let opacity = parseFloat(entity.getAttribute('material').opacity);
+                    // if (opacity + opa_inc < 1) {
+                    //     opacity += opa_inc;
+                    // } else {
+                    //     opacity = 1.0;
+                    //     figures[i].inserted = false;
+                    // }
+                    //setOpacity(entity, opacity);
 
                     // If animation stops before finish
                     let cond = 'id=' + figures[i].id
-                    if (findIndex(self.figures_in, cond) < 0){
+                    if (findIndex(self.figures_in, cond) < 0) {
                         self.figures_in.push(figures[i])
                     }
 
-                } else { 
+                } else {
                     // find index in old_figures
                     let cond = 'id=' + figures[i].id
                     let index = findIndex(figures_old, cond)
-                    if (index < 0 ){
+                    if (index < 0) {
                         // encontrar el elemento que no esta en la escena con id y darle opacidad 
                         // y cambiar sus propiedades a la nueva si es necesario 
                         figures[i].inserted = true;
@@ -590,8 +592,11 @@ AFRAME.registerComponent('babia-boats', {
                 let new_entity = this.createElement(figures[i], position);
                 this.addEvents(new_entity, figures[i]);
 
-                //Opacity 0
-                setOpacity(new_entity, 0);
+                //TODO: bad perfomance when Opacity 0 at the beginning
+                //setOpacity(new_entity, 0);
+                
+                // New building and quarter, it appears with 0.5 opacity
+                setOpacity(new_entity, 0.5);
 
                 element.appendChild(new_entity);
                 figures[i].inserted = true;
@@ -600,37 +605,42 @@ AFRAME.registerComponent('babia-boats', {
 
         // Delete figures
         let opa_dec = delta / this.duration;
-        for (let i in figures_old){
+        for (let i in figures_old) {
             let deleted = false;
             let cond = 'id=' + figures_old[i].id
             let index = findIndex(figures, cond)
-            if (index < 0){
-                if (findIndex(self.figures_del, cond) < 0){
+            if (index < 0) {
+                if (findIndex(self.figures_del, cond) < 0) {
                     self.figures_del.push(figures_old[i])
                 }
                 let entity_del = document.getElementById(figures_old[i].id);
-                if (entity_del){
-                    let opacity = parseFloat(entity_del.getAttribute('material').opacity);
-                    if (opacity - opa_dec > 0) {
-                        opacity -= opa_dec;
-                    } else {
-                        opacity = 0.0;
-                        deleted = true; 
-                        self.figures_del.pop(figures_old[i]); 
-                    }
-                    setOpacity(entity_del, opacity);
-                    if (deleted) {
-                        entity_del.remove();
-                    }
+                if (entity_del) {
+
+                    //TODO: Bad perfomance issue when changing dinamically the opacity, better to just make it non vissible
+                    entity_del.object3D.visible = false
+                    entity_del.remove();
+                    
+                    // let opacity = parseFloat(entity_del.components.material.opacity);
+                    // if (opacity - opa_dec > 0) {
+                    //     opacity -= opa_dec;
+                    // } else {
+                    //     opacity = 0.0;
+                    //     deleted = true;
+                    //     self.figures_del.pop(figures_old[i]);
+                    // }
+                    // setOpacity(entity_del, opacity);
+                    // if (deleted) {
+                    //     entity_del.remove();
+                    // }
                 }
             }
         }
     },
 
-    setFigures: function (figures, translate){
+    setFigures: function (figures, translate) {
         figures.forEach(figure => {
             let entity = document.getElementById(figure.id);
-            if (entity){
+            if (entity) {
                 if (entity.getAttribute('width') != figure.width) {
                     entity.setAttribute('width', figure.width);
                 }
@@ -640,13 +650,18 @@ AFRAME.registerComponent('babia-boats', {
                 if (entity.getAttribute('depth') != figure.depth) {
                     entity.setAttribute('depth', figure.depth);
                 }
-                entity.setAttribute('position', {
-                    x: figure.posX - translate.x,
-                    y: (parseFloat(figure.height) + translate.y) / 2,
-                    z: - figure.posY + translate.z
-                });
-    
-                if (figure.children){
+
+                //TODO: Full opacity because it was in 0.5 if new building/quarter
+                if(entity.components.material.data.opacity < 1){
+                    setOpacity(entity, 1)
+                }
+                
+                entity.object3D.position.set(
+                    figure.posX - translate.x,
+                    ((parseFloat(figure.height) + translate.y) / 2),
+                    (- figure.posY + translate.z),
+                )
+                if (figure.children) {
                     this.setFigures(figure.children, figure.translate_matrix);
                 }
             }
@@ -722,9 +737,9 @@ AFRAME.registerComponent('babia-boats', {
                 let inc_y = (delta * dist_y) / (2 * this.duration);
                 let inc_z = (delta * dist_z) / this.duration;
 
-                let last_x = parseFloat(entity.getAttribute('position').x);
-                let last_y = parseFloat(entity.getAttribute('position').y);
-                let last_z = parseFloat(entity.getAttribute('position').z);
+                let last_x = parseFloat(entity.object3D.position.x);
+                let last_y = parseFloat(entity.object3D.position.y);
+                let last_z = parseFloat(entity.object3D.position.z);
 
                 let new_x = last_x - inc_x;
                 let new_y = last_y + inc_y;
@@ -732,18 +747,18 @@ AFRAME.registerComponent('babia-boats', {
 
 
                 // Update entity
-                entity.setAttribute('position', {
-                    x: new_x,
-                    y: new_y,
-                    z: new_z
-                });
+                entity.object3D.position.set(
+                    new_x,
+                    new_y,
+                    new_z
+                )
 
             } else if ((new_time - this.start_time) > this.duration) {
-                entity.setAttribute('position', {
-                    x: figure.posX - translate.x,
-                    y: (parseFloat(figure.height) + translate.y) / 2,
-                    z: - figure.posY + translate.z
-                });
+                entity.object3D.position.set(
+                    (figure.posX - translate.x),
+                    ((parseFloat(figure.height) + translate.y) / 2),
+                    (- figure.posY + translate.z),
+                )                    
             }
         }
     },
@@ -800,7 +815,7 @@ AFRAME.registerComponent('babia-boats', {
         let data = this.data;
         this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
-      
+
         // If color metric activated, save in the metadata the max and min value for mapping
         if (data.color) {
             let [color_max, color_min] = getMaxMinColorValues(this.newData, data.color)
@@ -809,7 +824,7 @@ AFRAME.registerComponent('babia-boats', {
         }
         this.notiBuffer.set(this.newData)
         // Create city
-        this.updateChart(this.newData)  
+        this.updateChart(this.newData)
     },
 
     addEvents: function (entity, figure) {
@@ -1117,8 +1132,8 @@ function heatMapColorforValue(val, max, min) {
 let findIndex = (list, condicion) => {
     condicion = condicion.split('=')
     //console.log(condicion)
-    for (i = 0; i < list.length; i++){
-        if (list[i][condicion[0]] === condicion[1]){
+    for (i = 0; i < list.length; i++) {
+        if (list[i][condicion[0]] === condicion[1]) {
             return i
         }
     }
