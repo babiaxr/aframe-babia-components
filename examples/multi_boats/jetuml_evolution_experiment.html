@@ -19,6 +19,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
     <script src="./easyrtc.js"></script>
     <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+    <script
+        src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.3/dist/aframe-dialog-popup-component.min.js"></script>
     <!-- Gitlab Corner -->
     <link rel="stylesheet" href="../assets/gitlab-corner.css">
 </head>
@@ -134,12 +136,14 @@
         <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
 
         <!-- Boats Visualizer -->
-        <a-entity id="boats" babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn; height_building_legend: -0.5; legend_scale: 0.25; height_quarter_legend_box: 1; height_quarter_legend_title: 1.5"
+        <a-entity id="boats"
+            babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn; height_building_legend: -0.5; legend_scale: 0.25; height_quarter_legend_box: 1; height_quarter_legend_title: 1.5"
             position="-1 0.3 0" scale="0.015 0.015 0.015"></a-entity>
 
 
         <!-- Lights -->
-        <a-entity position="5 50 0" light="type: hemisphere; color: #CEE4F0; intensity: 1; groundColor: #454545"></a-entity>
+        <a-entity position="5 50 0" light="type: hemisphere; color: #CEE4F0; intensity: 1; groundColor: #454545">
+        </a-entity>
 
         <!-- Controls and Camera -->
         <a-entity id="cameraRig" position="0 0 3" networked="template:#rig-template; attachTemplateToLocal:false">
@@ -159,9 +163,12 @@
                 <a-entity id="tooltip_trigger_L" class="tips"
                     tooltip="text: Teleport; width: 0.07; height: 0.03; targetPosition: 0.002 -0.02 -0.014; lineHorizontalAlign: right; rotation: -90 0 0; src:assets/tooltip.png"
                     position="-0.09 -0.04 -0.08"></a-entity>
+                <a-entity id="tooltip_grip_L" class="tips"
+                    tooltip="text: Stop Audio; width: 0.08; height: 0.04; targetPosition: 0.006 -0.008 0.033; rotation: -90 0 0; src:assets/tooltip.png"
+                    position="0.085 -0.01 0.07"></a-entity>
             </a-entity>
             <a-entity id="rightHand" oculus-touch-controls="hand: right" laser-controls="hand: right"
-                raycaster="objects: .babiaxraycasterclass, #audio_button">
+                raycaster="objects: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon">
                 <a-entity id="tooltip_trigger_R" class="tips"
                     tooltip="text: Click; width: 0.07; height: 0.03; targetPosition: 0.005 -0.02 -0.014; lineHorizontalAlign: left; rotation: -90 0 0; src:assets/tooltip.png"
                     position="0.09 -0.04 -0.08"></a-entity>
@@ -169,7 +176,8 @@
                     tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
                     position="-0.085 -0.01 0.07"></a-entity>
             </a-entity>
-            <a-entity id="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, #audio_button">
+            <a-entity id="cursor" cursor="rayOrigin:mouse"
+                raycaster="objects: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon">
             </a-entity>
         </a-entity>
 
@@ -179,6 +187,25 @@
             <a-text id="audio_label" value="Stop Audio" color="#fff" width="4" position="-0.5 0 0" rotation="0 0 0">
             </a-text>
         </a-plane>
+
+
+        <!-- Information popup -->
+        <a-entity id="navbarpopup" position="2.5 1 -0.5" scale="0.3 0.3 0.3"
+            dialog-popup="
+      openIconImage: ../assets/popups/info.jpg;
+      closeIconImage: ../assets/popups/close.jpg;
+      title: How to use the navigation bar;
+      titleWrapCount: 30;
+      titleColor: white;
+      bodyColor: white;
+      dialogBoxColor: black;
+      bodyFont: roboto;
+      dialogBoxHeight: 8.5;
+      body: \n In this experiment we want to assess whether it is better to navigate 3D visualizations on-screen or using Virtual Reality (VR) headsets. \n Below you see a 3D representation of JetUML using the City metaphor. If you want to know more, please read the legend on the right of the city. \n
+      = CONTROLS AND INTERACTIONS \n Look around with your Virtual Reality (VR) headset and walk in the room to explore the city. \n  To show a tooltip with additional information on a building, point on it with the cursor. If you press the trigger after pointing on a building, the tooltip will remain open. To show information on a quarter, you need to point on it and press the trigger. To close all tooltips, you can press the dedicated button above the legend on the right. \n To reset the view, please press and hold the Oculus Button. \n
+      = START THE EXPERIMENT \n Please make sure that your supervisor acitvated both voice and screen recording. When you are ready, close this information dialog by hitting the (X) and press the trigger on the button labeled with (0).; "
+            babia-lookat="[camera]"></a-entity>
+
 
 
     </a-scene>
@@ -191,6 +218,7 @@
             tip.setAttribute('visible', false)
         });
         let hand_right = document.getElementById('rightHand')
+
         document.addEventListener('controllerconnected', (event) => {
             document.querySelector('#nav').setAttribute('scale', { x: 0.25, y: 0.25, z: 0.25 })
             document.querySelector('#cameraRig').setAttribute('position', { x: 0, y: 0, z: 3.25 })
@@ -199,7 +227,7 @@
                 tip.setAttribute('visible', true)
             });
         });
-        // presionar boton para ocultar tips
+        // hide tips
         hand_right.addEventListener('gripdown', function (evt) {
             if (tips_opened) {
                 tips_opened = false
@@ -213,6 +241,8 @@
                 });
             }
         })
+
+
 
 
         let selector = document.getElementById('selector')
@@ -293,6 +323,20 @@
     </script>
 
     <script>
+        let hand_left = document.getElementById('leftHand')
+        let tooltipAudioButton = document.getElementById('tooltip_grip_L')
+        // stop audio left hand
+        hand_left.addEventListener('gripdown', function (evt) {
+            if (tooltipAudioButton.components.tooltip.data.text === 'Stop Audio') {
+                NAF.connection.adapter.enableMicrophone(false);
+                tooltipAudioButton.setAttribute('tooltip', {'text': "Turn on Audio"});
+            } else {
+                NAF.connection.adapter.enableMicrophone(true);
+                tooltipAudioButton.setAttribute('tooltip', {'text': "Stop Audio"});
+            }
+        })
+
+
         /* Camera */
         let rig = document.getElementById('rig')
         let avatar = document.getElementById('avatar')
