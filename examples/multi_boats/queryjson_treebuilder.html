@@ -1,0 +1,132 @@
+<html>
+
+<head>
+  <title>Multiuser with Babia-Boats, queryjson and treebuilder. No Evolution.</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+  <script src="../../dist/aframe-babia-components.js"></script>
+  <!-- Mulituser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+  <script src="./easyrtc.js"></script>
+  <script src="https://unpkg.com/networked-aframe@^0.8.0/dist/networked-aframe.js"></script>
+    <!-- Gitlab Corner -->
+  <link rel="stylesheet" href="../assets/gitlab-corner.css">
+</head>
+
+<body>
+    <a-scene rain background="color: #ECECEC" networked-scene="
+    room: multi_boats_treebuilder;
+    adapter: easyrtc;
+    debug: true;
+    audio:true;
+    serverURL: https://f-l2108-pc02.aulas.etsit.urjc.es:49153/
+    "
+    >
+        <a-assets> 
+            <!-- Dummy asset to make the scene sync (WIP)-->
+            <img src="https://wallpapercave.com/wp/wp2345390.jpg?dummy=8484744">
+            <template id="querier-template">
+                <a-entity class="querier"></a-entity>
+            </template>
+        </a-assets>
+            
+        <a-entity environment="preset: japan"></a-entity>
+            
+        <a-entity id="querier" babia-queryjson="url: ./data1.json;"
+            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene">
+        </a-entity>
+            
+        <a-entity id="treebuilder" babia-treebuilder="field: x_axis; split_by: /; from: querier"></a-entity>
+        <a-entity id="boats" babia-boats="from: treebuilder " position="0 1 0"></a-entity>
+    
+        <a-entity movement-controls="fly: true" position="2 5 15">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
+            <a-entity cursor="rayOrigin:mouse"></a-entity>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+    </a-scene>
+    
+    <script>
+        let querier = document.getElementById('querier')
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            console.log("Bars owner: ", querier.components.networked.data.owner);
+            if (querier.components.networked.data.owner == 'scene'){
+                let imFirst = true;
+                for (client in NAF.connection.getConnectedClients()){
+                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
+                    let myTime = NAF.connection.adapter._myRoomJoinTime
+                    console.log("Other: ", otherTime)
+                    console.log("Mine: ", myTime)
+                    if (myTime > otherTime){
+                        imFirst = false;
+                    }
+                }
+                if (imFirst){
+                    NAF.utils.takeOwnership(querier)
+                }
+            }
+        });
+    
+        setTimeout(updateData, 4000)
+    
+        function updateData () {
+            if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
+                querier.setAttribute('babia-queryjson', 'url', 'data2.json');
+            }
+            setTimeout(updateData1, 4000);
+        }
+        function updateData1 () {
+            if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
+                querier.setAttribute('babia-queryjson', 'url', 'data3.json');
+            }
+        }
+    </script>
+    <script>
+        NAF.schemas.add({
+            template: '#querier-template',
+            components: [
+                'babia-queryjson',
+            ]
+        });
+    </script>
+    <!-- GITLAB CORNER-->
+    <div class="gitlab-corner-wrapper"><a
+        href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/multi_boats/queryjson_treebuilder.html"
+        class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+            <g id="g44">
+                <path id="path46" class="cls-1"
+                    d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+            </g>
+            <g id="g48">
+                <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+            </g>
+            <g id="g56">
+                <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+            </g>
+            <g id="g64">
+                <path id="path66" class="cls-3"
+                    d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+            </g>
+            <g id="g72">
+                <path id="path74" class="cls-2"
+                    d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+            </g>
+            <g id="g76">
+                <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+            </g>
+            <g id="g80">
+                <path id="path82" class="cls-3"
+                    d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+            </g>
+            <g id="g84">
+                <path id="path86" class="cls-2"
+                    d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+            </g>
+        </svg></a></div>
+</body>
+</html>

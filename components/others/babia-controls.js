@@ -4,7 +4,12 @@ if (typeof AFRAME === 'undefined') {
 }
 
 AFRAME.registerComponent('babia-controls', {
-    schema: {},
+    schema: {
+        // Current direction
+        direction: { type: 'string', default: ''},
+        // Current state
+        state: { type: 'string', default: ''},
+    },
 
     /**
     * Set if component needs multiple instancing.
@@ -24,6 +29,43 @@ AFRAME.registerComponent('babia-controls', {
     */
 
     update: function (oldData) {
+        let data = this.data;
+        if ((data.state) && (data.state != oldData.state)) {
+            let pause = document.getElementsByClassName('babiaPause')[0];
+            let play = document.getElementsByClassName('babiaPlay')[0];
+            if (data.state === 'pause') {
+                if (pause){
+                    this.el.children[0].removeChild(pause)
+                }
+                if (!play){
+                    this.createButton('play', 'white')
+                }
+            } else {
+                if (play){
+                    this.el.children[0].removeChild(play)
+                }
+                if (!pause){
+                   this.createButton('pause', 'white')  
+                }
+            }
+            this.el.parentEl.setAttribute('babia-navigator', 'state', data.state)
+        }
+        if ((data.direction) && (data.direction != oldData.direction)) {
+            let rewind = document.getElementsByClassName('babiaRewind')[0];
+            let forward = document.getElementsByClassName('babiaForward')[0];
+            if (data.direction === 'rewind'){
+                forward.color = 'white'
+                rewind.color = 'grey'
+                changeMaterial(forward, 'white')
+                changeMaterial(rewind, 'grey')
+            } else {
+                forward.color = 'grey'
+                rewind.color = 'white'
+                changeMaterial(forward, 'grey')
+                changeMaterial(rewind, 'white')
+            }
+            this.el.parentEl.setAttribute('babia-navigator', 'direction', data.direction)
+        }
     },
 
     player: undefined,
@@ -46,40 +88,33 @@ AFRAME.registerComponent('babia-controls', {
         let url
         let pos_x
         let class_name
-        let event
         let inverse = false
 
         if (type === 'play'){
             url = playButton.default
             pos_x = 0.2
             class_name = 'babiaPlay'
-            event = 'babiaContinue'
         } else if (type === 'pause') {
             url = pauseButton.default
             pos_x = 0
             class_name = 'babiaPause'
-            event = 'babiaStop'
         } else if (type === 'skipNext') {
             url = skipButton.default
             pos_x = 3
             class_name = 'babiaSkipNext'
-            event = class_name
             inverse = true
         } else if (type === "skipPrev") {
             url = skipButton.default
             pos_x = -3
             class_name = 'babiaSkipPrev'
-            event = class_name
         } else if (type === "rewind") {
             url = rewindButton.default
             pos_x = -6
             class_name = 'babiaRewind'
-            event = 'babiaToPast'
         } else if ( type === "forward"){
             url = rewindButton.default
             pos_x = 6
             class_name = 'babiaForward'
-            event = 'babiaToPresent'
             inverse = true
         } else {
             throw new Error("That button type doesn't exist.");
@@ -99,8 +134,8 @@ AFRAME.registerComponent('babia-controls', {
         this.player.appendChild(button)
 
         // Events
-        this.emitEvents(button, event)
         this.mouseOver(button)
+        this.processEvents(button)
     },
 
     mouseOver: function(element){
@@ -113,37 +148,27 @@ AFRAME.registerComponent('babia-controls', {
         })
     },
 
-    emitEvents: function(element, event){
+    processEvents: function(element){
         let self = this
         element.addEventListener('click', function () {
             if (element.classList.contains('babiaPlay')){
-                this.parentEl.removeChild(this)
-                self.createButton('pause', 'white')
+                this.parentEl.parentEl.setAttribute('babia-controls','state', 'play');
             } else if (element.classList.contains('babiaPause')){
-                this.parentEl.removeChild(this)
-                self.createButton('play', 'white')
+                this.parentEl.parentEl.setAttribute('babia-controls','state', 'pause');
             } else if ((element.classList.contains('babiaSkipNext')) || (element.classList.contains('babiaSkipPrev'))){
-                let pause = document.getElementsByClassName('babiaPause')[0]
-                if (pause){
-                    self.player.removeChild(pause)
-                    self.createButton('play', 'white')
+                if (self.data.state != 'pause') {
+                    this.parentEl.parentEl.setAttribute('babia-controls','state', 'pause')
                 }
+                let class_name = 'skipPrev';
+                if (element.classList.contains('babiaSkipNext')) {
+                    class_name = 'skipNext';
+                }
+                self.el.parentEl.components['babia-navigator'].controlNavigator(class_name);
             } else if (element.classList.contains('babiaForward')){
-                this.color = 'grey'
-                changeMaterial(this, this.color)
-                let rewind = document.getElementsByClassName('babiaRewind')[0]
-                rewind.color = 'white'
-                changeMaterial(rewind, rewind.color)
+                this.parentEl.parentEl.setAttribute('babia-controls','direction', 'forward');
             } else if (element.classList.contains('babiaRewind')){
-                this.color = 'grey'
-                changeMaterial(this, this.color)
-                let forward = document.getElementsByClassName('babiaForward')[0]
-                forward.color = 'white'
-                changeMaterial(forward, forward.color)
+                this.parentEl.parentEl.setAttribute('babia-controls','direction', 'rewind');
             }
-            //console.log('Emit... ' + event)
-            //self.el.parentEl.emit(event)
-            self.el.parentEl.components['babia-navigator'].controlNavigator(event)
         });
     }
 
