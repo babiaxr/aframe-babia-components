@@ -34,7 +34,7 @@
         
         <a-entity environment="preset: japan"></a-entity>
         
-        <a-entity id="querier" babia-queryjson="url: ./data1.json;"
+        <a-entity id="querier" babia-queryjson="url: ../boats/boats_temporal/data1.json;"
             networked="template:#querier-template; networkId:querier; persistent: true; owner: scene">
         </a-entity>
         <a-entity id="boats" 
@@ -76,7 +76,7 @@
 
         function updateData () {
             if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
-                querier.setAttribute('babia-queryjson', 'url', 'data2.json');
+                querier.setAttribute('babia-queryjson', 'url', '../boats/boats_temporal/data2.json');
             }
             setTimeout(updateData1, 4000);
         }
@@ -95,13 +95,13 @@
         }
         function updateData3 () {
             if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
-                querier.setAttribute('babia-queryjson', 'url', 'data1.json');
+                querier.setAttribute('babia-queryjson', 'url', '../boats/boats_temporal/data1.json');
             }
             setTimeout(updateData4, 4000);
         }
         function updateData4 () {
             if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
-                querier.setAttribute('babia-queryjson', 'url', 'data2.json');
+                querier.setAttribute('babia-queryjson', 'url', '../boats/boats_temporal/data2.json');
             }
             setTimeout(updateData5, 4000);
         }
@@ -114,7 +114,7 @@
         }
         function updateData6 () {
             if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
-                querier.setAttribute('babia-queryjson', 'url', 'data2.json');
+                querier.setAttribute('babia-queryjson', 'url', '../boats/boats_temporal/data1.json');
             }
         }
     </script>

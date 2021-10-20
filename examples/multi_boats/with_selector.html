@@ -42,11 +42,6 @@
             <template id="nav-template">
                 <a-entity class="nav"></a-entity>
             </template>
-           <!--<template id="controls-template">
-                <a-entity class="controls"></a-entity>
-            </template>
-            -->
-            
 
             <!-- Camera -->
             <template id="rig-template">
@@ -128,19 +123,6 @@
     <script>
         let selector = document.getElementById('selector')
         let nav = document.getElementById('nav')
-        /*let controls;
-
-    document.body.addEventListener('entityCreated', function (event) {
-        if(event.detail.el === nav){
-            controls = nav.children[1]
-            controls.setAttribute('networked',{
-            "template": "#controls-template",
-            "networkId": "controls",
-            "persistent": true,
-            "owner": "scene"
-        })
-        }
-    });*/
         
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
@@ -160,46 +142,46 @@
                 if (imFirst) {
                     NAF.utils.takeOwnership(selector)
                     NAF.utils.takeOwnership(nav)
-                   // NAF.utils.takeOwnership(controls)
                 } else { 
-                    console.log("I'm not creator")
-                    nav.children[1].setAttribute('visible', false)
-                    nav.children[2].setAttribute('visible', false)
-                    nav.children[3].setAttribute('visible', false)
+                    console.log("I'm not first")
+                    makeInvisible()
                 }
-            }
+            } else if (selector.components.networked.data.owner != NAF.clientId){
+                makeInvisible();
+            } 
         });
         
         
-        nav.addEventListener('click', function () {
-            if (!NAF.utils.isMine(selector) && !NAF.utils.isMine(nav)){
-                NAF.utils.takeOwnership(selector)
-                NAF.utils.takeOwnership(nav)
-               // NAF.utils.takeOwnership(controls)
-            } else {
-                setSelectorValue()
-            }          
+        nav.addEventListener('click', function (e) {
+            if (!NAF.utils.isMine(selector) && nav.components.networked.data.owner != 'scene'){
+                if (Object.keys(NAF.connection.connectedClients).length > 0){
+                    NAF.utils.takeOwnership(selector)
+                    NAF.utils.takeOwnership(nav)
+                }
+            }       
         })
 
         selector.addEventListener('ownership-gained', e => {
-            console.log("Selector ownership gained")
-            setSelectorValue()
-            nav.children[1].setAttribute('visible', true)
-            nav.children[2].setAttribute('visible', true)
-            nav.children[3].setAttribute('visible', true)
+            console.log("Selector ownership gained");
+            makeVisible();
         });
 
 
         selector.addEventListener('ownership-lost', e => {
-            console.log("Selector ownership lost")
+            console.log("Selector ownership lost");
+            makeInvisible();
+        });
+
+        function makeInvisible(){
             nav.children[1].setAttribute('visible', false)
             nav.children[2].setAttribute('visible', false)
             nav.children[3].setAttribute('visible', false)
-        });
+        }
 
-        function setSelectorValue(){
-            console.log ("Set current_value: " + selector.components['babia-selector'].selectable.current)
-            selector.setAttribute('babia-selector', 'current_value', selector.components['babia-selector'].selectable.current)
+        function makeVisible(){
+            nav.children[1].setAttribute('visible', true)
+            nav.children[2].setAttribute('visible', true)
+            nav.children[3].setAttribute('visible', true)
         }
     </script>
 

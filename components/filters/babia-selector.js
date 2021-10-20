@@ -7,7 +7,7 @@ class Selectable {
      * @param list {array} List of items to select from
      * @param field {string} Field name used to select (present in all items)
      */
-    constructor(list, field, current, step, speed) {
+    constructor(list, field, current, step, speed, state, direction) {
         this.data = {};
         for (let item of list) {
             let selector = item[field];
@@ -29,10 +29,20 @@ class Selectable {
         } else {
             this.speed = speed;
         }
-        if (current == -1){
+        if (current == -2){
             this.current = 0
         } else {
             this.current = current;
+        }
+        if (!state) {
+            this.state = 'play';
+        } else {
+            this.state = state;
+        }
+        if (!direction){
+            this.direction = 'forward'
+        } else {
+            this.direction = direction;
         }
     }
 
@@ -50,17 +60,33 @@ class Selectable {
 
     prev() {
         let selected = this.data[this.selectors[this.current]];
-        if (this.current + this.step > 0){
+        if (this.current - this.step >= 0){
             this.current -= this.step;
         } else {
-            this.current = 0
+            this.current = -1
         }
         return(selected);
     }
 
     setValue(value)  {
         let selected = this.data[this.selectors[value]];
-        this.current = value + 1;
+        if (this.direction != 'rewind'){
+            if (value > this.length) {
+                this.current = this.length
+            } else if (value < 1) {
+                this.current = 1
+            } else {
+                this.current = value + 1
+            }
+        } else {
+            if (value > this.length - 2) {
+                this.current = this.length - 2
+            } else if (value < -1) {
+                this.current = -1
+            } else {
+                this.current = value - 1
+            }
+        }
         return(selected);
     }
 };
@@ -88,7 +114,7 @@ AFRAME.registerComponent('babia-selector', {
         // data, for debugging, highest priority
         data: { type: 'string' },
         // Current value of timeline
-        current_value: { type: 'number', default: 0},
+        current_value: { type: 'number', default: -2},
         // Current speed
         speed: { type: 'number', default: 0},
         // Current step
@@ -153,20 +179,23 @@ AFRAME.registerComponent('babia-selector', {
                 this.navNotiBufferId = this.navComponent.notiBuffer.register(this.processEvent.bind(this), this)
             }
         }
-        if (data.current_value && data.current_value != oldData.current_value) {
-            this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
-            this.setSelect(data.current_value - 1)
-        }
+    
         if ((data.direction) && (data.direction != oldData.direction)) {
             if (data.direction != 'rewind') {
-                if (this.selectable.current != this.selectable.length){
+               if (this.selectable.current != this.selectable.length){
                     this.selectable.current += 2
+                }
+                if (this.navNotiBuffer){
+                    this.navNotiBuffer.set('forward')
                 }
             } else {
                 if (this.selectable.current < 1){
                     this.selectable.current = 0
                 } else {
                     this.selectable.current -= 2
+                }
+                if (this.navNotiBuffer){
+                    this.navNotiBuffer.set('rewind')
                 }
             }
         }
@@ -176,13 +205,13 @@ AFRAME.registerComponent('babia-selector', {
             this.navNotiBuffer.set({type: 'step', value: data.step})
             if (this.data.direction != 'rewind') {
                 if (this.selectable.current + data.step >= this.selectable.length){
-                    this.selectable.current = this.selectable.length - 1
+                    this.selectable.current = this.selectable.length
                 } else {
                     this.selectable.current += data.step - 1
                 }
             } else {
                 if (this.selectable.current - data.step <= 0){
-                    this.selectable.current = 0
+                    this.selectable.current = -1
                 } else {
                     this.selectable.current -= data.step + 1
                 }
@@ -198,11 +227,23 @@ AFRAME.registerComponent('babia-selector', {
                 }, timeout);
         }
 
-
+        // Only in multiuser
         if (el.components.networked){
+            // You are not the owner and you are not alone in the scene
             if ((el.components.networked.data.owner != NAF.clientId) && (el.components.networked.data.owner != 'scene')){
                 if ((data.state == 'pause') && (data.state != oldData.state)) {
                     this.navNotiBuffer.set('pause')
+                }
+                if ((data.current_value != -2) && (data.current_value != oldData.current_value)) {
+                    // Initialize with the proper value
+                    
+                    if (data.direction != 'rewind'){
+                        this.navNotiBuffer.set({type: 'position', value: data.current_value - 1, label: this.selectable.selectors[data.current_value - 1]})
+                        this.setSelect(data.current_value - 1)
+                    } else {
+                        this.navNotiBuffer.set({type: 'position', value: data.current_value + 1, label: this.selectable.selectors[data.current_value + 1]})
+                        this.setSelect(data.current_value + 1)
+                    }
                 }
             }
         }
@@ -210,11 +251,13 @@ AFRAME.registerComponent('babia-selector', {
 
     nextSelect: function() {
         if (this.selectable.current > this.selectable.length - 1){
-            this.selectable.current = this.selectable.length - 1
+            this.selectable.current = this.selectable.length
+            this.selectable.state = 'pause'
             this.el.setAttribute('babia-selector','state', 'pause');
             this.navNotiBuffer.set('pause')
         } else {
             this.newData = this.selectable.next();
+            this.el.setAttribute('babia-selector','current_value', this.selectable.current);
             this.notiBuffer.set(this.newData);
             this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
             this.babiaMetadata = { id: this.selectable.current};
@@ -224,11 +267,13 @@ AFRAME.registerComponent('babia-selector', {
     prevSelect: function() {
         if (this.selectable.current >= 0){
             this.newData = this.selectable.prev();
+            this.el.setAttribute('babia-selector','current_value', this.selectable.current);
             this.notiBuffer.set(this.newData);
             this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current+1]})
             this.babiaMetadata = { id: this.selectable.current };
         } else {
-            this.selectable.current = 0
+            this.selectable.current = - 1
+            this.selectable.state = 'pause'
             this.el.setAttribute('babia-selector','state', 'pause');
             this.navNotiBuffer.set('pause')
         } 
@@ -236,15 +281,19 @@ AFRAME.registerComponent('babia-selector', {
 
     setSelect: function(value) {
         if (((value != this.selectable.current - 1) && (this.data.direction != 'rewind')) || ((value != this.selectable.current + 1) && (this.data.direction === 'rewind'))) {
+            let label;
             this.newData = this.selectable.setValue(value);
+            //this.el.setAttribute('babia-selector','current_value', this.selectable.current);
             if (this.data.direction != 'rewind') {
                 this.babiaMetadata = { id: value++ };
+                label = this.selectable.selectors[value-1]
             } else {
                 this.babiaMetadata = { id: value-- };
                 this.selectable.current -=2
+                label = this.selectable.selectors[value+1]
             }
             this.notiBuffer.set(this.newData);
-            this.navNotiBuffer.set({type: 'position', value: value, label: this.selectable.selectors[value-1]});
+            this.navNotiBuffer.set({type: 'position', value: value, label: label});
         }
     },
 
@@ -286,7 +335,7 @@ AFRAME.registerComponent('babia-selector', {
     processData: function (_data) {
         // Create a Selectable object, and set the updating interval
         if (!this.selectable){
-            this.selectable = new Selectable(_data, this.data.select, this.data.current_value, this.data.step); 
+            this.selectable = new Selectable(_data, this.data.select, this.data.current_value, this.data.step, this.data.speed); 
         }
         this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
         let self = this;
@@ -298,20 +347,39 @@ AFRAME.registerComponent('babia-selector', {
 
       processEvent: function(event){
             if(event.includes('pause')) {
+                this.selectable.state = 'pause'
                 this.el.setAttribute('babia-selector','state', 'pause');
             } else if (event.includes('play')) {
+                this.selectable.state = 'play'
                 this.el.setAttribute('babia-selector','state', 'play');
             } else if (event.includes('forward')) {
+                this.selectable.direction = 'forward'
                 this.el.setAttribute('babia-selector','direction', 'forward');
             } else if (event.includes('rewind')) {
+                this.selectable.direction = 'rewind'
                 this.el.setAttribute('babia-selector','direction', 'rewind');
             } else if (event.includes('babiaSetPosition')) {
-                this.el.setAttribute('babia-selector','state','pause');
-                this.setSelect(parseInt(event.substring(16), 10))
+                this.selectable.state = 'pause'
+                let value = parseInt(event.substring(16), 10)
+                if (this.data.direction != 'rewind') {
+                    this.el.setAttribute('babia-selector',{
+                        'state': 'pause',
+                        'current_value': value + 1
+                    });
+                } else {
+                    this.el.setAttribute('babia-selector',{
+                        'state': 'pause',
+                        'current_value': value - 1
+                    });
+                }
+                
+                this.setSelect(value)
                 this.navNotiBuffer.set('pause')
             } else if (event.includes('babiaSetStep')) {
+                //this.selectable.step = parseInt(event.substring(12), 10)
                 this.el.setAttribute('babia-selector', 'step', parseInt(event.substring(12), 10))
             } else if (event.includes('babiaSetSpeed')) {
+                //this.selectable.speed = parseInt(event.substring(13), 10)
                 this.el.setAttribute('babia-selector', 'speed', parseInt(event.substring(13), 10))
             }
     },

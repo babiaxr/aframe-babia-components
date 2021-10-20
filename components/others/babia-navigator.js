@@ -98,18 +98,11 @@ AFRAME.registerComponent('babia-navigator', {
         }
         // Out of range
         if (((evt === 'skipPrev') && (value >= 0)) || ((evt === 'skipNext') && (value <= this.sliderEl.max))){
-            if (this.data.label){
-                this.sliderEl.setAttribute('babia-slider', {
-                    label: this.data.label,
-                    value: this.current
-            })    
-            } else {
-                this.sliderEl.setAttribute('babia-slider', 'value', this.current)
-            }
-            this.notiBuffer.set('babiaSetPosition' + value)
+            this.current = value
+            this.notiBuffer.set('babiaSetPosition' + this.current)
         } else {
             if (this.controlsEl.querySelector('.babiaPause')){
-                this.notiBuffer.set('babiaSetPosition' + value)
+                this.current = value
                 processData('pause')
             }
         }
@@ -132,7 +125,11 @@ AFRAME.registerComponent('babia-navigator', {
     processData: function(data){
         if (data == 'pause'){
             this.controlsEl.setAttribute('babia-controls', 'state', 'pause')
-        }else if (data.type){
+        } else if (data == 'rewind'){
+            this.el.setAttribute('babia-navigator', 'direction', 'rewind')
+        } else if (data == 'forward'){
+            this.el.setAttribute('babia-navigator', 'direction', 'forward')
+        } else if (data.type){
             if (data.type === 'position'){
                 if (!this.sliderEl){
                     this.initializeControls()
