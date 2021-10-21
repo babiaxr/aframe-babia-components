@@ -8,12 +8,6 @@ const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
 AFRAME.registerComponent('babia-navigator', {
     schema: {
-        // Current value of timeline
-        current_value: { type: 'number', default: -1},
-        // Current speed
-        speed: { type: 'number', default: 1},
-        // Current step
-        step: { type: 'number', default: 1},
         // Current direction
         direction: { type: 'string', default: ''},
         // Current state

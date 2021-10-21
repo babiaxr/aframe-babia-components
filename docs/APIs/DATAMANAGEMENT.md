@@ -53,7 +53,14 @@ You need the `babia-navigator` to manage the progress.
 | select            | Field to filter data  | string | `date` |
 | timeout            | Time between points of time in seconds  | number | 6000 |
 | data          | Embedded data to filter. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
+| current_value          | Current value of the time evolution **Important**: This attribute allows to the timeline to start at any point desired. It is also important for the syncronization in multiuser mode. | number | -2 |
+| speed | Speed of the time evolution | number | 0 |
+| step | Step of the time evolution | number | 0 |
+| direction | Direction of the time evolution (`forward` or `rewind`). If is empty or it gets a different value, it behaves like `forward` | string | `forward`
+| state | State of the time evolution (`play` or `pause`). If is empty or it gets a different value, it behaves like `play` | string | `play`
 
 **NOTE:** You can use multiple visualizers with the same selector component. Only indicating its id in `from` of any visualizer. All of them will be managed by the same navigator component.
 
 **IMPORTANT:** If you use this component with other filters, the correct order is: `Querier > Filters > Selector`. For `babia-boats` you need treebuilder component too, so the order is: `Querier > Filters > Selector > Treebuilder`. Not following this order can not work.
+
+**IMPORTANT:** In order to activate multiuser mode for selector and navigator, remember to add `network` component before `babia-selector` component in the entity. Navigator does not need to be syncronized.
