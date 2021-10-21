@@ -128,12 +128,12 @@
             networked="template:#nav-template; networkId:nav; persistent: true; owner: scene"></a-entity>
 
         <!-- Querier -->
-        <a-entity id="querier" babia-queryjson="url:../selector_boats/jetuml_evol_data.json;"></a-entity>
+        <a-entity id="querier" babia-queryjson="url:../selector_boats/jetuml_from_3_2_to_1_0.json;"></a-entity>
         <!-- 3 Selector -->
         <a-entity id="selector" babia-selector="from: querier; controller: nav"
             networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
         <!-- Treebuilder -->
-        <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
+        <a-entity id="treebuilder" babia-treebuilder="field: file_path; split_by: /; from: selector"></a-entity>
 
         <!-- Boats Visualizer -->
         <a-entity id="boats"
