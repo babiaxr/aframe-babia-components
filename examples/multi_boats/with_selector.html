@@ -39,9 +39,6 @@
             <template id="selector-template">
                 <a-entity class="selector"></a-entity>
             </template>
-            <template id="nav-template">
-                <a-entity class="nav"></a-entity>
-            </template>
 
             <!-- Camera -->
             <template id="rig-template">
@@ -63,13 +60,13 @@
 
             <!-- Slider -->
             <a-entity id="nav" babia-navigator position="6 1 1" rotation="0 0 0" scale="0.5 0.5 0.5"
-            networked="template:#nav-template; networkId:nav; persistent: true; owner: scene"></a-entity>
+            ></a-entity>
 
             <!-- Querier -->
             <a-entity id="querier" babia-queryjson="url: ../selector_boats/commits2.json;"></a-entity>
             <!-- 3 Selector -->
-            <a-entity id="selector" babia-selector="from: querier; controller: nav"
-            networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"></a-entity>
+            <a-entity id="selector" networked="template:#selector-template; networkId:selector; persistent: true; owner: scene"
+            babia-selector="from: querier; controller: nav"></a-entity>
             <!-- Treebuilder -->
             <a-entity id="treebuilder" babia-treebuilder="field: path; split_by: /; from: selector"></a-entity>
 
@@ -121,71 +118,6 @@
     </a-scene>
 
     <script>
-        let selector = document.getElementById('selector')
-        let nav = document.getElementById('nav')
-        
-        document.body.addEventListener('clientConnected', function (event) {
-            let clientId = event.detail.clientId;
-            console.log('clientConnected event. clientId =', clientId);
-            console.log("Selector owner: ", selector.components.networked.data.owner);
-            let imFirst = true
-            if (selector.components.networked.data.owner == 'scene'){
-                for (client in NAF.connection.getConnectedClients()){
-                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
-                    let myTime = NAF.connection.adapter._myRoomJoinTime
-                    console.log("Other: ", otherTime)
-                    console.log("Mine: ", myTime)
-                    if (myTime > otherTime){
-                        imFirst = false;
-                    }
-                }
-                if (imFirst) {
-                    NAF.utils.takeOwnership(selector)
-                    NAF.utils.takeOwnership(nav)
-                } else { 
-                    console.log("I'm not first")
-                    makeInvisible()
-                }
-            } else if (selector.components.networked.data.owner != NAF.clientId){
-                makeInvisible();
-            } 
-        });
-        
-        
-        nav.addEventListener('click', function (e) {
-            if (!NAF.utils.isMine(selector) && nav.components.networked.data.owner != 'scene'){
-                if (Object.keys(NAF.connection.connectedClients).length > 0){
-                    NAF.utils.takeOwnership(selector)
-                    NAF.utils.takeOwnership(nav)
-                }
-            }       
-        })
-
-        selector.addEventListener('ownership-gained', e => {
-            console.log("Selector ownership gained");
-            makeVisible();
-        });
-
-
-        selector.addEventListener('ownership-lost', e => {
-            console.log("Selector ownership lost");
-            makeInvisible();
-        });
-
-        function makeInvisible(){
-            nav.children[1].setAttribute('visible', false)
-            nav.children[2].setAttribute('visible', false)
-            nav.children[3].setAttribute('visible', false)
-        }
-
-        function makeVisible(){
-            nav.children[1].setAttribute('visible', true)
-            nav.children[2].setAttribute('visible', true)
-            nav.children[3].setAttribute('visible', true)
-        }
-    </script>
-
-    <script>
         /* Camera */
         let rig = document.getElementById('rig')
         let avatar = document.getElementById('avatar')
@@ -215,6 +147,7 @@
                 turnOnAudio();
             }
         });
+
         function turnOnAudio() {
             NAF.connection.adapter.enableMicrophone(true);
             audioButton.setAttribute('color', '#000');
@@ -244,19 +177,6 @@
                 'babia-selector'
             ]
         })
-        NAF.schemas.add({
-            template: '#nav-template',
-            components: [
-                'babia-navigator'
-            ]
-        })
-        /*
-        NAF.schemas.add({
-            template: '#controls-template',
-            components: [
-                'babia-controls'
-            ]
-        })*/
 
         // Avatar
         NAF.schemas.add({

@@ -33,9 +33,9 @@
     </a-assets>
         <a-entity environment="preset: japan"></a-entity>
 
-        <a-entity id="boats" babia-queryjson="url: ../boats/boats_temporal/data1.json;"
-            babia-boats position="0 1 0"
-            networked="template:#boats-template; networkId:boats; persistent: true; owner: scene">
+        <a-entity id="boats" networked="template:#boats-template; networkId:boats; persistent: true; owner: scene"
+            babia-queryjson="url: ../boats/boats_temporal/data1.json;"
+            babia-boats position="0 1 0">
         </a-entity>
 
         <a-entity movement-controls="fly: true" position="2 5 15">
@@ -50,7 +50,7 @@
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
-            console.log("Bars owner: ", boats.components.networked.data.owner);
+            console.log("Boats owner: ", boats.components.networked.data.owner);
             if (boats.components.networked.data.owner == 'scene'){
                 let imCreator = true;
                 for (client in NAF.connection.getConnectedClients()){

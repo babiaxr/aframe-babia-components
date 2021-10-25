@@ -49,6 +49,12 @@ To work needs to indicate it inside the selector
 ```html
    <a-entity id="nav" babia-navigator></a-entity>
 ```
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ----- |
+| direction | Direction of the time evolution (`forward` or `rewind`). If is empty or it gets a different value, it behaves like `forward`. **Important:** Do not set this value manually, it will be updated with the direction value of the selector via notiBuffer. | string | `forward`
+| state | State of the time evolution (`play` or `pause`). If is empty or it gets a different value, it behaves like `play`. **Important:** Do not set this value manually, it will be updated with the state value of the selector via notiBuffer | string | `play`
 
 ### babia-axis components
 

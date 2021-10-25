@@ -172,11 +172,17 @@ AFRAME.registerComponent('babia-selector', {
             // Unregister for old navigator
             if (this.navComponent) { 
                 this.navComponent.notiBuffer.unregister(this.navNotiBufferId, this) 
+                if (el.components.networked){
+                    this.removeOldNavListener(this.navComponent.el)
+                }
             };
             // Register for the new one
             this.navComponent = findNavComponent(data, el)
             if (this.navComponent.notiBuffer){
                 this.navNotiBufferId = this.navComponent.notiBuffer.register(this.processEvent.bind(this), this)
+            }
+            if (el.components.networked){
+                this.addMultiuserMode(this.navComponent.el)
             }
         }
     
@@ -200,11 +206,11 @@ AFRAME.registerComponent('babia-selector', {
             }
         }
         
-        if (data.step && (data.step != oldData.step)) {
+        if (data.step && (data.step != this.selectable.step)) {
             this.selectable.step = data.step
             this.navNotiBuffer.set({type: 'step', value: data.step})
             if (this.data.direction != 'rewind') {
-                if (this.selectable.current + data.step >= this.selectable.length){
+                if (this.selectable.current + data.step > this.selectable.length){
                     this.selectable.current = this.selectable.length
                 } else {
                     this.selectable.current += data.step - 1
@@ -217,7 +223,8 @@ AFRAME.registerComponent('babia-selector', {
                 }
             }
         }
-        if (data.speed && (data.speed != oldData.speed)){
+        if (data.speed && (data.speed != this.selectable.speed)){
+            this.selectable.speed = data.speed
                 let timeout = this.data.timeout / data.speed
                 this.navNotiBuffer.set({type: 'speed', value: data.speed})
                 let self = this
@@ -231,12 +238,8 @@ AFRAME.registerComponent('babia-selector', {
         if (el.components.networked){
             // You are not the owner and you are not alone in the scene
             if ((el.components.networked.data.owner != NAF.clientId) && (el.components.networked.data.owner != 'scene')){
-                if ((data.state == 'pause') && (data.state != oldData.state)) {
-                    this.navNotiBuffer.set('pause')
-                }
                 if ((data.current_value != -2) && (data.current_value != oldData.current_value)) {
                     // Initialize with the proper value
-                    
                     if (data.direction != 'rewind'){
                         this.navNotiBuffer.set({type: 'position', value: data.current_value - 1, label: this.selectable.selectors[data.current_value - 1]})
                         this.setSelect(data.current_value - 1)
@@ -244,6 +247,9 @@ AFRAME.registerComponent('babia-selector', {
                         this.navNotiBuffer.set({type: 'position', value: data.current_value + 1, label: this.selectable.selectors[data.current_value + 1]})
                         this.setSelect(data.current_value + 1)
                     }
+                }
+                if ((data.state == 'pause') && (data.state != oldData.state)) {
+                    this.navNotiBuffer.set('pause')
                 }
             }
         }
@@ -283,7 +289,6 @@ AFRAME.registerComponent('babia-selector', {
         if (((value != this.selectable.current - 1) && (this.data.direction != 'rewind')) || ((value != this.selectable.current + 1) && (this.data.direction === 'rewind'))) {
             let label;
             this.newData = this.selectable.setValue(value);
-            //this.el.setAttribute('babia-selector','current_value', this.selectable.current);
             if (this.data.direction != 'rewind') {
                 this.babiaMetadata = { id: value++ };
                 label = this.selectable.selectors[value-1]
@@ -345,7 +350,7 @@ AFRAME.registerComponent('babia-selector', {
         }, self.data.timeout * self.selectable.speed);
       },
 
-      processEvent: function(event){
+    processEvent: function(event){
             if(event.includes('pause')) {
                 this.selectable.state = 'pause'
                 this.el.setAttribute('babia-selector','state', 'pause');
@@ -376,12 +381,81 @@ AFRAME.registerComponent('babia-selector', {
                 this.setSelect(value)
                 this.navNotiBuffer.set('pause')
             } else if (event.includes('babiaSetStep')) {
-                //this.selectable.step = parseInt(event.substring(12), 10)
                 this.el.setAttribute('babia-selector', 'step', parseInt(event.substring(12), 10))
             } else if (event.includes('babiaSetSpeed')) {
-                //this.selectable.speed = parseInt(event.substring(13), 10)
                 this.el.setAttribute('babia-selector', 'speed', parseInt(event.substring(13), 10))
             }
     },
+
+    removeOldNavListener: function(nav){
+        nav.removeEventListener('click', function () {
+            if (!NAF.utils.isMine(selector) && selector.components.networked.data.owner != 'scene'){
+                if (Object.keys(NAF.connection.connectedClients).length > 0){
+                    NAF.utils.takeOwnership(selector)
+                }
+            }       
+        })
+    },
+
+    addMultiuserMode: function(nav){
+        let selector = this.el        
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            console.log("Selector owner: ", selector.components.networked.data.owner);
+            let imFirst = true
+            if (selector.components.networked.data.owner == 'scene'){
+                for (let client in NAF.connection.getConnectedClients()){
+                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
+                    let myTime = NAF.connection.adapter._myRoomJoinTime
+                    console.log("Other: ", otherTime)
+                    console.log("Mine: ", myTime)
+                    if (myTime > otherTime){
+                        imFirst = false;
+                    }
+                }
+                if (imFirst) {
+                    NAF.utils.takeOwnership(selector)
+                } else { 
+                    console.log("I'm not first")
+                    makeInvisible()
+                }
+            } else if (selector.components.networked.data.owner != NAF.clientId){
+                makeInvisible();
+            } 
+        });
+        
+        nav.addEventListener('click', function () {
+            if (!NAF.utils.isMine(selector) && selector.components.networked.data.owner != 'scene'){
+                if (Object.keys(NAF.connection.connectedClients).length > 0){
+                    NAF.utils.takeOwnership(selector)
+                }
+            }       
+        })
+    
+        selector.addEventListener('ownership-gained', e => {
+            console.log("Selector ownership gained");
+            makeVisible();
+        });
+    
+    
+        selector.addEventListener('ownership-lost', e => {
+            console.log("Selector ownership lost");
+            makeInvisible();
+        });
+    
+        function makeInvisible(){
+            nav.children[1].setAttribute('visible', false)
+            nav.children[2].setAttribute('visible', false)
+            nav.children[3].setAttribute('visible', false)
+        }
+    
+        function makeVisible(){
+            nav.children[1].setAttribute('visible', true)
+            nav.children[2].setAttribute('visible', true)
+            nav.children[3].setAttribute('visible', true)
+        }
+    }
+    
 });
 

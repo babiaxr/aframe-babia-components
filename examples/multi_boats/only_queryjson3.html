@@ -34,8 +34,8 @@
         
         <a-entity environment="preset: japan"></a-entity>
         
-        <a-entity id="querier" babia-queryjson="url: ../boats/boats_temporal/data1.json;"
-            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene">
+        <a-entity id="querier" networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"
+            babia-queryjson="url: ../boats/boats_temporal/data1.json;">
         </a-entity>
         <a-entity id="boats" 
             babia-boats="from: querier" position="0 1 0">
@@ -54,19 +54,19 @@
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
-            console.log("Bars owner: ", querier.components.networked.data.owner);
+            console.log("Querier owner: ", querier.components.networked.data.owner);
             if (querier.components.networked.data.owner == 'scene'){
-                let imCreator = true;
+                let imFirst = true;
                 for (client in NAF.connection.getConnectedClients()){
                     let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
                     let myTime = NAF.connection.adapter._myRoomJoinTime
                     console.log("Other: ", otherTime)
                     console.log("Mine: ", myTime)
                     if (myTime > otherTime){
-                        imCreator = false;
+                        imFirst = false;
                     }
                 }
-                if (imCreator){
+                if (imFirst){
                     NAF.utils.takeOwnership(querier)
                 }
             }

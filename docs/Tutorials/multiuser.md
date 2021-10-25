@@ -324,9 +324,11 @@ NAF.schemas.add({
 
 ### Special case 4: **babia querier**
 
-If we are using a querier to get the data it needs to be syncronized as well, so we need to add it to the schema of the entity that contains it.
+If we are using a querier and a filter to get and process the data, we can choose to syncronize just the querier instead of the graph. In this case, we need to add it to the schema of the entity that contains it. It is going to be a persistent entity, that does not duplicate entities when new clients connect.
 
-In this case, we want a persistent entity, that does not duplicate entities when new clients connect.
+In the case where querier/filter and graphs are in the same entity, we simply syncronize the entity that contains them all and add the three components to the schema.
+
+
 
 ```html
 <!-- TEMPLATE -->
@@ -375,6 +377,49 @@ scene.addEventListener('child-attached', function (event) {
 });
 
 ```
+
+### Special case 6: **babia-selector and babia-navigator**
+
+When we are working with temporal evolution of a graph with a selector and a navigator, the entity containing the **selector is the only one** that needs to be syncronized. Once adding the **networked** component to it, creating the template and adding the babia-selector to the schema, the component is going to behave in the multiuser mode automatically.
+
+```html
+<!-- TEMPLATE -->
+<template id="selector-template">
+    <a-entity class="selector"></a-entity>
+</template>
+
+<!-- ENTITY -->
+<a-entity id="selector" networked="template:#selector-template; networkId:selector; persistent: true; owner: scene" babia-selector="from: querier; controller: nav"></a-entity>
+```
+```javascript
+/* SCHEMA */
+NAF.schemas.add({
+    template: '#selector-template',
+    components: [
+        'babia-selector'
+    ]
+})
+```
+
+
+>IMPORTANT: The **networked** component needs to appear **before** the **babia-selector** component. This is important because the selector needs to check the existance of the networked component in order to activate the multiuser mode.
+
+**How does the multiuser mode work?**
+- When the first user enters and creates the scene, the selector owner is the scene, meaning no user has control over it.
+
+- When a second user enters the scene, the ownership of the selector will change and the first user will get it, so they will now have control over it.
+
+- When this happens, the second user will hide the controls of the navigator and only show the main slider.
+
+- The new user is going to update its selector current value when syncronizing it, so that if the first user was already seeing the slider in the third position, the new user will see the same. This also happens with the values of the direction (forward/backwards), the state (play/pause), the step and the speed.
+
+- Whenever the owner interacts with the navigator, the other user will receive all the changes.
+
+- This behaviour is going to be repeated every time a new user enters. This way only the first one will have the ownership until someone else asks for this ownership.
+
+- If another user wants to ask for the ownership, they have to click on the navigator and the ownership will be transfered to them. The old owner will hide the controls and the new owner will now show them with the same values that the old owner had (direction, state, step and speed).
+
+- When the owner leaves the scene, the ownership is transfered in order of arrival.
 
 **Same ui for more than one graph**
 

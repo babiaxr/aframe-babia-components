@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>Multiuser with Babia-Boats, queryjson and treebuilder. No Evolution.</title>
+  <title>Multiuser with Babia-Boats, queryjson and treebuilder. Starts when first user enters.</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
   <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
@@ -34,11 +34,11 @@
             
         <a-entity environment="preset: japan"></a-entity>
             
-        <a-entity id="querier" babia-queryjson="url: ./data1.json;"
-            networked="template:#querier-template; networkId:querier; persistent: true; owner: scene">
+        <a-entity id="querier" networked="template:#querier-template; networkId:querier; persistent: true; owner: scene"
+            babia-queryjson="url: ../boats/boats_temporal/data1.json;">
         </a-entity>
             
-        <a-entity id="treebuilder" babia-treebuilder="field: x_axis; split_by: /; from: querier"></a-entity>
+        <a-entity id="treebuilder" babia-treebuilder="field: uid; split_by: /; from: querier"></a-entity>
         <a-entity id="boats" babia-boats="from: treebuilder " position="0 1 0"></a-entity>
     
         <a-entity movement-controls="fly: true" position="2 5 15">
@@ -53,7 +53,7 @@
         document.body.addEventListener('clientConnected', function (event) {
             let clientId = event.detail.clientId;
             console.log('clientConnected event. clientId =', clientId);
-            console.log("Bars owner: ", querier.components.networked.data.owner);
+            console.log("Querier owner: ", querier.components.networked.data.owner);
             if (querier.components.networked.data.owner == 'scene'){
                 let imFirst = true;
                 for (client in NAF.connection.getConnectedClients()){
@@ -75,7 +75,7 @@
     
         function updateData () {
             if (NAF.utils.isMine(querier) || querier.components.networked.data.owner == 'scene'){
-                querier.setAttribute('babia-queryjson', 'url', 'data2.json');
+                querier.setAttribute('babia-queryjson', 'url', '../boats/boats_temporal/data2.json');
             }
             setTimeout(updateData1, 4000);
         }
