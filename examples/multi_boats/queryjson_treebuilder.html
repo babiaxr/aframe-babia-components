@@ -38,7 +38,7 @@
             babia-queryjson="url: ../boats/boats_temporal/data1.json;">
         </a-entity>
             
-        <a-entity id="treebuilder" babia-treebuilder="field: x_axis; split_by: /; from: querier"></a-entity>
+        <a-entity id="treebuilder" babia-treebuilder="field: uid; split_by: /; from: querier"></a-entity>
         <a-entity id="boats" babia-boats="from: treebuilder " position="0 1 0"></a-entity>
     
         <a-entity movement-controls="fly: true" position="2 5 15">
