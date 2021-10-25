@@ -4,7 +4,7 @@
 <head>
         <meta charset="utf-8">
         <title>Babia Bashboard - Visualize your Data </title>
-        <meta name="description" content="Museum build aframe and babia">
+        <meta name="description" content="Museum building with aframe and babia">
         </meta>
         <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
         <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
@@ -19,7 +19,7 @@
                 <!-- Assets -->
                 <a-assets>
                         <img id="sky" src="../demos/1.0.11/assets/360-panorama.jpg">
-                        <img id="floor" src="../demos/1.0.11/assets/floor-texture.jpg">
+                        <img id="wood" src="../demos/1.0.11/assets/floor-texture.jpg">
                         <img id="metalic" src="../demos/1.0.11/assets/metalic-texture.jpg">
                         <img id="wall" src="../assets/textures/white-wall-texture.jpg">
                         <a-asset-item id="door-obj" src="../assets/door/door.obj"></a-asset-item>
@@ -29,9 +29,24 @@
                 <!-- Enviroment -->
                 <a-sky src="#sky"></a-sky>
 
+                <!-- Lights -->
+                <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+
+                <!-- Querier/Filters Components -->
+                <a-entity id="data1" babia-queryjson="url: ../charts_querier/pie_querier/data.json"></a-entity>
+                <a-entity id="data2" babia-queryjson="url: ../charts_querier/cyls_querier/data.json"></a-entity>
+                <a-entity id="data3" babia-queryjson="url: ../charts_querier/multichart_querier/data.json"></a-entity>
+                <a-entity id="filter1" babia-filter="from: data1; filter: size=12" ></a-entity>
+                <a-entity id="filter2" babia-filter="from: data2; filter: age=2014" ></a-entity>
+                <a-entity id="nodes" babia-queryjson='url: ../charts_querier/network_chart_querier/nodes.json;'> </a-entity>
+                <a-entity id="links" babia-queryjson='url: ../charts_querier/network_chart_querier/links.json;'></a-entity>
+                <a-entity id="tree" babia-queryjson="url: ../boats/boats_treegenerator/data.json;"></a-entity>
+
+                <a-entity scale="0.4 2 0.4" babia-boats="from: treetest; area: area" position="0 1 0"></a-entity>
+
                 <!-- Room -->
                 <a-entity id="Room">
-                        <a-entity  id="floorRoom" material="shader: flat; src: #floor"
+                        <a-entity  id="floorRoom" material="shader: flat; src: #wood"
                         geometry="primitive: box; width: 7; depth: 9; height: 0.1"></a-entity>
                         <a-entity  id="ceiling" geometry="primitive: box; width: 7; depth: 9; height: 0.1"
                         position="0 3 0" material="shader: flat; src: #wall"></a-entity>
@@ -40,52 +55,131 @@
                         <a-entity id="wall1" position="3.65 1.5 0" >
                                 <a-entity  id="wall1-1" geometry="primitive: box; width: 0.5; depth: 8.7; height: 3" 
                                 material="shader: flat; src: #wall"></a-entity>
+                                <a-entity  id="shelf1-1" geometry="primitive: box; width: 0.5; depth: 2.5; height: 0.15" 
+                                material="shader: flat; src: #wood;" position="-0.5 -0.75 0" rotation="0 0 0">
+                                        <!-- Cyls -->
+                                        <a-entity  babia-cyls='from: data2; x_axis: name; height: size; radius: metric2; legend: true; axis: true;
+                                        radiusMax: 1.5; heightMax: 15' 
+                                        position="0.1 0 -0.45" rotation="0 -90 0" scale="0.1 0.1 0.1"></a-entity>
+                                </a-entity>
+                                <a-entity  id="shelf1-2" geometry="primitive: box; width: 0.3; depth: 2; height: 0.15" 
+                                material="shader: flat; src: #wood;" position="-0.3 -0.5 2.75" rotation="0 0 0">
+                                        <!-- Doughnut -->
+                                        <a-entity babia-doughnut='animation: false; from: data1; key: name; legend: true' 
+                                        position="0 0.75 0" rotation="90 -90 0" scale="0.45 0.2 0.45"></a-entity>
+                                </a-entity>
                         </a-entity>
                         <a-entity id="wall2" position="-3.5 1.5 0">
                                 <a-entity  id="wall2-1" geometry="primitive: box; width: 0.3; depth: 8.7; height: 1" 
-                                 material="shader: flat; src: #wall; repeat: 5 1" position="0 -1 0"></a-entity>
-                                 <a-entity  id="wall2-2" geometry="primitive: box; width: 0.3; depth: 8.7; height: 0.3" 
-                                 material="shader: flat; src: #wall; repeat: 5 1" position="0 1.35 0"></a-entity>
-                                 <a-entity  id="wall2-3" geometry="primitive: box; width: 0.3; depth: 0.5; height: 1.7" 
-                                 material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 0"></a-entity>
-                                 <a-entity  id="wall2-4" geometry="primitive: box; width: 0.3; depth: 0.6; height: 1.7" 
-                                 material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 4.35"></a-entity>
-                                 <a-entity  id="wall2-5" geometry="primitive: box; width: 0.3; depth: 0.6; height: 1.7" 
-                                 material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 -4.35"></a-entity>
+                                material="shader: flat; src: #wall; repeat: 5 1" position="0 -1 0"></a-entity>
+                                <a-entity  id="wall2-2" geometry="primitive: box; width: 0.3; depth: 8.7; height: 0.3" 
+                                material="shader: flat; src: #wall; repeat: 5 1" position="0 1.35 0"></a-entity>
+                                <a-entity  id="wall2-3" geometry="primitive: box; width: 0.3; depth: 0.5; height: 1.7" 
+                                material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 0"></a-entity>
+                                <a-entity  id="wall2-4" geometry="primitive: box; width: 0.3; depth: 0.6; height: 1.7" 
+                                material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 4.35"></a-entity>
+                                <a-entity  id="wall2-5" geometry="primitive: box; width: 0.3; depth: 0.6; height: 1.7" 
+                                material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 -4.35"></a-entity>
                         </a-entity>
                         <a-entity id="wall3" position="0 1.5 -4.5">
                                 <a-entity  id="wall3-1" geometry="primitive: box; width: 7; depth: 0.3; height: 3" 
-                                 material="shader: flat; src: #wall"></a-entity>
-                                 <a-entity  id="column3" geometry="primitive: box; width: 0.3; depth: 0.3; height: 3" 
-                                 material="shader: flat; src: #wall; repeat: 1 5" position="0 0 0.15"></a-entity>
+                                material="shader: flat; src: #wall"></a-entity>
+                                <a-entity  id="column3" geometry="primitive: box; width: 0.3; depth: 0.3; height: 3" 
+                                material="shader: flat; src: #wall; repeat: 1 5" position="0 0 0.15"></a-entity>
+                                <a-entity  id="shelf3-1" geometry="primitive: box; width: 0.5; depth: 2; height: 0.15" 
+                                material="shader: flat; src: #wood;" position="-1.75 -1 0.4" rotation="0 90 0">
+                                        <!-- Bars -->
+                                        <a-entity babia-bars='from: data1; legend: true; axis: true; x_axis: name; height: size; chartHeight: 20' 
+                                        position="0.1 0.1 -0.83" rotation="0 -90 0" scale="0.1 0.1 0.1"></a-entity>
+                                </a-entity>
+                                <a-entity  id="shelf3-2" geometry="primitive: box; width: 0.5; depth: 2; height: 0.15" 
+                                material="shader: flat; src: #wood;" position="1.75 -0.5 0.3" rotation="0 90 0">
+                                        <!-- Pie -->
+                                        <a-entity babia-pie='from: filter1; animation: false; key: name; legend: true' 
+                                        position="-0.04 0.6 0" rotation="90 -90 0" scale="0.5 0.2 0.5"></a-entity>
+                                </a-entity>
                         </a-entity>
                         <a-entity id="wall4" position="0 1.5 4.5">
-                                 <a-entity  id="wall4-1" geometry="primitive: box; width: 7.3; depth: 0.3; height: 1" 
-                                 material="shader: flat; src: #wall; repeat: 5 1" position="0 -1 0"></a-entity>
-                                 <a-entity  id="wall4-2" geometry="primitive: box; width: 7.3; depth: 0.3; height: 0.3" 
-                                 material="shader: flat; src: #wall; repeat: 5 1" position="0 1.35 0"></a-entity>
-                                 <a-entity  id="wall4-3" geometry="primitive: box; width: 0.5; depth: 0.3; height: 1.7" 
-                                 material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 0"></a-entity>
-                                 <a-entity  id="wall4-4" geometry="primitive: box; width: 0.3; depth: 0.3; height: 1.7" 
-                                 material="shader: flat; src: #wall; repeat: 1 3" position="-3.2 0.35 0"></a-entity>
-                                 <a-entity  id="wall4-5" geometry="primitive: box; width: 0.6; depth: 0.3; height: 1.7" 
-                                 material="shader: flat; src: #wall; repeat: 1 3" position="3.4 0.35 0"></a-entity>
-                                 <a-entity  id="column4" geometry="primitive: box; width: 0.3; depth: 0.3; height: 3" 
-                                 material="shader: flat; src: #wall; repeat: 1 5" position="0 0 -0.15"></a-entity>
+                                <a-entity  id="wall4-1" geometry="primitive: box; width: 7.3; depth: 0.3; height: 1" 
+                                material="shader: flat; src: #wall; repeat: 5 1" position="0 -1 0"></a-entity>
+                                <a-entity  id="wall4-2" geometry="primitive: box; width: 7.3; depth: 0.3; height: 0.3" 
+                                material="shader: flat; src: #wall; repeat: 5 1" position="0 1.35 0"></a-entity>
+                                <a-entity  id="wall4-3" geometry="primitive: box; width: 0.5; depth: 0.3; height: 1.7" 
+                                material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 0"></a-entity>
+                                <a-entity  id="wall4-4" geometry="primitive: box; width: 0.3; depth: 0.3; height: 1.7" 
+                                material="shader: flat; src: #wall; repeat: 1 3" position="-3.2 0.35 0"></a-entity>
+                                <a-entity  id="wall4-5" geometry="primitive: box; width: 0.6; depth: 0.3; height: 1.7" 
+                                material="shader: flat; src: #wall; repeat: 1 3" position="3.4 0.35 0"></a-entity>
+                                <a-entity  id="column4" geometry="primitive: box; width: 0.3; depth: 0.3; height: 3" 
+                                material="shader: flat; src: #wall; repeat: 1 5" position="0 0 -0.15"></a-entity>
                         </a-entity>
+
+                        <a-entity id="table1" position="-1.75 0 -0.4" scale="0.9 0.9 0.9">
+                                <a-entity  id="plank1" geometry="primitive: box; width: 1; depth: 4; height: 0.15" 
+                                material="src: #wood;" position="0 1 0" rotation="0 0 0">
+                                        <!-- Cylsmap -->
+                                        <a-entity babia-cylsmap='animation: false; x_axis: name; z_axis: age; height: metric2; radius: size; legend: true; from: data3;
+                                        heightMax: 85'
+                                        position="-0.3 0.076 0.5 " rotation="0 0 0" scale="0.005 0.005 0.005"></a-entity>
+                                        <!-- Barsmap -->
+                                        <a-entity babia-barsmap='animation: false; x_axis: name; z_axis: age; height: size; legend: true; from: data3'
+                                        position="-0.3 0.075 0" rotation="0 90 0" scale="0.055 0.055 0.055"></a-entity>
+                                        <!-- Bubbles -->
+                                        <a-entity babia-bubbles='animation: true; x_axis: name; z_axis: age; height: metric2; radius: size; legend: true; from: data3;
+                                        heightMax: 45'
+                                        position="-0.3 0.075 -1.7 " rotation="0 0 0" scale="0.005 0.005 0.005"></a-entity>
+                                </a-entity>
+                                <a-entity  id="leg1-1" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="0.4 0.5 -1.9" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg1-2" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="-0.4 0.5 -1.9" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg1-3" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="0.4 0.5 1.9" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg1-4" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="-0.4 0.5 1.9" rotation="0 0 0"></a-entity>
+                        </a-entity>
+
+                        <a-entity id="table2" position="0.75 0 -1" scale="0.9 0.9 0.9">
+                                <a-entity  id="plank2" geometry="primitive: box; width: 1; depth: 1; height: 0.15" 
+                                material="src: #wood;" position="0 1 0" rotation="0 0 0">
+                                        <!-- Network -->
+                                        <a-entity id="network" babia-network='nodesFrom: nodes; linksFrom: links;
+                                        nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
+                                        nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04;
+                                        linkWidth: 0.5;  linkAutoColorBy: source; 
+                                        nodeLegend: true; linkLegend: true; linkLabel: id;'
+                                        rotation="0 0 0" position="0 0.6 0" scale="0.01 0.01 0.01"></a-entity>
+                                </a-entity>
+                                <a-entity  id="leg2-1" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="0.45 0.5 -0.45" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg2-2" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="-0.45 0.5 -0.45" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg2-3" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="0.45 0.5 0.45" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg2-4" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="-0.45 0.5 0.45" rotation="0 0 0"></a-entity>
+                        </a-entity>
+
+                        <a-entity id="table3" position="0 0 2.75" rotation="0 90 0" scale="0.9 0.9 0.9">
+                                <a-entity  id="plank3" geometry="primitive: box; width: 1.5; depth: 2.5; height: 0.15" 
+                                material="src: #wood;" position="0 1 0" rotation="0 0 0">
+                                        <!-- Boats -->
+                                        <a-entity babia-treebuilder="field: id; split_by: /; from: tree"
+                                        babia-boats="area: area"
+                                        scale="0.03 0.07 0.03" position="0 0.075 0" rotation="0 90 0"></a-entity>
+                                </a-entity>
+                                <a-entity  id="leg3-1" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="0.65 0.5 -1.15" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg3-2" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="-0.65 0.5 -1.15" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg3-3" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="0.65 0.5 1.15" rotation="0 0 0"></a-entity>
+                                <a-entity  id="leg3-4" geometry="primitive: box; width: 0.1; depth: 0.1; height: 0.9" 
+                                material="src: #wood;" position="-0.65 0.5 1.15" rotation="0 0 0"></a-entity>
+                        </a-entity>
+
                 </a-entity>
                 
-
-                <!-- Querier Components -->
-
-
-
-
-
-
-
-                <!-- Lights -->
-                <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
 
                 <!-- Controls and Camera -->
                 <a-entity id ="cameraRig" position="0 0 0">
