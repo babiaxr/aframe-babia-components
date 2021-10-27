@@ -1,7 +1,6 @@
-let findProdComponent = require('../others/common').findProdComponent;
 let updateTitle = require('../others/common').updateTitle;
-let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
+let updateFunction = require('../others/common').updateFunction;
 
 const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
@@ -47,35 +46,19 @@ AFRAME.registerComponent('babia-bubbles', {
     multiple: false,
 
     /**
+    * Called once when component is attached. Generally for initial setup.
+    */
+        init: function () {
+            this.notiBuffer = new NotiBuffer();
+        },
+
+    /**
     * Called when component is attached and when component data changes.
     * Generally modifies the entity based on the data.
     */
 
     update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        /**
-         * Update or create chart component
-         */
-        if (data.data && oldData.data !== data.data) {
-            let _data = parseJson(data.data);
-            this.processData(_data);
-        } else if (data.from !== oldData.from) {
-            // Unregister from old producer
-            if (this.prodComponent) {
-                this.prodComponent.notiBuffer.unregister(this.notiBufferId)
-            };
-            this.prodComponent = findProdComponent (data, el)
-            if (this.prodComponent.notiBuffer) {
-                this.notiBufferId = this.prodComponent.notiBuffer
-                    .register(this.processData.bind(this))
-            }     
-        } 
-        // If changed whatever, re-print with the current data
-        else if (data !== oldData && this.newData) {
-            this.processData(this.newData)
-        }
+        updateFunction(this, oldData)
     },
 
     /**

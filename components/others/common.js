@@ -16,75 +16,6 @@ const colors = {
     }
 };
 
-
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-        dispatchEventOnElement(element, propertyName)
-    });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaVisualizerUpdated", propertyName)
-}
-
-let findDataComponent = (data, el, self) => {
-    let eventName = "babiaQuerierDataReady"
-    if (data.from) {
-        // Save the reference to the querier or filterdata
-        let dataElement = document.getElementById(data.from)
-        if (dataElement.components['babia-filter']) {
-            self.dataComponent = dataElement.components['babia-filter']
-            eventName = "babiaFilterDataReady"
-        } else if (dataElement.components['babia-queryjson']) {
-            self.dataComponent = dataElement.components['babia-queryjson']
-        } else if (dataElement.components['babia-queryes']) {
-            self.dataComponent = dataElement.components['babia-queryes']
-        } else if (dataElement.components['babia-querygithub']) {
-            self.dataComponent = dataElement.components['babia-querygithub']
-        } else if (dataElement.components['babia-selector']) {
-            self.dataComponent = dataElement.components['babia-selector'];
-            eventName = "babiaSelectorDataReady";
-        } else {
-            console.error("Problem registering to the querier", el);
-            return
-        }
-    } else {
-        // Look for a querier or filterdata in the same element and register
-        if (el.components['babia-filter']) {
-            self.dataComponent = el.components['babia-filter']
-            eventName = "babiaFilterDataReady"
-        } else if (el.components['babia-queryjson']) {
-            self.dataComponent = el.components['babia-queryjson']
-        } else if (el.components['babia-queryes']) {
-            self.dataComponent = el.components['babia-queryes']
-        } else if (el.components['babia-querygithub']) {
-            self.dataComponent = el.components['babia-querygithub']
-        } else if (el.components['babia-selector']) {
-            self.dataComponent = el.components['babia-selector'];
-            eventName = "babiaSelectorDataReady";
-        } else {
-            // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babia-filter]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
-                eventName = "babiaFilterDataReady"
-            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
-            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-            } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-                self.dataComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
-            } else if (document.querySelectorAll('[babia-selector]').length > 0) {
-                self.dataComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
-                eventName = "babiaSelectorDataReady";
-            } else {
-                console.error("Error, querier not found", el, el.components, el.components['babia-selector']);
-                return
-            }
-        }
-    }
-    return eventName
-}
-
 let findProdComponent = (data, el, selfProducer) => {
     let prodComponent;
     if (data.from) {
@@ -226,6 +157,8 @@ let findTargetComponent = (data, self) => {
                 targetComponent = targetElement.components['babia-city']
             } else if (targetElement.components['babia-boats']) {
                 targetComponent = targetElement.components['babia-boats']
+            } else if (targetElement.components['babia-network']){
+                targetComponent = targetElement.components['babia-network']
             } else {
                 console.error("Visualizer not found.")
                 return
@@ -262,13 +195,57 @@ let parseJson = (json) => {
     return object;
 }
 
-module.exports.dataReadyToSend = dataReadyToSend;
-module.exports.dispatchEventOnElement = dispatchEventOnElement;
-module.exports.findDataComponent = findDataComponent;
+let updateFunction = (self, oldData) => {
+    let data = self.data;
+    let el = self.el;
+
+    if (el.components["babia-bars"] || el.components["babia-barsmap"]){
+        if (!data.index){
+            data.index = data.x_axis;
+        }
+        self.animation = data.animation;
+        self.bar_array = [];
+    }
+    if (el.components["babia-boats"]){
+        if (!self.figures){
+            self.figures = [];
+        }
+    }
+
+    if (data.data && oldData.data !== data.data) {
+        let _data = parseJson(data.data);
+        self.processData(_data);
+    } else if (data.from !== oldData.from) {
+        if (self.slice_array) {
+            self.slice_array = [];
+        }
+        // Unregister from old producer
+        if (self.prodComponent) {
+            self.prodComponent.notiBuffer.unregister(self.notiBufferId);
+        };
+            self.prodComponent = findProdComponent (data, el);
+            if (self.prodComponent.notiBuffer) {
+                self.notiBufferId = self.prodComponent.notiBuffer
+                    .register(self.processData.bind(self));
+            }     
+        } 
+        // If changed whatever, re-print with the current data
+        else if (data !== oldData && self.newData) {
+            if (self.slice_array){
+                self.slice_array = [];
+            }
+            if (self.bar_array){
+                self.bar_array = [];
+            }
+            self.processData(self.newData);
+        }
+}
+ 
 module.exports.findProdComponent = findProdComponent;
 module.exports.findNavComponent = findNavComponent;
 module.exports.findTargetComponent = findTargetComponent;
 module.exports.colors = colors;
 module.exports.updateTitle = updateTitle;
 module.exports.parseJson = parseJson;
+module.exports.updateFunction = updateFunction;
 

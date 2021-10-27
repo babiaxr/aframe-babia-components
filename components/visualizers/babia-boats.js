@@ -1,4 +1,5 @@
 let findProdComponent = require('../others/common').findProdComponent;
+let updateFunction = require('../others/common').updateFunction;
 
 const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
@@ -86,33 +87,7 @@ AFRAME.registerComponent('babia-boats', {
     */
 
     update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-        if (!this.figures) {
-            this.figures = [];
-        }
-
-        // Highest priority to data
-        if (data.data && oldData.data !== data.data) {
-            // Get from the json or embedded
-            let _data = JSON.parse(data.data);
-            this.processData(_data);
-        } else if (data.from !== oldData.from) {
-            // Unregister for old treegenerator
-            if (this.prodComponent) {
-                this.prodComponent.notiBuffer.unregister(this.notiBufferId)
-            };
-            // Register for the new one
-            this.prodComponent = findProdComponent(data, el)
-            if (this.prodComponent.notiBuffer) {
-                this.notiBufferId = this.prodComponent.notiBuffer
-                    .register(this.processData.bind(this))
-            }
-        }
-        // If changed whatever, re-print with the current data
-        else if (data !== oldData && this.newData) {
-            this.processData(this.newData)
-        }
+        updateFunction(this, oldData)
     },
 
     /**

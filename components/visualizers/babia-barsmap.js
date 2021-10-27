@@ -2,6 +2,7 @@ let findProdComponent = require('../others/common').findProdComponent;
 let updateTitle = require('../others/common').updateTitle;
 let parseJson = require('../others/common').parseJson;
 const colors = require('../others/common').colors;
+let updateFunction = require('../others/common').updateFunction;
 
 const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
@@ -73,36 +74,7 @@ AFRAME.registerComponent('babia-barsmap', {
     */
 
     update: function (oldData) {
-        let data = this.data;
-        let el = this.el;
-
-        if (!data.index){
-            data.index = data.x_axis
-        }
-
-        console.log("Starting Barsmap");
-        this.animation = data.animation
-        this.bar_array = []
-
-        if (data.data && oldData.data !== data.data) {
-            let _data = parseJson(data.data);
-            this.processData(_data);
-        } else if (this.data.from !== oldData.from) {
-            // Unregister from old producer
-            if (this.prodComponent) {
-                this.prodComponent.notiBuffer.unregister(this.notiBufferId)
-            };
-            this.prodComponent = findProdComponent(this.data, el)
-            if (this.prodComponent.notiBuffer) {
-                this.notiBufferId = this.prodComponent.notiBuffer
-                    .register(this.processData.bind(this))
-            }
-        }
-        // If changed whatever, re-print with the current data
-        else if (data !== oldData && this.newData) {
-            this.slice_array = []
-            this.processData(this.newData);
-        }
+        updateFunction(this, oldData)
     },
 
     /**
