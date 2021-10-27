@@ -66,6 +66,12 @@ AFRAME.registerComponent('babia-ui', {
     dataQueriers: undefined,
     handController: undefined,
 
+    /**
+     * Only for babia-network
+     */
+    nodesQueriers: undefined,
+    linksQueriers: undefined,
+
     updateInterfaceEventCallback: function(data) {
         let self = this;
         if(data){
@@ -101,23 +107,48 @@ AFRAME.registerComponent('babia-ui', {
     },
 
     findQuerierComponents: function() {
-        this.dataQueriers = []
-        // All queriers and filterdatas of the scene
-        document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
-            // Skip querier data when the target visualizer has included filtered data too.
-            if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+        if (this.targetComponent.el.components['babia-network'] && (this.targetComponent.el.components['babia-network'].data.nodesFrom || this.targetComponent.el.components['babia-network'].data.nodes)){
+            console.log("nodesFrom or nodes")
+            this.nodesQueriers = [];
+            this.linksQueriers = [];
+            document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
+                // Skip querier data when the target visualizer has included filtered data too.
+                if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+                    this.nodesQueriers.push(querier.id)
+                    this.linksQueriers.push(querier.id)
+                }            
+            });
+            document.querySelectorAll('[babia-queryes]').forEach(querier => { 
+                this.nodesQueriers.push(querier.id)
+                this.linksQueriers.push(querier.id)
+            });
+            document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
+                this.nodesQueriers.push(querier.id)
+                this.linksQueriers.push(querier.id)
+            });
+            document.querySelectorAll('[babia-filter]').forEach(querier => { 
+                this.nodesQueriers.push(querier.id)
+                this.linksQueriers.push(querier.id)
+            });
+        } else {
+            this.dataQueriers = []
+            // All queriers and filterdatas of the scene
+            document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
+                // Skip querier data when the target visualizer has included filtered data too.
+                if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+                    this.dataQueriers.push(querier.id)
+                }            
+            });
+            document.querySelectorAll('[babia-queryes]').forEach(querier => { 
                 this.dataQueriers.push(querier.id)
-            }            
-        });
-        document.querySelectorAll('[babia-queryes]').forEach(querier => { 
-            this.dataQueriers.push(querier.id)
-        });
-        document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
-            this.dataQueriers.push(querier.id)
-        });
-        document.querySelectorAll('[babia-filter]').forEach(querier => { 
-            this.dataQueriers.push(querier.id)
-        });
+            });
+            document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
+                this.dataQueriers.push(querier.id)
+            });
+            document.querySelectorAll('[babia-filter]').forEach(querier => { 
+                this.dataQueriers.push(querier.id)
+            });
+        } 
     }
 })
 
@@ -191,20 +222,54 @@ let generateInterface = (self, metrics, parent) =>{
     let posX = 0
     let maxX = 0
 
-    // Data files
-    if (self.dataQueriers.length > 1) { 
-        let button = createProperty("Data", posX, posY)
-        self.interface.appendChild(button)
-        self.dataQueriers.forEach(data => {
-            posX += 3.25
-            let button = createDataSelect(self, data, posX, posY)
-            button.classList.add("babiaxraycasterclass")
-            self.interface.appendChild(button) 
-        });
+    if (self.targetComponent.el.components['babia-network'] && (self.targetComponent.el.components['babia-network'].data.nodesFrom || self.targetComponent.el.components['babia-network'].data.nodes)){
+        // Nodes files
+        if (self.nodesQueriers.length > 1) { 
+            let button = createProperty("Nodes", posX, posY)
+            self.interface.appendChild(button)
+            self.nodesQueriers.forEach(data => {
+                posX += 3.25
+                let button = createDataSelect(self, data, posX, posY, 'nodes')
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button) 
+            });
+        }
+        --posY
+        if(maxX < posX) { maxX = posX }
+        posX = 0 
+        
+        // Links files
+        if (self.linksQueriers.length > 1) { 
+            let button = createProperty("Links", posX, posY)
+            self.interface.appendChild(button)
+            self.linksQueriers.forEach(data => {
+                posX += 3.25
+                let button = createDataSelect(self, data, posX, posY, 'links')
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button) 
+            });
+        }
+        --posY
+        if(maxX < posX) { maxX = posX }
+        posX = 0
+    } else {
+        // Data files
+        if (self.dataQueriers.length > 1) { 
+            let button = createProperty("Data", posX, posY)
+            self.interface.appendChild(button)
+            self.dataQueriers.forEach(data => {
+                posX += 3.25
+                let button = createDataSelect(self, data, posX, posY)
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button) 
+            });
+        }
+        --posY
+        if(maxX < posX) { maxX = posX }
+        posX = 0 
     }
-    --posY
-    if(maxX < posX) { maxX = posX }
-    posX = 0 
+
+    
 
     // Properties and metrics
     if (!self.targetComponent.el.components['babia-network']){
@@ -307,6 +372,10 @@ let selection_events = (entity, visualizer, isData) =>{
         // Change selected querier in visualializer (from)
         } else if (entity.from) {
             visualizer.el.setAttribute(visualizer.attrName, "from", entity.from )
+        } else if (entity.nodes) {
+            visualizer.el.setAttribute(visualizer.attrName, 'nodesFrom', entity.nodes)
+        } else if (entity.links) {
+            visualizer.el.setAttribute(visualizer.attrName, 'linksFrom', entity.links)
         }
     });
 }
@@ -327,9 +396,15 @@ let createProperty = (property, positionX, positionY) =>{
     return entity
 }
 
-let createDataSelect = (self, id, positionX, positionY) =>{
+let createDataSelect = (self, id, positionX, positionY, networkType) =>{
     let entity = document.createElement('a-box')
-    entity.from = id;
+    if (networkType == 'nodes'){
+        entity.nodes = id
+    } else if (networkType == 'links'){
+        entity.links = id
+    } else {
+        entity.from = id;
+    }
     entity.classList.add("babiaxraycasterclass")
     entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })

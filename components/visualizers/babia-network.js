@@ -291,10 +291,10 @@ AFRAME.registerComponent('babia-network', {
             this.notiBufferId = this.linksProdComponent.notiBuffer
                 .register(this.processLinks.bind(this))
           }
-        }
+        } 
   
         // If changed whatever, re-print with the current data
-        if (elData !== oldData) {
+        else if (elData !== oldData) {
           if (elData.data){
             let _data = parseJson(elData.data);
             this.processData(_data)
@@ -375,12 +375,13 @@ AFRAME.registerComponent('babia-network', {
   /**
   * Where the data is gonna be stored
   */
-  newData: undefined,
+  newNodes: undefined,
+  newLinks: undefined,
 
   /**
   * Where the current data is stored
   */
-   currentData: undefined,
+  currentData: undefined,
 
   /**
   * Where the metadata is gonna be stored
@@ -394,8 +395,16 @@ AFRAME.registerComponent('babia-network', {
   /*
   * Update chart
   */
-  updateChart: function (elData, self) {
+  updateChart: function (nodes_links, self) {
     if (self.currentData){
+      let elData = [];
+      for (let attr in this.data){
+        elData[attr] = this.data[attr]
+      }
+    
+      elData.nodes = nodes_links.nodes;
+      elData.links = nodes_links.links;
+
       let diff = AFRAME.utils.diff(elData, self.currentData);
       let fgProps = [
         'jsonUrl',
@@ -469,79 +478,79 @@ AFRAME.registerComponent('babia-network', {
   */
   processData: function (_data) {
     console.log("processData", this);
-    let elData = this.data
-    elData.data = _data;
-    elData = this.elDataFromData(elData);
-    this.data = elData
+    //let elData = this.data
+   // elData.data = _data;
+    let nodes_links = this.elDataFromData(_data);
+   // this.data = elData
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
     console.log("Generating network...")
-    this.updateChart(elData, this)
-    this.notiBuffer.set(elData.data)
+    this.updateChart(nodes_links, this)
+    this.notiBuffer.set(nodes_links)
   },
 
   processNodes: function (nodes){
     console.log("processNodes", this);
-    let elData = this.data
-    elData.nodes = nodes
-    this.data.nodes = elData.nodes
-    elData = this.elDataFromNodesAndLinks(elData)
-
-    if (!elData){
-      if (this.data.links) {
-        let _links = parseJson(this.data.links);
-        this.processLinks(_links)
-      } else if (this.data.linksFrom){
+    //let elData = this.data
+    //elData.nodes = nodes
+    //this.data.nodes = elData.nodes
+    if (this.newNodes != nodes){
+      this.newNodes = nodes;
+      let nodes_links = this.elDataFromNodesAndLinks(nodes, this.newLinks)
+  
+      if (!nodes_links){
+        if (this.data.links) {
+          let _links = parseJson(this.data.links);
+          this.processLinks(_links)
+        } else if (this.data.linksFrom){
+          this.babiaMetadata = { id: this.babiaMetadata.id++ }
+          console.log("Generating network...")
+        }
+      } else {
+        //this.data = elData
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
+        this.updateChart(nodes_links, this)
+        this.notiBuffer.set(nodes_links)
       }
-    } else {
-      this.data = elData
-      this.babiaMetadata = { id: this.babiaMetadata.id++ }
-      console.log("Generating network...")
-      this.updateChart(elData, this)
     }
-    this.notiBuffer.set(elData.data)
   },
 
-  processLinks: function (links){
+  processLinks: function (_links){
     console.log("processLinks", this);
-    let elData = this.data
-    if (typeof(links) === 'string' || links instanceof String) {
-      elData.links = JSON.parse(links);
-    } else {
-      elData.links = links;
-    };
-    this.data.links = elData.links
-    elData = this.elDataFromNodesAndLinks(elData)
-
-    if (!elData){
-      if (this.data.nodes) {
-        let _nodes = parseJson(this.data.nodes);
-        this.processLinks(_nodes)
-      } else if (this.data.nodesFrom){
+    //let elData = this.data
+    let links = parseJson(_links);
+    //this.data.links = elData.links
+    if (this.newLinks != links){
+      this.newLinks = links;
+      let nodes_links = this.elDataFromNodesAndLinks(this.newNodes, links)
+      if (!nodes_links){
+        if (this.data.nodes) {
+          let _nodes = parseJson(this.data.nodes);
+          this.processNodes(_nodes)
+        } else if (this.data.nodesFrom){
+          this.babiaMetadata = { id: this.babiaMetadata.id++ }
+          console.log("Generating network...")
+        }
+      } else {
+        //this.data = elData
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
+        this.updateChart(nodes_links, this)
+        this.notiBuffer.set(nodes_links)
       }
-    } else {
-      this.data = elData
-      this.babiaMetadata = { id: this.babiaMetadata.id++ }
-      console.log("Generating network...")
-      this.updateChart(elData, this)
     }
-    this.notiBuffer.set(elData.data)
   },
   // Format from data to nodes and links
-  elDataFromData: function(elData){
+  elDataFromData: function(data){
     let nodes = [];
     let links = [];
-
-    const data = elData.data;
-    const nodeId = elData.nodeId;
-    const linkId = elData.linkId;
-    const nodeVal = elData.nodeVal;
-    const source = elData.linkSource;
-    const target = elData.linkTarget;
-    const linkLabel = elData.linkLabel;
+    
+    const nodeId = this.data.nodeId;
+    const linkId = this.data.linkId;
+    const nodeVal = this.data.nodeVal;
+    const source = this.data.linkSource;
+    const target = this.data.linkTarget;
+    const linkLabel = this.data.linkLabel;
 
     data.forEach(element => {
       let node = {};
@@ -571,6 +580,7 @@ AFRAME.registerComponent('babia-network', {
               })
               if (!linkExists) {
                 let newLink = {}
+                //newLink[linkId] = firstNode[linkId]
                 newLink[linkLabel] = firstNode[linkLabel]
                 newLink[source] = firstNode[nodeId]
                 newLink[target] = secondNode[nodeId]
@@ -578,6 +588,7 @@ AFRAME.registerComponent('babia-network', {
               }
             } else {
               let newLink = {}
+              //newLink[linkId] = firstNode[linkId]
               newLink[linkLabel] = firstNode[linkLabel]
               newLink[source] = firstNode[nodeId]
               newLink[target] = secondNode[nodeId]
@@ -588,21 +599,19 @@ AFRAME.registerComponent('babia-network', {
       })
     });
   
-    elData.nodes = nodes;
-    elData.links = links;
+    //elData.nodes = nodes;
+    //elData.links = links;
 
-    return elData;
+    return {nodes: nodes, links: links};
   },
 
   // Format nodes and links
 
-  elDataFromNodesAndLinks: function(elData) {
-    let nodes = elData.nodes;
-    let links = elData.links;
-    const nodeId = elData.nodeId;
-    const nodeVal = elData.nodeVal;
-    const source = elData.linkSource;
-    const target = elData.linkTarget;
+  elDataFromNodesAndLinks: function(nodes, links) {
+    const nodeId = this.data.nodeId;
+    const nodeVal = this.data.nodeVal;
+    const source = this.data.linkSource;
+    const target = this.data.linkTarget;
 
     if (!Array.isArray(nodes) || !Array.isArray(links)) {
       // Either nodes or links are not ready yet
@@ -626,10 +635,10 @@ AFRAME.registerComponent('babia-network', {
         }
       })
     })
-    elData.nodes = nodes;
-    elData.links = links;
+    //elData.nodes = nodes;
+    //elData.links = links;
 
-    return elData;
+    return {nodes: nodes, links: links};
   },
   
   showLegend: function (nodeThree, node, nodeLabel, scale) {
