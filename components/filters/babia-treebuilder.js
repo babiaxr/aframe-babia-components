@@ -88,11 +88,10 @@ AFRAME.registerComponent('babia-treebuilder', {
                     let newPart = {}
                     if (j === path.length - 1) {
                         newPart = paths[i]
-                        newPart['uid'] = part
                     } else {
                         newPart['children'] = []
-                        newPart['uid'] = paths[i][data.field].split(part)[0] + part
                     }
+                    newPart['uid'] = paths[i][data.field].split(part)[0] + part
                     newPart['name'] = part                  
                     currentLevel.push(newPart);
                     currentLevel = newPart.children;
