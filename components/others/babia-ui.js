@@ -69,7 +69,9 @@ AFRAME.registerComponent('babia-ui', {
     updateInterfaceEventCallback: function(data) {
         let self = this;
         if(data){
-            getDataMetrics(self,data, self.targetComponentVisProperties)
+            if (!self.targetComponent.el.components['babia-network']){
+                getDataMetrics(self,data, self.targetComponentVisProperties)
+            }
         }
         
         while (self.el.firstChild)
@@ -105,7 +107,7 @@ AFRAME.registerComponent('babia-ui', {
             // Skip querier data when the target visualizer has included filtered data too.
             if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
                 this.dataQueriers.push(querier.id)
-            } 
+            }            
         });
         document.querySelectorAll('[babia-queryes]').forEach(querier => { 
             this.dataQueriers.push(querier.id)
@@ -159,7 +161,6 @@ let getDataMetrics = (self, data, properties) =>{
     Object.keys(last_child).forEach(metric => {
         if (typeof last_child[metric] == 'number'){
             number_metrics.push(metric)
-
         }
     });
 
@@ -169,7 +170,8 @@ let getDataMetrics = (self, data, properties) =>{
         } else {
             self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
         }
-    });   
+    });
+    
 }
 
 let getLastChild = (data) =>{
@@ -205,20 +207,22 @@ let generateInterface = (self, metrics, parent) =>{
     posX = 0 
 
     // Properties and metrics
-    metrics.forEach(property => {
-        let button = createProperty(property.property, posX, posY)
-        self.interface.appendChild(button)
-        property.metrics.forEach(metric => {
-            posX += 3.25
-            let button = createMetric(self, property.property, metric, posX, posY)
-            button.classList.add("babiaxraycasterclass")
+    if (!self.targetComponent.el.components['babia-network']){
+        metrics.forEach(property => {
+            let button = createProperty(property.property, posX, posY)
             self.interface.appendChild(button)
+            property.metrics.forEach(metric => {
+                posX += 3.25
+                let button = createMetric(self, property.property, metric, posX, posY)
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button)
+            });
+            --posY
+            if(maxX < posX) { maxX = posX }
+            posX = 0  
         });
-        --posY
-        if(maxX < posX) { maxX = posX }
-        posX = 0  
-    });
- 
+    }
+    
     self.interface.width = maxX + 3;
     self.interface.height = Math.abs(posY)
 

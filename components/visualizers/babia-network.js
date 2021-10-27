@@ -26,6 +26,7 @@ SOFTWARE.
 
 let findProdComponent = require('../others/common').findProdComponent;
 let parseJson = require('../others/common').parseJson;
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
 /* global AFRAME */
 
@@ -187,7 +188,14 @@ AFRAME.registerComponent('babia-network', {
     return this;
   },
 
+  /**
+  * List of visualization properties
+  */
+  visProperties: [],
+
   init: function () {
+    this.notiBuffer = new NotiBuffer();
+
     let state = this.state = {}; // Internal state
 
     // Get camera dom element and attach fixed view elements to camera
@@ -468,6 +476,7 @@ AFRAME.registerComponent('babia-network', {
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
     console.log("Generating network...")
     this.updateChart(elData, this)
+    this.notiBuffer.set(elData.data)
   },
 
   processNodes: function (nodes){
@@ -491,7 +500,7 @@ AFRAME.registerComponent('babia-network', {
       console.log("Generating network...")
       this.updateChart(elData, this)
     }
-    
+    this.notiBuffer.set(elData.data)
   },
 
   processLinks: function (links){
@@ -519,6 +528,7 @@ AFRAME.registerComponent('babia-network', {
       console.log("Generating network...")
       this.updateChart(elData, this)
     }
+    this.notiBuffer.set(elData.data)
   },
   // Format from data to nodes and links
   elDataFromData: function(elData){
