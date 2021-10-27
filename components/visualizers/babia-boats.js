@@ -311,7 +311,7 @@ AFRAME.registerComponent('babia-boats', {
                 if (this.data.area) {
                     figure = {
                         id: "boat-" + elements[i][this.data.field],
-                        name: elements[i][this.data.field],
+                        name: (elements[i].name) ? elements[i].name : elements[i][this.data.field],
                         posX: posX,
                         posY: posY,
                         width: Math.sqrt(element.area),
@@ -321,7 +321,7 @@ AFRAME.registerComponent('babia-boats', {
                 } else {
                     figure = {
                         id: "boat-" + elements[i][this.data.field],
-                        name: elements[i][this.data.field],
+                        name: (elements[i].name) ? elements[i].name : elements[i][this.data.field],
                         posX: posX,
                         posY: posY,
                         width: element.width,
