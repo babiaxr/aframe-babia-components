@@ -8,7 +8,7 @@
     "build": "npm run build:dev && npm run build:prod",
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "dev": "webpack-dev-server --open --config webpack.dev.js",
+    "dev": "webpack-dev-server --open --config webpack.devnossl.js",
     "dist": "npm run build",
     "serve": "npm run dev",
     "ssldev": "webpack-dev-server --open --config webpack.dev.js",
