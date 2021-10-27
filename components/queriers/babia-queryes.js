@@ -1,7 +1,11 @@
+let parseJson = require('../others/common').parseJson;
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
 }
+
+const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
 /**
 * A-Charts component for A-Frame.
@@ -26,7 +30,10 @@ AFRAME.registerComponent('babia-queryes', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { },
+    init: function () { 
+        // Buffer for setting the data obtained and notifying consumers
+        this.notiBuffer = new NotiBuffer();
+    },
 
     /**
     * Called when component is attached and when component data changes.
@@ -35,19 +42,19 @@ AFRAME.registerComponent('babia-queryes', {
 
     update: function (oldData) {
         let data = this.data;
-        let el = this.el;
-        let self = this;
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
-            parseEmbeddedJSONData(data.data, el, self)
+            //parseEmbeddedJSONData(data.data, el, self)
+            let _data = parseJson(data.data)
+            this.notiBuffer.set(_data);
         } else {
             if (data.elasticsearch_url !== oldData.elasticsearch_url ||
                 data.index !== oldData.index ||
                 data.query !== oldData.query ||
                 data.size !== oldData.size) {
                 if (data.elasticsearch_url && data.index) {
-                    requestJSONDataFromES(data, el, self)
+                    this.getJSON(data);
                 } else {
                     console.error("elasicsearch_url and index must be defined")
                     return
@@ -55,140 +62,27 @@ AFRAME.registerComponent('babia-queryes', {
             }
         }
     },
-    /**
-    * Called when a component is removed (e.g., via removeAttribute).
-    * Generally undoes all modifications to the entity.
-    */
-    remove: function () { },
 
-    /**
-    * Called on each scene tick.
-    */
-    // tick: function (t) { },
+    getJSON: async function(data) {
+        let url = `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`;
+        let response = await fetch(url);
+        if (response.status == 200) {
+            let json = await response.json();
+            json = this.parseDataES(json);
+            // TODO: throw error if json is not in the right format
+            this.notiBuffer.set(json);
+            return;
+        } 
+        throw new Error(response.status);
 
-    /**
-    * Called when entity pauses.
-    * Use to stop or remove any dynamic or background behavior such as events.
-    */
-    pause: function () { },
-
-    /**
-    * Called when entity resumes.
-    * Use to continue or add any dynamic or background behavior such as events.
-    */
-    play: function () { },
-
-    /**
-     * Where the data is gonna be stored
-     */
-    babiaData: undefined,
-
-    /**
-     * Where the metaddata is gonna be stored
-     */
-    babiaMetadata: {
-        id: 0
     },
 
-    /**
-     * Register function
-     */
-    register: function (interestedElem) {
-        let el = this.el
-        this.interestedElements.push(interestedElem)
-
-        // Send the latest version of the data
-        if (this.babiaData) {
-            dispatchEventOnElement(interestedElem, "babiaData")
+    parseDataES: function(data) {
+        data = data.hits.hits;
+        let save = []
+        for (let i = 0; i < data.length; i++) {
+            save[i] = data[i]._source
         }
-    },
-
-    /**
-     * Unregister function
-     */
-    unregister: function (interestedElem) {
-        const index = this.interestedElements.indexOf(interestedElem)
-
-        // Remove from the interested elements if still there
-        if (index > -1) {
-            this.interestedElements.splice(index, 1);
-        }
-    },
-
-    /**
-     * Interested elements
-     */
-    interestedElements: [],
-})
-
-
-let requestJSONDataFromES = (data, el, self) => {
-    // Create a new request object
-    let request = new XMLHttpRequest();
-
-    // Initialize a request
-    request.open('get', `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`)
-    // Send it
-    request.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
-            // Save data
-            if (typeof request.response === 'string' || request.response instanceof String) {
-                dataRaw = JSON.parse(request.response).hits.hits
-                let dataRetrieved = []
-                for (let i = 0; i < dataRaw.length; i++) {
-                    dataRetrieved[i] = dataRaw[i]._source
-                }
-            } else {
-                // Why this case
-                let dataRetrieved = []
-                console.error("Unexpected response", request.response)
-            }
-
-            // Save
-            self.babiaData = dataRetrieved
-            self.babiaMetadata = {
-                id: self.babiaMetadata.id++
-            }
-
-            // Dispatch/Trigger/Fire the event
-            dataReadyToSend("babiaData", self)
-
-        } else {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-            console.error("Error during requesting data", this.status, xhr.statusText)
-        }
-    };
-    request.onerror = function () {
-        reject({
-            status: this.status,
-            statusText: xhr.statusText
-        });
-        console.error("Error during requesting data", this.status, xhr.statusText)
-    };
-    request.send();
-}
-
-let parseEmbeddedJSONData = (embedded, el, self) => {
-    // Save data
-    let dataRetrieved = JSON.parse(embedded)
-    self.babiaData = dataRetrieved
-    self.babiaMetadata = {
-        id: self.babiaMetadata.id++
+        return save
     }
-
-    // Dispatch/Trigger/Fire the event
-    dataReadyToSend("babiaData", self)
-}
-
-let dataReadyToSend = (propertyName, self) => {
-    self.interestedElements.forEach(element => {
-        dispatchEventOnElement(element, propertyName)
-    });
-}
-
-let dispatchEventOnElement = (element, propertyName) => {
-    element.emit("babiaQuerierDataReady", propertyName)
-}
+})
