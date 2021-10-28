@@ -33,6 +33,7 @@ AFRAME.registerComponent('babia-boats', {
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
+        legend_lookat: { type: 'string', default: "[camera]" },
         field: { type: 'string', default: 'uid' },
     },
 
@@ -844,7 +845,7 @@ AFRAME.registerComponent('babia-boats', {
                     });
                     entity.appendChild(transparentBox)
 
-                    legend = generateLegend(figure.name, self.data.legend_scale, 'black', 'white');
+                    legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let coordinatesFinal = {
@@ -909,7 +910,7 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        legend = generateLegend(figure.name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -943,7 +944,7 @@ AFRAME.registerComponent('babia-boats', {
                         depth: entityGeometry.depth + 0.1,
                         width: entityGeometry.width + 0.1
                     });
-                    legend = generateLegend(figure.name, self.data.legend_scale, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                    legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -980,7 +981,7 @@ AFRAME.registerComponent('babia-boats', {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (name, legend_scale, colorPlane, colorText, data, fheight, farea, fdepth, fwidth, fcolor) => {
+let generateLegend = (name, legend_scale, lookat, colorPlane, colorText, data, fheight, farea, fdepth, fwidth, fcolor) => {
     let width = 2;
     let height = 1;
     if (name.length > 16)
@@ -1021,7 +1022,7 @@ let generateLegend = (name, legend_scale, colorPlane, colorText, data, fheight, 
     }
 
     let entity = document.createElement('a-plane');
-    entity.setAttribute('babia-lookat', "[camera]");
+    entity.setAttribute('babia-lookat', lookat);
 
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', height);
