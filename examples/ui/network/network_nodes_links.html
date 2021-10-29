@@ -31,8 +31,8 @@
         <a-entity id="network" babia-network='nodesFrom: nodes; linksFrom: links;
             nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
             nodeResolution: 20; nodeVal: size; nodeRelSize: 0.04;
-            linkWidth: 0.5;  linkAutoColorBy: source; 
-            nodeLegend: true; linkLegend: true; linkLabel: id;'
+            linkWidth: 0.5;  linkAutoColorBy: source; linkSource: from;
+            nodeLegend: true; linkLegend: true; linkLabel: id; linkId:id'
             rotation="0 0 90">
         </a-entity>
         <a-entity id="ui_network" babia-ui="target: network" position="0 0 50" rotation="-90 20 -200"

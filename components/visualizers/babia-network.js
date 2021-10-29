@@ -188,12 +188,17 @@ AFRAME.registerComponent('babia-network', {
     return this;
   },
 
-  /**
-  * List of visualization properties
-  */
-  visProperties: [],
+    /**
+     * List of visualization properties
+     */
+     visProperties: { 'nodes': ['nodeId'],
+                      'links0': ['linkId'],
+                      'links1': ['linkSource', 'linkTarget']},
 
   init: function () {
+    this.isFirstTimeNodes = true;
+    this.isFirstTimeLinks = true;
+
     this.notiBuffer = new NotiBuffer();
 
     let state = this.state = {}; // Internal state
@@ -295,12 +300,18 @@ AFRAME.registerComponent('babia-network', {
   
         // If changed whatever, re-print with the current data
         else if (elData !== oldData) {
-          if (elData.data){
-            let _data = parseJson(elData.data);
-            this.processData(_data)
-          } else if (elData.nodes){
-            let _nodes = parseJson(elData.nodes);
-            this.processNodes(_nodes)
+          if (this.newData){
+            let _data = parseJson(this.newData);
+            this.processData(_data, true)
+          } else if (this.newNodes){
+            if (elData.linkSource != oldData.linkSource || elData.linkTarget != oldData.linkTarget) {
+              let _links = parseJson(this.newLinks);
+              this.processLinks(_links, true)
+            } else {
+              let _nodes = parseJson(this.newNodes);
+              this.processNodes(_nodes, true)
+            }
+            
           }
         }
       }
@@ -375,8 +386,22 @@ AFRAME.registerComponent('babia-network', {
   /**
   * Where the data is gonna be stored
   */
+  newData: undefined,
   newNodes: undefined,
   newLinks: undefined,
+  
+
+  /**
+   * Boolean to know if it's first time for getting the ui fields
+   */
+  isFirstTimeNodes: undefined,
+  isFirstTimeLinks: undefined,
+
+  /**
+   * Store the fields that we need to show in the ui and not the rest
+   */
+  nodeFields: undefined,
+  linkFields: undefined,
 
   /**
   * Where the current data is stored
@@ -476,24 +501,21 @@ AFRAME.registerComponent('babia-network', {
   /*
   * Process data obtained from producer
   */
-  processData: function (_data) {
+  processData: function (_data, newData) {
     console.log("processData", this);
-    //let elData = this.data
-   // elData.data = _data;
+   if (this.newData != _data || newData){
+    this.newData = _data;
     let nodes_links = this.elDataFromData(_data);
-   // this.data = elData
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
     console.log("Generating network...")
     this.updateChart(nodes_links, this)
-    this.notiBuffer.set(nodes_links)
+    this.notiBuffer.set(_data)
+   }
   },
 
-  processNodes: function (nodes){
+  processNodes: function (nodes, forceProcess){
     console.log("processNodes", this);
-    //let elData = this.data
-    //elData.nodes = nodes
-    //this.data.nodes = elData.nodes
-    if (this.newNodes != nodes){
+    if (this.newNodes != nodes || forceProcess){
       this.newNodes = nodes;
       let nodes_links = this.elDataFromNodesAndLinks(nodes, this.newLinks)
   
@@ -506,21 +528,18 @@ AFRAME.registerComponent('babia-network', {
           console.log("Generating network...")
         }
       } else {
-        //this.data = elData
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
         this.updateChart(nodes_links, this)
-        this.notiBuffer.set(nodes_links)
+        this.notiBuffer.set({'nodes': nodes_links.nodes, 'links': nodes_links.links})
       }
     }
   },
 
-  processLinks: function (_links){
+  processLinks: function (_links, forceProcess){
     console.log("processLinks", this);
-    //let elData = this.data
     let links = parseJson(_links);
-    //this.data.links = elData.links
-    if (this.newLinks != links){
+    if (this.newLinks != links || forceProcess){
       this.newLinks = links;
       let nodes_links = this.elDataFromNodesAndLinks(this.newNodes, links)
       if (!nodes_links){
@@ -532,11 +551,10 @@ AFRAME.registerComponent('babia-network', {
           console.log("Generating network...")
         }
       } else {
-        //this.data = elData
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
         this.updateChart(nodes_links, this)
-        this.notiBuffer.set(nodes_links)
+        this.notiBuffer.set({'nodes': nodes_links.nodes, 'links': nodes_links.links})
       }
     }
   },
@@ -558,9 +576,11 @@ AFRAME.registerComponent('babia-network', {
       Object.keys(element).forEach(function (k) {
         if (k === nodeId) {
           node[nodeId] = element[k];
-        } else if (k === linkId) {
+        } 
+        if (k === linkId) {
           node.linkId = element[k];
-        } else if (k === nodeVal) {
+        } 
+        if (k === nodeVal) {
           node[nodeVal] = element[k];
         }
       });
@@ -599,46 +619,67 @@ AFRAME.registerComponent('babia-network', {
       })
     });
   
-    //elData.nodes = nodes;
-    //elData.links = links;
-
     return {nodes: nodes, links: links};
   },
 
   // Format nodes and links
 
   elDataFromNodesAndLinks: function(nodes, links) {
-    const nodeId = this.data.nodeId;
-    const nodeVal = this.data.nodeVal;
-    const source = this.data.linkSource;
-    const target = this.data.linkTarget;
-
     if (!Array.isArray(nodes) || !Array.isArray(links)) {
       // Either nodes or links are not ready yet
       return false
     }
-    nodes.forEach(node => {
-      Object.keys(node).forEach(function (k) {
-        if (k === nodeId) {
-          node[nodeId] = node[k];
-        } else if (k === nodeVal) {
-          node[nodeVal] = node[k];
-        }
-      });
-    })
-    links.map(link => {
-      nodes.forEach(node => {
-        if (link[source] === node[nodeId]){
-          link[source] = node[nodeId];
-        } else if (link[target] === node[nodeId]){
-          link[target] = node[nodeId];
+
+    if (this.isFirstTimeNodes){
+      this.nodeFields = []
+      Object.keys(nodes[0]).forEach((k) => {
+          this.nodeFields.push(k)
+      })
+      this.isFirstTimeNodes = false;
+    }
+    if (this.isFirstTimeLinks){
+      this.linkFields = []
+      Object.keys(links[0]).forEach((k) => {
+          this.linkFields.push(k)
+      })
+      this.isFirstTimeLinks = false;
+    }
+
+    if (typeof(links[0].source) === 'object') {
+      links.forEach ((link) => {
+        link.source = link.source[this.data.nodeId];
+        link.target = link.target[this.data.nodeId];
+      })
+    }
+
+    let _nodes = [];
+    nodes.forEach((node) => {
+      let _node = {};
+      Object.keys(node).forEach((k) => {
+        for (let f in this.nodeFields){
+          if (k == this.nodeFields[f]){
+            _node[k] = node[k]
+          }
         }
       })
+      _nodes.push(_node)
     })
-    //elData.nodes = nodes;
-    //elData.links = links;
 
-    return {nodes: nodes, links: links};
+    let _links = [];
+    links.forEach((link) => {
+      let _link = {};
+      Object.keys(link).forEach((k) => {
+        for (let f in this.linkFields){
+          if (k == this.linkFields[f] && k != this.data.linkId){
+            _link[k] = link[k]
+          }
+        }
+      })
+      _links.push(_link)
+
+    })
+
+    return {nodes: _nodes, links: _links};
   },
   
   showLegend: function (nodeThree, node, nodeLabel, scale) {
@@ -647,7 +688,9 @@ AFRAME.registerComponent('babia-network', {
     let radius = nodeThree.geometry.boundingSphere.radius
     let sceneEl = document.querySelector('a-scene');
     this.legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
-    sceneEl.appendChild(this.legend);
+    if (this.legend){
+      sceneEl.appendChild(this.legend);
+    }
   },
 
   showLinkLegend: function(linkThree, link, linkLabel, scale) {
@@ -674,7 +717,9 @@ AFRAME.registerComponent('babia-network', {
   
     let sceneEl = document.querySelector('a-scene');
     this.legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
-    sceneEl.appendChild(this.legend);
+    if (this.legend){
+      sceneEl.appendChild(this.legend);
+    }
   },
   
   removeLegend: function() {
@@ -687,40 +732,42 @@ AFRAME.registerComponent('babia-network', {
 
 function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
   let text = node[nodeLabel];
-
-  let width = 2;
-  let x = 3;
-  let y = 3;
-  let z = 3;
-  if (text.length > 16)
-    width = text.length / 8;
-  if(scale){
-    x = x * scale.x;
-    y = y * scale.y;
-    z = z * scale.z;
-    radius = (radius + 3) * scale.y;
-  }
-
-  let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius, z: nodePosition.z})
-  entity.setAttribute('babia-lookat', "[camera]");
-  entity.setAttribute('width', width);
-  entity.setAttribute('height', '1');
-  entity.setAttribute('color', 'white');
-  entity.setAttribute('scale', {x: x, y: y, z: z})
-  entity.setAttribute('text', {
-    'value': node[nodeLabel],
-    'align': 'center',
-    'width': 6,
-    'color': 'black'
-  });
-  entity.classList.add("babiaxrLegend")
-  return entity;
+  if (text) {
+    let width = 2;
+    let x = 3;
+    let y = 3;
+    let z = 3;
+    if (text.length > 16)
+      width = text.length / 8;
+    if(scale){
+      x = x * scale.x;
+      y = y * scale.y;
+      z = z * scale.z;
+      radius = (radius + 3) * scale.y;
+    }
+  
+    let entity = document.createElement('a-plane');
+    entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius, z: nodePosition.z})
+    entity.setAttribute('babia-lookat', "[camera]");
+    entity.setAttribute('width', width);
+    entity.setAttribute('height', '1');
+    entity.setAttribute('color', 'white');
+    entity.setAttribute('scale', {x: x, y: y, z: z})
+    entity.setAttribute('text', {
+      'value': node[nodeLabel],
+      'align': 'center',
+      'width': 6,
+      'color': 'black'
+    });
+    entity.classList.add("babiaxrLegend")
+    return entity;
+  } 
 }
 
 function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
   let text = link[linkLabel];
-  let width = 2;
+  if (text){
+    let width = 2;
   let x = 3;
   let y = 3;
   let z = 3;
@@ -748,6 +795,7 @@ function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
   });
   entity.classList.add("babiaxrLegend")
   return entity;
+  }
 }
 
 function setCursor() {

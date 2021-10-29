@@ -55,7 +55,7 @@ AFRAME.registerComponent('babia-ui', {
         // Register to target component notiBuffer
         if (this.targetComponent.notiBuffer) {
             this.notiBufferId = this.targetComponent.notiBuffer
-                .register(this.updateInterfaceEventCallback.bind(this))
+                .register(this.updateInterface.bind(this))
         }
     },
 
@@ -72,12 +72,12 @@ AFRAME.registerComponent('babia-ui', {
     nodesQueriers: undefined,
     linksQueriers: undefined,
 
-    updateInterfaceEventCallback: function(data) {
+    updateInterface: function(data) {
         let self = this;
         if(data){
-            if (!self.targetComponent.el.components['babia-network']){
+           // if (!self.targetComponent.el.components['babia-network']){
                 getDataMetrics(self,data, self.targetComponentVisProperties)
-            }
+            //}
         }
         
         while (self.el.firstChild)
@@ -172,37 +172,106 @@ let insertInterfaceOnHand = (self, hand) => {
 }
 
 let getDataMetrics = (self, data, properties) =>{
-    self.dataMetrics=[]
+    if (self.targetComponent.attrName == 'babia-network') {
+        if (data.nodes){
+            self.dataMetrics={
+                'nodes': [],
+                'links': []
+            }
 
-    // Create structure
-    let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
-    let number_metrics = []
-    let last_child
+            // Create structure
+            let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+            let number_metrics = []
+            let last_child
+            
+            last_child = getLastChild(data.nodes[0])
 
-    if(self.targetComponent.attrName == 'babia-city')
-    {
-        // Get last child of the tree
-        last_child = getLastChild(data)
-    } else if (self.targetComponent.attrName == 'babia-boats'){
-        last_child = getLastChild(data[0])
-    } else { 
-        last_child = data[0] 
-    }
+            Object.keys(last_child).forEach(metric => {
+                if (typeof last_child[metric] == 'number'){
+                    number_metrics.push(metric)
+                }
+            });
+        
+            properties['nodes'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics['nodes'].push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics['nodes'].push({property: property, metrics: Object.keys(data.nodes[0])})
+                }
+            });
 
-    Object.keys(last_child).forEach(metric => {
-        if (typeof last_child[metric] == 'number'){
-            number_metrics.push(metric)
-        }
-    });
-
-    properties.forEach(property => {
-        if (number_properties.includes(property)){
-            self.dataMetrics.push({property: property, metrics: number_metrics})
+            properties['links1'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics['links'].push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics['links'].push({property: property, metrics: Object.keys(data.links[0])})
+                }
+            });
         } else {
-            self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
-        }
-    });
+            self.dataMetrics=[]
+
+            // Create structure
+            let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+            let number_metrics = []
+            let last_child
+            
+            last_child = getLastChild(data[0])
+        
+            Object.keys(last_child).forEach(metric => {
+                if (typeof last_child[metric] == 'number'){
+                    number_metrics.push(metric)
+                }
+            });
+        
+            properties['nodes'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics.push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+                }
+            });
     
+            properties['links0'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics.push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+                }
+            });   
+        }
+           
+    } else {
+        self.dataMetrics=[]
+
+        // Create structure
+        let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+        let number_metrics = []
+        let last_child
+
+        if(self.targetComponent.attrName == 'babia-city')
+        {
+            // Get last child of the tree
+            last_child = getLastChild(data)
+        } else if (self.targetComponent.attrName == 'babia-boats'){
+            last_child = getLastChild(data[0])
+        } else { 
+            last_child = data[0] 
+        }
+
+        Object.keys(last_child).forEach(metric => {
+            if (typeof last_child[metric] == 'number'){
+                number_metrics.push(metric)
+            }
+        });
+
+        properties.forEach(property => {
+            if (number_properties.includes(property)){
+                self.dataMetrics.push({property: property, metrics: number_metrics})
+            } else {
+                self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+            }
+        });
+    }
 }
 
 let getLastChild = (data) =>{
@@ -252,6 +321,35 @@ let generateInterface = (self, metrics, parent) =>{
         --posY
         if(maxX < posX) { maxX = posX }
         posX = 0
+
+        // Properties and metrics
+        metrics.nodes.forEach(property => {
+            let button = createProperty(property.property, posX, posY)
+            self.interface.appendChild(button)
+            property.metrics.forEach(metric => {
+                    posX += 3.25
+                    let button = createMetric(self, property.property, metric, posX, posY)
+                    button.classList.add("babiaxraycasterclass")
+                    self.interface.appendChild(button)
+            });
+            --posY
+            if(maxX < posX) { maxX = posX }
+            posX = 0  
+        });
+
+        metrics.links.forEach(property => {
+            let button = createProperty(property.property, posX, posY)
+            self.interface.appendChild(button)
+            property.metrics.forEach(metric => {
+                posX += 3.25
+                let button = createMetric(self, property.property, metric, posX, posY)
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button)
+            });
+            --posY
+            if(maxX < posX) { maxX = posX }
+            posX = 0  
+        });
     } else {
         // Data files
         if (self.dataQueriers.length > 1) { 
@@ -267,12 +365,8 @@ let generateInterface = (self, metrics, parent) =>{
         --posY
         if(maxX < posX) { maxX = posX }
         posX = 0 
-    }
 
-    
-
-    // Properties and metrics
-    if (!self.targetComponent.el.components['babia-network']){
+        // Properties and metrics
         metrics.forEach(property => {
             let button = createProperty(property.property, posX, posY)
             self.interface.appendChild(button)
@@ -280,7 +374,7 @@ let generateInterface = (self, metrics, parent) =>{
                 posX += 3.25
                 let button = createMetric(self, property.property, metric, posX, posY)
                 button.classList.add("babiaxraycasterclass")
-                self.interface.appendChild(button)
+                self.interface.appendChild(button)            
             });
             --posY
             if(maxX < posX) { maxX = posX }
