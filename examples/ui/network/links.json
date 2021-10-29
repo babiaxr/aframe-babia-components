@@ -1,0 +1,13 @@
+[
+    {"id": "Link 1", "from": "China","target": "Italy"},
+    {"id": "Link 2", "from": "China","target": "Spain"},
+    {"id": "Link 3", "from": "Spain","target": "Germany"},
+    {"id": "Link 4", "from": "Spain","target": "France"},
+    {"id": "Link 4", "from": "China","target": "France"},
+    {"id": "Link 5", "from": "China","target": "India"},
+    {"id": "Link 6", "from": "UK","target": "Mexico"},
+    {"id": "Link 6", "from": "Spain","target": "Mexico"},
+    {"id": "Link 7", "from": "China","target": "UK"},
+    {"id": "Link 8", "from": "China","target": "Russia"},
+    {"id": "Link 9", "from": "China","target": "USA"}
+]

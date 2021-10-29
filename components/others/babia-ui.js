@@ -55,7 +55,7 @@ AFRAME.registerComponent('babia-ui', {
         // Register to target component notiBuffer
         if (this.targetComponent.notiBuffer) {
             this.notiBufferId = this.targetComponent.notiBuffer
-                .register(this.updateInterfaceEventCallback.bind(this))
+                .register(this.updateInterface.bind(this))
         }
     },
 
@@ -66,10 +66,18 @@ AFRAME.registerComponent('babia-ui', {
     dataQueriers: undefined,
     handController: undefined,
 
-    updateInterfaceEventCallback: function(data) {
+    /**
+     * Only for babia-network
+     */
+    nodesQueriers: undefined,
+    linksQueriers: undefined,
+
+    updateInterface: function(data) {
         let self = this;
         if(data){
-            getDataMetrics(self,data, self.targetComponentVisProperties)
+           // if (!self.targetComponent.el.components['babia-network']){
+                getDataMetrics(self,data, self.targetComponentVisProperties)
+            //}
         }
         
         while (self.el.firstChild)
@@ -99,23 +107,48 @@ AFRAME.registerComponent('babia-ui', {
     },
 
     findQuerierComponents: function() {
-        this.dataQueriers = []
-        // All queriers and filterdatas of the scene
-        document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
-            // Skip querier data when the target visualizer has included filtered data too.
-            if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+        if (this.targetComponent.el.components['babia-network'] && (this.targetComponent.el.components['babia-network'].data.nodesFrom || this.targetComponent.el.components['babia-network'].data.nodes)){
+            console.log("nodesFrom or nodes")
+            this.nodesQueriers = [];
+            this.linksQueriers = [];
+            document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
+                // Skip querier data when the target visualizer has included filtered data too.
+                if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+                    this.nodesQueriers.push(querier.id)
+                    this.linksQueriers.push(querier.id)
+                }            
+            });
+            document.querySelectorAll('[babia-queryes]').forEach(querier => { 
+                this.nodesQueriers.push(querier.id)
+                this.linksQueriers.push(querier.id)
+            });
+            document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
+                this.nodesQueriers.push(querier.id)
+                this.linksQueriers.push(querier.id)
+            });
+            document.querySelectorAll('[babia-filter]').forEach(querier => { 
+                this.nodesQueriers.push(querier.id)
+                this.linksQueriers.push(querier.id)
+            });
+        } else {
+            this.dataQueriers = []
+            // All queriers and filterdatas of the scene
+            document.querySelectorAll('[babia-queryjson]').forEach(querier => { 
+                // Skip querier data when the target visualizer has included filtered data too.
+                if (querier.id != this.data.target || ( querier.id == this.data.target && !this.targetComponent.prodComponent.attrName == 'babia-filter')){
+                    this.dataQueriers.push(querier.id)
+                }            
+            });
+            document.querySelectorAll('[babia-queryes]').forEach(querier => { 
                 this.dataQueriers.push(querier.id)
-            } 
-        });
-        document.querySelectorAll('[babia-queryes]').forEach(querier => { 
-            this.dataQueriers.push(querier.id)
-        });
-        document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
-            this.dataQueriers.push(querier.id)
-        });
-        document.querySelectorAll('[babia-filter]').forEach(querier => { 
-            this.dataQueriers.push(querier.id)
-        });
+            });
+            document.querySelectorAll('[babia-querygithub]').forEach(querier => { 
+                this.dataQueriers.push(querier.id)
+            });
+            document.querySelectorAll('[babia-filter]').forEach(querier => { 
+                this.dataQueriers.push(querier.id)
+            });
+        } 
     }
 })
 
@@ -139,37 +172,106 @@ let insertInterfaceOnHand = (self, hand) => {
 }
 
 let getDataMetrics = (self, data, properties) =>{
-    self.dataMetrics=[]
+    if (self.targetComponent.attrName == 'babia-network') {
+        if (data.nodes){
+            self.dataMetrics={
+                'nodes': [],
+                'links': []
+            }
 
-    // Create structure
-    let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
-    let number_metrics = []
-    let last_child
+            // Create structure
+            let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+            let number_metrics = []
+            let last_child
+            
+            last_child = getLastChild(data.nodes[0])
 
-    if(self.targetComponent.attrName == 'babia-city')
-    {
-        // Get last child of the tree
-        last_child = getLastChild(data)
-    } else if (self.targetComponent.attrName == 'babia-boats'){
-        last_child = getLastChild(data[0])
-    } else { 
-        last_child = data[0] 
-    }
+            Object.keys(last_child).forEach(metric => {
+                if (typeof last_child[metric] == 'number'){
+                    number_metrics.push(metric)
+                }
+            });
+        
+            properties['nodes'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics['nodes'].push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics['nodes'].push({property: property, metrics: Object.keys(data.nodes[0])})
+                }
+            });
 
-    Object.keys(last_child).forEach(metric => {
-        if (typeof last_child[metric] == 'number'){
-            number_metrics.push(metric)
-
-        }
-    });
-
-    properties.forEach(property => {
-        if (number_properties.includes(property)){
-            self.dataMetrics.push({property: property, metrics: number_metrics})
+            properties['links1'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics['links'].push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics['links'].push({property: property, metrics: Object.keys(data.links[0])})
+                }
+            });
         } else {
-            self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+            self.dataMetrics=[]
+
+            // Create structure
+            let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+            let number_metrics = []
+            let last_child
+            
+            last_child = getLastChild(data[0])
+        
+            Object.keys(last_child).forEach(metric => {
+                if (typeof last_child[metric] == 'number'){
+                    number_metrics.push(metric)
+                }
+            });
+        
+            properties['nodes'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics.push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+                }
+            });
+    
+            properties['links0'].forEach(property => {
+                if (number_properties.includes(property)){
+                    self.dataMetrics.push({property: property, metrics: number_metrics})
+                } else {
+                    self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+                }
+            });   
         }
-    });   
+           
+    } else {
+        self.dataMetrics=[]
+
+        // Create structure
+        let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+        let number_metrics = []
+        let last_child
+
+        if(self.targetComponent.attrName == 'babia-city')
+        {
+            // Get last child of the tree
+            last_child = getLastChild(data)
+        } else if (self.targetComponent.attrName == 'babia-boats'){
+            last_child = getLastChild(data[0])
+        } else { 
+            last_child = data[0] 
+        }
+
+        Object.keys(last_child).forEach(metric => {
+            if (typeof last_child[metric] == 'number'){
+                number_metrics.push(metric)
+            }
+        });
+
+        properties.forEach(property => {
+            if (number_properties.includes(property)){
+                self.dataMetrics.push({property: property, metrics: number_metrics})
+            } else {
+                self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
+            }
+        });
+    }
 }
 
 let getLastChild = (data) =>{
@@ -189,36 +291,97 @@ let generateInterface = (self, metrics, parent) =>{
     let posX = 0
     let maxX = 0
 
-    // Data files
-    if (self.dataQueriers.length > 1) { 
-        let button = createProperty("Data", posX, posY)
-        self.interface.appendChild(button)
-        self.dataQueriers.forEach(data => {
-            posX += 3.25
-            let button = createDataSelect(self, data, posX, posY)
-            button.classList.add("babiaxraycasterclass")
-            self.interface.appendChild(button) 
-        });
-    }
-    --posY
-    if(maxX < posX) { maxX = posX }
-    posX = 0 
-
-    // Properties and metrics
-    metrics.forEach(property => {
-        let button = createProperty(property.property, posX, posY)
-        self.interface.appendChild(button)
-        property.metrics.forEach(metric => {
-            posX += 3.25
-            let button = createMetric(self, property.property, metric, posX, posY)
-            button.classList.add("babiaxraycasterclass")
+    if (self.targetComponent.el.components['babia-network'] && (self.targetComponent.el.components['babia-network'].data.nodesFrom || self.targetComponent.el.components['babia-network'].data.nodes)){
+        // Nodes files
+        if (self.nodesQueriers.length > 1) { 
+            let button = createProperty("Nodes", posX, posY)
             self.interface.appendChild(button)
-        });
+            self.nodesQueriers.forEach(data => {
+                posX += 3.25
+                let button = createDataSelect(self, data, posX, posY, 'nodes')
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button) 
+            });
+        }
         --posY
         if(maxX < posX) { maxX = posX }
-        posX = 0  
-    });
- 
+        posX = 0 
+        
+        // Links files
+        if (self.linksQueriers.length > 1) { 
+            let button = createProperty("Links", posX, posY)
+            self.interface.appendChild(button)
+            self.linksQueriers.forEach(data => {
+                posX += 3.25
+                let button = createDataSelect(self, data, posX, posY, 'links')
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button) 
+            });
+        }
+        --posY
+        if(maxX < posX) { maxX = posX }
+        posX = 0
+
+        // Properties and metrics
+        metrics.nodes.forEach(property => {
+            let button = createProperty(property.property, posX, posY)
+            self.interface.appendChild(button)
+            property.metrics.forEach(metric => {
+                    posX += 3.25
+                    let button = createMetric(self, property.property, metric, posX, posY)
+                    button.classList.add("babiaxraycasterclass")
+                    self.interface.appendChild(button)
+            });
+            --posY
+            if(maxX < posX) { maxX = posX }
+            posX = 0  
+        });
+
+        metrics.links.forEach(property => {
+            let button = createProperty(property.property, posX, posY)
+            self.interface.appendChild(button)
+            property.metrics.forEach(metric => {
+                posX += 3.25
+                let button = createMetric(self, property.property, metric, posX, posY)
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button)
+            });
+            --posY
+            if(maxX < posX) { maxX = posX }
+            posX = 0  
+        });
+    } else {
+        // Data files
+        if (self.dataQueriers.length > 1) { 
+            let button = createProperty("Data", posX, posY)
+            self.interface.appendChild(button)
+            self.dataQueriers.forEach(data => {
+                posX += 3.25
+                let button = createDataSelect(self, data, posX, posY)
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button) 
+            });
+        }
+        --posY
+        if(maxX < posX) { maxX = posX }
+        posX = 0 
+
+        // Properties and metrics
+        metrics.forEach(property => {
+            let button = createProperty(property.property, posX, posY)
+            self.interface.appendChild(button)
+            property.metrics.forEach(metric => {
+                posX += 3.25
+                let button = createMetric(self, property.property, metric, posX, posY)
+                button.classList.add("babiaxraycasterclass")
+                self.interface.appendChild(button)            
+            });
+            --posY
+            if(maxX < posX) { maxX = posX }
+            posX = 0  
+        });
+    }
+    
     self.interface.width = maxX + 3;
     self.interface.height = Math.abs(posY)
 
@@ -303,6 +466,10 @@ let selection_events = (entity, visualizer, isData) =>{
         // Change selected querier in visualializer (from)
         } else if (entity.from) {
             visualizer.el.setAttribute(visualizer.attrName, "from", entity.from )
+        } else if (entity.nodes) {
+            visualizer.el.setAttribute(visualizer.attrName, 'nodesFrom', entity.nodes)
+        } else if (entity.links) {
+            visualizer.el.setAttribute(visualizer.attrName, 'linksFrom', entity.links)
         }
     });
 }
@@ -323,9 +490,15 @@ let createProperty = (property, positionX, positionY) =>{
     return entity
 }
 
-let createDataSelect = (self, id, positionX, positionY) =>{
+let createDataSelect = (self, id, positionX, positionY, networkType) =>{
     let entity = document.createElement('a-box')
-    entity.from = id;
+    if (networkType == 'nodes'){
+        entity.nodes = id
+    } else if (networkType == 'links'){
+        entity.links = id
+    } else {
+        entity.from = id;
+    }
     entity.classList.add("babiaxraycasterclass")
     entity.setAttribute('position', { x: positionX, y: positionY, z: 0})
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })

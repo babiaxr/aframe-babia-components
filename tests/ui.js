@@ -11,4 +11,11 @@ describe('Babia-UI component examples (screenshot)', () => {
             cy.screenshot('ui_' + example);
         });
     });
+    ['network', 'network_nodes_links'].forEach((example) => {
+        it(`Screenshot UI(${example})`, () => {
+            cy.visit('/examples/ui/network'+ example + '.html');
+            cy.wait(5000);
+            cy.screenshot('ui_' + example);
+        });
+    });
 });
