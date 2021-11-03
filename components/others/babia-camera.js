@@ -13,6 +13,7 @@ AFRAME.registerComponent('babia-camera', {
         gripLLabel: {type: 'string', default: 'Stop Audio'},
         triggerRLabel: {type: 'string', default: 'Click'},
         triggerLLabel: {type: 'string', default: 'Teleport' },
+        teleportCollisions: {type: 'string', default: '.environmentGround'}
     },
 
     /**
@@ -87,7 +88,7 @@ AFRAME.registerComponent('babia-camera', {
                 self.leftHand.setAttribute('teleport-controls', {
                     cameraRig: `#${self.el.parentElement.id}`,
                     teleportOrigin: `#${self.el.id}`,
-                    collisionEntities: '#floorRoom',
+                    collisionEntities: self.data.teleportCollisions,
                     hitCylinderColor: '#ff3468',
                     curveHitColor: '#ff3468',
                     curveMissColor: '#333333',
