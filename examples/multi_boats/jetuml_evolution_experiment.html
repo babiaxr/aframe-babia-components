@@ -146,38 +146,15 @@
         </a-entity>
 
         <!-- Controls and Camera -->
-        <a-entity id="cameraRig" position="0 0 3" networked="template:#rig-template; attachTemplateToLocal:false">
-            <a-entity id="head" camera look-controls wasd-controls="fly: false"
+        <a-entity id="cameraRig" position="0 1.6 3" networked="template:#rig-template; attachTemplateToLocal:false">
+            <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon; 
+                raycasterHand: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon" look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
                 <a-sphere id="avatar" color="#D3FFE4" scale="0.25 0.25 0.25"
                     networked="template:#avatar-template;attachTemplateToLocal:false;">
                     <a-text id="username-tag" networked="template:#username-tag-template; attachTemplateToLocal:false"
                         position="-0.5 1.5 0" width="5" color="black" value="username"></a-text>
                 </a-sphere>
-            </a-entity>
-            <!-- Hand Controls -->
-            <a-entity id="leftHand"
-                teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;  collisionEntities: #floorRoom;
-                    hitCylinderColor: #ff3468; curveHitColor: #ff3468; curveMissColor: #333333; curveLineWidth: 0.01; button: trigger"
-                oculus-touch-controls="hand: left">
-                <a-entity id="tooltip_trigger_L" class="tips"
-                    tooltip="text: Teleport; width: 0.07; height: 0.03; targetPosition: 0.002 -0.02 -0.014; lineHorizontalAlign: right; rotation: -90 0 0; src:assets/tooltip.png"
-                    position="-0.09 -0.04 -0.08"></a-entity>
-                <a-entity id="tooltip_grip_L" class="tips"
-                    tooltip="text: Stop Audio; width: 0.08; height: 0.04; targetPosition: 0.006 -0.008 0.033; rotation: -90 0 0; src:assets/tooltip.png"
-                    position="0.085 -0.01 0.07"></a-entity>
-            </a-entity>
-            <a-entity id="rightHand" oculus-touch-controls="hand: right" laser-controls="hand: right"
-                raycaster="objects: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon">
-                <a-entity id="tooltip_trigger_R" class="tips"
-                    tooltip="text: Click; width: 0.07; height: 0.03; targetPosition: 0.005 -0.02 -0.014; lineHorizontalAlign: left; rotation: -90 0 0; src:assets/tooltip.png"
-                    position="0.09 -0.04 -0.08"></a-entity>
-                <a-entity id="tooltip_grip_R" class="tips"
-                    tooltip="text: Open/Close \nTips; width: 0.08; height: 0.04; targetPosition: -0.006 -0.008 0.033; rotation: -90 0 0; lineHorizontalAlign: right; src:assets/tooltip.png"
-                    position="-0.085 -0.01 0.07"></a-entity>
-            </a-entity>
-            <a-entity id="cursor" cursor="rayOrigin:mouse"
-                raycaster="objects: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon">
             </a-entity>
         </a-entity>
 
@@ -211,54 +188,88 @@
     </a-scene>
 
     <script>
-        /** TIPS **/
-        let tips_opened = false;
-        let tooltips = document.querySelectorAll('.tips')
-        tooltips.forEach(tip => {
-            tip.setAttribute('visible', false)
-        });
-        let hand_right = document.getElementById('rightHand')
 
-        document.addEventListener('controllerconnected', (event) => {
-            document.querySelector('#nav').setAttribute('scale', { x: 0.25, y: 0.25, z: 0.25 })
-            document.querySelector('#cameraRig').setAttribute('position', { x: 0, y: 0, z: 3.25 })
-            tips_opened = true;
-            tooltips.forEach(tip => {
-                tip.setAttribute('visible', true)
-            });
+        let selector = document.getElementById('selector')
+        let nav = document.getElementById('nav')
+        
+        document.body.addEventListener('clientConnected', function (event) {
+            let clientId = event.detail.clientId;
+            console.log('clientConnected event. clientId =', clientId);
+            console.log("Selector owner: ", selector.components.networked.data.owner);
+            let imFirst = true
+            if (selector.components.networked.data.owner == 'scene'){
+                for (client in NAF.connection.getConnectedClients()){
+                    let otherTime = NAF.connection.getConnectedClients()[client].roomJoinTime
+                    let myTime = NAF.connection.adapter._myRoomJoinTime
+                    console.log("Other: ", otherTime)
+                    console.log("Mine: ", myTime)
+                    if (myTime > otherTime){
+                        imFirst = false;
+                    }
+                }
+                if (imFirst) {
+                    NAF.utils.takeOwnership(selector)
+                    NAF.utils.takeOwnership(nav)
+                } else { 
+                    console.log("I'm not first")
+                    makeInvisible()
+                }
+            } else if (selector.components.networked.data.owner != NAF.clientId){
+                makeInvisible();
+            } 
         });
-        // hide tips
-        hand_right.addEventListener('gripdown', function (evt) {
-            if (tips_opened) {
-                tips_opened = false
-                tooltips.forEach(tip => {
-                    tip.setAttribute('visible', false)
-                });
-            } else {
-                tips_opened = true
-                tooltips.forEach(tip => {
-                    tip.setAttribute('visible', true)
-                });
-            }
+        
+        
+        nav.addEventListener('click', function (e) {
+            if (!NAF.utils.isMine(selector) && nav.components.networked.data.owner != 'scene'){
+                if (Object.keys(NAF.connection.connectedClients).length > 0){
+                    NAF.utils.takeOwnership(selector)
+                    NAF.utils.takeOwnership(nav)
+                }
+            }       
         })
 
+        selector.addEventListener('ownership-gained', e => {
+            console.log("Selector ownership gained");
+            makeVisible();
+        });
 
+
+        selector.addEventListener('ownership-lost', e => {
+            console.log("Selector ownership lost");
+            makeInvisible();
+        });
+
+        function makeInvisible(){
+            nav.children[1].setAttribute('visible', false)
+            nav.children[2].setAttribute('visible', false)
+            nav.children[3].setAttribute('visible', false)
+        }
+
+        function makeVisible(){
+            nav.children[1].setAttribute('visible', true)
+            nav.children[2].setAttribute('visible', true)
+            nav.children[3].setAttribute('visible', true)
+        }
     </script>
 
 
     <script>
-        let hand_left = document.getElementById('leftHand')
-        let tooltipAudioButton = document.getElementById('tooltip_grip_L')
-        // stop audio left hand
-        hand_left.addEventListener('gripdown', function (evt) {
-            if (tooltipAudioButton.components.tooltip.data.text === 'Stop Audio') {
-                NAF.connection.adapter.enableMicrophone(false);
-                tooltipAudioButton.setAttribute('tooltip', {'text': "Turn on Audio"});
-            } else {
-                NAF.connection.adapter.enableMicrophone(true);
-                tooltipAudioButton.setAttribute('tooltip', {'text': "Stop Audio"});
-            }
-        })
+
+        document.addEventListener('controllerconnected' , (event) => {     
+            let hand_left = document.getElementById('babia-leftHand');
+            // stop audio left hand
+            hand_left.addEventListener('gripdown', function (evt) {
+                let tooltipAudioButton = document.getElementById('babia-tooltip_grip_L')
+                if (tooltipAudioButton.components.tooltip.data.text === 'Stop Audio') {
+                    NAF.connection.adapter.enableMicrophone(false);
+                    tooltipAudioButton.setAttribute('tooltip', {'text': "Turn on Audio"});
+                } else {
+                    NAF.connection.adapter.enableMicrophone(true);
+                    tooltipAudioButton.setAttribute('tooltip', {'text': "Stop Audio"});
+                }
+            })
+        });
 
 
         /* Camera */
@@ -305,11 +316,6 @@
         }
 
 
-        /* Update avatar height in VR */
-
-        document.addEventListener('controllerconnected', (event) => {
-            rig.setAttribute('position', { x: 4, y: 1.6, z: 3 })
-        })
 
     </script>
     <script>
@@ -319,6 +325,19 @@
                 'babia-selector'
             ]
         })
+        NAF.schemas.add({
+            template: '#nav-template',
+            components: [
+                'babia-navigator'
+            ]
+        })
+        /*
+        NAF.schemas.add({
+            template: '#controls-template',
+            components: [
+                'babia-controls'
+            ]
+        })*/
 
         // Avatar
         NAF.schemas.add({
