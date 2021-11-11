@@ -128,24 +128,3 @@ This component adds a z axis to the graph.
     <a-entity babia-axis-z = 'labels: continents, ticks: calculatedTicks, length: 10, palette: pearl,
     align: front, name: continent'></a-entity>
 ```
-
-#### **babia-camera component**
-
-This component replaces A-frame camera and cursor components and inserts oculus controllers.
-
-#### API
-
-| Property       | Description           | Type   | Default value |
-| --------       | -----------           | ----   | ----- |
-| raycasterMouse         | Objects the raycaster can interact with  | string | .babiaxraycasterclass |
-| raycasterHand          | Objects the raycaster can interact with | string | .babiaxraycasterclass |
-| tipsOpened         | Displays tips about hand controllers | boolean | true |
-| triggerRLabel          | Action label for this button | string | Click |
-| triggerLLabel          | Action label for this button | string | Teleport |
-| gridRLabel          | Action label for this button | string | Open/Close Tips |
-| grigLLabel          | Action label for this button | string | Stop Audio |
-| teleportCollision     | Selector of the meshes used to check the collisions | string | .environmentGround |
-
-```html
-    <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button; raycasterHand: .babiaxraycasterclass, #audio_button" look-controls wasd-controls="fly: false"></a-entity>
-```

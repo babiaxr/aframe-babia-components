@@ -15,7 +15,7 @@ module.exports = {
         loader: "babel-loader"
       },
       {
-        test: /\.(glb|gltf|png)$/,
+        test: /\.(glb|gltf)$/,
         use:
           [
             {
