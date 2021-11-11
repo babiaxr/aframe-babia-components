@@ -31,6 +31,7 @@ require('./components/others/babia-controls')
 require('./components/others/babia-navigator')
 require('./components/others/babia-slider')
 require('./components/others/babia-ui-link')
+require('./components/others/babia-camera')
 require('./common/noti-buffer')
 
 // Assets
