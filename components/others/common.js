@@ -199,7 +199,7 @@ let updateFunction = (self, oldData) => {
     let data = self.data;
     let el = self.el;
 
-    if (el.components["babia-bars"] || el.components["babia-barsmap"]){
+    if (el.components["babia-bars"] || el.components["babia-barsmap"] || el.components["babia-cyls"]){
         if (!data.index){
             data.index = data.x_axis;
         }

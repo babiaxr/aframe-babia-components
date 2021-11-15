@@ -19,19 +19,29 @@ AFRAME.registerComponent('babia-cyls', {
     radius: { type: 'string', default: 'radius' },
     x_axis: { type: 'string', default: 'x_axis' },
     from: { type: 'string' },
-    legend: { type: 'boolean' },
+    legend: { type: 'boolean', default: false },
     axis: { type: 'boolean', default: true },
     // Name for axis
     axis_name: {type: 'boolean', default: false},
-    animation: { type: 'boolean', default: false },
     palette: { type: 'string', default: 'ubuntu' },
     title: { type: 'string' },
     titleFont: { type: 'string' },
     titleColor: { type: 'string' },
-    titlePosition: { type: 'string', default: "0 0 0" },
-    scale: { type: 'number' },
-    heightMax: { type: 'number' },
-    radiusMax: { type: 'number' },
+    titlePosition: { type: 'vec3', default: {x: 0, y: 0, z: 0} },
+    // Height of the chart
+    chartHeight: { type: 'number', default: 10 },
+    // Maximun of the radius
+    radiusMax: { type: 'number', default: 2 },
+    // Keep height when updating data
+    keepHeight: { type: 'boolean', default: true},
+    incremental: { type: 'boolean', default: false},
+    index: { type: 'string' },
+    // Should this be animated
+    animation: { type: 'boolean', default: true},
+    // Duration of animations
+    dur: { type: 'number', default: 2000},
+    uiLink: {type: 'boolean', default: false},
+    uiLinkPosition: { type: 'vec3', default: {x: -4.5, y: 2, z: 2.5} },
   },
       
   /**
@@ -48,6 +58,15 @@ AFRAME.registerComponent('babia-cyls', {
   */
   init: function () {
     this.notiBuffer = new NotiBuffer();
+
+    // Build chartEl
+    this.chartEl = document.createElement('a-entity');
+    this.chartEl.classList.add('babiaxrChart')
+    this.el.appendChild(this.chartEl);
+
+    // Build titleEl
+    this.updateTitle()
+    this.el.appendChild(this.titleEl);
   },
   /**
   * Called when component is attached and when component data changes.
@@ -55,6 +74,9 @@ AFRAME.registerComponent('babia-cyls', {
   */
   update: function (oldData) {
     updateFunction(this, oldData)
+    if (this.data.uiLink){
+      createUiLink(el, this.data.uiLinkPosition)
+    }
   },
 
   /**
@@ -73,142 +95,161 @@ AFRAME.registerComponent('babia-cyls', {
   newData: undefined,
 
   /**
+  * Where the previous state data is gonna be stored
+  */
+  currentData: undefined,
+
+  /**
    * Where the metadata is gonna be stored
    */
   babiaMetadata: {
     id: 0
   },
 
+    /**
+     * Value max
+     */
+     valueMax: undefined,
+
+     xLabels: [],
+     xTicks: [],
+
   /*
   * Update title
   */
   updateTitle: function(){
     const titleRotation = { x: 0, y: 0, z: 0 }
-    const titleEl = updateTitle(this.data, titleRotation);        
-    this.el.appendChild(titleEl);
+    this.titleEl = updateTitle(this.data, titleRotation);        
   },
 
   /*
   * Update chart
   */
   updateChart: function () {
-    const dataToPrint = this.newData;
+    let dataToPrint = this.newData;
+
+    if (this.currentData) {
+      dataToPrint = this.currentData;
+    } else {
+        dataToPrint = this.newData;
+    }
     console.log("Data babia-cyls:", dataToPrint)
 
     const data = this.data;
-    const el = this.el;  
+    const el = this.el; 
 
-    const animation = data.animation
-    const palette = data.palette
-    const scale = data.scale
+    //Print Title
+    this.updateTitle();
 
-    let heightMax = data.heightMax
-    let radiusMax = data.radiusMax
-  
+    // Height Chart
+    let valueMax = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+    if (!this.lengthY) {
+      this.lengthY = data.chartHeight;
+    } else if (!data.keepHeight) {
+        this.lengthY = this.lengthY * maxValue / this.maxValue;
+    };
+    this.maxValue = valueMax;
+
+    // Proportion of the radius
+    let maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
+    this.radius_scale = data.radiusMax / maxRadius;
+
+    // List current cylinders
+    let chartEl = this.chartEl;
+    let cyls = chartEl.querySelectorAll('a-entity[babia-cyl]');
+    let currentCyls = {};
+    for (let cyl of cyls) {
+        let cylName = cyl.getAttribute('babia-name');
+        currentCyls[cylName] = {'el': cyl, 'found': false};
+    };
+
     let xLabels = [];
     let xTicks = [];
     let colorId = 0
-    let stepX = 1
-    let firstradius = 0
-    let lastradius = 0
-      
-    let valueMax = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
-    let maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
-    
-    if (scale) {
-      valueMax = valueMax / scale
-      maxRadius = maxRadius / scale
-    }
-    if (!heightMax){
-      heightMax = valueMax
-    }
-    proportion = heightMax / valueMax
-  
-    if (!radiusMax){
-      radiusMax = maxRadius
-    }
-    radius_scale = radiusMax / maxRadius
-  
-    this.chartEl = document.createElement('a-entity');
-    this.chartEl.classList.add('babiaxrChart')
-    el.appendChild(this.chartEl)
-  
-    for (let cylinder of dataToPrint) {
-      let xLabel = cylinder[data.x_axis]
-      let radius = cylinder[data.radius]
-      let height = cylinder[data.height]
-  
-      if (cylinder !== dataToPrint[0]) {
-        //Calculate stepX
-        if (scale) {
-          stepX += lastradius + radius / scale + 0.5
-        } else{
-          stepX += lastradius + radius * radius_scale + 0.5
-        }
-  
+
+    let last_radius; // Needed to calculate separation between cyls
+    // Add or modify cyls for new data
+    for (let i = 0; i < dataToPrint.length; i++) {
+      let item = dataToPrint[i]
+
+      let xLabel = item[data.x_axis];
+      let posX;
+      if (i == 0){
+        posX = 0.5 + item[data.radius] * this.radius_scale;
       } else {
-        if (scale) {
-          firstradius = radius / scale
-        } else {
-          firstradius = radius * radius_scale
-        }
-      }
-  
-      let cylinderEntity = generateCylinder(height, radius, colorId, palette, stepX, animation, scale, proportion, radius_scale)
-      cylinderEntity.classList.add("babiaxraycasterclass")
-      this.chartEl.appendChild(cylinderEntity);
-  
-      //Prepare legend
-      if (data.legend) {
-        showLegend(data, cylinderEntity, cylinder, el, maxRadius)
-      }
-  
-      // update lastradius
-      if (!scale && !radius_scale) {
-        lastradius = radius
+        posX = xTicks[i-1] + last_radius + 0.5 + item[data.radius] * this.radius_scale;
+      } 
+      let cylEl;
+      if ( currentCyls[xLabel] && !item['_not'] ) {
+        cylEl = currentCyls[xLabel].el;
+        currentCyls[xLabel].found = true;
       } else {
-        if (scale) {
-          lastradius = radius / scale
-        } else {
-          lastradius = radius_scale * radius
-        }
+        cylEl = document.createElement('a-entity');
+        cylEl.setAttribute('babia-name', xLabel);
+        cylEl.id = item[data.index];
+        cylEl.object3D.position.x = posX;
+        this.chartEl.appendChild(cylEl);
       }
+
+      createCylinder(this, cylEl, data, item, colorId, xLabel, posX);
   
-      xLabels.push(xLabel)
-      xTicks.push(firstradius + stepX)
+      xLabels.push(xLabel);
+      xTicks.push(posX);
   
       //Increase color id
       colorId++
+
+      last_radius = item[data.radius] * this.radius_scale;
     }
+
+    // Remove old cyls (not in new data)
+    for (let name in currentCyls) {
+      if ( !currentCyls[name].found ) {
+        currentCyls[name].el.remove();
+      };
+    };
   
     //Print axis
     if (data.axis) {
-      const lengthX = firstradius + stepX + lastradius + 0.5
-      const lengthY = heightMax
-      this.updateAxis(xLabels, xTicks, lengthX, firstradius, maxRadius, valueMax, lengthY);
+      const lengthX = xTicks[xTicks.length-1] + (dataToPrint[0][data.radius]+ dataToPrint[dataToPrint.length-1][data.radius])* this.radius_scale / 2 ;
+      this.updateAxis(xLabels, xTicks, lengthX, this.maxValue);
     }
-  
-    //Print Title
-    this.updateTitle();
   },
 
   /*
   * Update axis
   */
-  updateAxis: function (labels, ticks, lengthX, firstRadius, maxRadius, valueMax, lengthY) {
-    let xAxisEl = document.createElement('a-entity');
-    this.chartEl.appendChild(xAxisEl);
-    xAxisEl.setAttribute('babia-axis-x',{'labels': labels, 'ticks': ticks, 'length': lengthX,'palette': this.data.palette});
-    xAxisEl.setAttribute('position', {x: -firstRadius, y: 0, z: maxRadius + 1});
+  updateAxis: function(labels, ticks, lengthX, maxValue) {
+    const data = this.data;
+    if (data.axis) {
+      if (!this.xAxisEl) {
+        this.xAxisEl = document.createElement('a-entity');
+        this.chartEl.appendChild(this.xAxisEl);
+      };
+      this.xAxisEl.setAttribute('babia-axis-x',
+        {'labels': labels, 'ticks': ticks, 'length': lengthX,
+            'palette': data.palette});
+      this.xAxisEl.setAttribute('position', {
+          x: 0, y: 0, z: data.radiusMax + 0.25
+      });
 
-    let yAxisEl = document.createElement('a-entity');
-    this.chartEl.appendChild(yAxisEl);
-    yAxisEl.setAttribute('babia-axis-y',{'maxValue': valueMax, 'length': lengthY});
-    yAxisEl.setAttribute('position', {x: -firstRadius, y: 0, z: maxRadius + 1});
-    
-    if (this.data.axis_name){
-      xAxisEl.setAttribute('babia-axis-x', 'name', this.data.x_axis);
-      yAxisEl.setAttribute('babia-axis-y', 'name', this.data.height);
+      if (!this.yAxisEl) {
+          this.yAxisEl = document.createElement('a-entity');
+          this.chartEl.appendChild(this.yAxisEl);
+      };
+      this.yAxisEl.setAttribute('babia-axis-y',
+          {'maxValue': maxValue, 'length': this.lengthY});
+      this.yAxisEl.setAttribute('position', {
+          x: 0, y: 0, z: data.radiusMax + 0.25
+      });
+      if (data.axis_name){
+        if (data.index) {
+            this.xAxisEl.setAttribute('babia-axis-x', 'name', data.index);
+        } else {
+            this.xAxisEl.setAttribute('babia-axis-x', 'name', data.x_axis);
+        }
+        this.yAxisEl.setAttribute('babia-axis-y', 'name', data.height);
+      }
     }
   },
 
@@ -219,92 +260,52 @@ AFRAME.registerComponent('babia-cyls', {
     console.log("processData", this);
     this.newData = data;
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
-    while (this.el.firstChild)
-            this.el.firstChild.remove();
+    /*while (this.el.firstChild)
+            this.el.firstChild.remove();*/
     console.log("Generating cyls...")
     this.updateChart()
     this.notiBuffer.set(this.newData)
   }
 })
 
-function generateCylinder(height, radius, colorId, palette, position, animation, scale, proportion, radius_scale) {
-  let color = colors.get(colorId, palette)
-  let entity = document.createElement('a-cylinder');
-  if (scale) {
-    height = height / scale
-    radius = radius / scale
-  } else if (proportion || radius_scale) {
-    if (proportion) {
-      height = proportion * height
-    }
-    if (radius_scale) {
-      radius = radius_scale * radius
-    }
-  }
-  entity.setAttribute('color', color);
-  entity.setAttribute('height', 0);
-  entity.setAttribute('radius', radius);
-  // Add animation
-  if (animation) {
-    var duration = 4000
-    var increment = 20 * height / duration
-    var size = 0
-    var id = setInterval(animation, 1);
-    function animation() {
-      if (size >= height) {
-        clearInterval(id);
+let createCylinder = (self, cylEl, data, item, colorId, xLabel, posX) => {
+  cylEl.setAttribute('babia-cyl', {
+      'height': item[data.height] * self.lengthY / self.maxValue,
+      'radius': item[data.radius] * self.radius_scale,
+      'color': colors.get(colorId, data.palette),
+      'label': 'events',
+      'animation': data.animation
+  });
+  if (data.legend) {
+      cylEl.setAttribute('babia-cyl', {
+          'labelText': xLabel + ': ' + item[data.height]
+      });
+  };
+  if (posX !== cylEl.object3D.position.x) {
+      if (data.animation) {
+          cylEl.setAttribute('animation', {
+              'property': 'object3D.position.x',
+              'to': posX,
+              'dur': data.dur
+          });
       } else {
-        size += increment;
-        entity.setAttribute('height', size);
-        entity.setAttribute('position', { x: position, y: size / 2, z: 0 });
-      }
-    }
-  } else {
-    entity.setAttribute('height', height);
-    entity.setAttribute('position', { x: position, y: height / 2, z: 0 });
+          cylEl.object3D.position.x = posX;
+      };
   }
-  return entity;
+  
 }
 
-
-function showLegend(data, cylinderEntity, cylinder, el, maxRadius) {
-  cylinderEntity.addEventListener('mouseenter', function () {
-    this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-    legend = generateLegend(data, cylinder, cylinderEntity, maxRadius);
-    el.appendChild(legend);
-  });
-
-  cylinderEntity.addEventListener('mouseleave', function () {
-    this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-    el.removeChild(legend);
-  });
+let createUiLink = (el, position) => {
+  let ui_link = document.createElement('a-entity');
+  if (!el.id){
+      // Generate id
+      let id = 'bars' + Math.floor(Math.random() * 1000);
+      el.id = id
+  }
+  console.log('id:', el.id)
+  ui_link.setAttribute('babia-ui-link', {viz: el.id})
+  ui_link.setAttribute('position', {x: position.x, y: position.y, z:position.z})
+  el.appendChild(ui_link)
+  console.log('Create Button', el) 
+  return
 }
-
-function generateLegend(data, cylinder, cylinderEntity, maxRadius) {
-  let text = cylinder[data.x_axis] + ': ' + cylinder[data.height];
-  let width = 5;
-  if (text.length > 16)
-    width = text.length / 2;
-
-  let cylinderPosition = cylinderEntity.getAttribute('position')
-  let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {
-    x: cylinderPosition.x, y: 2 * cylinderPosition.y + 2,
-    z: cylinderPosition.z + maxRadius + 0.5
-  });
-  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-  entity.setAttribute('height', '1.5');
-  entity.setAttribute('width', width);
-  entity.setAttribute('color', 'white');
-  entity.setAttribute('text', {
-    'value': cylinder[data.x_axis] + ': ' + cylinder[data.height],
-    'align': 'center',
-    'width': 20,
-    'color': 'black'
-  });
-  entity.classList.add("babiaxrLegend")
-  return entity;
-}
-
-
-
