@@ -1,6 +1,7 @@
 let updateTitle = require('../others/common').updateTitle;
 const colors = require('../others/common').colors;
 let updateFunction = require('../others/common').updateFunction;
+let createCylinder = require('./babia-cyls').createCylinder;
 
 const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
@@ -32,7 +33,11 @@ AFRAME.registerComponent('babia-cylsmap', {
     titlePosition: { type: 'string', default: "0 0 0" },
     scale: { type: 'number' },
     heightMax: { type: 'number' },
-    radiusMax: { type: 'number' },
+    radiusMax: { type: 'number', default: 2 },
+    // Height of the chart
+    chartHeight: { type: 'number', default: 10 },
+    // Keep height when updating data
+    keepHeight: { type: 'boolean', default: true},
   },
     
   /**
@@ -49,6 +54,15 @@ AFRAME.registerComponent('babia-cylsmap', {
   */
   init: function () {
     this.notiBuffer = new NotiBuffer();
+
+    // Build chartEl
+    this.chartEl = document.createElement('a-entity');
+    this.chartEl.classList.add('babiaxrChart')
+    this.el.appendChild(this.chartEl);
+
+    // Build titleEl
+    this.updateTitle()
+    this.el.appendChild(this.titleEl);
   },
   /**
   * Called when component is attached and when component data changes.
@@ -85,8 +99,7 @@ AFRAME.registerComponent('babia-cylsmap', {
   */
   updateTitle: function(){
     const titleRotation = { x: 0, y: 0, z: 0 }
-    const titleEl = updateTitle(this.data, titleRotation);        
-    this.el.appendChild(titleEl);
+    this.titleEl = updateTitle(this.data, titleRotation);        
   },
 
   /*
@@ -95,127 +108,123 @@ AFRAME.registerComponent('babia-cylsmap', {
 
   updateChart: function () {
     const dataToPrint = this.newData;
-    console.log("Data babia-cylsmap:", dataToPrint)
-
     const data = this.data;
-    const el = this.el; 
-
-    const animation = data.animation
-    const palette = data.palette
-    const scale = data.scale
-
-    let heightMax = data.heightMax
-    let radiusMax = data.radiusMax
-
+   
     let xLabels = [];
-    let xTicks = [];
     let zLabels = [];
+    let map = new Array();
+    let colorId = 0
+    let xTicks = [];
     let zTicks = [];
-    let colorId = 0;
-    let maxColorId = 0;
-    let stepX = 0;
-    let stepZ = 0;
-    let maxX = 0;
-    let maxZ = 0;
-    let keys_used = {}
-    let z_axis = {}
+    
+    // Generate map, xLabels and zLabels
+    for (i= 0; i < dataToPrint.length; i++) {
+      let xLabel = dataToPrint[i][data.x_axis];
+      let zLabel = dataToPrint[i][data.z_axis];
+      if (!xLabels.includes(xLabel)){
+        xLabels.push(xLabel);
+      }
+      if (!zLabels.includes(zLabel)){
+        zLabels.push(zLabel);
+      } 
+      let stepX = xLabels.indexOf(xLabel);
+      let stepZ = zLabels.indexOf(zLabel);
+      if (map[stepX]){
+        map[stepX][stepZ] = dataToPrint[i][data.radius];
+      } else {
+          let innermap = new Array();
+          innermap[stepZ] = dataToPrint[i][data.radius];
+          map[stepX] = innermap;
+      }
+    }
+    //console.log('MAP =>', map)
 
+    // Height Chart
     let valueMax = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.height]; }))
+    if (!this.lengthY) {
+      this.lengthY = data.chartHeight;
+    } else if (!data.keepHeight) {
+      this.lengthY = this.lengthY * this.maxValue / this.maxValue;
+    };
+    this.maxValue = valueMax;
+    
+
+    // Proportion of the radius
     let maxRadius = Math.max.apply(Math, dataToPrint.map(function (o) { return o[data.radius]; }))
+    this.radius_scale = data.radiusMax / maxRadius;
 
-    if (scale) {
-      valueMax = valueMax / scale
-      maxRadius = maxRadius / scale
-    }
-    if (!heightMax) {
-      heightMax = valueMax
-    }
-    proportion = heightMax / valueMax
-
-    if (!radiusMax) {
-      radiusMax = maxRadius
-    }
-    radius_scale = radiusMax / maxRadius
-
-    this.chartEl = document.createElement('a-entity');
-    this.chartEl.classList.add('babiaxrChart')
-    el.appendChild(this.chartEl)
-
-    if (scale) {
-      maxX = maxRadius / scale
-      maxZ = maxRadius / scale
-    } else {
-      maxX = maxRadius * radius_scale
-      maxZ = maxRadius * radius_scale;
-    }
-
-    for (let cylinder of dataToPrint) {
-      let xLabel = cylinder[data.x_axis]
-      let zLabel = cylinder[data.z_axis]
-      let height = cylinder[data.height]
-      let radius = cylinder[data.radius]
-
-      // Check if used in order to put the cylinder in the parent row
-      if (keys_used[xLabel]) {
-        stepX = keys_used[xLabel].posX
-        colorId = keys_used[xLabel].colorId
+    // Generate xticks and zticks (to assign cyls positions later)
+    for (i= 0; i < xLabels.length; i++) {
+      let rad_0 = Math.max.apply(Math, map[i].filter(function (o) { if( o != '' ) { return o ; }}));
+      if (i == 0){
+        xTicks.push(rad_0 * this.radius_scale);
       } else {
-        if (scale) {
-          stepX += 2 * maxRadius / scale + 0.5
-        } else {
-          stepX += 2 * maxRadius * radius_scale + 0.5
-        }
-        colorId = maxColorId
-        //Save in used
-        keys_used[xLabel] = {
-          "posX": stepX,
-          "colorId": colorId
-        }
-
-        xLabels.push(xLabel)
-        xTicks.push(stepX)
-        maxColorId++
+        let rad_1 = Math.max.apply(Math, map[i-1].filter(function (o) { if( o != '' ) { return o ; }}));
+        xTicks.push(xTicks[i-1] + rad_0 * this.radius_scale + 0.5 + rad_1 * this.radius_scale);
       }
+    };
+    //console.log('xticks: ', xTicks)
 
-      if (z_axis[zLabel]) {
-        stepZ = z_axis[zLabel].posZ
+    for (j= 0; j < zLabels.length; j++) {
+      rad_0 = maxRadiusZ(map, xLabels.length, j);
+      if (j == 0){
+        zTicks.push(rad_0 * this.radius_scale);
       } else {
-        if (scale) {
-          stepZ = maxZ + 2 * maxRadius / scale + 0.5
-        } else {
-          stepZ = maxZ + 2 * maxRadius * radius_scale + 0.5
-        }
-        //Save in used
-        z_axis[zLabel] = {
-          "posZ": stepZ
-        }
-        zLabels.push(zLabel)
-        zTicks.push(stepZ)
-      }
+        rad_1 = maxRadiusZ(map, xLabels.length, j-1);
+        zTicks.push(zTicks[j-1] + rad_1 * this.radius_scale + 0.5 + rad_0 * this.radius_scale);
+      }  
+    };
+    //console.log('zticks: ', zTicks)
 
-      if (stepX > maxX){
-        maxX = stepX
-      }
-      if (stepZ > maxZ){
-        maxZ = stepZ
-      }
-     
-      let cylinderEntity = generateCylinder(height, radius, colorId, palette, stepX, stepZ, animation, scale, proportion, radius_scale);
-      cylinderEntity.classList.add("babiaxraycasterclass")
-      this.chartEl.appendChild(cylinderEntity, el)
+    // List current cylinders
+    let chartEl = this.chartEl;
+    let cyls = chartEl.querySelectorAll('a-entity[babia-cyl]');
+    let currentCyls = {};
+    for (let cyl of cyls) {
+        let cylName = cyl.getAttribute('babia-name');
+        currentCyls[cylName] = {'el': cyl, 'found': false};
+    };
 
-      //Prepare legend
-      if (data.legend) {
-        showLegend(data, cylinderEntity, cylinder, el)
+    // Add or modify cyls for new data
+    for (let i = 0; i < dataToPrint.length; i++) {
+      let item = dataToPrint[i]
+
+      let xLabel = item[data.x_axis];
+      let zLabel = item[data.z_axis];
+      let cylEl;
+      let id = xLabel + '-' + zLabel;
+      let posX = xTicks[xLabels.indexOf(xLabel)];
+      let posZ = zTicks[zLabels.indexOf(zLabel)];
+      if ( currentCyls[id] && !item['_not'] ) {
+        cylEl = currentCyls[id].el;
+        currentCyls[id].found = true;
+      } else {
+        cylEl = document.createElement('a-entity');
+        cylEl.setAttribute('babia-name', id);
+        cylEl.id = id;
+        cylEl.object3D.position.x = posX;
+        cylEl.object3D.position.z = posZ;
+        this.chartEl.appendChild(cylEl);
       }
+      colorId = xLabels.indexOf(xLabel);
+      createCylinder(this, cylEl, data, item, colorId, xLabel, posX, posZ, zLabel);
     }
+
+    // Remove old cyls (not in new data)
+    for (let name in currentCyls) {
+      if ( !currentCyls[name].found ) {
+        currentCyls[name].el.remove();
+      };
+    };
 
     //Print axis
     if (data.axis) {
-      const lengthX = maxX
-      const lengthZ = maxZ
-      const lengthY = heightMax
-      this.updateAxis(xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, valueMax, lengthY);
+      let lastRadX = Math.max.apply(Math, map[xLabels.length-1].filter(function (o) { if( o != '' ) { return o ; }}));
+      const lengthX = xTicks[xTicks.length-1] + lastRadX * this.radius_scale + 0.5;
+      const lengthZ = zTicks[zTicks.length-1] + maxRadiusZ(map, xLabels.length, zLabels.length-1) * this.radius_scale + 0.5;
+      xTicks = xTicks + 0.25;
+      zTicks = zTicks + 0.25;
+      this.updateAxis(xLabels, xTicks, lengthX, valueMax, zLabels, zTicks, lengthZ);
     }
 
     //Print Title
@@ -224,25 +233,49 @@ AFRAME.registerComponent('babia-cylsmap', {
   /*
   * Update axis
   */
-  updateAxis: function(xLabels, xTicks, lengthX, zLabels, zTicks, lengthZ, valueMax, lengthY) {
-    let xAxisEl = document.createElement('a-entity');
-    this.chartEl.appendChild(xAxisEl);
-    xAxisEl.setAttribute('babia-axis-x',{'labels': xLabels, 'ticks': xTicks, 'length': lengthX,'palette': this.data.palette});
-    xAxisEl.setAttribute('position', {x: 0, y: 0, z: 0});
-  
-    let yAxisEl = document.createElement('a-entity');
-    this.chartEl.appendChild(yAxisEl);
-    yAxisEl.setAttribute('babia-axis-y',{'maxValue': valueMax, 'length': lengthY});
-    yAxisEl.setAttribute('position', {x: 0, y: 0, z: 0});
-  
-    let zAxisEl = document.createElement('a-entity');
-    this.chartEl.appendChild(zAxisEl);
-    zAxisEl.setAttribute('babia-axis-z',{'labels': zLabels, 'ticks': zTicks, 'length': lengthZ});
-    zAxisEl.setAttribute('position', {x: 0, y: 0, z: 0});
-    if (this.data.axis_name){
-        xAxisEl.setAttribute('babia-axis-x', 'name', this.data.x_axis);
-        yAxisEl.setAttribute('babia-axis-y', 'name', this.data.height);
-        zAxisEl.setAttribute('babia-axis-z', 'name', this.data.z_axis);
+  updateAxis: function(xLabels, xTicks, lengthX, maxValue, zLabels, zTicks, lengthZ) {
+    const data = this.data;
+    if (data.axis) {
+        if (!this.xAxisEl) {
+            this.xAxisEl = document.createElement('a-entity');
+            this.chartEl.appendChild(this.xAxisEl);
+        };
+        this.xAxisEl.setAttribute('babia-axis-x',
+            {'labels': xLabels, 'ticks': xTicks, 'length': lengthX,
+                'palette': data.palette, 'align': 'behind'});
+        this.xAxisEl.setAttribute('position', {
+            x: -0.25, y: 0, z: -0.25
+        });
+
+        if (!this.zAxisEl) {
+            this.zAxisEl = document.createElement('a-entity');
+            this.chartEl.appendChild(this.zAxisEl);
+        };
+        this.zAxisEl.setAttribute('babia-axis-z',
+            {'labels': zLabels, 'ticks': zTicks, 'length': lengthZ,
+                'palette': data.palette, 'align': 'left'});
+        this.zAxisEl.setAttribute('position', {
+            x: -0.25, y: 0, z: -0.25
+        });
+
+        if (!this.yAxisEl) {
+            this.yAxisEl = document.createElement('a-entity');
+            this.chartEl.appendChild(this.yAxisEl);
+        };
+        this.yAxisEl.setAttribute('babia-axis-y',
+            {'maxValue': maxValue, 'length': this.lengthY});
+        this.yAxisEl.setAttribute('position', {
+            x: -0.25, y: 0, z: -0.25
+        });
+        if (data.axis_name){
+            if (data.index =! "x_axis") {
+                this.xAxisEl.setAttribute('babia-axis-x', 'name', data.index);
+            } else {
+                this.xAxisEl.setAttribute('babia-axis-x', 'name', data.x_axis);
+            }
+            this.yAxisEl.setAttribute('babia-axis-y', 'name', data.height);
+            this.zAxisEl.setAttribute('babia-axis-z', 'name', data.z_axis);
+        }
     }
   },
 
@@ -253,99 +286,20 @@ AFRAME.registerComponent('babia-cylsmap', {
     console.log("processData", this);
     this.newData = data;
     this.babiaMetadata = { id: this.babiaMetadata.id++ };
-    while (this.el.firstChild)
-      this.el.firstChild.remove();
+    /*while (this.el.firstChild)
+      this.el.firstChild.remove();*/
     console.log("Generating cylsmap...")
     this.updateChart()
     this.notiBuffer.set(this.newData)
   }
 })
 
-function generateCylinder(height, radius, colorId, palette, positionX, positionZ, animation, scale, proportion, radius_scale) {
-  let color = colors.get(colorId, palette)
-  let entity = document.createElement('a-cylinder');
-  if (scale) {
-    height = height / scale
-    radius = radius / scale
-  } else if (proportion || radius_scale) {
-    if (proportion) {
-      height = proportion * height
+let maxRadiusZ = (map, length, j) => {
+  let rad = 0
+  for (i= 0; i < length; i++) {
+    if (map[i][j] && rad < map[i][j]){
+      rad = map[i][j];
     }
-    if (radius_scale) {
-      radius = radius_scale * radius
-    }
-  }
-  entity.setAttribute('color', color);
-  entity.setAttribute('height', 0);
-  entity.setAttribute('radius', radius);
-  // Add animation
-  if (animation) {
-    var duration = 4000
-    var increment = 20 * height / duration
-    var size = 0
-    var id = setInterval(animation, 1);
-    function animation() {
-      if (size >= height) {
-        clearInterval(id);
-      } else {
-        size += increment;
-        entity.setAttribute('height', size);
-        entity.setAttribute('position', { x: positionX, y: size / 2, z: positionZ });
-      }
-    }
-  } else {
-    entity.setAttribute('height', height);
-    entity.setAttribute('position', { x: positionX, y: height / 2, z: positionZ });
-  }
-  return entity;
+  }; 
+  return rad; 
 }
-
-function showLegend(data, cylinderEntity, cylinder, el) {
-  cylinderEntity.addEventListener('mouseenter', function () {
-    this.setAttribute('scale', { x: 1.1, y: 1.1, z: 1.1 });
-    legend = generateLegend(data, cylinder, cylinderEntity, el.getAttribute("scale"));
-    el.appendChild(legend);
-  });
-
-  cylinderEntity.addEventListener('mouseleave', function () {
-    this.setAttribute('scale', { x: 1, y: 1, z: 1 });
-    el.removeChild(legend);
-  });
-}
-
-function generateLegend(data, cylinder, cylinderEntity, scale) {
-  let text = ''
-  let lines = []
-  lines.push(cylinder[data.x_axis] + ' ' + cylinder[data.z_axis] + '\n');
-  lines.push('Height: ' + cylinder[data.height] + '\n');
-  lines.push('Radius: ' + cylinder[data.radius])
-  let width = 5;
-  for (let line of lines) {
-    if ((line.length > 10) && (width < line.length / 2)) {
-      width = line.length / 2;
-    }
-    text += line
-  }
-
-  let cylinderPosition = cylinderEntity.getAttribute('position')
-  let entity = document.createElement('a-plane');
-  let z = cylinderPosition.z;
-  if (scale)
-    z = z + (cylinder[data.radius] / 2) * scale.z;
-  else 
-    z = z + (cylinder[data.radius] / 2);
-  entity.setAttribute('position', {x: cylinderPosition.x, y: 2 * cylinderPosition.y + 3, z: z});
-  entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
-  entity.setAttribute('height', '4');
-  entity.setAttribute('width', width);
-  entity.setAttribute('color', 'white');
-  entity.setAttribute('text', {
-    'value': text,
-    'align': 'center',
-    'width': 20,
-    'color': 'black'
-  });
-  entity.classList.add("babiaxrLegend")
-  return entity;
-}
-

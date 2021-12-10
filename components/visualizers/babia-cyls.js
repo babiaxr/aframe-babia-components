@@ -191,7 +191,7 @@ AFRAME.registerComponent('babia-cyls', {
         this.chartEl.appendChild(cylEl);
       }
 
-      createCylinder(this, cylEl, data, item, colorId, xLabel, posX);
+      createCylinder(this, cylEl, data, item, colorId, xLabel, posX, 0);
   
       xLabels.push(xLabel);
       xTicks.push(posX);
@@ -268,7 +268,7 @@ AFRAME.registerComponent('babia-cyls', {
   }
 })
 
-let createCylinder = (self, cylEl, data, item, colorId, xLabel, posX) => {
+let createCylinder = (self, cylEl, data, item, colorId, xLabel, posX, posZ, zLabel) => {
   cylEl.setAttribute('babia-cyl', {
       'height': item[data.height] * self.lengthY / self.maxValue,
       'radius': item[data.radius] * self.radius_scale,
@@ -277,9 +277,15 @@ let createCylinder = (self, cylEl, data, item, colorId, xLabel, posX) => {
       'animation': data.animation
   });
   if (data.legend) {
-      cylEl.setAttribute('babia-cyl', {
-          'labelText': xLabel + ': ' + item[data.height]
-      });
+      if (!zLabel){
+        cylEl.setAttribute('babia-cyl', {
+          'labelText': xLabel + '\nHeight: ' + item[data.height] + '\nRadius: ' + item[data.radius]
+        });
+      } else {
+        cylEl.setAttribute('babia-cyl', {
+          'labelText': xLabel + ' | ' + zLabel + '\nHeight: ' + item[data.height] + '\nRadius: ' + item[data.radius]
+        });
+      }
   };
   if (posX !== cylEl.object3D.position.x) {
       if (data.animation) {
@@ -292,6 +298,17 @@ let createCylinder = (self, cylEl, data, item, colorId, xLabel, posX) => {
           cylEl.object3D.position.x = posX;
       };
   }
+  if (posZ !== cylEl.object3D.position.z) {
+    if (data.animation) {
+        cylEl.setAttribute('animation', {
+            'property': 'object3D.position.z',
+            'to': posZ,
+            'dur': data.dur
+        });
+    } else {
+        cylEl.object3D.position.z = posZ;
+    };
+}
   
 }
 
@@ -309,3 +326,5 @@ let createUiLink = (el, position) => {
   console.log('Create Button', el) 
   return
 }
+
+module.exports.createCylinder = createCylinder;
