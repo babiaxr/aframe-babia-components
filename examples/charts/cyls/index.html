@@ -22,17 +22,26 @@
             <a-asset-item id="optimerBoldFont" src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json"></a-asset-item>
         </a-assets>
 
-        <a-entity scale = "0.5 0.5. 0.5" babia-cyls='x_axis: key; legend: true; palette: ubuntu; title: babia-cyls;
+        <a-entity id="cyls" scale = "0.5 0.5. 0.5" babia-cyls='x_axis: key; legend: true; palette: ubuntu; title: babia-cyls;
             titleColor: #FFFFFF; titleFont: #optimerBoldFont; titlePosition: -10 0.5 5.5; radiusMax: 2; heightMax: 45; animation: true;
-            data: [{"key":"Andrea","height":20,"radius":4},{"key":"Jesus","height":40,"radius":2},{"key":"David","height":30,"radius":1},{"key":"David","height":20,"radius":3}]'
+            data: [{"key":"Andrea","height":20,"radius":4},{"key":"Jesus","height":40,"radius":2},{"key":"David","height":30,"radius":1},{"key":"Almudena","height":20,"radius":3}]'
         position="0 0 0" rotation="0 0 0"></a-entity>
 
-        <a-entity movement-controls="fly: true" position="-3 5 20">
-            <a-entity camera position="7 5 0" look-controls></a-entity>
+        <a-entity movement-controls="fly: true" position="2 3 8">
+            <a-entity camera position="0 0 0" look-controls></a-entity>
             <a-entity cursor="rayOrigin:mouse"></a-entity>
             <a-entity laser-controls="hand: right"></a-entity>
         </a-entity>
     </a-scene>
+
+    <script>
+        setTimeout(updateData, 4000);
+        let data = '[{"key":"Andrea","height":2,"radius":1},{"key":"Jesus","height":20,"radius":10},{"key":"David","height":1,"radius":5},{"key":"Almudena","height":25,"radius":20}]';
+
+        function updateData () {
+            document.querySelector('#cyls').setAttribute('babia-cyls', 'data', data);
+        }
+    </script>
 
     <!-- GITLAB CORNER-->
     <div class="gitlab-corner-wrapper"><a href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/charts/cyls/index.html" class="gitlab-corner"
