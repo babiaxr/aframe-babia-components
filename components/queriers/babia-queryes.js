@@ -74,15 +74,14 @@ AFRAME.registerComponent('babia-queryes', {
             url = `${data.elasticsearch_url}/${data.index}/_search`;
             // Get request body
             let request = await fetch(data.request);
-            let json;
             if (request.status == 200) {
-                json = await request.json();
+                this.json = await request.json();
                 // TODO: Throw error if json is not in the right format
-                json = parseJson(json);
+                this.json = parseJson(this.json);
             } else {
                 throw new Error(request.status);
             }
-            console.log(json['aggs'])
+            //console.log(this.json['aggs'])
             response = await fetch(url , {
                 method: 'POST',
                 mode: 'cors',
@@ -91,12 +90,12 @@ AFRAME.registerComponent('babia-queryes', {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
                 },
-                body: JSON.stringify(json)
+                body: JSON.stringify(this.json)
             });
         } 
         if (response.status == 200) {
             let json = await response.json();
-            console.log(json);
+            //console.log(json);
             json = this.parseDataES(json);
             // TODO: throw error if json is not in the right format
             this.notiBuffer.set(json);
@@ -106,11 +105,71 @@ AFRAME.registerComponent('babia-queryes', {
     },
 
     parseDataES: function(data) {
-        data = data.hits.hits;
         let save = []
-        for (let i = 0; i < data.length; i++) {
-            save[i] = data[i]._source
+        console.log('REQUEST:', this.json);
+        let aggs = Object.keys(data.aggregations)
+        if (this.json['aggs'] && aggs.length == 1 && !this.json['aggs'][aggs[0]]['aggs']) {
+            data = data.aggregations[aggs[0]].buckets 
+            for (let i = 0; i < data.length; i++) {
+                save.push(data[i])
+            }
+        } else if (this.json['aggs'] && aggs.length == 1 && this.json['aggs'][aggs[0]]['aggs']) {
+            data = data.aggregations[aggs[0]].buckets
+            for (let i = 0; i < data.length; i++) {
+                if (data[0][Object.keys(data[0])[0]].values){
+                    save.push({
+                        key_as_string: data[i].key_as_string,
+                        key: data[i].key,
+                        doc_count: data[i].doc_count,
+                        value: data[i][Object.keys(data[0])[0]].values[0].value
+                    })
+                } else if (data[0][Object.keys(data[0])[0]].value && data[0][Object.keys(data[0])[0]].length == 1){
+                    save.push({
+                        key_as_string: data[i].key_as_string,
+                        key: data[i].key,
+                        doc_count: data[i].doc_count,
+                        value: data[i][Object.keys(data[0])[0]].value
+                    })
+                } else if (data[0][Object.keys(data[0])[0]].buckets){
+                    for (let j = 0; j < data[i][Object.keys(data[0])[0]].buckets.length; j++){
+                        save.push({
+                            key_as_string: data[i].key_as_string,
+                            key: data[i][Object.keys(data[0])[0]].buckets[j].key,
+                            count: data[i][Object.keys(data[0])[0]].buckets[j].doc_count,
+                            doc_count: data[i].doc_count,
+                            value: data[i][Object.keys(data[0])[0]].value
+                        })
+                    }  
+                } else if (Object.keys(data[0]).length > 1){
+                    save.push({
+                        key_as_string: aggs[0],
+                        key: data[i].key,
+                        value: data[i].doc_count
+                    }) 
+                    for (let j = 0; j < Object.keys(data[0]).length; j++){
+                        if(data[i][Object.keys(data[0])[j]].value){
+                            save.push({
+                                key_as_string: Object.keys(data[0])[j],
+                                key: data[i].key,
+                                value: data[i][Object.keys(data[0])[j]].value
+                            }) 
+                        }
+                    }
+                } else {
+                    save.push({
+                        key_as_string: data[i].key_as_string,
+                        key: data[i].key,
+                        doc_count: data[i].doc_count
+                    }) 
+                }
+            }
+        } else {
+            data = data.hits.hits;
+            for (let i = 0; i < data.length; i++) {
+                save[i] = data[i]._source
+            }
         }
+        //console.log(save)
         return save
     }
 })
