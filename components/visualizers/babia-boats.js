@@ -688,6 +688,7 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('width', new_width);
             entity.setAttribute('height', new_height);
             entity.setAttribute('depth', new_depth);
+            entity.babiaRawData = figure.rawData
 
         } else if (((new_time - this.start_time) > this.duration) &&
             ((figure.width != figure_old.width) ||
@@ -697,7 +698,7 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('width', figure.width);
             entity.setAttribute('height', figure.height);
             entity.setAttribute('depth', figure.depth);
-            entity.setAttribute('babiaRawData', JSON.stringify(figure.rawData))
+            entity.babiaRawData = figure.rawData
         }
     },
 
@@ -770,7 +771,7 @@ AFRAME.registerComponent('babia-boats', {
         entity.setAttribute('depth', depth);
         // rawData building
         if (figure.rawData) {
-            entity.setAttribute('babiaRawData', JSON.stringify(figure.rawData))
+            entity.babiaRawData = figure.rawData
         }
 
         // add into scene
@@ -910,7 +911,7 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -944,7 +945,7 @@ AFRAME.registerComponent('babia-boats', {
                         depth: entityGeometry.depth + 0.1,
                         width: entityGeometry.width + 0.1
                     });
-                    legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', JSON.parse(entity.getAttribute('babiaRawData')), self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                    legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let height_real = new THREE.Box3().setFromObject(entity.object3D)
