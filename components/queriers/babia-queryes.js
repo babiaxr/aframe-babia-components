@@ -16,13 +16,13 @@ AFRAME.registerComponent('babia-queryes', {
         index: { type: 'string' },
         query: { type: 'string' },
         size: { type: 'int', default: 10 },
-        request: {type: 'string'},
+        request: { type: 'string' },
         user: { type: 'string' },
         password: { type: 'string' },
         // data, for debugging, highest priority
         data: { type: 'string' },
         // ONLY BARS
-        tableBars: {type: 'boolean', default: false},
+        tableBars: { type: 'boolean', default: false },
     },
 
     /**
@@ -33,7 +33,7 @@ AFRAME.registerComponent('babia-queryes', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { 
+    init: function () {
         // Buffer for setting the data obtained and notifying consumers
         this.notiBuffer = new NotiBuffer();
         this.tableBars = this.data.tableBars;
@@ -67,12 +67,18 @@ AFRAME.registerComponent('babia-queryes', {
         }
     },
 
-    getJSON: async function(data) {
+    getJSON: async function (data) {
         let url;
         let response;
-        if (data.size && data.query){
+        if (data.size && data.query) {
             url = `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`;
-            response = await fetch(url);
+            if (data.user && data.password) {
+                let headers = new Headers();
+                headers.append('Authorization', 'Basic ' + btoa(data.user + ':' + data.password));
+                response = await fetch(url, { headers: headers })
+            } else {
+                response = await fetch(url);
+            }
         } else if (data.request) {
             url = `${data.elasticsearch_url}/${data.index}/_search`;
             // Get request body
@@ -85,17 +91,32 @@ AFRAME.registerComponent('babia-queryes', {
                 throw new Error(request.status);
             }
             //console.log(this.json['aggs'])
-            response = await fetch(url , {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify(this.json)
-            });
-        } 
+            if (data.user && data.password) {
+                response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Authorization': 'Basic ' + btoa(data.user + ':' + data.password),
+                    },
+                    body: JSON.stringify(this.json)
+                });
+            } else {
+                response = await fetch(url, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify(this.json)
+                });
+            }
+            
+        }
         if (response.status == 200) {
             let json = await response.json();
             //console.log(json);
@@ -103,17 +124,17 @@ AFRAME.registerComponent('babia-queryes', {
             // TODO: throw error if json is not in the right format
             this.notiBuffer.set(json);
             return;
-        } 
+        }
         throw new Error(response.status);
     },
 
-    parseDataES: function(data) {
+    parseDataES: function (data) {
         let save = []
         console.log('REQUEST:', this.json);
         console.log('REPLY:', data)
         let aggs = Object.keys(data.aggregations)
         if (this.json['aggs'] && aggs.length == 1 && !this.json['aggs'][aggs[0]]['aggs']) {
-            data = data.aggregations[aggs[0]].buckets 
+            data = data.aggregations[aggs[0]].buckets
             for (let i = 0; i < data.length; i++) {
                 save.push(data[i])
             }
@@ -121,22 +142,22 @@ AFRAME.registerComponent('babia-queryes', {
             data = data.aggregations[aggs[0]].buckets
             for (let i = 0; i < data.length; i++) {
                 //console.log(data[0][Object.keys(data[0])[0]].buckets.length)
-                if (data[0][Object.keys(data[0])[0]].values){
+                if (data[0][Object.keys(data[0])[0]].values) {
                     save.push({
                         key_as_string: data[i].key_as_string,
                         key: data[i].key,
                         doc_count: data[i].doc_count,
                         value: data[i][Object.keys(data[0])[0]].values[0].value
                     })
-                } else if (data[0][Object.keys(data[0])[0]].value && data[0][Object.keys(data[0])[0]].length == 1){
+                } else if (data[0][Object.keys(data[0])[0]].value && data[0][Object.keys(data[0])[0]].length == 1) {
                     save.push({
                         key_as_string: data[i].key_as_string,
                         key: data[i].key,
                         doc_count: data[i].doc_count,
                         value: data[i][Object.keys(data[0])[0]].value
                     })
-                } else if (data[0][Object.keys(data[0])[0]].buckets && data[0][Object.keys(data[0])[0]].buckets.length > 0){
-                    for (let j = 0; j < data[i][Object.keys(data[0])[0]].buckets.length; j++){
+                } else if (data[0][Object.keys(data[0])[0]].buckets && data[0][Object.keys(data[0])[0]].buckets.length > 0) {
+                    for (let j = 0; j < data[i][Object.keys(data[0])[0]].buckets.length; j++) {
                         save.push({
                             key_as_string: data[i].key_as_string,
                             key: data[i][Object.keys(data[0])[0]].buckets[j].key,
@@ -144,22 +165,22 @@ AFRAME.registerComponent('babia-queryes', {
                             doc_count: data[i].doc_count,
                             value: data[i][Object.keys(data[0])[0]].value
                         })
-                    }  
-                } else if (Object.keys(data[0]).length > 1){
-                    if (this.tableBars == true){
+                    }
+                } else if (Object.keys(data[0]).length > 1) {
+                    if (this.tableBars == true) {
                         // ONLY FROM TABLE TO BARS
                         save.push({
                             key_as_string: aggs[0],
                             key: data[i].key,
                             value: data[i].doc_count
-                        }) 
-                        for (let j = 0; j < Object.keys(data[0]).length; j++){
-                            if(data[i][Object.keys(data[0])[j]].value){
+                        })
+                        for (let j = 0; j < Object.keys(data[0]).length; j++) {
+                            if (data[i][Object.keys(data[0])[j]].value) {
                                 save.push({
                                     key_as_string: Object.keys(data[0])[j],
                                     key: data[i].key,
                                     value: data[i][Object.keys(data[0])[j]].value
-                                }) 
+                                })
                             }
                         }
                     } else {
@@ -173,15 +194,15 @@ AFRAME.registerComponent('babia-queryes', {
                         } else {
                             element['key_as_string'] = aggs[0];
                         }
-                        for (let j = 0; j < Object.keys(data[0]).length; j++){
-                            if(data[i][Object.keys(data[0])[j]].value){
+                        for (let j = 0; j < Object.keys(data[0]).length; j++) {
+                            if (data[i][Object.keys(data[0])[j]].value) {
                                 element[Object.keys(data[0])[j]] = data[i][Object.keys(data[0])[j]].value;
                             }
                         }
-                        if (data[0][Object.keys(data[0])[0]].buckets){
-                            for(let j = 0; j < Object.keys(data[0][Object.keys(data[0])[0]].buckets).length; j++){
+                        if (data[0][Object.keys(data[0])[0]].buckets) {
+                            for (let j = 0; j < Object.keys(data[0][Object.keys(data[0])[0]].buckets).length; j++) {
                                 //console.log(Object.keys(data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]])[0])
-                                if (data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]][Object.keys(data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]])[0]].value){
+                                if (data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]][Object.keys(data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]])[0]].value) {
                                     element[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]] = data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]][Object.keys(data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]])[0]].value;
                                 } else {
                                     element[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]] = data[i][Object.keys(data[i])[0]].buckets[Object.keys(data[i][Object.keys(data[i])[0]].buckets)[j]].doc_count;
@@ -195,7 +216,7 @@ AFRAME.registerComponent('babia-queryes', {
                         key_as_string: data[i].key_as_string,
                         key: data[i].key,
                         doc_count: data[i].doc_count
-                    }) 
+                    })
                 }
             }
         } else {
