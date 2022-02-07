@@ -21,6 +21,8 @@ This component will put the data retrieved into the `babiaData` attribute of the
 | Property        | Description           | Type   | Default value |
 | --------        | -----------           | ----   | ------ |
 | elasticsearch_url             | Url of ElasticSearch  | string | - |
+| user             | Username for the ElasticSearch if secured  | string | - |
+| password             | Password for the ElasticSearch if secured | string | - |
 | index        | Index of the query | string   | - |
 | size         | Size of the max results of the query | int   | 10 |
 | query        | Query using the Lucene query string syntax, p.e: `q=name:dlumbrer`  | string   | - |
