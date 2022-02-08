@@ -46,11 +46,11 @@
                                 <a-entity  id="wall1-1" geometry="primitive: box; width: 0.5; depth: 8.7; height: 3" 
                                 material="shader: flat; src: #wall"></a-entity>
                                 <a-entity  id="shelf1-1" geometry="primitive: box; width: 0.35; depth: 2.5; height: 0.15" 
-                                material="shader: flat; src: #wood;" position="-0.5 -0.75 0" rotation="0 0 0">
+                                material="shader: flat; src: #wood;" position="-0.4 -0.75 0" rotation="0 0 0">
                                         <!-- Median Open Time (days) -->
                                         <a-entity id="median-open-time" babia-queryes="elasticsearch_url: https://f-l2108-pc02.aulas.etsit.urjc.es:49160; user: admin; password: admin; index: github_issues; request: issues_queries/median-open-time.json"
                                         babia-bars='height: value; x_axis: key_as_string; legend: true; chartHeight: 35; palette: flat' 
-                                        position="0.1 0.09 -1.1" rotation="0 -90 0" scale="0.03 0.03 0.03"></a-entity> 
+                                        position="0.1 0.08 -1.1" rotation="0 -90 0" scale="0.03 0.03 0.03"></a-entity> 
                                         <a-entity text-geometry='value: Median Open Time (days); font: #font' material='color: #000' 
                                         position='-0.179 -0.019 -1.158' rotation='0 -90 0' scale='0.1 0.1 0.1'></a-entity>
                                 </a-entity>
@@ -59,7 +59,7 @@
                                         <!-- 80 Percent Open Time (days) -->
                                         <a-entity id="80-percent-open-time" babia-queryes="elasticsearch_url: https://f-l2108-pc02.aulas.etsit.urjc.es:49160; user: admin; password: admin; index: github_issues; request: issues_queries/80-percent-open-time.json"
                                         babia-bars='height: value; x_axis: key_as_string; legend: true; chartHeight: 35; palette: flat' 
-                                        position="00 0.09 -1.1" rotation="0 -90 0" scale="0.03 0.03 0.03"></a-entity>
+                                        position="00 0.08 -1.1" rotation="0 -90 0" scale="0.03 0.03 0.03"></a-entity>
                                         <a-entity text-geometry='value: 80 Percent Open Time (days); font: #font' material='color: #000' 
                                         position='-0.216 -0.012 -1.116' rotation='0 -90 0' scale='0.1 0.1 0.1'></a-entity>
                                 </a-entity>
@@ -197,15 +197,16 @@
                 </a-entity>
                 
 
-                <!-- Controls and Camera -->
-                <a-entity id ="cameraRig" position="0 1.6 0">
-                        <a-entity id="head" camera look-controls
-                        wasd-controls="fly: false">
-                        </a-entity>
-                        <a-entity id ="cursor" cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass"></a-entity>
+        <!-- Controls and Camera -->
+        <a-entity id="cameraRig" position="0 1.6 0">
+                <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass; 
+                    raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom" 
+                    look-controls wasd-controls="fly: false">
+                    <a-entity></a-entity>
                 </a-entity>
-
+            </a-entity>
         </a-scene>
+
         <div class="gitlab-corner-wrapper"><a
                         href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/dashboard/chaoss-issues.html"
                         class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
