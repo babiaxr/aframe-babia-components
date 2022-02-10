@@ -126,16 +126,21 @@
         </div>
         <ul>
             <li>
-                <h3>Desert Multiuser Demo</h3>
+                <h3>Desert Bars with dynamic data change</h3>
                 <input class="btn" type="button" id="start_button" value="Start">
             </li>
-            <li>
+            <!-- <li>
                 <h3>Museum Multiuser Demo</h3>
                 <input class="btn" type="button" id="start_button_1" value="Start">
-            </li>
+            </li> -->
             <li>
-                <h3>Museum Multiuser Demo test UI</h3>
+                <h3>Museum with all charts and interaction</h3>
                 <input class="btn" type="button" id="start_button_2" value="Start">
+            </li>
+            <hr>
+            <li>
+                <h3>CodeCity city evolution of the JetUML project</h3>
+                <input class="btn" type="button" id="start_button_3" value="Start">
             </li>
         </ul>
     </div>
@@ -145,6 +150,7 @@
         let startButton = document.getElementById("start_button")
         let startButton1 = document.getElementById("start_button_1")
         let startButton2 = document.getElementById("start_button_2")
+        let startButton3 = document.getElementById("start_button_3")
 
         let serverUrlInput = document.getElementById("server_url");
         let serverURL = serverUrlInput.value;
@@ -187,12 +193,16 @@
             let url = "./desert_demo.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
             window.location.href = url;
         });
-        startButton1.addEventListener('click', function (event) {
-            let url = "../../demos/1.0.11/index_multiuser.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
-            window.location.href = url;
-        });
+        // startButton1.addEventListener('click', function (event) {
+        //     let url = "../../demos/1.0.11/index_multiuser.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+        //     window.location.href = url;
+        // });
         startButton2.addEventListener('click', function (event) {
             let url = "../../demos/1.0.11/index_multiuser_ui.html" + "?serverURL=" + serverURL + "&avatar=" + avatar;
+            window.location.href = url;
+        });
+        startButton3.addEventListener('click', function (event) {
+            let url = "../../multi_boats/jetuml_evolution_experiment.html"
             window.location.href = url;
         });
 
