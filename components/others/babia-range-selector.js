@@ -40,7 +40,8 @@ AFRAME.registerComponent('babia-range-selector', {
                         {label:'Last 6 months', time: 6*30*24*60*60000},
                         {label:'Last 1 year', time: 1*365*24*60*60000},
                         {label:'Last 2 years', time: 2*365*24*60*60000},
-                        {label:'Last 5 years', time: 5*365*24*60*60000}]
+                        {label:'Last 5 years', time: 5*365*24*60*60000}];
+        this.label_select = 'babia-button-' + this.options[0].label.replaceAll(' ', '-');
     },
 
     /**
@@ -56,6 +57,7 @@ AFRAME.registerComponent('babia-range-selector', {
     interface: undefined,
     options: undefined,
     handController: undefined,
+    label_select: undefined,
 
     updateInterface: function(data) {
         let self = this;
@@ -142,8 +144,12 @@ let createButton = (self, option, positionX, positionY) =>{
     })
     text.setAttribute('position', "0 0 0.01")
     entity.appendChild(text)
-    
+
     selection_events(self, entity)
+
+    if (self.label_select == entity.id){
+        entity.emit('click')
+    }
 
     return entity
 }

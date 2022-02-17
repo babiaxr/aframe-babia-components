@@ -27,6 +27,18 @@
         rangeSelector: interface"
         babia-bars='height: value; x_axis: key_as_string; legend: true; chartHeight: 35' 
         position="-4 0.08 0" rotation="0 0 0" scale="0.3 0.3 0.3"></a-entity>
+
+        <a-entity id="status" 
+        babia-queryes="elasticsearch_url: http://localhost:9200; index: data;
+        request: pullrequests_queries/status.json; rangeSelector: interface"
+        babia-pie='size: doc_count; legend: true' 
+        position="-18 3 0" rotation="90 60 0" scale="2 2 2"></a-entity>
+
+        <a-entity id="pull-requests-by-organization" 
+        babia-queryes="elasticsearch_url: http://localhost:9200; index: data; 
+        request: pullrequests_queries/pull-requests-by-organization.json; rangeSelector: interface"
+        babia-doughnut='size: doc_count; legend: true' 
+        position="-18 9 0" rotation="90 60 0" scale="1 1 1"></a-entity>
         
         <a-entity id="cameraRig" position="-3 5 12">
             <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass; 

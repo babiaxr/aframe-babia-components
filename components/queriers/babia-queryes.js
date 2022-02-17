@@ -47,6 +47,7 @@ AFRAME.registerComponent('babia-queryes', {
 
     update: function (oldData) {
         this.oldData = oldData;
+        let notiData = ''
         if (this.data.rangeSelector){
             let prodElement = document.getElementById(this.data.rangeSelector);
             if (prodElement.components['babia-range-selector']) {
@@ -55,9 +56,10 @@ AFRAME.registerComponent('babia-queryes', {
             if (this.prodComponent.notiBuffer) {
                 this.notiBufferId = this.prodComponent.notiBuffer
                     .register(this.updateQuerier.bind(this))
+                notiData = this.prodComponent.notiBuffer.data;
             }
         }
-        this.updateQuerier('', oldData)
+        this.updateQuerier(notiData)
     },
 
     updateQuerier: function (received){
@@ -79,6 +81,8 @@ AFRAME.registerComponent('babia-queryes', {
                     console.error("elasicsearch_url and index must be defined")
                     return
                 }
+            } else if (received) {
+                this.getJSON(data, received);
             }
         }
     },
@@ -106,7 +110,14 @@ AFRAME.registerComponent('babia-queryes', {
                 this.json = parseJson(this.json);
                 // Modify the request with new range
                 if (received){
-                    let range = this.json['query']['bool']['must'][3]['range'][Object.keys(this.json['query']['bool']['must'][3]['range'])[0]]
+                    // range index
+                    let index
+                    for (let i = 0; i < this.json['query']['bool']['must'].length; i++){
+                        if (this.json['query']['bool']['must'][i]['range']){
+                            index = i;
+                        }
+                    }
+                    let range = this.json['query']['bool']['must'][index]['range'][Object.keys(this.json['query']['bool']['must'][index]['range'])[0]]
                     range['gte'] = received.from;
                     range['lte'] = received.to;
                 }
