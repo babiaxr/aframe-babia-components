@@ -23,6 +23,7 @@ AFRAME.registerComponent('babia-queryes', {
         data: { type: 'string' },
         // ONLY BARS
         tableBars: { type: 'boolean', default: false },
+        rangeSelector: { type: 'string'}
     },
 
     /**
@@ -45,11 +46,26 @@ AFRAME.registerComponent('babia-queryes', {
     */
 
     update: function (oldData) {
+        this.oldData = oldData;
+        if (this.data.rangeSelector){
+            let prodElement = document.getElementById(this.data.rangeSelector);
+            if (prodElement.components['babia-range-selector']) {
+                this.prodComponent = prodElement.components['babia-range-selector']
+            } 
+            if (this.prodComponent.notiBuffer) {
+                this.notiBufferId = this.prodComponent.notiBuffer
+                    .register(this.updateQuerier.bind(this))
+            }
+        }
+        this.updateQuerier('', oldData)
+    },
+
+    updateQuerier: function (received){
         let data = this.data;
+        let oldData = this.oldData;
 
         // Highest priority to data
         if (data.data && oldData.data !== data.data) {
-            //parseEmbeddedJSONData(data.data, el, self)
             let _data = parseJson(data.data)
             this.notiBuffer.set(_data);
         } else {
@@ -58,7 +74,7 @@ AFRAME.registerComponent('babia-queryes', {
                 data.query !== oldData.query ||
                 data.size !== oldData.size) {
                 if (data.elasticsearch_url && data.index) {
-                    this.getJSON(data);
+                    this.getJSON(data, received);
                 } else {
                     console.error("elasicsearch_url and index must be defined")
                     return
@@ -67,9 +83,10 @@ AFRAME.registerComponent('babia-queryes', {
         }
     },
 
-    getJSON: async function (data) {
+    getJSON: async function (data, received) {
         let url;
         let response;
+
         if (data.size && data.query) {
             url = `${data.elasticsearch_url}/${data.index}/_search?size=${data.size}&${data.query}`;
             if (data.user && data.password) {
@@ -87,6 +104,12 @@ AFRAME.registerComponent('babia-queryes', {
                 this.json = await request.json();
                 // TODO: Throw error if json is not in the right format
                 this.json = parseJson(this.json);
+                // Modify the request with new range
+                if (received){
+                    let range = this.json['query']['bool']['must'][3]['range'][Object.keys(this.json['query']['bool']['must'][3]['range'])[0]]
+                    range['gte'] = received.from;
+                    range['lte'] = received.to;
+                }
             } else {
                 throw new Error(request.status);
             }

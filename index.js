@@ -34,6 +34,7 @@ require('./components/others/babia-ui-link')
 require('./components/others/babia-camera')
 require('./common/noti-buffer')
 require('./components/geometries/babia-cyl')
+require('./components/others/babia-range-selector')
 
 // Assets
 pauseButton = require('./components/others/models/pause_button.gltf')
