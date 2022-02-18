@@ -84,6 +84,7 @@ AFRAME.registerComponent('babia-range-selector', {
             let hand = event.target.getAttribute(controller).hand
             if (hand === 'left' && !document.querySelector('#babia-menu-hand')){
                 self.handController = event.target.id
+                self.interface = generateInterface(self)
                 insertInterfaceOnHand(self, self.handController)
             }    
         });
@@ -95,11 +96,11 @@ let insertInterfaceOnHand = (self, hand) => {
     let scale = 0.03
     self.interface.id = 'babia-menu-hand'
     self.interface.setAttribute('scale', {x: scale, y: scale, z: scale}) 
-    self.interface.setAttribute('position', {x: -scale * self.interface.width / 2, y: scale * self.interface.height /2, z: -0.1})
+    self.interface.setAttribute('position', {x: -0.05, y: -0.05, z: -0.1})
     self.interface.setAttribute('rotation', {x: -60, y: 0, z: 0}) 
     self.interface.setAttribute('visible', false)
     hand_entity.appendChild(self.interface);
-    openCloseMenu(self.handController, self.interface)
+    openCloseMenu(hand, self.interface)
 }
 
 
@@ -120,8 +121,6 @@ let generateInterface = (self) =>{
             posY = 7;
         }
     });
-    self.interface.width = posX;
-    self.interface.height = 7;
     return self.interface
 }
 
@@ -195,7 +194,7 @@ let selection_events = (self, entity) =>{
 }
 
 let openCloseMenu = (hand_id, entity_menu) =>{
-    let menu_opened = true
+    let menu_opened = false;
     let entity_hand = document.getElementById(hand_id)
     entity_hand.addEventListener('gripdown', function(){
         if (menu_opened){

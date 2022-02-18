@@ -9,7 +9,9 @@
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
     <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
-    <script src="../../../dist/aframe-babia-components.js"></script>
+    <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
+    <script src="https://unpkg.com/aframe-tooltip-component/dist/aframe-tooltip-component.min.js"></script>
+    <script src="../../dist/aframe-babia-components.js"></script>
 </head>
 
 <body>
@@ -22,32 +24,31 @@
                 position="-8 2 4" scale="0.5 0.5 0.5"></a-entity>
 
         <a-entity id="median-open-time" 
-        babia-queryes="elasticsearch_url: http://localhost:9200; index: data; 
+        babia-queryes="elasticsearch_url: https://f-l2108-pc02.aulas.etsit.urjc.es:49160; user: admin; password: admin; index: github_issues;
         request: pullrequests_queries/median-open-time.json;
         rangeSelector: interface"
         babia-bars='height: value; x_axis: key_as_string; legend: true; chartHeight: 35' 
         position="-4 0.08 0" rotation="0 0 0" scale="0.3 0.3 0.3"></a-entity>
 
         <a-entity id="status" 
-        babia-queryes="elasticsearch_url: http://localhost:9200; index: data;
+        babia-queryes="elasticsearch_url: https://f-l2108-pc02.aulas.etsit.urjc.es:49160; user: admin; password: admin; index: github_issues;
         request: pullrequests_queries/status.json; rangeSelector: interface"
         babia-pie='size: doc_count; legend: true' 
         position="-18 3 0" rotation="90 60 0" scale="2 2 2"></a-entity>
 
         <a-entity id="pull-requests-by-organization" 
-        babia-queryes="elasticsearch_url: http://localhost:9200; index: data; 
+        babia-queryes="elasticsearch_url: https://f-l2108-pc02.aulas.etsit.urjc.es:49160; user: admin; password: admin; index: github_issues; 
         request: pullrequests_queries/pull-requests-by-organization.json; rangeSelector: interface"
         babia-doughnut='size: doc_count; legend: true' 
         position="-18 9 0" rotation="90 60 0" scale="1 1 1"></a-entity>
         
         <a-entity id="cameraRig" position="-3 5 12">
             <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass; 
-            raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom" 
+            raycasterHand: .babiaxraycasterclass; teleportCollision: .environmentGround; gripLLabel: Open/Close \nMenu," 
             look-controls wasd-controls="fly: false">
             <a-entity></a-entity>
             </a-entity>
         </a-entity>
-
     </a-scene>
 
     <!-- GITLAB CORNER-->
