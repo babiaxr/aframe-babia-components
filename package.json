@@ -20,7 +20,8 @@
     "test:chrome": "cypress run --browser chrome"
   },
   "dependencies": {
-    "networked-aframe": "^0.8.0"
+    "networked-aframe": "^0.8.0",
+    "papaparse": "^5.3.1"
   },
   "repository": {
     "type": "git",

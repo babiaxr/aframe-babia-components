@@ -1,5 +1,6 @@
 require('./components/queriers/babia-querygithub')
 require('./components/queriers/babia-queryjson')
+require('./components/queriers/babia-querycsv')
 require('./components/queriers/babia-queryes')
 require('./components/others/babia-ui')
 require('./components/filters/babia-filter')

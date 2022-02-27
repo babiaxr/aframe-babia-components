@@ -25,6 +25,8 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponent = prodElement.components['babia-filter']
         } else if (prodElement.components['babia-queryjson']) {
             prodComponent = prodElement.components['babia-queryjson']
+        } else if (prodElement.components['babia-querycsv']) {
+            prodComponent = prodElement.components['babia-querycsv']
         } else if (prodElement.components['babia-queryes']) {
             prodComponent = prodElement.components['babia-queryes']
         } else if (prodElement.components['babia-querygithub']) {
@@ -44,6 +46,8 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponentNodes = prodElementNodes.components['babia-filter']
         } else if (prodElementNodes.components['babia-queryjson']) {
             prodComponentNodes = prodElementNodes.components['babia-queryjson']
+        } else if (prodElementNodes.components['babia-querycsv']) {
+            prodComponentNodes = prodElementNodes.components['babia-querycsv']
         } else if (prodElementNodes.components['babia-queryes']) {
             prodComponentNodes = prodElementNodes.components['babia-queryes']
         } else if (prodElementNodes.components['babia-querygithub']) {
@@ -59,6 +63,8 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponentLinks = prodElementLinks.components['babia-filter']
         } else if (prodElementLinks.components['babia-queryjson']) {
             prodComponentLinks = prodElementLinks.components['babia-queryjson']
+        } else if (prodElementLinks.components['babia-querycsv']) {
+            prodComponentLinks = prodElementLinks.components['babia-querycsv']
         } else if (prodElementLinks.components['babia-queryes']) {
             prodComponentLinks = prodElementLinks.components['babia-queryes']
         } else if (prodElementLinks.components['babia-querygithub']) {
@@ -75,6 +81,8 @@ let findProdComponent = (data, el, selfProducer) => {
             prodComponent = el.components['babia-filter']
         } else if (el.components['babia-queryjson'] && selfProducer != 'babia-queryjson') {
             prodComponent = el.components['babia-queryjson']
+        } else if (el.components['babia-querycsv'] && selfProducer != 'babia-querycsv') {
+            prodComponent = el.components['babia-querycsv']
         } else if (el.components['babia-queryes'] && selfProducer != 'babia-queryes') {
             prodComponent = el.components['babia-queryes']
         } else if (el.components['babia-querygithub'] && selfProducer != 'babia-querygithub') {
@@ -89,7 +97,9 @@ let findProdComponent = (data, el, selfProducer) => {
                 prodComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
             } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
                 prodComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
-            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
+            } else if (document.querySelectorAll("[babia-querycsv]").length > 0) {
+                prodComponent = document.querySelectorAll("[babia-querycsv]")[0].components['babia-queryjson']
+            } else if (document.querySelectorAll("[babia-queryes]").length > 0) {
                 prodComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
             } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
                 prodComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
