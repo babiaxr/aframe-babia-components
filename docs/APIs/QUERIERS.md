@@ -43,6 +43,19 @@ This component will put the data retrieved into the `babiaData` attribute of the
 | url             | Url of the file with the JSON data  | string | - |
 | data        | JSON data directly stringified in the property | string   | - |
 
+### babia-querycsv component
+
+Component that will retrieve data from a CSV input that can be defined as an url or directly embedded.
+
+This component will put the data retrieved into the `babiaData` attribute of the entity.
+
+#### API
+
+| Property        | Description           | Type   | Default value |
+| --------        | -----------           | ----   | ------ |
+| url             | Url of the file with the CSV data  | string | - |
+| data        | CSV data directly stringified in the property | string   | - |
+
 
 ### babia-querygithub component
 
