@@ -2,29 +2,15 @@
 
 This doc gathers all the information about the releases made by the Springs/Milestones of BabiaXR.
 
-## Springs/Milestones
-
-| Name        | Start date           | End Date   | Information | Board | Release Notes | NPM version |
-| --------        | -----------           | ----   | ----- | ------ | ------ | ------- |
-| Akira         | 2020-04-22   |   2020-05-06  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/2) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Akira) | [Link](#akira) | 1.0.7 |
-| Bobobo         | 2020-05-06   |   2020-05-20 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/3) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Bobobo) | [Link](#bobobo) | 1.0.8 |
-| Cowboy Bepop         | 2020-05-20   |  2020-06-11  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/4) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Cowboy%20Bepop) | [Link](#cowboy-bepop) | 1.0.9 |
-| Detective Conan         | 2020-06-10   |  2020-06-24  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/5) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Detective%20Conan) | [Link](#detective-conan) | 1.0.10 |
-| Excel Saga        | 2020-06-24  |  2020-07-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/6) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Excel%20Saga) | [Link](#excel-saga) | - |
-| Fairy Tail        | 2020-07-22   |  2020-08-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/7) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Fairy%20Tail) | [Link](#fairy-tail) | - |
-| Gantz         | 2020-08-19   |  2020-09-02  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/8) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Gantz) | [Link](#gantz) | - |
-| Haikyu!!         | 2020-09-09   |  2020-10-22  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/9) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Haikyu!!) | [Link](#haikyu!!)  | 1.0.11 |
-| Inuyasha        | 2020-10-22   |  2020-11-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/10) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Inuyasha) | [Link](#inuyasha)  | 1.0.12 |
-| Kakegurui        | -   |  -  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
-| Light        | -   |  2021-03-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/13) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Light) | [Link](#light)  | 1.1.1 |
-| Mazinger Z        | -   |  2021-04-21  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#mazinger-z)  | - |
-| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | 1.1.2 |
-| One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | 1.1.3 |
-| Pokemon        | 2021-06-07   |  2021-06-26 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/17) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Pokemon) | [Link](#pokemon)  | 1.1.4 |
-| Queens Blade        | 2021-06-26   |  2021-09-29 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/18) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Queens%20Blade) | [Link](#queens-blade)  | 1.2.1 |
-
-
 ## Release notes
+
+### No-name
+
+> NPM 1.2.3 version
+
+#### Querycsv
+
+Included this new component
 
 ### ReLIFE
 
@@ -295,3 +281,28 @@ Selector adapted to all the components
 - Added cylinder (3D an 3D) and doughnut charts to the components set.
 - Added animation to the visualizations (except pie and doughnut chart).
 - Added Totem chart in order to change the data of some visualizations dynamically.
+
+
+
+## Springs/Milestones
+
+| Name        | Start date           | End Date   | Information | Board | Release Notes | NPM version |
+| --------        | -----------           | ----   | ----- | ------ | ------ | ------- |
+| Akira         | 2020-04-22   |   2020-05-06  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/2) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Akira) | [Link](#akira) | 1.0.7 |
+| Bobobo         | 2020-05-06   |   2020-05-20 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/3) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Bobobo) | [Link](#bobobo) | 1.0.8 |
+| Cowboy Bepop         | 2020-05-20   |  2020-06-11  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/4) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Cowboy%20Bepop) | [Link](#cowboy-bepop) | 1.0.9 |
+| Detective Conan         | 2020-06-10   |  2020-06-24  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/5) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Detective%20Conan) | [Link](#detective-conan) | 1.0.10 |
+| Excel Saga        | 2020-06-24  |  2020-07-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/6) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Excel%20Saga) | [Link](#excel-saga) | - |
+| Fairy Tail        | 2020-07-22   |  2020-08-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/7) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Fairy%20Tail) | [Link](#fairy-tail) | - |
+| Gantz         | 2020-08-19   |  2020-09-02  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/8) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Gantz) | [Link](#gantz) | - |
+| Haikyu!!         | 2020-09-09   |  2020-10-22  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/9) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Haikyu!!) | [Link](#haikyu!!)  | 1.0.11 |
+| Inuyasha        | 2020-10-22   |  2020-11-05  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/10) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Inuyasha) | [Link](#inuyasha)  | 1.0.12 |
+| Kakegurui        | -   |  -  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/12) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Kakegurui) | [Link](#kakegurui)  | 1.1.0 |
+| Light        | -   |  2021-03-08  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/13) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Light) | [Link](#light)  | 1.1.1 |
+| Mazinger Z        | -   |  2021-04-21  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/14) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Mazinger%20Z) | [Link](#mazinger-z)  | - |
+| Naruto        | -   |  2021-05-04  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/15) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&utf8=%E2%9C%93&milestone_title=Naruto) | [Link](#naruto)  | 1.1.2 |
+| One Punch Man        | 2021-05-04   |  2021-06-07  | [Link](https://gitlab.com/groups/babiaxr/-/milestones/16) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=One%20Punch%20Man) | [Link](#one-punch-man)  | 1.1.3 |
+| Pokemon        | 2021-06-07   |  2021-06-26 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/17) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Pokemon) | [Link](#pokemon)  | 1.1.4 |
+| Queens Blade        | 2021-06-26   |  2021-09-29 | [Link](https://gitlab.com/groups/babiaxr/-/milestones/18) | [Link](https://gitlab.com/groups/babiaxr/-/boards?scope=all&milestone_title=Queens%20Blade) | [Link](#queens-blade)  | 1.2.1 |
+
+**DEPRECATED**
