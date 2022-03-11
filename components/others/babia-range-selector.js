@@ -14,6 +14,7 @@ AFRAME.registerComponent('babia-range-selector', {
     schema: {
         from: { type: 'string' },
         to: { type: 'string' },
+        default: {type: 'string', default: 'Last 1 year'}
     },
 
     /**
@@ -41,7 +42,15 @@ AFRAME.registerComponent('babia-range-selector', {
                         {label:'Last 1 year', time: 1*365*24*60*60000},
                         {label:'Last 2 years', time: 2*365*24*60*60000},
                         {label:'Last 5 years', time: 5*365*24*60*60000}];
-        this.label_select = 'babia-button-' + this.options[0].label.replaceAll(' ', '-');
+        // Set Initial Option
+        let index = 0;
+        for (i = 0; i < this.options.length; i++){
+            if (this.data.default === this.options[i].label){
+                index = i;
+                break;
+            }
+        }
+        this.label_select = 'babia-button-' + this.options[index].label.replaceAll(' ', '-');
     },
 
     /**
