@@ -21,6 +21,7 @@ AFRAME.registerComponent('babia-bubbles', {
         z_axis: { type: 'string', default: 'z_axis' },
         from: { type: 'string' },
         legend: { type: 'boolean' },
+        legend_lookat: { type: 'string', default: "[camera]" },
         axis: { type: 'boolean', default: true },
         // Name for axis
         axis_name: {type: 'boolean', default: false},
@@ -324,6 +325,7 @@ function generateLegend(data, bubble, bubbleEntity) {
         'color': 'black'
     });
     entity.classList.add("babiaxrLegend")
+    entity.setAttribute('babia-lookat', data.legend_lookat);
     return entity;
 }
 
