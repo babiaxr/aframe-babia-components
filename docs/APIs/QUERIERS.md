@@ -27,6 +27,8 @@ This component will put the data retrieved into the `babiaData` attribute of the
 | size         | Size of the max results of the query | int   | 10 |
 | query        | Query using the Lucene query string syntax, p.e: `q=name:dlumbrer`  | string   | - |
 | request        | JSON body with aggregations that summarizes your data  (See [example](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/queryes/index.html))| string   | - |
+| rangeSelector        | ID from the range selector entity (See this [doc](./OTHERS.md)| string   | - |
+
 
 > **Important**: The ElasticSearch must have enabled cross-origin resource sharing because the queries are made by the browser. See this [ElasticSearch reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-http.html)
 

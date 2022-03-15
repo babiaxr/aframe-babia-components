@@ -82,7 +82,6 @@ This component shows a simple 2D bar chart.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
-| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
@@ -117,7 +116,6 @@ This component shows a bars map.
 | legend          | Shows a legend when hovering a bar  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
-| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
@@ -188,7 +186,6 @@ This component shows a cylinder chart.
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
-| scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | chartHeight          | Adjusts the height of the chart.  | number | 10 |
 | keepHeight          | Keep height when updating data.  | boolean | true |
 | radiusMax          | Adjusts bubbles' radius of the chart.  | number | 2 |

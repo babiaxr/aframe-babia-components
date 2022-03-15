@@ -149,3 +149,18 @@ This component replaces A-frame camera and cursor components and inserts oculus 
 ```html
     <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button; raycasterHand: .babiaxraycasterclass, #audio_button" look-controls wasd-controls="fly: false"></a-entity>
 ```
+
+#### **babia-range-selector component**
+
+This component uses the queryes component in order to change the time range in the query (only used in requests). It includes 
+
+#### API
+
+| Property       | Description           | Type   | Default value |
+| --------       | -----------           | ----   | ----- |
+| default           | Default time range in the list, options: `Last 5 years, Last 2 years, Last 1 year, Last 6 months, Last 90 days, Last 60 days, Last 30 days, Last 7 days, Last 24 hours, Last 12 hours, Last 4 hours, Last 1 hour, Last 30 minutes, Last 15 minutes` | string | `Last 1 year` | 
+
+```html
+    <!-- UI -->
+    <a-entity id="interface" babia-range-selector position="3.376 1.072 -3.073" rotation="0 -90 0" scale="0.132 0.132 0.132"></a-entity>
+```
