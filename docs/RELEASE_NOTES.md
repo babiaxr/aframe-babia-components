@@ -4,6 +4,21 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### NPM 1.2.4 version
+
+#### Range Selector
+
+- Included this new component
+- Default value now can be custom
+
+#### barsmap
+
+- When data changes the bars now changes, fixed the bug
+
+#### Legends
+
+- Add lookat and scale to the legends in bars, cyls, doughnut, pie and bubbles
+
 ### No-name
 
 > NPM 1.2.3 version
