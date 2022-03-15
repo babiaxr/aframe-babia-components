@@ -20,7 +20,9 @@ AFRAME.registerComponent('babia-cyl', {
         // Label for the cylinder ('', 'fixed', 'events')
         label: { type: 'string', default: ''},
         // Label text (valid if label is not empty)
-        labelText: { type: 'string', default: ''}
+        labelText: { type: 'string', default: ''},
+        // Label lookat for following
+        labelLookat: { type: 'string', default: "[camera]" }
     },
 
     init: function() {
@@ -166,6 +168,9 @@ AFRAME.registerComponent('babia-cyl', {
             this.labelEl.setAttribute('babia-label', { 'text': data.labelText });
         }
 
+        if(data.labelLookat && oldData.labelLookat !== data.labelLookat){
+            this.labelEl.setAttribute('babia-lookat', data.labelLookat);
+        }
     },
 
     hideLabel: function () {
