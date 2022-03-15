@@ -14,7 +14,7 @@ AFRAME.registerComponent('babia-range-selector', {
     schema: {
         from: { type: 'string' },
         to: { type: 'string' },
-        default: {type: 'string', default: 'Last 1 year'}
+        defaultRange: {type: 'string', default: 'Last 5 years'}
     },
 
     /**
@@ -45,7 +45,7 @@ AFRAME.registerComponent('babia-range-selector', {
         // Set Initial Option
         let index = 0;
         for (i = 0; i < this.options.length; i++){
-            if (this.data.default === this.options[i].label){
+            if (this.data.defaultRange === this.options[i].label){
                 index = i;
                 break;
             }

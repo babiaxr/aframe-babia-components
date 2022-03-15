@@ -158,7 +158,7 @@ This component uses the queryes component in order to change the time range in t
 
 | Property       | Description           | Type   | Default value |
 | --------       | -----------           | ----   | ----- |
-| default           | Default time range in the list, options: `Last 5 years, Last 2 years, Last 1 year, Last 6 months, Last 90 days, Last 60 days, Last 30 days, Last 7 days, Last 24 hours, Last 12 hours, Last 4 hours, Last 1 hour, Last 30 minutes, Last 15 minutes` | string | `Last 1 year` | 
+| defaultRange           | Default time range in the list, options: `Last 5 years, Last 2 years, Last 1 year, Last 6 months, Last 90 days, Last 60 days, Last 30 days, Last 7 days, Last 24 hours, Last 12 hours, Last 4 hours, Last 1 hour, Last 30 minutes, Last 15 minutes` | string | `Last 1 year` | 
 
 ```html
     <!-- UI -->
