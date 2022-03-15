@@ -22,6 +22,7 @@ AFRAME.registerComponent('babia-barsmap', {
         z_axis: { type: 'string', default: 'z_axis' },
         from: { type: 'string' },
         legend: { type: 'boolean' },
+        legend_lookat: { type: 'string', default: "[camera]" },
         axis: { type: 'boolean', default: true },
         // Name for axis
         axis_name: {type: 'boolean', default: false},
@@ -279,7 +280,8 @@ AFRAME.registerComponent('babia-barsmap', {
 
             if (data.legend) {
                 barEl.setAttribute('babia-bar', {
-                    'labelText': xLabel + ', ' + zLabel + ': ' + item[data.height]
+                    'labelText': xLabel + ', ' + zLabel + ': ' + item[data.height],
+                    'labelLookat': data.legend_lookat
                 });
             };
         }
@@ -337,7 +339,8 @@ AFRAME.registerComponent('babia-barsmap', {
                             this.chartEl.querySelector('#' + bar[data.x_axis] + bar[data.z_axis]).setAttribute('babia-bar', 
                             {
                                 'height': bar[data.height] * data.chartHeight / this.maxValue,
-                                'labelText': bar[data.x_axis] +"," + bar[data.z_axis] + ': ' + bar[data.height]
+                                'labelText': bar[data.x_axis] +"," + bar[data.z_axis] + ': ' + bar[data.height],
+                                'labelLookat': data.legend_lookat
                             })
                         } else {
                             // Create new bar
@@ -409,7 +412,8 @@ let generateBar = (self, data, item, maxValue, palette, xLabels, zLabels, xTicks
 
     if (data.legend) {
         barEl.setAttribute('babia-bar', {
-            'labelText': item[self.data.x_axis] + ': ' + item[self.data.height]
+            'labelText': item[self.data.x_axis] + ': ' + item[self.data.height],
+            'labelLookat': data.legend_lookat
         });
     };
 

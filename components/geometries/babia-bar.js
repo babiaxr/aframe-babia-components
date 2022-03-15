@@ -22,7 +22,9 @@ AFRAME.registerComponent('babia-bar', {
         // Label for the bar ('', 'fixed', 'events')
         label: { type: 'string', default: ''},
         // Label text (valid if label is not empty)
-        labelText: { type: 'string', default: ''}
+        labelText: { type: 'string', default: ''},
+        // Label lookat for following
+        labelLookat: { type: 'string', default: "[camera]" }
     },
 
     init: function() {
@@ -170,6 +172,10 @@ AFRAME.registerComponent('babia-bar', {
         this.labelEl.setAttribute('rotation', {x: 0, y: 0, z: 0});
         if (text != oldData.labelText) {
             this.labelEl.setAttribute('babia-label', { 'text': data.labelText });
+        }
+
+        if(data.labelLookat && oldData.labelLookat !== data.labelLookat){
+            this.labelEl.setAttribute('babia-lookat', data.labelLookat);
         }
 
     },
