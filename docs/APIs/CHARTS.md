@@ -24,6 +24,7 @@ This component shows a pie chart.
 | key          | The field of the data that will define each slice of the pie. (Make sure that this field has unique values!) | string | key |
 | size          | The **numeric** field of the data that will define the size of the slices | string | size |
 | legend          | Shows a legend when hovering a slice  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
@@ -52,6 +53,7 @@ This component shows a doughnut chart.
 | key          | The field of the data that will define each slice of the pie. (Make sure that this field has unique values!) | string | key |
 | size          | The **numeric** field of the data that will define the size of the slices | string | size |
 | legend          | Shows a legend when hovering a slice  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
@@ -80,6 +82,7 @@ This component shows a simple 2D bar chart.
 | x_axis          | The field of the data that will define the tags of the x_axis of the chart (as a keys). (Make sure that this field has unique values!) | string | x_axis |
 | height          | the **numeric** field of the data that will define the height of the bars | string | height |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
@@ -114,6 +117,7 @@ This component shows a bars map.
 | z_axis          | The field of the data that will define the tags of the z_axis of the chart (as a keys). (Make sure that this field has unique values!) | string | z_axis |
 | height          | the **numeric** field of the data that will define the height of the bars | string | height |
 | legend          | Shows a legend when hovering a bar  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
@@ -149,6 +153,7 @@ This component shows a 3D Bubbles chart.
 | height          | the **numeric** field of the data that will define the height of the bubbles | string | height |
 | radius          | the **numeric** field of the data that will define the radius of the bubbles | string | radius |
 | legend          | Shows a legend when hovering a bubble  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | axis          | Shows chart axis  | boolean | true |
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | heightMax          | Adjusts the height of the chart.  | number | - |
@@ -184,6 +189,7 @@ This component shows a cylinder chart.
 | height          | the **numeric** field of the data that will define the height of the cylynders | string | height |
 | radius          | the **numeric** field of the data that will define the radius of the cylynders | string | radius |
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
 | chartHeight          | Adjusts the height of the chart.  | number | 10 |
@@ -221,6 +227,7 @@ This component shows a 3D cylinder chart.
 | height          | the **numeric** field of the data that will define the height of the cylynders | string | height |
 | radius          | the **numeric** field of the data that will define the radius of the cylynders | string | radius |
 | legend          | Shows a legend when hovering a cylinder  | boolean | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
@@ -299,6 +306,7 @@ This component shows a city in boats.
 | height          | Field in data items to represent as building height | string | height |
 | color          | Field in data items to represent the color of the buildings as HSL heatmap | string | - |
 | building_separation  | Separation of the buildings by a numeric factor | number | 0.25 |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | border          | Size of border around buildings (streets are built on it) | number | 0.5 |
 | extra          | Extra factor for total area with respect to built area | number | 1.0 |
 | zone_elevation          | Zone: elevation for each "depth" of quarters, over the previous one | number | 0.3 |
