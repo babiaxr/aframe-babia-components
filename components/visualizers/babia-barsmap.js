@@ -221,7 +221,12 @@ AFRAME.registerComponent('babia-barsmap', {
         let zTicks = [];
 
         let chartEl = this.chartEl;
-        console.log(dataToPrint)
+        // RESET CHART REMOVING ALL THE BARS
+        let bars = chartEl.querySelectorAll('a-entity[babia-bar]');
+        bars.forEach(barToDelete => {
+            barToDelete.remove()
+        });
+        //console.log(dataToPrint)
         for (let i = 0; i < dataToPrint.length; i++) {
             let item = dataToPrint[i]
  
