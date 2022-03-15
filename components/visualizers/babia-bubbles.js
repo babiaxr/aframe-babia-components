@@ -22,6 +22,7 @@ AFRAME.registerComponent('babia-bubbles', {
         from: { type: 'string' },
         legend: { type: 'boolean' },
         legend_lookat: { type: 'string', default: "[camera]" },
+        legend_scale: { type: 'number', default: 1 },
         axis: { type: 'boolean', default: true },
         // Name for axis
         axis_name: {type: 'boolean', default: false},
@@ -326,6 +327,7 @@ function generateLegend(data, bubble, bubbleEntity) {
     });
     entity.classList.add("babiaxrLegend")
     entity.setAttribute('babia-lookat', data.legend_lookat);
+    entity.setAttribute('scale',{x: data.legend_scale, y: data.legend_scale, z: data.legend_scale});
     return entity;
 }
 

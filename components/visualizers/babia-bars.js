@@ -20,6 +20,7 @@ AFRAME.registerComponent('babia-bars', {
         from: { type: 'string' },
         legend: { type: 'boolean', default: false },
         legend_lookat: { type: 'string', default: "[camera]" },
+        legend_scale: { type: 'number', default: 1 },
         axis: { type: 'boolean', default: true },
         // Name for axis
         axis_name: {type: 'boolean', default: false},
@@ -245,6 +246,7 @@ AFRAME.registerComponent('babia-bars', {
                 barEl.setAttribute('babia-bar', {
                     'labelText': xLabel + ': ' + item[data.height],
                     'labelLookat': data.legend_lookat,
+                    'labelScale': data.legend_scale
                 });
             };
             if (posX !== barEl.object3D.position.x) {
@@ -320,7 +322,8 @@ AFRAME.registerComponent('babia-bars', {
                             {
                                 'height': bar[data.height] * data.chartHeight / this.maxValue,
                                 'labelText': bar[data.index] + ': ' + bar[data.height],
-                                'labelLookat': data.legend_lookat
+                                'labelLookat': data.legend_lookat,
+                                'labelScale': data.legend_scale
                             })
                         } else {
                             // Find last bar and get its position
@@ -367,6 +370,7 @@ let generateBar = (self, data, item, colorId, palette, stepX ) => {
         bar.setAttribute('babia-bar', {
             'labelText': item[self.data.x_axis] + ': ' + item[self.data.height],
             'labelLookat': data.legend_lookat,
+            'labelScale': data.legend_scale
         });
     };
     bar.setAttribute('position', { x: stepX, y: 0, z: 0 }); 

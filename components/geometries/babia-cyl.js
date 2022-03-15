@@ -171,6 +171,10 @@ AFRAME.registerComponent('babia-cyl', {
         if(data.labelLookat && oldData.labelLookat !== data.labelLookat){
             this.labelEl.setAttribute('babia-lookat', data.labelLookat);
         }
+
+        if(data.labelScale && oldData.labelScale !== data.labelScale){
+            this.labelEl.setAttribute('scale',{x: data.labelScale, y: data.labelScale, z: data.labelScale});
+        }
     },
 
     hideLabel: function () {

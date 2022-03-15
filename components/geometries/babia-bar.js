@@ -24,7 +24,9 @@ AFRAME.registerComponent('babia-bar', {
         // Label text (valid if label is not empty)
         labelText: { type: 'string', default: ''},
         // Label lookat for following
-        labelLookat: { type: 'string', default: "[camera]" }
+        labelLookat: { type: 'string', default: "[camera]" },
+        // Scale for the label
+        labelScale: { type: 'number', default: 1 },
     },
 
     init: function() {
@@ -176,6 +178,10 @@ AFRAME.registerComponent('babia-bar', {
 
         if(data.labelLookat && oldData.labelLookat !== data.labelLookat){
             this.labelEl.setAttribute('babia-lookat', data.labelLookat);
+        }
+
+        if(data.labelScale && oldData.labelScale !== data.labelScale){
+            this.labelEl.setAttribute('scale',{x: data.labelScale, y: data.labelScale, z: data.labelScale});
         }
 
     },

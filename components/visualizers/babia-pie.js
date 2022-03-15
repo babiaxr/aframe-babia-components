@@ -20,6 +20,7 @@ AFRAME.registerComponent('babia-pie', {
         from: { type: 'string' },
         legend: { type: 'boolean' },
         legend_lookat: { type: 'string', default: "[camera]" },
+        legend_scale: { type: 'number', default: 1 },
         palette: { type: 'string', default: 'ubuntu' },
         title: { type: 'string' },
         titleFont: { type: 'string' },
@@ -230,6 +231,7 @@ function generateLegend(data, slice) {
     });
     entity.classList.add("babiaxrLegend")
     entity.setAttribute('babia-lookat', data.legend_lookat);
+    entity.setAttribute('scale',{x: data.legend_scale, y: data.legend_scale, z: data.legend_scale});
     return entity;
 }
 

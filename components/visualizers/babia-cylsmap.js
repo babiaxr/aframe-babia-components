@@ -23,6 +23,7 @@ AFRAME.registerComponent('babia-cylsmap', {
     from: { type: 'string' },
     legend: { type: 'boolean' },
     legend_lookat: { type: 'string', default: "[camera]" },
+    legend_scale: { type: 'number', default: 1 },
     axis: { type: 'boolean', default: true },
     // Name for axis
     axis_name: {type: 'boolean', default: false},

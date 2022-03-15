@@ -21,6 +21,7 @@ AFRAME.registerComponent('babia-cyls', {
     from: { type: 'string' },
     legend: { type: 'boolean', default: false },
     legend_lookat: { type: 'string', default: "[camera]" },
+    legend_scale: { type: 'number', default: 1 },
     axis: { type: 'boolean', default: true },
     // Name for axis
     axis_name: {type: 'boolean', default: false},
@@ -281,12 +282,14 @@ let createCylinder = (self, cylEl, data, item, colorId, xLabel, posX, posZ, zLab
       if (!zLabel){
         cylEl.setAttribute('babia-cyl', {
           'labelText': xLabel + '\nHeight: ' + item[data.height] + '\nRadius: ' + item[data.radius],
-          'labelLookat': data.legend_lookat
+          'labelLookat': data.legend_lookat,
+          'labelScale': data.legend_scale
         });
       } else {
         cylEl.setAttribute('babia-cyl', {
           'labelText': xLabel + ' | ' + zLabel + '\nHeight: ' + item[data.height] + '\nRadius: ' + item[data.radius],
-          'labelLookat': data.legend_lookat
+          'labelLookat': data.legend_lookat,
+          'labelScale': data.legend_scale
         });
       }
   };
