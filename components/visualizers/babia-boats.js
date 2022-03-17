@@ -570,7 +570,7 @@ AFRAME.registerComponent('babia-boats', {
 
                 //TODO: bad perfomance when Opacity 0 at the beginning
                 //setOpacity(new_entity, 0);
-                
+
                 // New building and quarter, it appears with 0.5 opacity
                 setOpacity(new_entity, 0.5);
 
@@ -595,7 +595,7 @@ AFRAME.registerComponent('babia-boats', {
                     //TODO: Bad perfomance issue when changing dinamically the opacity, better to just make it non vissible
                     entity_del.object3D.visible = false
                     entity_del.remove();
-                    
+
                     // let opacity = parseFloat(entity_del.components.material.opacity);
                     // if (opacity - opa_dec > 0) {
                     //     opacity -= opa_dec;
@@ -628,10 +628,10 @@ AFRAME.registerComponent('babia-boats', {
                 }
 
                 //TODO: Full opacity because it was in 0.5 if new building/quarter
-                if(entity.components.material.data.opacity < 1){
+                if (entity.components.material.data.opacity < 1) {
                     setOpacity(entity, 1)
                 }
-                
+
                 entity.object3D.position.set(
                     figure.posX - translate.x,
                     ((parseFloat(figure.height) + translate.y) / 2),
@@ -690,6 +690,17 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('depth', new_depth);
             entity.babiaRawData = figure.rawData
 
+            //Check if has transparent box as a quarter
+            if (entity.classList.contains('babiaquarterboxactivated')) {
+                entity.childNodes.forEach(chidlren => {
+                    if (chidlren.classList.contains('babiaquarterlegendbox')){
+                        chidlren.setAttribute('geometry', 'width', new_width);
+                        chidlren.setAttribute('geometry', 'depth', new_depth);
+                    }
+                });
+            }
+
+
         } else if (((new_time - this.start_time) > this.duration) &&
             ((figure.width != figure_old.width) ||
                 (figure.height != figure_old.height) ||
@@ -699,6 +710,16 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('height', figure.height);
             entity.setAttribute('depth', figure.depth);
             entity.babiaRawData = figure.rawData
+
+            //Check if has transparent box as a quarter
+            if (entity.classList.contains('babiaquarterboxactivated')) {
+                entity.childNodes.forEach(chidlren => {
+                    if (chidlren.classList.contains('babiaquarterlegendbox')){
+                        chidlren.setAttribute('geometry', 'width', new_width);
+                        chidlren.setAttribute('geometry', 'depth', new_depth);
+                    }
+                });
+            }
         }
     },
 
@@ -735,7 +756,7 @@ AFRAME.registerComponent('babia-boats', {
                     (figure.posX - translate.x),
                     ((parseFloat(figure.height) + translate.y) / 2),
                     (- figure.posY + translate.z),
-                )                    
+                )
             }
         }
     },
@@ -817,7 +838,9 @@ AFRAME.registerComponent('babia-boats', {
 
                 if (legend) {
                     entity.removeChild(transparentBox)
-                    self.el.parentElement.removeChild(legend)
+                    entity.classList.remove("babiaquarterboxactivated");
+                    entity.
+                        self.el.parentElement.removeChild(legend)
                     legend = undefined
                     transparentBox = undefined
 
@@ -828,7 +851,8 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 } else {
                     transparentBox = document.createElement('a-entity');
-                    transparentBox.setAttribute('class', 'babialegend')
+                    transparentBox.setAttribute('class', 'babiaquarterlegendbox')
+                    entity.classList.add("babiaquarterboxactivated");
                     let oldGeometry = entity.getAttribute('geometry')
                     let scale = self.el.getAttribute("scale")
                     let tsBoxHeight = oldGeometry.height + self.data.height_quarter_legend_box
