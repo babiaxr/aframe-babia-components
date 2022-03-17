@@ -41,6 +41,7 @@ AFRAME.registerComponent('babia-boats', {
     * Entities with legend activated
     */
     entitiesWithLegend: [],
+    legendsActive: [],
 
     /**
     * Querier component target
@@ -692,10 +693,11 @@ AFRAME.registerComponent('babia-boats', {
 
             //Check if has transparent box as a quarter
             if (entity.classList.contains('babiaquarterboxactivated')) {
-                entity.childNodes.forEach(chidlren => {
-                    if (chidlren.classList.contains('babiaquarterlegendbox')){
-                        chidlren.setAttribute('geometry', 'width', new_width);
-                        chidlren.setAttribute('geometry', 'depth', new_depth);
+                entity.childNodes.forEach(child => {
+                    if (child.classList.contains('babiaquarterlegendbox')){
+                        child.setAttribute('geometry', 'width', new_width);
+                        child.setAttribute('geometry', 'depth', new_depth);
+                        child.setAttribute('material', 'opacity', 0.4);
                     }
                 });
             }
@@ -713,10 +715,11 @@ AFRAME.registerComponent('babia-boats', {
 
             //Check if has transparent box as a quarter
             if (entity.classList.contains('babiaquarterboxactivated')) {
-                entity.childNodes.forEach(chidlren => {
-                    if (chidlren.classList.contains('babiaquarterlegendbox')){
-                        chidlren.setAttribute('geometry', 'width', new_width);
-                        chidlren.setAttribute('geometry', 'depth', new_depth);
+                entity.childNodes.forEach(child => {
+                    if (child.classList.contains('babiaquarterlegendbox')){
+                        child.setAttribute('geometry', 'width', new_width);
+                        child.setAttribute('geometry', 'depth', new_depth);
+                        child.setAttribute('material', 'opacity', 0.4);
                     }
                 });
             }
@@ -839,16 +842,21 @@ AFRAME.registerComponent('babia-boats', {
                 if (legend) {
                     entity.removeChild(transparentBox)
                     entity.classList.remove("babiaquarterboxactivated");
-                    entity.
-                        self.el.parentElement.removeChild(legend)
-                    legend = undefined
-                    transparentBox = undefined
+                    self.el.parentElement.removeChild(legend)
 
-                    // Remove from the array that has the entity activated
+                    // Remove from the array that has the entity activated and the legend
                     const index = self.entitiesWithLegend.indexOf(entity);
                     if (index > -1) {
                         self.entitiesWithLegend.splice(index, 1);
                     }
+                    const indexLegend = self.legendsActive.indexOf(legend);
+                    if (index > -1) {
+                        self.legendsActive.splice(indexLegend, 1);
+                    }
+
+                    legend = undefined
+                    transparentBox = undefined
+
                 } else {
                     transparentBox = document.createElement('a-entity');
                     transparentBox.setAttribute('class', 'babiaquarterlegendbox')
@@ -884,6 +892,7 @@ AFRAME.registerComponent('babia-boats', {
 
                     // Add to the elements that has the legend activated
                     self.entitiesWithLegend.push(entity)
+                    self.legendsActive.push(legend)
                 }
             })
 
@@ -909,14 +918,19 @@ AFRAME.registerComponent('babia-boats', {
                         'color': entity.getAttribute('babiaxrFirstColor')
                     });
                     self.el.parentElement.removeChild(legend)
-                    legend = undefined
-                    alreadyActive = false
 
                     // Remove from the array that has the entity activated
                     const index = self.entitiesWithLegend.indexOf(entity);
                     if (index > -1) {
                         self.entitiesWithLegend.splice(index, 1);
                     }
+                    const indexLegend = self.legendsActive.indexOf(legend);
+                    if (index > -1) {
+                        self.legendsActive.splice(indexLegend, 1);
+                    }
+
+                    legend = undefined
+                    alreadyActive = false
                 } else {
                     alreadyActive = true
 
@@ -951,6 +965,7 @@ AFRAME.registerComponent('babia-boats', {
 
                     // Add to the elements that has the legend activated
                     self.entitiesWithLegend.push(entity)
+                    self.legendsActive.push(legend)
                 }
 
             })
