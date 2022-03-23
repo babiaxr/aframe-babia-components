@@ -28,20 +28,20 @@ AFRAME.registerComponent('babia-range-selector', {
     init: function () {
         this.notiBuffer = new NotiBuffer();
 
-        this.options = [{label:'Last 15 minutes', time: 15*60000},
-                        {label:'Last 30 minutes', time: 15*60000},
-                        {label:'Last 1 hour', time: 60*60000},
-                        {label:'Last 4 hours', time: 4*60*60000},
-                        {label:'Last 12 hours', time: 12*60*60000},
-                        {label:'Last 24 hours', time: 24*60*60000},
-                        {label:'Last 7 days', time: 7*24*60*60000},
-                        {label:'Last 30 days', time: 30*24*60*60000},
-                        {label:'Last 60 days', time: 60*24*60*60000},
-                        {label:'Last 90 days', time: 90*24*60*60000},
-                        {label:'Last 6 months', time: 6*30*24*60*60000},
-                        {label:'Last 1 year', time: 1*365*24*60*60000},
-                        {label:'Last 2 years', time: 2*365*24*60*60000},
-                        {label:'Last 5 years', time: 5*365*24*60*60000}];
+        this.options = [{label:'Last 15 minutes', time: 15*60000, interval: "30s"},
+                        {label:'Last 30 minutes', time: 15*60000, interval: "30s"},
+                        {label:'Last 1 hour', time: 60*60000, interval: "1m"},
+                        {label:'Last 4 hours', time: 4*60*60000, interval: "5m"},
+                        {label:'Last 12 hours', time: 12*60*60000, interval: "10m"},
+                        {label:'Last 24 hours', time: 24*60*60000, interval: "30m"},
+                        {label:'Last 7 days', time: 7*24*60*60000, interval: "3h"},
+                        {label:'Last 30 days', time: 30*24*60*60000, interval: "12h"},
+                        {label:'Last 60 days', time: 60*24*60*60000, interval: "1d"},
+                        {label:'Last 90 days', time: 90*24*60*60000, interval: "2d"},
+                        {label:'Last 6 months', time: 6*30*24*60*60000, interval: "3d"},
+                        {label:'Last 1 year', time: 1*365*24*60*60000, interval: "1w"},
+                        {label:'Last 2 years', time: 2*365*24*60*60000, interval: "15d"},
+                        {label:'Last 5 years', time: 5*365*24*60*60000, interval: "30d"}];
         // Set Initial Option
         let index = 0;
         for (i = 0; i < this.options.length; i++){
@@ -194,6 +194,7 @@ let selection_events = (self, entity) =>{
                 let now = Date.now();
                 let to_send = {
                     from : now - option.time,
+                    interval: option.interval,
                     to: now
                 }
                 self.notiBuffer.set(to_send);

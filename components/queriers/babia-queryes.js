@@ -120,6 +120,13 @@ AFRAME.registerComponent('babia-queryes', {
                     let range = this.json['query']['bool']['must'][index]['range'][Object.keys(this.json['query']['bool']['must'][index]['range'])[0]]
                     range['gte'] = received.from;
                     range['lte'] = received.to;
+
+                    // Interval para date_histograms
+                    if (this.json['aggs']['2']){
+                        if(this.json['aggs']['2']['date_histogram']){
+                            this.json['aggs']['2']['date_histogram']['interval'] = received.interval
+                        }
+                    }
                 }
             } else {
                 throw new Error(request.status);
