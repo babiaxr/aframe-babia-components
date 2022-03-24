@@ -603,6 +603,15 @@ AFRAME.registerComponent('babia-boats', {
 
                         if (figures[i].children) {
                             this.Animation(entity, figures[i].children, figures_old[index].children, delta, figures[i].translate_matrix, figures_old[index].translate_matrix);
+                        } else {
+                            // Building color if changed, force to the new one
+                            if(figures[i].rawData[self.data.color] !== figures_old[index].rawData[self.data.color]) {
+                                let color = heatMapColorforValue(figures[i].rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                                let oldColor = entity.getAttribute('color')
+                                if (color !== oldColor) {
+                                    entity.setAttribute('color', color)
+                                }
+                            }
                         }
                     }
                 }
