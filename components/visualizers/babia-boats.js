@@ -103,7 +103,8 @@ AFRAME.registerComponent('babia-boats', {
                 this.animation = false;
                 this.setFigures(this.figures, t);
 
-                //Reactivate legends
+                //Reactivate legends, check PERFORMANCE
+                self.entitiesWithLegend = self.entitiesWithLegend.filter(item => document.getElementById(item.entity.id))
                 self.entitiesWithLegend.forEach(item => {
                     let entity = item.entity
                     let figure = item.figure
