@@ -96,11 +96,53 @@ AFRAME.registerComponent('babia-boats', {
     * Called on each scene tick.
     */
     tick: function (t, delta) {
+        let self = this;
         if (this.animation) {
             let t = { x: 0, y: 0, z: 0 };
             if ((Date.now() - this.start_time) > this.duration) {
                 this.animation = false;
                 this.setFigures(this.figures, t);
+
+                //Reactivate legends
+                self.entitiesWithLegend.forEach(item => {
+                    let entity = item.entity
+                    let figure = item.figure
+
+                    if (figure.children) {
+                        // Quarter
+                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: self.data.height_quarter_legend_title,
+                            z: coordinates.z
+                        }
+                        entity.legend.setAttribute('position', coordinatesFinal)
+                        entity.legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(entity.legend) 
+
+                        self.legendsActive.push(entity.legend)
+                        entity.alreadyActive = true
+                    } else {
+                        // Building
+                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        let height_real = new THREE.Box3().setFromObject(entity.object3D)
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: height_real.max.y + 1 + self.data.height_building_legend,
+                            z: coordinates.z
+                        }
+                        entity.legend.setAttribute('position', coordinatesFinal)
+                        entity.legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(entity.legend);
+
+                        self.legendsActive.push(entity.legend)
+                        entity.alreadyActive = true
+                    }
+                });
             } else {
                 this.Animation(this.el, this.figures, this.figures_old, delta, t, t);
             }
@@ -503,6 +545,12 @@ AFRAME.registerComponent('babia-boats', {
         let new_time = Date.now();
         let entity;
 
+        // First, remove all the legends that are active
+        self.legendsActive.forEach(legend => {
+            legend.remove()
+        });
+        self.legendsActive = []
+
         for (let i in figures) {
             if (document.getElementById(figures[i].id)) {
                 // If exists
@@ -832,29 +880,28 @@ AFRAME.registerComponent('babia-boats', {
         let self = this;
         if (figure.children) {
             // Quarter
-            let legend;
             let transparentBox;
             entity.addEventListener('click', function (e) {
                 // Just launch the event on the child
                 if (e.target !== this)
                     return;
 
-                if (legend) {
+                if (entity.legend) {
                     entity.removeChild(transparentBox)
                     entity.classList.remove("babiaquarterboxactivated");
-                    self.el.parentElement.removeChild(legend)
+                    self.el.parentElement.removeChild(entity.legend)
 
                     // Remove from the array that has the entity activated and the legend
-                    const index = self.entitiesWithLegend.indexOf(entity);
+                    const index = self.entitiesWithLegend.findIndex(item => item.entity === entity);
                     if (index > -1) {
                         self.entitiesWithLegend.splice(index, 1);
                     }
-                    const indexLegend = self.legendsActive.indexOf(legend);
+                    const indexLegend = self.legendsActive.indexOf(entity.legend);
                     if (index > -1) {
                         self.legendsActive.splice(indexLegend, 1);
                     }
 
-                    legend = undefined
+                    entity.legend = undefined
                     transparentBox = undefined
 
                 } else {
@@ -878,7 +925,7 @@ AFRAME.registerComponent('babia-boats', {
                     });
                     entity.appendChild(transparentBox)
 
-                    legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
+                    entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let coordinatesFinal = {
@@ -886,29 +933,28 @@ AFRAME.registerComponent('babia-boats', {
                         y: self.data.height_quarter_legend_title,
                         z: coordinates.z
                     }
-                    legend.setAttribute('position', coordinatesFinal)
-                    legend.setAttribute('visible', true);
-                    self.el.parentElement.appendChild(legend)
+                    entity.legend.setAttribute('position', coordinatesFinal)
+                    entity.legend.setAttribute('visible', true);
+                    self.el.parentElement.appendChild(entity.legend)
 
                     // Add to the elements that has the legend activated
-                    self.entitiesWithLegend.push(entity)
-                    self.legendsActive.push(legend)
+                    self.entitiesWithLegend.push({'figure': figure, 'entity': entity})
+                    self.legendsActive.push(entity.legend)
                 }
             })
 
             this.drawElements(entity, figure.children, figure.translate_matrix);
         } else {
             // Building
-            let legend;
             let entityGeometry;
-            let alreadyActive = false;
+            entity.alreadyActive = false;
 
             entity.addEventListener('click', function (e) {
                 if (e.target !== this)
                     return;
 
-                if (alreadyActive) {
-                    legend.setAttribute('visible', false);
+                if (entity.alreadyActive) {
+                    entity.legend.setAttribute('visible', false);
                     entity.setAttribute('geometry', {
                         height: entityGeometry.height - 0.1,
                         depth: entityGeometry.depth - 0.1,
@@ -917,25 +963,25 @@ AFRAME.registerComponent('babia-boats', {
                     entity.setAttribute('material', {
                         'color': entity.getAttribute('babiaxrFirstColor')
                     });
-                    self.el.parentElement.removeChild(legend)
+                    self.el.parentElement.removeChild(entity.legend)
 
                     // Remove from the array that has the entity activated
-                    const index = self.entitiesWithLegend.indexOf(entity);
+                    const index = self.entitiesWithLegend.findIndex(item => item.entity === entity);
                     if (index > -1) {
                         self.entitiesWithLegend.splice(index, 1);
                     }
-                    const indexLegend = self.legendsActive.indexOf(legend);
+                    const indexLegend = self.legendsActive.indexOf(entity.legend);
                     if (index > -1) {
                         self.legendsActive.splice(indexLegend, 1);
                     }
 
-                    legend = undefined
-                    alreadyActive = false
+                    entity.legend = undefined
+                    entity.alreadyActive = false
                 } else {
-                    alreadyActive = true
+                    entity.alreadyActive = true
 
                     // If clicked again but not mouseover
-                    if (!legend) {
+                    if (!entity.legend) {
                         // COPY FROM 626
                         entityGeometry = entity.getAttribute('geometry')
                         let boxPosition = entity.getAttribute("position")
@@ -949,7 +995,7 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -958,20 +1004,20 @@ AFRAME.registerComponent('babia-boats', {
                             y: height_real.max.y + 1 + self.data.height_building_legend,
                             z: coordinates.z
                         }
-                        legend.setAttribute('position', coordinatesFinal)
-                        legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(legend);
+                        entity.legend.setAttribute('position', coordinatesFinal)
+                        entity.legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(entity.legend);
                     }
 
                     // Add to the elements that has the legend activated
-                    self.entitiesWithLegend.push(entity)
-                    self.legendsActive.push(legend)
+                    self.entitiesWithLegend.push({'figure': figure, 'entity': entity})
+                    self.legendsActive.push(entity.legend)
                 }
 
             })
 
             entity.addEventListener('mouseenter', function () {
-                if (!alreadyActive) {
+                if (!entity.alreadyActive) {
                     entityGeometry = entity.getAttribute('geometry')
                     let boxPosition = entity.getAttribute("position")
                     entity.setAttribute('position', boxPosition)
@@ -984,7 +1030,7 @@ AFRAME.registerComponent('babia-boats', {
                         depth: entityGeometry.depth + 0.1,
                         width: entityGeometry.width + 0.1
                     });
-                    legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                    entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -993,15 +1039,15 @@ AFRAME.registerComponent('babia-boats', {
                         y: height_real.max.y + 1 + self.data.height_building_legend,
                         z: coordinates.z
                     }
-                    legend.setAttribute('position', coordinatesFinal)
-                    legend.setAttribute('visible', true);
-                    self.el.parentElement.appendChild(legend);
+                    entity.legend.setAttribute('position', coordinatesFinal)
+                    entity.legend.setAttribute('visible', true);
+                    self.el.parentElement.appendChild(entity.legend);
                 }
 
             });
             entity.addEventListener('mouseleave', function () {
-                if (!alreadyActive && legend) {
-                    legend.setAttribute('visible', false);
+                if (!entity.alreadyActive && entity.legend) {
+                    entity.legend.setAttribute('visible', false);
                     entity.setAttribute('geometry', {
                         height: entityGeometry.height - 0.1,
                         depth: entityGeometry.depth - 0.1,
@@ -1010,8 +1056,8 @@ AFRAME.registerComponent('babia-boats', {
                     entity.setAttribute('material', {
                         'color': entity.getAttribute('babiaxrFirstColor')
                     });
-                    self.el.parentElement.removeChild(legend)
-                    legend = undefined
+                    self.el.parentElement.removeChild(entity.legend)
+                    entity.legend = undefined
                 }
             });
         }
