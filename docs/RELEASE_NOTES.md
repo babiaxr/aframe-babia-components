@@ -4,6 +4,17 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### NPM 1.2.5 version
+
+#### Colors palettes
+
+- Added the feature of change the color palette just adding an array:
+
+```
+ <a-entity babia-barsmap='animation: true; x_axis: name; z_axis: age; height: size; legend: true; from: queriertest; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]' position="-10 0 0" rotation="0 0 0"></a-entity>
+
+```
+
 ### NPM 1.2.4 version
 
 #### Range Selector

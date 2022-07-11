@@ -26,7 +26,7 @@ This component shows a pie chart.
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 | legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | legend_scale         | Scale for the legend  | number | 1 |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>` | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
@@ -56,7 +56,7 @@ This component shows a doughnut chart.
 | legend          | Shows a legend when hovering a slice  | boolean | false |
 | legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
 | legend_scale         | Scale for the legend  | number | 1 |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>`  | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
@@ -89,7 +89,7 @@ This component shows a simple 2D bar chart.
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>`  | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
@@ -125,7 +125,7 @@ This component shows a bars map.
 | axis          | Shows chart axis  | boolean | true |
 | axis_name | Shows metric labels on axis | boolean | false |
 | chartHeight          | Adjusts the height of the chart.  | number | - |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>`  | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
@@ -163,7 +163,7 @@ This component shows a 3D Bubbles chart.
 | scale          | Scales up the chart. For example: scale 1/100 => `scale: 100` | number | - |
 | heightMax          | Adjusts the height of the chart.  | number | - |
 | radiusMax          | Adjusts bubbles' radius of the chart.  | number | - |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>`  | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
@@ -201,7 +201,7 @@ This component shows a cylinder chart.
 | chartHeight          | Adjusts the height of the chart.  | number | 10 |
 | keepHeight          | Keep height when updating data.  | boolean | true |
 | radiusMax          | Adjusts bubbles' radius of the chart.  | number | 2 |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>`  | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
@@ -241,7 +241,7 @@ This component shows a 3D cylinder chart.
 | chartHeight          | Adjusts the height of the chart.  | number | 10 |
 | keepHeight          | Keep height when updating data.  | boolean | true |
 | radiusMax          | Adjusts bubbles' radius of the chart.  | number | 2 |
-| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes)  | string | ubuntu |
+| palette          | Color palette of the chart `blues` `bussiness` `sunset`. [See more](#color-palettes) or a custom array of colors ` <a-entity babia-xxxx='...; palette: ["#ffb02e", "#8600c4", "#007700", "#00388c", "#df0084", "#00c4ff"]'></a-entity>`  | string or array | ubuntu |
 | title          | Shows chart title  | string | - |
 | titleFont          | Font of the title. Path to a typeface.json file or selector to `<a-asset-item>`. [See more](#fonts)  | JSON (list of objects) | https://rawgit.com/supermedium/superframe/master/components/text-geometry/lib/helvetiker_regular.typeface.json |
 | titleColor          | Color of the title  | string | #FFFFFF |
