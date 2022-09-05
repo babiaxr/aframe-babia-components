@@ -52,7 +52,7 @@ let parseFn = function (prop) {
   try {
     let evalled = geval('(' + prop + ')');
     return evalled;
-  } catch (e) {} // Can't eval, not a function
+  } catch (e) { } // Can't eval, not a function
   return null;
 };
 
@@ -71,36 +71,42 @@ let cursor = '';
 AFRAME.registerComponent('babia-network', {
   schema: {
     nodeLegend: { type: 'boolean', default: false },
-    linkLegend: {type: 'boolean', default: false},
-    from: { type: 'string'},
-    nodesFrom: { type: 'string'},
-    linksFrom: { type: 'string'},
-    data: { type: 'string', default: ''},
-    nodes: { type:'string', default: '' },
+    linkLegend: { type: 'boolean', default: false },
+
+    // Label lookat for following
+    legend_lookat: { type: 'string', default: "[camera]" },
+    // Scale for the label
+    legend_scale: { type: 'number', default: 1 },
+
+    from: { type: 'string' },
+    nodesFrom: { type: 'string' },
+    linksFrom: { type: 'string' },
+    data: { type: 'string', default: '' },
+    nodes: { type: 'string', default: '' },
     links: { type: 'string', default: '' },
     nodeId: { type: 'string', default: 'id' },
     nodeLabel: { parse: parseAccessor, default: 'id' },
-    linkId: { type: 'string', default: ''},
+    linkId: { type: 'string', default: '' },
     linkSource: { type: 'string', default: 'source' },
     linkTarget: { type: 'string', default: 'target' },
-    nodeVal: { type: 'string', default: '' }, 
-    nodeRelSize: { type: 'number', default: 4 }, 
+    nodeVal: { type: 'string', default: '' },
+    nodeRelSize: { type: 'number', default: 4 },
     nodeColor: { parse: parseAccessor, default: 'color' },
-    nodeAutoColorBy: { parse: parseAccessor, default: '' }, 
-    nodeResolution: { type: 'number', default: 8 }, 
+    nodeAutoColorBy: { parse: parseAccessor, default: '' },
+    nodeResolution: { type: 'number', default: 8 },
     linkColor: { parse: parseAccessor, default: 'color' },
     linkAutoColorBy: { parse: parseAccessor, default: '' },
     linkWidth: { parse: parseAccessor, default: 0 },
-    linkResolution: { type: 'number', default: 6 }, 
+    linkResolution: { type: 'number', default: 6 },
     linkLabel: { parse: parseAccessor, default: '' },
-    
+
     nodeDesc: { parse: parseAccessor, default: 'desc' },
     linkDesc: { parse: parseAccessor, default: 'desc' },
     nodeVisibility: { parse: parseAccessor, default: true },
     nodeOpacity: { type: 'number', default: 1 },
     linkVisibility: { parse: parseAccessor, default: true },
     linkOpacity: { type: 'number', default: 1 },
-    
+
     nodeThreeObject: { parse: parseAccessor, default: null },
     nodeThreeObjectExtend: { parse: parseAccessor, default: false },
     linkCurvature: { parse: parseAccessor, default: 0 },
@@ -111,37 +117,37 @@ AFRAME.registerComponent('babia-network', {
     linkPositionUpdate: { parse: parseFn, default: null },
     linkDirectionalArrowLength: { parse: parseAccessor, default: 0 },
     linkDirectionalArrowColor: { parse: parseAccessor, default: null },
-    linkDirectionalArrowRelPos: { parse: parseAccessor, default: 0.5 }, 
-    linkDirectionalArrowResolution: { type: 'number', default: 8 }, 
-    linkDirectionalParticles: { parse: parseAccessor, default: 0 }, 
-    linkDirectionalParticleSpeed: { parse: parseAccessor, default: 0.01 }, 
+    linkDirectionalArrowRelPos: { parse: parseAccessor, default: 0.5 },
+    linkDirectionalArrowResolution: { type: 'number', default: 8 },
+    linkDirectionalParticles: { parse: parseAccessor, default: 0 },
+    linkDirectionalParticleSpeed: { parse: parseAccessor, default: 0.01 },
     linkDirectionalParticleWidth: { parse: parseAccessor, default: 0.5 },
     linkDirectionalParticleColor: { parse: parseAccessor, default: null },
-    linkDirectionalParticleResolution: { type: 'number', default: 4 }, 
-    
+    linkDirectionalParticleResolution: { type: 'number', default: 4 },
+
     linkHoverPrecision: { type: 'number', default: 2 },
-    onNodeCenterHover: { parse: parseFn, default: function () {} },
-    onLinkCenterHover: { parse: parseFn, default: function () {} },
-    
+    onNodeCenterHover: { parse: parseFn, default: function () { } },
+    onLinkCenterHover: { parse: parseFn, default: function () { } },
+
     numDimensions: { type: 'number', default: 3 },
     dagMode: { type: 'string', default: '' },
     dagLevelDistance: { type: 'number', default: 0 },
-    dagNodeFilter: { parse: parseFn, function() { return true; }},
+    dagNodeFilter: { parse: parseFn, function() { return true; } },
     onDagError: { parse: parseFn, default: undefined },
-    forceEngine: { type: 'string', default: 'd3' }, 
+    forceEngine: { type: 'string', default: 'd3' },
     d3AlphaMin: { type: 'number', default: 0 },
     d3AlphaDecay: { type: 'number', default: 0.0228 },
     d3VelocityDecay: { type: 'number', default: 0.4 },
     ngraphPhysics: { parse: parseJson, default: null },
-    warmupTicks: { type: 'int', default: 0 }, 
-    cooldownTicks: { type: 'int', default: 1e18 }, 
-    cooldownTime: { type: 'int', default: 15000 }, 
-    onEngineTick: { parse: parseFn, default: function () {} },
-    onEngineStop: { parse: parseFn, default: function () {} }
+    warmupTicks: { type: 'int', default: 0 },
+    cooldownTicks: { type: 'int', default: 1e18 },
+    cooldownTime: { type: 'int', default: 15000 },
+    onEngineTick: { parse: parseFn, default: function () { } },
+    onEngineStop: { parse: parseFn, default: function () { } }
   },
 
   // Bind component methods
-  getGraphBbox: function() {
+  getGraphBbox: function () {
     if (!this.forceGraph) {
       // Got here before component init -> initialize forceGraph
       this.forceGraph = new ThreeForceGraph();
@@ -188,12 +194,14 @@ AFRAME.registerComponent('babia-network', {
     return this;
   },
 
-    /**
-     * List of visualization properties
-     */
-     visProperties: { 'nodes': ['nodeId'],
-                      'links0': ['linkId'],
-                      'links1': ['linkSource', 'linkTarget']},
+  /**
+   * List of visualization properties
+   */
+  visProperties: {
+    'nodes': ['nodeId'],
+    'links0': ['linkId'],
+    'links1': ['linkSource', 'linkTarget']
+  },
 
   init: function () {
     this.isFirstTimeNodes = true;
@@ -233,22 +241,22 @@ AFRAME.registerComponent('babia-network', {
     * Update or create chart component
     */
     // Highest priority to data
-    if(elData.data && oldData.data !== elData.data){
+    if (elData.data && oldData.data !== elData.data) {
       let _data = parseJson(elData.data);
       this.processData(_data);
 
     } else {
       // Second highest priority to nodes and links
-      if (elData.nodes){
-        if(oldData.nodes !== elData.nodes){
+      if (elData.nodes) {
+        if (oldData.nodes !== elData.nodes) {
           let _nodes = parseJson(elData.nodes);
           this.processNodes(_nodes);
         }
-        if (oldData.links !== elData.links){
+        if (oldData.links !== elData.links) {
           let _links = parseJson(elData.links);
           this.processLinks(_links)
         }
-      // Data from querier
+        // Data from querier
       } else {
         // If changed from, need to re-register to the new data component
         if (elData.from !== oldData.from && !elData.nodesFrom) {
@@ -256,17 +264,17 @@ AFRAME.registerComponent('babia-network', {
           if (this.prodComponent) {
             this.prodComponent.notiBuffer.unregister(this.notiBufferId)
           };
-          if (this.nodesProdComponent){
+          if (this.nodesProdComponent) {
             this.nodesProdComponent.notiBuffer.unregister(this.notiBufferId)
           };
-          if (this.linksProdComponent){
+          if (this.linksProdComponent) {
             this.linksProdComponent.notiBuffer.unregister(this.notiBufferId)
           };
-  
-          this.prodComponent = findProdComponent (elData, el)
-          if (this.prodComponent.notiBuffer){
+
+          this.prodComponent = findProdComponent(elData, el)
+          if (this.prodComponent.notiBuffer) {
             this.notiBufferId = this.prodComponent.notiBuffer
-                .register(this.processData.bind(this))
+              .register(this.processData.bind(this))
           }
         } else if (elData.nodesFrom !== oldData.nodesFrom || elData.linksFrom !== oldData.linksFrom) {
           // Now we have nodesFrom, should have linksFrom too
@@ -274,36 +282,36 @@ AFRAME.registerComponent('babia-network', {
           if (this.prodComponent) {
             this.prodComponent.notiBuffer.unregister(this.notiBufferId)
           };
-          if (this.nodesProdComponent){
+          if (this.nodesProdComponent) {
             this.nodesProdComponent.notiBuffer.unregister(this.notiBufferId)
           };
-          if (this.linksProdComponent){
+          if (this.linksProdComponent) {
             this.linksProdComponent.notiBuffer.unregister(this.notiBufferId)
           };
-  
-          let prodComponent = findProdComponent (elData, el)
-  
+
+          let prodComponent = findProdComponent(elData, el)
+
           // First, nodes
           this.nodesProdComponent = prodComponent.nodes
-          if (this.nodesProdComponent.notiBuffer){
+          if (this.nodesProdComponent.notiBuffer) {
             this.notiBufferId = this.nodesProdComponent.notiBuffer
-                .register(this.processNodes.bind(this))
+              .register(this.processNodes.bind(this))
           }
-  
+
           // Now, the same for links
           this.linksProdComponent = prodComponent.links
-          if (this.linksProdComponent.notiBuffer){
+          if (this.linksProdComponent.notiBuffer) {
             this.notiBufferId = this.linksProdComponent.notiBuffer
-                .register(this.processLinks.bind(this))
+              .register(this.processLinks.bind(this))
           }
-        } 
-  
+        }
+
         // If changed whatever, re-print with the current data
         else if (elData !== oldData) {
-          if (this.newData){
+          if (this.newData) {
             let _data = parseJson(this.newData);
             this.processData(_data, true)
-          } else if (this.newNodes){
+          } else if (this.newNodes) {
             if (elData.linkSource != oldData.linkSource || elData.linkTarget != oldData.linkTarget) {
               let _links = parseJson(this.newLinks);
               this.processLinks(_links, true)
@@ -311,16 +319,16 @@ AFRAME.registerComponent('babia-network', {
               let _nodes = parseJson(this.newNodes);
               this.processNodes(_nodes, true)
             }
-            
+
           }
         }
       }
-    } 
+    }
   },
 
- /**
-  * Called on each scene tick.
-  */
+  /**
+   * Called on each scene tick.
+   */
   tick: function (t, td) {
 
     let intersects = cursor.components.raycaster.raycaster.intersectObjects(this.forceGraph.children)
@@ -329,7 +337,7 @@ AFRAME.registerComponent('babia-network', {
       })
       .sort(function (a, b) { // Prioritize nodes over links
         return isNode(b) - isNode(a);
-        function isNode (o) { return o.object.__graphObjType === 'node'; }
+        function isNode(o) { return o.object.__graphObjType === 'node'; }
       });
 
     let topObject = intersects.length ? intersects[0].object : null;
@@ -344,9 +352,9 @@ AFRAME.registerComponent('babia-network', {
         // Hover out
         this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
       }
-      if (this.data.nodeLegend && prevObjType === 'node' ){
+      if (this.data.nodeLegend && prevObjType === 'node') {
         this.removeLegend(this)
-      } else if(this.data.linkLegend && this.data.linkLabel!="" && prevObjType === 'link'){
+      } else if (this.data.linkLegend && this.data.linkLabel != "" && prevObjType === 'link') {
         this.removeLegend(this)
       }
       if (objType) {
@@ -360,7 +368,7 @@ AFRAME.registerComponent('babia-network', {
         if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
           this.showLegend(topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
         } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
-          if (this.data.linkLabel != ""){
+          if (this.data.linkLabel != "") {
             this.showLinkLegend(topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
           }
         }
@@ -389,7 +397,7 @@ AFRAME.registerComponent('babia-network', {
   newData: undefined,
   newNodes: undefined,
   newLinks: undefined,
-  
+
 
   /**
    * Boolean to know if it's first time for getting the ui fields
@@ -421,12 +429,12 @@ AFRAME.registerComponent('babia-network', {
   * Update chart
   */
   updateChart: function (nodes_links, self) {
-    if (self.currentData){
+    if (self.currentData) {
       let elData = [];
-      for (let attr in this.data){
+      for (let attr in this.data) {
         elData[attr] = this.data[attr]
       }
-    
+
       elData.nodes = nodes_links.nodes;
       elData.links = nodes_links.links;
 
@@ -482,13 +490,13 @@ AFRAME.registerComponent('babia-network', {
         'onEngineTick',
         'onEngineStop'
       ];
-  
+
       fgProps
         .filter(function (p) { return p in diff; })
         .forEach(function (p) {
           self.forceGraph[p](elData[p] !== '' ? elData[p] : null);
         }); // Convert blank values into nulls
-  
+
       if ('nodes' in diff || 'links' in diff) {
         self.forceGraph.graphData({
           nodes: elData.nodes,
@@ -503,27 +511,27 @@ AFRAME.registerComponent('babia-network', {
   */
   processData: function (_data, newData) {
     console.log("processData", this);
-   if (this.newData != _data || newData){
-    this.newData = _data;
-    let nodes_links = this.elDataFromData(_data);
-    this.babiaMetadata = { id: this.babiaMetadata.id++ };
-    console.log("Generating network...")
-    this.updateChart(nodes_links, this)
-    this.notiBuffer.set(_data)
-   }
+    if (this.newData != _data || newData) {
+      this.newData = _data;
+      let nodes_links = this.elDataFromData(_data);
+      this.babiaMetadata = { id: this.babiaMetadata.id++ };
+      console.log("Generating network...")
+      this.updateChart(nodes_links, this)
+      this.notiBuffer.set(_data)
+    }
   },
 
-  processNodes: function (nodes, forceProcess){
+  processNodes: function (nodes, forceProcess) {
     console.log("processNodes", this);
-    if (this.newNodes != nodes || forceProcess){
+    if (this.newNodes != nodes || forceProcess) {
       this.newNodes = nodes;
       let nodes_links = this.elDataFromNodesAndLinks(nodes, this.newLinks)
-  
-      if (!nodes_links){
+
+      if (!nodes_links) {
         if (this.data.links) {
           let _links = parseJson(this.data.links);
           this.processLinks(_links)
-        } else if (this.data.linksFrom){
+        } else if (this.data.linksFrom) {
           this.babiaMetadata = { id: this.babiaMetadata.id++ }
           console.log("Generating network...")
         }
@@ -531,22 +539,22 @@ AFRAME.registerComponent('babia-network', {
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
         this.updateChart(nodes_links, this)
-        this.notiBuffer.set({'nodes': nodes_links.nodes, 'links': nodes_links.links})
+        this.notiBuffer.set({ 'nodes': nodes_links.nodes, 'links': nodes_links.links })
       }
     }
   },
 
-  processLinks: function (_links, forceProcess){
+  processLinks: function (_links, forceProcess) {
     console.log("processLinks", this);
     let links = parseJson(_links);
-    if (this.newLinks != links || forceProcess){
+    if (this.newLinks != links || forceProcess) {
       this.newLinks = links;
       let nodes_links = this.elDataFromNodesAndLinks(this.newNodes, links)
-      if (!nodes_links){
+      if (!nodes_links) {
         if (this.data.nodes) {
           let _nodes = parseJson(this.data.nodes);
           this.processNodes(_nodes)
-        } else if (this.data.nodesFrom){
+        } else if (this.data.nodesFrom) {
           this.babiaMetadata = { id: this.babiaMetadata.id++ }
           console.log("Generating network...")
         }
@@ -554,15 +562,15 @@ AFRAME.registerComponent('babia-network', {
         this.babiaMetadata = { id: this.babiaMetadata.id++ }
         console.log("Generating network...")
         this.updateChart(nodes_links, this)
-        this.notiBuffer.set({'nodes': nodes_links.nodes, 'links': nodes_links.links})
+        this.notiBuffer.set({ 'nodes': nodes_links.nodes, 'links': nodes_links.links })
       }
     }
   },
   // Format from data to nodes and links
-  elDataFromData: function(data){
+  elDataFromData: function (data) {
     let nodes = [];
     let links = [];
-    
+
     const nodeId = this.data.nodeId;
     const linkId = this.data.linkId;
     const nodeVal = this.data.nodeVal;
@@ -576,10 +584,10 @@ AFRAME.registerComponent('babia-network', {
       Object.keys(element).forEach(function (k) {
         if (k === nodeId) {
           node[nodeId] = element[k];
-        } 
+        }
         if (k === linkId) {
           node.linkId = element[k];
-        } 
+        }
         if (k === nodeVal) {
           node[nodeVal] = element[k];
         }
@@ -591,7 +599,7 @@ AFRAME.registerComponent('babia-network', {
       nodes.forEach(secondNode => {
         if (firstNode[nodeId] !== secondNode[nodeId]) { // not same id
           if (firstNode.linkId === secondNode.linkId) { // same linkId, make link
-            if (links.length > 0){
+            if (links.length > 0) {
               let linkExists = false;
               links.forEach(link => {
                 if ((link[source] === firstNode[nodeId] && link[target] === secondNode[nodeId]) || (link[source] === secondNode[nodeId] && link[target] === firstNode[nodeId])) { // the link does already exists, in any direction
@@ -613,40 +621,40 @@ AFRAME.registerComponent('babia-network', {
               newLink[source] = firstNode[nodeId]
               newLink[target] = secondNode[nodeId]
               links.push(newLink);
-            }  
+            }
           }
         }
       })
     });
-  
-    return {nodes: nodes, links: links};
+
+    return { nodes: nodes, links: links };
   },
 
   // Format nodes and links
 
-  elDataFromNodesAndLinks: function(nodes, links) {
+  elDataFromNodesAndLinks: function (nodes, links) {
     if (!Array.isArray(nodes) || !Array.isArray(links)) {
       // Either nodes or links are not ready yet
       return false
     }
 
-    if (this.isFirstTimeNodes){
+    if (this.isFirstTimeNodes) {
       this.nodeFields = []
       Object.keys(nodes[0]).forEach((k) => {
-          this.nodeFields.push(k)
+        this.nodeFields.push(k)
       })
       this.isFirstTimeNodes = false;
     }
-    if (this.isFirstTimeLinks){
+    if (this.isFirstTimeLinks) {
       this.linkFields = []
       Object.keys(links[0]).forEach((k) => {
-          this.linkFields.push(k)
+        this.linkFields.push(k)
       })
       this.isFirstTimeLinks = false;
     }
 
-    if (typeof(links[0].source) === 'object') {
-      links.forEach ((link) => {
+    if (typeof (links[0].source) === 'object') {
+      links.forEach((link) => {
         link.source = link.source[this.data.nodeId];
         link.target = link.target[this.data.nodeId];
       })
@@ -656,8 +664,8 @@ AFRAME.registerComponent('babia-network', {
     nodes.forEach((node) => {
       let _node = {};
       Object.keys(node).forEach((k) => {
-        for (let f in this.nodeFields){
-          if (k == this.nodeFields[f]){
+        for (let f in this.nodeFields) {
+          if (k == this.nodeFields[f]) {
             _node[k] = node[k]
           }
         }
@@ -669,8 +677,8 @@ AFRAME.registerComponent('babia-network', {
     links.forEach((link) => {
       let _link = {};
       Object.keys(link).forEach((k) => {
-        for (let f in this.linkFields){
-          if (k == this.linkFields[f] && k != this.data.linkId){
+        for (let f in this.linkFields) {
+          if (k == this.linkFields[f] && k != this.data.linkId) {
             _link[k] = link[k]
           }
         }
@@ -679,59 +687,124 @@ AFRAME.registerComponent('babia-network', {
 
     })
 
-    return {nodes: _nodes, links: _links};
+    return { nodes: _nodes, links: _links };
   },
-  
+
   showLegend: function (nodeThree, node, nodeLabel, scale) {
     let worldPosition = new THREE.Vector3();
     nodeThree.getWorldPosition(worldPosition);
     let radius = nodeThree.geometry.boundingSphere.radius
     let sceneEl = document.querySelector('a-scene');
-    this.legend = generateLegend(node, nodeLabel, worldPosition, radius, scale);
-    if (this.legend){
+    this.legend = generateLegend(this.data, node, nodeLabel, worldPosition, radius, scale);
+    if (this.legend) {
       sceneEl.appendChild(this.legend);
     }
   },
 
-  showLinkLegend: function(linkThree, link, linkLabel, scale) {
+  showLinkLegend: function (linkThree, link, linkLabel, scale) {
     let worldPosition = new THREE.Vector3();
     let radius = linkThree.geometry.boundingSphere.radius
-  
+
     let sourcePos = new THREE.Vector3();
     let targetPos = new THREE.Vector3();
-  
+
     let nodes = this.forceGraph.children.filter(element => element.__graphObjType == "node")
-  
+
     nodes.forEach(node => {
-      if(node.__data[this.data.nodeId] == link.source[this.data.nodeId]){
+      if (node.__data[this.data.nodeId] == link.source[this.data.nodeId]) {
         node.getWorldPosition(sourcePos)
       }
-      if(node.__data[this.data.nodeId] == link.target[this.data.nodeId]){
+      if (node.__data[this.data.nodeId] == link.target[this.data.nodeId]) {
         node.getWorldPosition(targetPos)
       }
     })
-    
-    worldPosition.x = (sourcePos.x + targetPos.x)/2
-    worldPosition.y = (sourcePos.y + targetPos.y)/2
-    worldPosition.z = (sourcePos.z + targetPos.z)/2
-  
+
+    worldPosition.x = (sourcePos.x + targetPos.x) / 2
+    worldPosition.y = (sourcePos.y + targetPos.y) / 2
+    worldPosition.z = (sourcePos.z + targetPos.z) / 2
+
     let sceneEl = document.querySelector('a-scene');
-    this.legend = generateLinkLegend(link, linkLabel, worldPosition, radius, scale);
-    if (this.legend){
+    this.legend = generateLinkLegend(this.data, link, linkLabel, worldPosition, radius, scale);
+    if (this.legend) {
       sceneEl.appendChild(this.legend);
     }
   },
-  
-  removeLegend: function() {
-    if (this.legend){
+
+  removeLegend: function () {
+    if (this.legend) {
       let sceneEl = document.querySelector('a-scene');
       sceneEl.removeChild(this.legend)
     }
   }
 });
 
-function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
-  let text = node[nodeLabel];
+function generateLegend(data, node, nodeLabel, nodePosition, radius, scale) {
+  let name = node[nodeLabel];
+  if (name) {
+    let width = 2;
+    let height = 1;
+
+    if (name.length > 16)
+      width = name.length / 5;
+
+    if (data) {
+      let radiusText = "\n " + data.nodeVal + " (radius): " + Math.round(node[data.nodeVal] * 100) / 100
+      if (radiusText.length > 16)
+        width = radiusText.length / 5;
+      name += radiusText
+
+      if (data.nodeAutoColorBy) {
+        let autoColorText = "\n " + data.nodeAutoColorBy + " (color): " + node[data.nodeAutoColorBy]
+        if (autoColorText.length > 16 && autoColorText > radiusText)
+          width = autoColorText.length / 5;
+        name += autoColorText
+      } else {
+        let autoColorText = "\n " + data.nodeAutoColorBy + " (color): " + node[data.nodeAutoColorBy]
+        if (autoColorText.length > 16 && autoColorText > radiusText)
+          width = autoColorText.length / 5;
+        name += autoColorText
+      }
+
+    }
+
+
+    let x = 3;
+    let y = 3;
+    let z = 3;
+    if (name.length > 16)
+      width = name.length / 16;
+    if (scale) {
+      x = x * scale.x * data.legend_scale;
+      y = y * scale.y * data.legend_scale;
+      z = z * scale.z * data.legend_scale;
+      radius = (radius + 3) * scale.y * data.legend_scale;
+    }
+
+    let entity = document.createElement('a-plane');
+    entity.setAttribute('position', { x: nodePosition.x, y: nodePosition.y + radius, z: nodePosition.z })
+    entity.setAttribute('babia-lookat', data.legend_lookat);
+    entity.setAttribute('width', width);
+    entity.setAttribute('height', height);
+    entity.setAttribute('color', 'white');
+    entity.setAttribute('scale', { x: x * data.legend_scale, y: y * data.legend_scale, z: z * data.legend_scale })
+    entity.setAttribute('material', { 'side': 'double' });
+    entity.setAttribute('text', {
+      'value': name,
+      'align': 'center',
+      'width': 6,
+      'color': 'black',
+      'alphaTest': 6,
+      'opacity': 6,
+      'transparent': false
+  });
+
+    entity.classList.add("babiaxrLegend")
+    return entity;
+  }
+}
+
+function generateLinkLegend(data, link, linkLabel, linkPosition, radius, scale) {
+  let text = link[linkLabel];
   if (text) {
     let width = 2;
     let x = 3;
@@ -739,62 +812,32 @@ function generateLegend(node, nodeLabel, nodePosition, radius, scale) {
     let z = 3;
     if (text.length > 16)
       width = text.length / 8;
-    if(scale){
+    if (scale) {
       x = x * scale.x;
       y = y * scale.y;
       z = z * scale.z;
       radius = (radius + 3) * scale.y;
     }
-  
+
     let entity = document.createElement('a-plane');
-    entity.setAttribute('position', {x: nodePosition.x, y: nodePosition.y + radius, z: nodePosition.z})
-    entity.setAttribute('babia-lookat', "[camera]");
+    entity.setAttribute('position', { x: linkPosition.x, y: linkPosition.y + radius, z: linkPosition.z })
+    entity.setAttribute('babia-lookat', data.legend_lookat);
     entity.setAttribute('width', width);
     entity.setAttribute('height', '1');
     entity.setAttribute('color', 'white');
-    entity.setAttribute('scale', {x: x, y: y, z: z})
+    entity.setAttribute('scale', { x: x * data.legend_scale, y: y * data.legend_scale, z: z * data.legend_scale })
+    entity.setAttribute('material', { 'side': 'double' });
     entity.setAttribute('text', {
-      'value': node[nodeLabel],
+      'value': link[linkLabel],
       'align': 'center',
       'width': 6,
-      'color': 'black'
-    });
+      'color': 'black',
+      'alphaTest': 6,
+      'opacity': 6,
+      'transparent': false
+  });
     entity.classList.add("babiaxrLegend")
     return entity;
-  } 
-}
-
-function generateLinkLegend(link, linkLabel, linkPosition, radius, scale) {
-  let text = link[linkLabel];
-  if (text){
-    let width = 2;
-  let x = 3;
-  let y = 3;
-  let z = 3;
-  if (text.length > 16)
-    width = text.length / 8;
-  if(scale){
-      x = x * scale.x;
-      y = y * scale.y;
-      z = z * scale.z;
-      radius = (radius + 3) * scale.y;
-  }
-
-  let entity = document.createElement('a-plane');
-  entity.setAttribute('position', {x: linkPosition.x, y: linkPosition.y + radius, z: linkPosition.z})
-  entity.setAttribute('babia-lookat', "[camera]");
-  entity.setAttribute('width', width);
-  entity.setAttribute('height', '1');
-  entity.setAttribute('color', 'white');
-  entity.setAttribute('scale', {x: x, y: y, z: z})
-  entity.setAttribute('text', {
-    'value': link[linkLabel],
-    'align': 'center',
-    'width': 6,
-    'color': 'black'
-  });
-  entity.classList.add("babiaxrLegend")
-  return entity;
   }
 }
 

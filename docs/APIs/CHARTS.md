@@ -395,6 +395,8 @@ This component shows a network chart.
 | -----    |--------           | ----   |---------   | --------  |
 | nodeLegend          | Shows a legend when hovering a node.  | boolean | - | false |
 | linkLegend          | Shows a legend when hovering a link. **Important**: will only work if nodeLabel is different from ""  | boolean | - | false |
+| legend_lookat         | Element that the legend will follow in terms of rotation  | string | `[camera]` |
+| legend_scale         | Scale for the legend  | number | 1 |
 | from          | The filterdata/querier entity ID where the data for the chart is.| string | - | - |
 | data          | Complete data to show in the chart. Link information will be obtained from the information inside the nodes. **Important**: Using this attribute will disable the `from`, `nodes` and `links` attributes.  | JSON (list of objects) | -  | - |
 | nodes          | Nodes data to show in the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - | - |
