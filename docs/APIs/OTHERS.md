@@ -131,7 +131,7 @@ This component adds a z axis to the graph.
 
 #### **babia-camera component**
 
-This component replaces A-frame camera and cursor components and inserts oculus controllers.
+This component built the needed things related to the camera for changing between VR and On-Screen, it adds cursor components and inserts oculus controllers.
 
 #### API
 
@@ -147,7 +147,7 @@ This component replaces A-frame camera and cursor components and inserts oculus 
 | teleportCollision     | Selector of the meshes used to check the collisions | string | .environmentGround |
 
 ```html
-    <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button; raycasterHand: .babiaxraycasterclass, #audio_button" look-controls wasd-controls="fly: false"></a-entity>
+    <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button; raycasterHand: .babiaxraycasterclass, #audio_button" look-controls wasd-controls="fly: false"></a-entity>
 ```
 
 #### **babia-range-selector component**

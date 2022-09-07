@@ -147,7 +147,7 @@
 
         <!-- Controls and Camera -->
         <a-entity id="cameraRig" position="0 1.6 3" networked="template:#rig-template; attachTemplateToLocal:false">
-            <a-entity id="head" babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon; 
+            <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon; 
                 raycasterHand: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon; teleportCollision: #floorRoom" 
                 look-controls wasd-controls="fly: false"
                 networked="template:#camera-template;attachTemplateToLocal:false;">
