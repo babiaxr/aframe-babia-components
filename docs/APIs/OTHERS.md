@@ -164,3 +164,34 @@ This component uses the queryes component in order to change the time range in t
     <!-- UI -->
     <a-entity id="interface" babia-range-selector position="3.376 1.072 -3.073" rotation="0 -90 0" scale="0.132 0.132 0.132"></a-entity>
 ```
+
+
+#### **babia-poster component**
+
+**This component is a soft fork of aframe-dialog-component**: https://github.com/editvr/aframe-dialog-popup-component#readme
+
+| Property               | Description                 | Default Value                 |
+| ---------------------- | --------------------------- | ----------------------------- |
+| title                  | String containing title.    | New Dialog                    |
+| titleColor             | Text color of title.        | black                         |
+| titleFont              | Title font.                 | mozillavr                     |
+| titleWrapCount         | Title entity wrap count.    | 24                            |
+| body                   | String containing body.     | This dialog has no body yet.  |
+| bodyColor              | Text color of body.         | black                         |
+| bodyFont               | Body  font.                 | mozillavr                     |
+| bodyWrapCount          | Body entity wrap count.     | 30                            |
+| openOn                 | Open/Close event.           | click                         |
+| active                 | Turn dialog on/off.         | true                          |
+| openIconImage          | Icon image for open button. | None                          |
+| openIconRadius         | Radius for open icon.       | 0.3                           |
+| openIconColor          | Color for open icon.        | white                         |
+| closeIconImage         | Icon image for open button. | None                          |
+| closeIconRadius        | Radius for close icon.      | 0.3                           |
+| closeIconColor         | Color for close icon.       | white                         |
+| image                  | Path to Dialog hero image.  | None                          |
+| imageWidth             | Dialog hero image width.    | 2                             |
+| imageHeight            | Dialog hero image height.   | 2                             |
+| dialogBoxWidth         | Dialog box width.           | 4                             |
+| dialogBoxHeight        | Dialog box height.          | 4                             |
+| dialogBoxColor         | Dialog box background color.| white                         |
+| dialogBoxPadding       | Dialog box padding.         | 0.2                           |

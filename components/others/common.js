@@ -17,7 +17,7 @@ const colors = {
     },
     'get': function (i, palette) {
         // CAMBIAR LA LOGICA POR SI METES UN ARRAY DIRECTAMENTE EN VEZ DE AÑADIR UNA DE POR DEFECTO
-        if (palette in colors) {
+        if (palette in this.palettes) {
             let length = this.palettes[palette].length;
             return this.palettes[palette][i % length];
         } else {
