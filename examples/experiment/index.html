@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>BabiaXR Demo - COVID-19 Data into BabiaXr Charts </title>
+        <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
+        </meta>
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+        <script
+                src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
+        <script
+                src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
+        <script
+                src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+        <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+        <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+        <script src="../demos/1.0.11/dist/aframe-lounge-component.min.js"></script>
+        <script src="../../dist/aframe-babia-components.js"></script>
+        <link rel="stylesheet" href="../assets/gitlab-corner.css">
+        <style>
+                h1 {
+                        color: #AAAAAA;
+                        font-family: 'Archivo', sans-serif;
+                        font-size: 45px;
+                        text-align: center;
+                        text-shadow: black 0.1em 0.1em 0.2em
+                }
+
+                p {
+                        color: #444444;
+                        font-family: 'Archivo', sans-serif;
+                        font-size: 26px;
+                        text-align: justify;
+                        text-shadow: #AAAAAA 0.1em 0.1em 0.2em
+                }
+        </style>
+</head>
+
+<body>
+        <a-scene id="scene" light="defaultLightsEnabled: false">
+
+                <!-- Assets -->
+                <a-assets>
+                        <img id="sky" src="../demos/1.0.11/assets/360-panorama.jpg">
+                        <img id="floor" src="../demos/1.0.11/assets/floor-texture.jpg">
+                        <img id="metalic" src="../demos/1.0.11/assets/metalic-texture.jpg">
+                </a-assets>
+
+                <a-entity babia-experiment id="experiment">
+
+                        <!-- Querier Components -->
+                        <a-entity id="piedata" babia-queryjson="url: ../demos/1.0.11/data_examples/europe.json;">
+                        </a-entity>
+                        <a-entity id="networknodes"
+                                babia-queryjson="url: ../demos/1.0.11/data_examples/travel_nodes.json;"></a-entity>
+                        <a-entity id="networklinks"
+                                babia-queryjson="url: ../demos/1.0.11/data_examples/travel_links.json;"></a-entity>
+                        <a-entity id="doughnutdata" babia-queryjson="url: ../demos/1.0.11/data_examples/asia.json;">
+                        </a-entity>
+                        <a-entity id="bardata" babia-queryjson="url: ../demos/1.0.11/data_examples/usa2.json;">
+                        </a-entity>
+                        <a-entity id="3dbardata" babia-queryjson="url: ../demos/1.0.11/data_examples/USA.json;">
+                        </a-entity>
+                        <a-entity id="cylsdata" babia-queryjson="url: ../demos/1.0.11/data_examples/continents2.json;">
+                        </a-entity>
+                        <a-entity id="continentsdata"
+                                babia-queryjson="url: ../demos/1.0.11/data_examples/continents.json;"></a-entity>
+
+                        <!-- Enviroment -->
+                        <a-sky src="#sky"></a-sky>
+
+                        <!-- Aframe Lounge -->
+                        <a-entity id="lounge" position="5 0 0" lounge="width: 40; depth: 50; height: 10;
+                            north: barrier; 
+                            floorTexture: ../assets/textures/floor-texture.jpg">
+
+                                <!-- Simple Components -->
+                                <a-entity position=" 16 0 -12" lounge-plinth="width: 4; depth: 4" lounge-staydown>
+                                        <a-entity id="pie"
+                                                babia-pie='legend: true; palette: blues; from: piedata; key: country; size: cases'
+                                                position="0 2.5 0" rotation="90 -45 0" scale="2 2 2"></a-entity>
+                                </a-entity>
+                                <a-entity position="16 0 1" lounge-plinth="width: 4; depth: 4" lounge-staydown>
+                                        <a-entity id="doughnut"
+                                                babia-doughnut='legend: true; palette: pearl; from: doughnutdata; key: country; size: cases'
+                                                position="0 2.5 0" rotation="90 -45 0" scale="1.5 1.5 1.5"></a-entity>
+                                </a-entity>
+                                <a-entity position="0 0 -8" lounge-plinth="width: 6.5; depth: 4" lounge-staydown>
+                                        <a-entity id="bar"
+                                                babia-bars='legend: true; axis: true; heightMax: 15; from: bardata; x_axis: date; height: deaths'
+                                                position="-2.25 0.275 0" rotation="0 0 0" scale="0.5 0.5 0.5">
+                                        </a-entity>
+                                </a-entity>
+                                <a-entity position=" 2 0 10" lounge-plinth="width: 7; depth: 4" lounge-staydown>
+                                        <a-entity id="cylinder"
+                                                babia-cyls='legend: true; axis: true; palette: sunset; heightMax: 15; x_axis: country; height: cases; radius: deaths; from: cylsdata'
+                                                position="-2.75 0.275 -0.8" rotation="0 0 0" scale="0.15 0.4 0.15">
+                                        </a-entity>
+                                </a-entity>
+
+
+                                <!-- 3D Components -->
+                                <a-entity position="-12 0 -18" lounge-plinth="width: 10; depth: 4" lounge-staydown>
+                                        <a-entity id="bubbles"
+                                                babia-bubbles='legend: true; palette: ubuntu; radiusMax: 2.2; heightMax: 30; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
+                                                position="-4.5 0.275 -1.2" rotation="0 0 0" scale="0.12 0.12 0.12">
+                                        </a-entity>
+                                </a-entity>
+                                <a-entity position="-12 0 2" lounge-plinth="width: 3; depth: 9.8" lounge-staydown
+                                        rotation="0 180 0">
+                                        <a-entity id="3dcylinder"
+                                                babia-cylsmap='legend: true; palette: flat; heightMax: 100; radiusMax: 2; from: continentsdata; x_axis: country; z_axis: continentExp; height: deaths; radius: cases'
+                                                position="1 0.275 -4" rotation="0 -90 0" scale="0.1 0.1 0.1"></a-entity>
+                                </a-entity>
+                                <a-entity position="-12 0 20" lounge-plinth="width: 4; depth: 8" lounge-staydown
+                                        rotation="0 180 0">
+                                        <a-entity id="3dbar"
+                                                babia-barsmap='x_axis: key; z_axis: key2; height: size; legend: true; palette: bussiness; animation: true;
+                        heightMax:35; data:[{"key":"David","key2":"2019","size":90},{"key":"David","key2":"2018","size":8},{"key":"David","key2":"2017","size":70},{"key":"David","key2":"2016","size":65},{"key":"David","key2":"2015","size":5},{"key":"Pete","key2":"2011","size":80},{"key":"Pete","key2":"2014","size":7},{"key":"Josh","key2":"2016","size":65},{"key":"Josh","key2":"2015","size":55},{"key":"Jesus","key2":"2016","size":90},{"key":"Jesus","key2":"2011","size":80},{"key":"Jesus","key2":"2014","size":75},{"key":"Jesus","key2":"2016","size":60},{"key":"Jesus","key2":"2015","size":5},{"key":"Jesus","key2":"2016","size":95},{"key":"Steve","key2":"2016","size":90},{"key":"Steve","key2":"2017","size":8},{"key":"Steve","key2":"2014","size":7},{"key":"Steve","key2":"2013","size":60},{"key":"Moreno","key2":"2015","size":45},{"key":"Jesus","key2":"2019","size":100},{"key":"Pete","key2":"2019","size":10}]'
+                                                position="-1.062 0.275 -1.887" rotation="0 0 0" scale="0.4 0.4 0.4">
+                                        </a-entity>
+                                </a-entity>
+
+
+                                <!-- CodeCity Component-->
+                                <a-entity position="16 3 20" lounge-plinth="width: 6; depth: 6" lounge-staydown>
+                                        <a-entity position="0 0.25 0" id="codecity" babiaxr-codecity='width: 20; depth: 20; streets: true; color: green;
+                                extra: 1.5; base_thick: 0.3; split: pivot; titles: true; time_evolution_delta: 3000;
+                                 data: ../demos/1.0.11/main_data.json' scale="0.3 0.3 0.3" rotation="0 180 0">
+                                        </a-entity>
+                                </a-entity>
+
+                                <!-- Network Component -->
+                                <!-- <a-entity position="7 3 -18" lounge-plinth="width: 6; depth: 6" lounge-staydown>
+                                        <a-entity id="network" babia-network='nodesFrom: networknodes; linksFrom: networklinks;
+                                nodeId: country; nodeLabel: country; nodeAutoColorBy: country; 
+                                nodeResolution: 20; nodeVal: population; nodeRelSize: 1; 
+                                linkWidth: 0.1; nodeLegend: true;' scale="0.1 0.1 0.1" rotation="0 0 -90"
+                                                position="0 5 0">
+                                        </a-entity>
+                                </a-entity> -->
+
+                                <!-- UI Component -->
+                                <a-entity id="ui_doughnut" babia-ui="target: doughnut" position="18 -1 9"
+                                        rotation="0 -90 0" scale="0.4 0.7 0.5">
+                                </a-entity>
+
+                        </a-entity>
+
+                        <!-- Component's Descriptions -->
+                        <a-entity id="piedescription" position="18.2 -4.1 -12" rotation="-30 -90 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-pie Component</h1>
+                                        <p>This component shows a pie chart.
+                                        <p>Raycaster: </br>Get intersection with a slice to show the value.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="doughnutdescription" position="18.4 -4.1 0" rotation="-30 -90 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-doughnut Component</h1>
+                                        <p>This component shows a doughnut chart.
+                                        <p>Raycaster: </br>Get intersection with a slice to show the value.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="bardescription" position="8 -4.1 -6" rotation="-30 0 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-bars Component</h1>
+                                        <p>This component shows a 2 axis bar chart.
+                                        <p>Raycaster: </br>Get intersection with a bar to show the key and value.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="cylinderdescription" position="10 -4.1 12" rotation="-30 0 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-cyls Component</h1>
+                                        <p>This component shows a 2 axis cylinder chart.
+                                        <p>Raycaster: </br>Get intersection with a cylinder to show the key and value.
+                                        </p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="3dbardescription" position="-3.5 -4.1 21" rotation="-30 180 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-barsmap Component</h1>
+                                        <p>This component shows a 3 axis bar chart.
+                                        <p>Raycaster: </br>Get intersection with a bar to show the keys and values.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="3dcylinderdescription" position="-5.5 -4.1 -3" rotation="-30 90 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-cylsmap Component</h1>
+                                        <p>This component shows a 3 axis cylinder chart.
+                                        <p>Raycaster: </br>Get intersection with a cylinder to show the keys and values.
+                                        </p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="bubbledescription" position="-2 -4.1 -16" rotation="-30 0 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-bubbles Component</h1>
+                                        <p>This component shows a 3 axis bubbles chart.
+                                        <p>Raycaster: </br>Get intersection with a bubbles to show the keys and values.
+                                        </p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+
+                        <a-entity id="codecitydescription" position="17.5 -4.1 16.5" rotation="-30 -135 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-city Component</h1>
+                                        <p>This component shows a city created using repository data.
+                                        <p>Raycaster: </br>Get intersection with a building to show the path.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="networkdescription" position="10 -4.1 -15" rotation="-30 0 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-network Component</h1>
+                                        <p>This component shows a set of nodes and relation links.
+                                        <p>Raycaster: </br>Get intersection with a node to show its name.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="uidescription" position="21 -4.1 5" rotation="-30 -90 0">
+                                <a-box src="#floor" height="2" width="2" depth="0.1" position="0 0 0"></a-box>
+                                <a-box src="#metalic" height="1.8" width="1.8" depth="0.05" position="0 0 0.05"></a-box>
+                                <a-entity htmlembed position="0 0.1 0.1" style="width: 380px; height: 400px;">
+                                        <h1>babia-ui Component</h1>
+                                        <p>This component lets you choose between sets of data or metrics to show.
+                                        <p>Interact: </br>Click on the different buttons to change the data of the
+                                                doughnut
+                                                chart.</p>
+                                        </p>
+                                </a-entity>
+                        </a-entity>
+
+
+                        <!-- Lights -->
+                        <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+
+                        <!-- Controls and Camera -->
+                        <a-entity lounge-entry-point>
+                                <a-entity id="cameraRig" position="3 -3.5 0">
+                                        <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass;
+                                        raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom"
+                                                look-controls wasd-controls="fly: true">
+                                        </a-entity>
+                                </a-entity>
+                        </a-entity>
+
+                </a-entity>
+
+        </a-scene>
+        <div class="gitlab-corner-wrapper"><a
+                        href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/demos/1.0.11/index.html"
+                        class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                                <g id="g44">
+                                        <path id="path46" class="cls-1"
+                                                d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                                </g>
+                                <g id="g48">
+                                        <path id="path50" class="cls-2"
+                                                d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                                </g>
+                                <g id="g56">
+                                        <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                                </g>
+                                <g id="g64">
+                                        <path id="path66" class="cls-3"
+                                                d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                                </g>
+                                <g id="g72">
+                                        <path id="path74" class="cls-2"
+                                                d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                                </g>
+                                <g id="g76">
+                                        <path id="path78" class="cls-1"
+                                                d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                                </g>
+                                <g id="g80">
+                                        <path id="path82" class="cls-3"
+                                                d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                                </g>
+                                <g id="g84">
+                                        <path id="path86" class="cls-2"
+                                                d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                                </g>
+                        </svg></a></div>
+</body>
+
+</html>
