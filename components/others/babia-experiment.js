@@ -13,7 +13,8 @@ AFRAME.registerComponent('babia-experiment', {
         timeLimitEnding: { type: 'boolean', default: false }, // If false, go for the button
         timeLimitTime: { type: 'number', default: 300 }, // In seconds
         finishButton: { type: 'boolean', default: true },
-        recordDelta: { type: 'number', default: 3000 } // In milliseconds, each delta the position and rotation will be recorded
+        recordDelta: { type: 'number', default: 3000 }, // In milliseconds, each delta the position and rotation will be recorded
+        recordAudio: { type: 'boolean', default: true }
     },
 
     /**
@@ -42,6 +43,7 @@ AFRAME.registerComponent('babia-experiment', {
     */
 
     update: function (oldData) {
+        const self = this
         if (this.data != this.oldData) {
             // Get camera
             let isThereBabiaCamera = this.el.querySelectorAll("[babia-camera]")
@@ -150,13 +152,19 @@ AFRAME.registerComponent('babia-experiment', {
         this.startButtonEntity.setAttribute('position', { x: this.babiaCameraPosition.x - 3.5, y: this.babiaCameraPosition.y + 1, z: this.babiaCameraPosition.z - 3.5 })
 
         // Start recording time
-        this.startButtonEntity.addEventListener('click', function (event) {
+        this.startButtonEntity.addEventListener('click', async function (event) {
             self.showCharts()
             self.runningExperiment = true;
+            // Start Recording
             self.recordingData = window.setInterval(function () {
                 recordData(self)
             }, self.data.recordDelta);
             self.recordedData['startTime'] = Date.now();
+            // Audio
+            if (self.data.recordAudio) {
+                self.audioRecorder = await recordAudio();
+                self.audioRecorder.start();
+            }
             self.startButtonEntity.setAttribute('visible', false)
 
             // Show finish button
@@ -198,9 +206,14 @@ AFRAME.registerComponent('babia-experiment', {
         // Start recording time
         this.finishButtonEntity.addEventListener('click', function (event) {
             self.hideCharts()
+            // Stop recording
             self.runningExperiment = false;
             recordData(self)
             clearInterval(this.recordingData)
+            if (self.audioRecorder) {
+                self.stopAndDownloadAudio()
+            }
+
             self.recordedData['finishTime'] = Date.now();
             self.recordedData['totalDuration'] = self.recordedData['finishTime'] - self.recordedData['startTime'];
             downloadObjectAsJson(self.recordedData, "experimentdetails")
@@ -210,6 +223,17 @@ AFRAME.registerComponent('babia-experiment', {
         }, false);
 
         this.el.parentElement.append(this.finishButtonEntity);
+    },
+
+    stopAndDownloadAudio: async function () {
+        let audio = await this.audioRecorder.stop()
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = audio.audioUrl;
+        a.download = "audio.webm";
+        a.click();
+        window.URL.revokeObjectURL(audio.audioUrl)
     },
 
     tick: function () {
@@ -261,3 +285,43 @@ function downloadObjectAsJson(exportObj, exportName) {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
 }
+
+
+
+const recordAudio = () => {
+    return new Promise(resolve => {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                const mediaRecorder = new MediaRecorder(stream);
+                const audioChunks = [];
+
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    audioChunks.push(event.data);
+                });
+
+                const start = () => {
+                    mediaRecorder.start();
+                };
+
+                const stop = () => {
+                    return new Promise(resolve => {
+                        mediaRecorder.addEventListener("stop", () => {
+                            const audioBlob = new Blob(audioChunks);
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            const audio = new Audio(audioUrl);
+                            const play = () => {
+                                audio.play();
+                            };
+
+                            resolve({ audioBlob, audioUrl, play });
+                        });
+
+                        mediaRecorder.stop();
+                    });
+                };
+
+
+                resolve({ start, stop });
+            });
+    });
+};
