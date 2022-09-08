@@ -208,9 +208,10 @@ let findTargetComponent = (data, self) => {
 let updateTitle = (data, titleRotation) => {
     let titleEl = document.createElement('a-entity');
     titleEl.classList.add("babiaxrTitle")
-    titleEl.setAttribute('text-geometry', { 'value': data.title });
-    if (data.titleFont) titleEl.setAttribute('text-geometry', { 'font': data.titleFont });
+    titleEl.setAttribute('text', { 'value': data.title });
     if (data.titleColor) titleEl.setAttribute('material', { 'color': data.titleColor });
+    titleEl.setAttribute('scale', '10 10 10');
+    titleEl.setAttribute('wrapCount', '10');
     titleEl.setAttribute('position', data.titlePosition);
     titleEl.setAttribute('rotation', titleRotation);
     return titleEl
