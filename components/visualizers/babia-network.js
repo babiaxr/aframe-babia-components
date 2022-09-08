@@ -330,46 +330,52 @@ AFRAME.registerComponent('babia-network', {
    * Called on each scene tick.
    */
   tick: function (t, td) {
+    // Cursor may not be initialized
+    if (!cursor) {
+      cursor = document.querySelector('[cursor]');
+    } else {
+      if (cursor.components.raycaster.raycaster) {
+        let intersects = cursor.components.raycaster.raycaster.intersectObjects(this.forceGraph.children)
+          .filter(function (o) { // Check only node/link objects
+            return ['node', 'link'].indexOf(o.object.__graphObjType) !== -1;
+          })
+          .sort(function (a, b) { // Prioritize nodes over links
+            return isNode(b) - isNode(a);
+            function isNode(o) { return o.object.__graphObjType === 'node'; }
+          });
 
-    let intersects = cursor.components.raycaster.raycaster.intersectObjects(this.forceGraph.children)
-      .filter(function (o) { // Check only node/link objects
-        return ['node', 'link'].indexOf(o.object.__graphObjType) !== -1;
-      })
-      .sort(function (a, b) { // Prioritize nodes over links
-        return isNode(b) - isNode(a);
-        function isNode(o) { return o.object.__graphObjType === 'node'; }
-      });
+        let topObject = intersects.length ? intersects[0].object : null;
 
-    let topObject = intersects.length ? intersects[0].object : null;
+        if (topObject !== this.state.hoverObj) {
+          const prevObjType = this.state.hoverObj ? this.state.hoverObj.__graphObjType : null;
+          const prevObjData = this.state.hoverObj ? this.state.hoverObj.__data : null;
+          const objType = topObject ? topObject.__graphObjType : null;
+          const objData = topObject ? topObject.__data : null;
 
-    if (topObject !== this.state.hoverObj) {
-      const prevObjType = this.state.hoverObj ? this.state.hoverObj.__graphObjType : null;
-      const prevObjData = this.state.hoverObj ? this.state.hoverObj.__data : null;
-      const objType = topObject ? topObject.__graphObjType : null;
-      const objData = topObject ? topObject.__data : null;
+          if (prevObjType && prevObjType !== objType) {
+            // Hover out
+            this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
+          }
+          if (this.data.nodeLegend && prevObjType === 'node') {
+            this.removeLegend(this)
+          } else if (this.data.linkLegend && this.data.linkLabel != "" && prevObjType === 'link') {
+            this.removeLegend(this)
+          }
+          if (objType) {
+            // Hover in
+            this.data['on' + (objType === 'node' ? 'Node' : 'Link') + 'CenterHover'](objData, prevObjType === objType ? prevObjData : null);
+          }
 
-      if (prevObjType && prevObjType !== objType) {
-        // Hover out
-        this.data['on' + (prevObjType === 'node' ? 'Node' : 'Link') + 'CenterHover'](null, prevObjData);
-      }
-      if (this.data.nodeLegend && prevObjType === 'node') {
-        this.removeLegend(this)
-      } else if (this.data.linkLegend && this.data.linkLabel != "" && prevObjType === 'link') {
-        this.removeLegend(this)
-      }
-      if (objType) {
-        // Hover in
-        this.data['on' + (objType === 'node' ? 'Node' : 'Link') + 'CenterHover'](objData, prevObjType === objType ? prevObjData : null);
-      }
+          this.state.hoverObj = topObject;
 
-      this.state.hoverObj = topObject;
-
-      if (topObject) {
-        if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
-          this.showLegend(topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
-        } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
-          if (this.data.linkLabel != "") {
-            this.showLinkLegend(topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
+          if (topObject) {
+            if (this.data.nodeLegend && topObject.__graphObjType === 'node') {
+              this.showLegend(topObject, topObject.__data, this.data.nodeLabel, this.el.getAttribute("scale"))
+            } else if (this.data.linkLegend && topObject.__graphObjType === 'link') {
+              if (this.data.linkLabel != "") {
+                this.showLinkLegend(topObject, topObject.__data, this.data.linkLabel, this.el.getAttribute("scale"))
+              }
+            }
           }
         }
       }
@@ -796,7 +802,7 @@ function generateLegend(data, node, nodeLabel, nodePosition, radius, scale) {
       'alphaTest': 6,
       'opacity': 6,
       'transparent': false
-  });
+    });
 
     entity.classList.add("babiaxrLegend")
     return entity;
@@ -835,7 +841,7 @@ function generateLinkLegend(data, link, linkLabel, linkPosition, radius, scale) 
       'alphaTest': 6,
       'opacity': 6,
       'transparent': false
-  });
+    });
     entity.classList.add("babiaxrLegend")
     return entity;
   }
