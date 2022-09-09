@@ -89,7 +89,7 @@
                 <a-entity id='links' babia-queryjson='url: links_babia.json'></a-entity>
                 <a-entity id='nodes' babia-queryjson='url: nodes_babia.json'></a-entity>
                 <a-entity id="network" babia-network='nodesFrom: nodes; linksFrom: links;
-            nodeId: name; nodeLabel: name;
+            nodeId: name; nodeLabel: name; linkDistance: 60;
             nodeResolution: 20; nodeVal: maintainers; nodeRelSize: 2.5; nodeAutoColorBy: license;
             linkWidth: 0.2;  linkAutoColorBy: source; legend_scale: 5s;
             nodeLegend: true; linkLegend: true; linkLabel: id;

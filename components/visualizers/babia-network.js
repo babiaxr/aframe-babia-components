@@ -124,6 +124,7 @@ AFRAME.registerComponent('babia-network', {
     linkDirectionalParticleWidth: { parse: parseAccessor, default: 0.5 },
     linkDirectionalParticleColor: { parse: parseAccessor, default: null },
     linkDirectionalParticleResolution: { type: 'number', default: 4 },
+    linkDistance: { type: 'number', default: 30 },
 
     linkHoverPrecision: { type: 'number', default: 2 },
     onNodeCenterHover: { parse: parseFn, default: function () { } },
@@ -204,6 +205,7 @@ AFRAME.registerComponent('babia-network', {
   },
 
   init: function () {
+    const self = this;
     this.isFirstTimeNodes = true;
     this.isFirstTimeLinks = true;
 
@@ -227,6 +229,11 @@ AFRAME.registerComponent('babia-network', {
     // setup FG object
     if (!this.forceGraph) this.forceGraph = new ThreeForceGraph(); // initialize forceGraph if it doesn't exist yet
     this.el.object3D.add(this.forceGraph);
+
+    // Force distance if selected
+    if (this.data.linkDistance) {
+      this.forceGraph.d3Force('link').distance(function () { return self.data.linkDistance })
+    }
 
     // setup cursor
     setCursor();
