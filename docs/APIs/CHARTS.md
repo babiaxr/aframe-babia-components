@@ -322,6 +322,10 @@ This component shows a city in boats.
 | base_color          | Quarter color | color | #98e690 |
 | data          | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.  | JSON (list of objects) | - |
 | field | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**) | string   | `uid` |
+| autoscale          | Force the scale of the boats-city in a fit space, it also affects to the animation | boolean | false |
+| autoscaleSizeX         | Max size (absolute units) in x-axis for the autoscale | number | 3 |
+| autoscaleSizeY          | Max size (absolute units) in y-axis for the autoscale | number | 2 |
+| autoscaleSizeZ          | Max size (absolute units) in z-axis for the autoscale | number | 3 |
 
 #### Data format example
 ```json

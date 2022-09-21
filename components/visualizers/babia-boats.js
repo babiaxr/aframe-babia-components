@@ -35,6 +35,12 @@ AFRAME.registerComponent('babia-boats', {
         legend_scale: { type: 'number', default: 1 },
         legend_lookat: { type: 'string', default: "[camera]" },
         field: { type: 'string', default: 'uid' },
+
+        // Autoscale when animating or starting
+        autoscale: { type: 'boolean', default: false },
+        autoscaleSizeX: { type: 'number', default: 3 },
+        autoscaleSizeZ: { type: 'number', default: 3 },
+        autoscaleSizeY: { type: 'number', default: 2 }
     },
 
     /**
@@ -92,16 +98,51 @@ AFRAME.registerComponent('babia-boats', {
         updateFunction(this, oldData)
     },
 
+    /** 
+     * Already autoscaled
+    */
+    alreadyAutoscaled: false,
+    autoscaleBoats: function () {
+        const self = this
+        // 2 for X and 2 for Y
+        let bbox = new THREE.Box3().setFromObject(this.el.object3D)
+        let finalSizeX = bbox.max.x - bbox.min.x
+        let finalSizeY = bbox.max.y - bbox.min.y
+        let finalSizeZ = bbox.max.z - bbox.min.z
+
+        let currentScale = this.el.getAttribute("scale")
+        if (!currentScale) {
+            currentScale = { x: 1, y: 1, z: 1 }
+        }
+
+        this.el.setAttribute("scale", { x: eval(this.data.autoscaleSizeX / finalSizeX) * currentScale.x, y: eval(this.data.autoscaleSizeY / finalSizeY) * currentScale.y, z: eval(this.data.autoscaleSizeZ / finalSizeZ) * currentScale.z })
+    },
+
     /**
     * Called on each scene tick.
     */
     tick: function (t, delta) {
         let self = this;
+
+        // First time to autoscale
+        if (this.data.autoscale && !this.alreadyAutoscaled) {
+            let bbox = new THREE.Box3().setFromObject(this.el.object3D)
+            if (bbox.min.x !== Infinity) {
+                this.autoscaleBoats()
+                this.alreadyAutoscaled = true
+            }
+        }
+
         if (this.animation) {
             let t = { x: 0, y: 0, z: 0 };
             if ((Date.now() - this.start_time) > this.duration) {
                 this.animation = false;
                 this.setFigures(this.figures, t);
+
+                // Animation finished, set autoscale if activated
+                if (this.data.autoscale) {
+                    this.autoscaleBoats()
+                }
 
                 //Reactivate legends, check PERFORMANCE
                 self.entitiesWithLegend = self.entitiesWithLegend.filter(item => document.getElementById(item.entity.id))
@@ -121,7 +162,7 @@ AFRAME.registerComponent('babia-boats', {
                         }
                         entity.legend.setAttribute('position', coordinatesFinal)
                         entity.legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(entity.legend) 
+                        self.el.parentElement.appendChild(entity.legend)
 
                         self.legendsActive.push(entity.legend)
                         entity.alreadyActive = true
@@ -605,7 +646,7 @@ AFRAME.registerComponent('babia-boats', {
                             this.Animation(entity, figures[i].children, figures_old[index].children, delta, figures[i].translate_matrix, figures_old[index].translate_matrix);
                         } else {
                             // Building color if changed, force to the new one
-                            if(figures[i].rawData[self.data.color] !== figures_old[index].rawData[self.data.color]) {
+                            if (figures[i].rawData[self.data.color] !== figures_old[index].rawData[self.data.color]) {
                                 let color = heatMapColorforValue(figures[i].rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
                                 let oldColor = entity.getAttribute('color')
                                 if (color !== oldColor) {
@@ -752,7 +793,7 @@ AFRAME.registerComponent('babia-boats', {
             //Check if has transparent box as a quarter
             if (entity.classList.contains('babiaquarterboxactivated')) {
                 entity.childNodes.forEach(child => {
-                    if (child.classList.contains('babiaquarterlegendbox')){
+                    if (child.classList.contains('babiaquarterlegendbox')) {
                         child.setAttribute('geometry', 'width', new_width);
                         child.setAttribute('geometry', 'depth', new_depth);
                         child.setAttribute('material', 'opacity', 0.4);
@@ -774,7 +815,7 @@ AFRAME.registerComponent('babia-boats', {
             //Check if has transparent box as a quarter
             if (entity.classList.contains('babiaquarterboxactivated')) {
                 entity.childNodes.forEach(child => {
-                    if (child.classList.contains('babiaquarterlegendbox')){
+                    if (child.classList.contains('babiaquarterlegendbox')) {
                         child.setAttribute('geometry', 'width', new_width);
                         child.setAttribute('geometry', 'depth', new_depth);
                         child.setAttribute('material', 'opacity', 0.4);
@@ -948,7 +989,7 @@ AFRAME.registerComponent('babia-boats', {
                     self.el.parentElement.appendChild(entity.legend)
 
                     // Add to the elements that has the legend activated
-                    self.entitiesWithLegend.push({'figure': figure, 'entity': entity})
+                    self.entitiesWithLegend.push({ 'figure': figure, 'entity': entity })
                     self.legendsActive.push(entity.legend)
                 }
             })
@@ -1020,7 +1061,7 @@ AFRAME.registerComponent('babia-boats', {
                     }
 
                     // Add to the elements that has the legend activated
-                    self.entitiesWithLegend.push({'figure': figure, 'entity': entity})
+                    self.entitiesWithLegend.push({ 'figure': figure, 'entity': entity })
                     self.legendsActive.push(entity.legend)
                 }
 
