@@ -69,7 +69,7 @@ AFRAME.registerComponent('babia-boats', {
     /**
      * List of visualization properties
      */
-    visProperties: ['height', 'area', 'width', 'depth'],
+    visProperties: ['height', 'area', 'width', 'depth', 'color'],
 
     /**
     * Set if component needs multiple instancing.
@@ -252,6 +252,7 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     generateElements: function (elements, figures, translate, inc) {
+        const self = this;
         var increment = inc;
 
         // Vertical Limits
@@ -391,7 +392,8 @@ AFRAME.registerComponent('babia-boats', {
                     height: element.height,
                     depth: element.depth,
                     children: children,
-                    translate_matrix: translate_matrix
+                    translate_matrix: translate_matrix,
+                    color: self.data.base_color
                 }
             } else {
                 if (this.data.area) {
@@ -415,6 +417,7 @@ AFRAME.registerComponent('babia-boats', {
                         depth: element.depth
                     }
                 }
+                figure.color = heatMapColorforValue(elements[i][self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
             }
             figure.rawData = elements[i]
             figures.push(figure);
@@ -635,12 +638,19 @@ AFRAME.registerComponent('babia-boats', {
                         if (entity.getAttribute('depth') != figures[i].depth) {
                             entity.setAttribute('depth', figures[i].depth);
                         }
+                        if (entity.getAttribute('color') != figures[i].color) {
+                            entity.setAttribute('color', figures[i].color);
+                        }
 
                     } else {
                         // RESIZE
                         this.resize(entity, new_time, delta, figures[i], figures_old[index]);
                         // TRASLATE
                         this.traslate(entity, new_time, delta, figures[i], figures_old[index], translate, translate_old);
+                        // COLOR
+                        if (entity.getAttribute('color') != figures[i].color) {
+                            entity.setAttribute('color', figures[i].color);
+                        }
 
                         if (figures[i].children) {
                             this.Animation(entity, figures[i].children, figures_old[index].children, delta, figures[i].translate_matrix, figures_old[index].translate_matrix);
@@ -725,6 +735,9 @@ AFRAME.registerComponent('babia-boats', {
                 }
                 if (entity.getAttribute('depth') != figure.depth) {
                     entity.setAttribute('depth', figure.depth);
+                }
+                if (entity.getAttribute('color') != figure.color) {
+                    entity.setAttribute('color', figure.color);
                 }
 
                 //TODO: Full opacity because it was in 0.5 if new building/quarter

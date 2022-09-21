@@ -244,7 +244,7 @@ let getDataMetrics = (self, data, properties) =>{
         self.dataMetrics=[]
 
         // Create structure
-        let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth']
+        let number_properties = ['height', 'radius', 'width', 'size', 'farea', 'fheight', 'area', 'depth', 'color']
         let number_metrics = []
         let last_child
 
