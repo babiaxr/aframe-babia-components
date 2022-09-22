@@ -1008,7 +1008,7 @@ AFRAME.registerComponent('babia-boats', {
                     return;
 
                 if (entity.legend) {
-                    entity.removeChild(transparentBox)
+                    self.el.parentElement.removeChild(transparentBox)
                     entity.classList.remove("babiaquarterboxactivated");
                     self.el.parentElement.removeChild(entity.legend)
 
@@ -1030,30 +1030,28 @@ AFRAME.registerComponent('babia-boats', {
                     transparentBox.setAttribute('class', 'babiaquarterlegendbox')
                     entity.classList.add("babiaquarterboxactivated");
                     let oldGeometry = entity.getAttribute('geometry')
-                    let scale = self.el.getAttribute("scale")
-                    let tsBoxHeight = oldGeometry.height + self.data.height_quarter_legend_box
-                    if (scale) {
-                        tsBoxHeight = ((oldGeometry.height + self.data.height_quarter_legend_box) / scale.y)
-                    }
+                    let scale = self.el.getAttribute("scale") || {x: 1, y: 1, z: 1}
+                    let tsBoxHeight = (oldGeometry.height * scale.y) + self.data.height_quarter_legend_box
                     transparentBox.setAttribute('geometry', {
                         height: tsBoxHeight,
-                        depth: oldGeometry.depth,
-                        width: oldGeometry.width
+                        depth: oldGeometry.depth * scale.z,
+                        width: oldGeometry.width * scale.x
                     });
                     transparentBox.setAttribute('material', {
                         'visible': true,
                         'opacity': 0.4
                     });
-                    entity.appendChild(transparentBox)
-
-                    entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                    transparentBox.setAttribute('position', coordinates)
+                    self.el.parentElement.appendChild(transparentBox)
+
                     let coordinatesFinal = {
                         x: coordinates.x,
                         y: self.data.height_quarter_legend_title,
                         z: coordinates.z
                     }
+                    entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
                     entity.legend.setAttribute('position', coordinatesFinal)
                     entity.legend.setAttribute('visible', true);
                     self.el.parentElement.appendChild(entity.legend)
