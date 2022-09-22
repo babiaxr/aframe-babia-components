@@ -1,5 +1,6 @@
 let findProdComponent = require('../others/common').findProdComponent;
 let updateFunction = require('../others/common').updateFunction;
+const colorsArray = require('../others/common').colors.palettes['categoric'];
 
 const NotiBuffer = require("../../common/noti-buffer").NotiBuffer;
 
@@ -251,6 +252,12 @@ AFRAME.registerComponent('babia-boats', {
         }
     },
 
+    /**
+     * For the categoric colors
+     */
+    categoricColorIndex: 0,
+    categoricColorMaps: {},
+
     generateElements: function (elements, figures, translate, inc) {
         const self = this;
         var increment = inc;
@@ -417,7 +424,23 @@ AFRAME.registerComponent('babia-boats', {
                         depth: element.depth
                     }
                 }
-                figure.color = heatMapColorforValue(elements[i][self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                if (typeof elements[i][self.data.color] === 'number') {
+                    figure.color = heatMapColorforValue(elements[i][self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                } else if (typeof elements[i][self.data.color] === 'string') {
+                    // Categoric color
+                    if (elements[i][self.data.color] in self.categoricColorMaps) {
+                        figure.color = self.categoricColorMaps[elements[i][self.data.color]]
+                    } else {
+                        self.categoricColorMaps[elements[i][self.data.color]] = colorsArray[self.categoricColorIndex]
+                        figure.color = colorsArray[self.categoricColorIndex]
+
+                        self.categoricColorIndex = self.categoricColorIndex + 1
+                        if (self.categoricColorIndex >= colorsArray.length) {
+                            self.categoricColorIndex = 0
+                        }
+                    }
+                }
+
             }
             figure.rawData = elements[i]
             figures.push(figure);
@@ -657,7 +680,26 @@ AFRAME.registerComponent('babia-boats', {
                         } else {
                             // Building color if changed, force to the new one
                             if (figures[i].rawData[self.data.color] !== figures_old[index].rawData[self.data.color]) {
-                                let color = heatMapColorforValue(figures[i].rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                                // Color numeric or categoric
+                                let color
+                                if (typeof figures[i].rawData[self.data.color] === 'number') {
+                                    color = heatMapColorforValue(figures[i].rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                                } else if (typeof figures[i].rawData[self.data.color] === 'string') {
+                                    // Categoric color
+                                    if (figures[i].rawData[self.data.color] in self.categoricColorMaps) {
+                                        color = self.categoricColorMaps[figures[i].rawData[self.data.color]]
+                                    } else {
+                                        self.categoricColorMaps[figures[i].rawData[self.data.color]] = colorsArray[self.categoricColorIndex]
+                                        color = colorsArray[self.categoricColorIndex]
+
+                                        self.categoricColorIndex = self.categoricColorIndex + 1
+                                        if (self.categoricColorIndex >= colorsArray.length) {
+                                            self.categoricColorIndex = 0
+                                        }
+                                    }
+                                }
+
+
                                 let oldColor = entity.getAttribute('color')
                                 if (color !== oldColor) {
                                     entity.setAttribute('color', color)
@@ -894,7 +936,22 @@ AFRAME.registerComponent('babia-boats', {
             color = self.data.base_color;;
         } else {
             if (self.data.color) {
-                color = heatMapColorforValue(figure.rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                if (typeof figure.rawData[self.data.color] === 'number') {
+                    color = heatMapColorforValue(figure.rawData[self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                } else if (typeof figure.rawData[self.data.color] === 'string') {
+                    // Categoric color
+                    if (figure.rawData[self.data.color] in self.categoricColorMaps) {
+                        color = self.categoricColorMaps[figure.rawData[self.data.color]]
+                    } else {
+                        self.categoricColorMaps[figure.rawData[self.data.color]] = colorsArray[self.categoricColorIndex]
+                        color = colorsArray[self.categoricColorIndex]
+
+                        self.categoricColorIndex = self.categoricColorIndex + 1
+                        if (self.categoricColorIndex >= colorsArray.length) {
+                            self.categoricColorIndex = 0
+                        }
+                    }
+                }
             } else {
                 color = self.data.building_color;
             }
@@ -1163,7 +1220,12 @@ let generateLegend = (name, legend_scale, lookat, colorPlane, colorText, data, f
         }
 
         if (fcolor) {
-            let colorText = "\n " + fcolor + " (color): " + Math.round(data[fcolor] * 100) / 100
+            let colorText = "\n " + fcolor
+            if (typeof data[fcolor] === 'string') {
+                colorText += " (color): " + data[fcolor]
+            } else {
+                colorText += " (color): " + Math.round(data[fcolor] * 100) / 100
+            }
             if (colorText.length > 16 && colorText > heightText)
                 width = colorText.length / 5;
             name += colorText

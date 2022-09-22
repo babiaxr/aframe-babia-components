@@ -267,6 +267,21 @@ let getDataMetrics = (self, data, properties) =>{
         properties.forEach(property => {
             if (number_properties.includes(property)){
                 self.dataMetrics.push({property: property, metrics: number_metrics})
+
+                // Specific case for categoric color in boats
+                if (property === "color"){
+                    if (self.targetComponent.attrName == 'babia-boats'){
+                        let categoric_colors = []
+                        for (const [key, value] of Object.entries(last_child)) {
+                            if (typeof value === 'string'){
+                                categoric_colors.push(key)
+                            }
+                        }
+                          
+                        self.dataMetrics.push({property: property, metrics: categoric_colors})
+                    }
+                }
+                
             } else {
                 self.dataMetrics.push({property: property, metrics: Object.keys(data[0])})
             }
