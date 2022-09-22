@@ -91,7 +91,7 @@ AFRAME.registerComponent('babia-treebuilder', {
                     } else {
                         newPart['children'] = []
                     }
-                    newPart['uid'] = paths[i][data.field].split(part)[0] + part
+                    newPart['uid'] = paths[i][data.field].split(part + data.split_by)[0] + part
                     newPart['name'] = part                  
                     currentLevel.push(newPart);
                     currentLevel = newPart.children;
