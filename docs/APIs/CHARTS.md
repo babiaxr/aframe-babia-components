@@ -317,6 +317,7 @@ This component shows a city in boats.
 | building_separation | Separation of the buildings by a numeric factor                                                                             | number                 | 0.25          |
 | legend_lookat       | Element that the legend will follow in terms of rotation                                                                    | string                 | `[camera]`    |
 | legend_scale        | Scale for the legend                                                                                                        | number                 | 1             |
+| highlightQuarter    | Option to highlight a quarter when a building is clicked                                                                    | boolean                | false         |
 | border              | Size of border around buildings (streets are built on it)                                                                   | number                 | 0.5           |
 | extra               | Extra factor for total area with respect to built area                                                                      | number                 | 1.0           |
 | zone_elevation      | Zone: elevation for each "depth" of quarters, over the previous one, ABSOLUTE value (scale does not affects this parameter) | number                 | 0.3           |

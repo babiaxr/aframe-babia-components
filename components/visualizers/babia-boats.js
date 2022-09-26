@@ -36,6 +36,7 @@ AFRAME.registerComponent('babia-boats', {
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
         legend_lookat: { type: 'string', default: "[camera]" },
+        highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
         // Autoscale when animating or starting
@@ -1087,6 +1088,22 @@ AFRAME.registerComponent('babia-boats', {
                     return;
 
                 if (entity.alreadyActive) {
+                    // Remove Higlight quarter
+                    if (self.data.highlightQuarter) {
+                        if (parseInt(entity.parentElement.getAttribute('babiaxrHightlighted')) == 1) {
+                            let oldPosition = entity.parentElement.getAttribute('position')
+                            entity.parentElement.setAttribute("position", { x: oldPosition.x, y: entity.parentElement.getAttribute('babiaxrFirstYPosition'), z: oldPosition.z })
+                            entity.parentElement.setAttribute('material', {
+                                'color': entity.parentElement.getAttribute('babiaxrFirstColor')
+                            });
+                            entity.parentElement.setAttribute('babiaxrHightlighted', 0)
+                        } else {
+                            let currentActives = parseInt(entity.parentElement.getAttribute('babiaxrHightlighted'))
+                            entity.parentElement.setAttribute('babiaxrHightlighted', currentActives - 1)
+                        }
+                    }
+
+
                     entity.legend.setAttribute('visible', false);
                     entity.setAttribute('geometry', {
                         height: entityGeometry.height - 0.1,
@@ -1117,7 +1134,7 @@ AFRAME.registerComponent('babia-boats', {
                     if (!entity.legend) {
                         // COPY FROM 626
                         entityGeometry = entity.getAttribute('geometry')
-                        let boxPosition = entity.getAttribute("position")
+                        let boxPosition = entity.getAttribute('position')
                         entity.setAttribute('position', boxPosition)
                         entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
                         entity.setAttribute('material', {
@@ -1142,6 +1159,21 @@ AFRAME.registerComponent('babia-boats', {
                         self.el.parentElement.appendChild(entity.legend);
                     }
 
+                    // Higlight quarter
+                    if (self.data.highlightQuarter) {
+                        if (!entity.parentElement.getAttribute('babiaxrHightlighted') || parseInt(entity.parentElement.getAttribute('babiaxrHightlighted')) == 0) {
+                            let oldPosition = entity.parentElement.getAttribute("position")
+                            entity.parentElement.setAttribute('babiaxrFirstYPosition', oldPosition.y)
+                            entity.parentElement.setAttribute("position", { x: oldPosition.x, y: oldPosition.y + 0.3, z: oldPosition.z })
+                            entity.parentElement.setAttribute('babiaxrFirstColor', entity.parentElement.getAttribute("material")["color"])
+                            entity.parentElement.setAttribute('material', 'color', '#bfbfbf')
+                            entity.parentElement.setAttribute('babiaxrHightlighted', 1)
+                        } else {
+                            let currentActives = parseInt(entity.parentElement.getAttribute('babiaxrHightlighted'))
+                            entity.parentElement.setAttribute('babiaxrHightlighted', currentActives + 1)
+                        }
+                    }
+
                     // Add to the elements that has the legend activated
                     self.entitiesWithLegend.push({ 'figure': figure, 'entity': entity })
                     self.legendsActive.push(entity.legend)
@@ -1152,7 +1184,7 @@ AFRAME.registerComponent('babia-boats', {
             entity.addEventListener('mouseenter', function () {
                 if (!entity.alreadyActive) {
                     entityGeometry = entity.getAttribute('geometry')
-                    let boxPosition = entity.getAttribute("position")
+                    let boxPosition = entity.getAttribute('position')
                     entity.setAttribute('position', boxPosition)
                     entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
                     entity.setAttribute('material', {
