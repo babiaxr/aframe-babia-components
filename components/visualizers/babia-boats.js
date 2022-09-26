@@ -22,6 +22,8 @@ AFRAME.registerComponent('babia-boats', {
         area: { type: 'string' },
         color: { type: 'string' },
         height: { type: 'string', default: 'height' },
+        maxBuildingHeight: { type: 'number', default: 2 },
+        minBuildingHeight: { type: 'number', default: 0.03 },
         zone_elevation: { type: 'number', default: 0.3 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
@@ -29,7 +31,6 @@ AFRAME.registerComponent('babia-boats', {
         building_color: { type: 'string', default: "#E6B9A1" },
         base_color: { type: 'color', default: '#98e690' },
         // To add into the doc
-        min_building_height: { type: 'number', default: 1 },
         height_quarter_legend_box: { type: 'number', default: 11 },
         height_quarter_legend_title: { type: 'number', default: 12 },
         height_building_legend: { type: 'number', default: 0 },
@@ -41,7 +42,7 @@ AFRAME.registerComponent('babia-boats', {
         autoscale: { type: 'boolean', default: false },
         autoscaleSizeX: { type: 'number', default: 3 },
         autoscaleSizeZ: { type: 'number', default: 3 },
-        autoscaleSizeY: { type: 'number', default: 2 }
+        //autoscaleSizeY: { type: 'number', default: 2 }
     },
 
     /**
@@ -116,7 +117,7 @@ AFRAME.registerComponent('babia-boats', {
             currentScale = { x: 1, y: 1, z: 1 }
         }
 
-        this.el.setAttribute("scale", { x: eval(this.data.autoscaleSizeX / finalSizeX) * currentScale.x, y: eval(this.data.autoscaleSizeY / finalSizeY) * currentScale.y, z: eval(this.data.autoscaleSizeZ / finalSizeZ) * currentScale.z })
+        this.el.setAttribute("scale", { x: eval(this.data.autoscaleSizeX / finalSizeX) * currentScale.x, y: currentScale.y, z: eval(this.data.autoscaleSizeZ / finalSizeZ) * currentScale.z })
     },
 
     /**
@@ -301,7 +302,7 @@ AFRAME.registerComponent('babia-boats', {
                 element.width = elements[i][this.data.width] || 0.5
             }
             if (this.data.height) {
-                element.height = elements[i][this.data.height] || this.data.min_building_height
+                element.height = self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, elements[i][this.data.height]) || this.data.minBuildingHeight
             }
             if (this.data.depth) {
                 element.depth = elements[i][this.data.depth] || 0.5
@@ -315,7 +316,12 @@ AFRAME.registerComponent('babia-boats', {
                 var children = [];
                 var translate_matrix;
                 // Save Zone's parameters
-                element.height = this.data.zone_elevation;
+                // Check scale because it should be abosulte, not relative
+                let scale = self.el.getAttribute("scale")
+                if (!scale) {
+                    scale = { x: 1, y: 1, z: 1 }
+                }
+                element.height = this.data.zone_elevation / scale.y;
                 increment -= this.data.border * this.data.extra;
                 [element.width, element.depth, translate_matrix, children] = this.generateElements(element.children, children, translate_matrix, increment);
                 translate_matrix.y = element.height;
@@ -988,13 +994,21 @@ AFRAME.registerComponent('babia-boats', {
 
         // If color metric activated, save in the metadata the max and min value for mapping
         if (data.color) {
-            let [color_max, color_min] = getMaxMinColorValues(this.newData, data.color)
+            let [color_max, color_min] = getMaxMinValues(this.newData, data.color)
             this.babiaMetadata['color_max'] = color_max
             this.babiaMetadata['color_min'] = color_min
         }
+        let [heightMax, heightMin] = getMaxMinValues(this.newData, data.height)
+        this.babiaMetadata['heightMax'] = heightMax
+        this.babiaMetadata['heightMin'] = heightMin
+
         this.notiBuffer.set(this.newData)
         // Create city
         this.updateChart(this.newData)
+    },
+
+    normalizeValues: function (valmin, valmax, newmin, newmax, val) {
+        return (((val - valmin) / (valmax - valmin)) * (newmax - newmin)) + newmin;
     },
 
     addEvents: function (entity, figure) {
@@ -1030,7 +1044,7 @@ AFRAME.registerComponent('babia-boats', {
                     transparentBox.setAttribute('class', 'babiaquarterlegendbox')
                     entity.classList.add("babiaquarterboxactivated");
                     let oldGeometry = entity.getAttribute('geometry')
-                    let scale = self.el.getAttribute("scale") || {x: 1, y: 1, z: 1}
+                    let scale = self.el.getAttribute("scale") || { x: 1, y: 1, z: 1 }
                     let tsBoxHeight = (oldGeometry.height * scale.y) + self.data.height_quarter_legend_box
                     transparentBox.setAttribute('geometry', {
                         height: tsBoxHeight,
@@ -1280,16 +1294,16 @@ let getLevels = (elements, levels) => {
     return max_level;
 }
 
-let getMaxMinColorValues = (data, colorfield, max, min) => {
+let getMaxMinValues = (data, field, max, min) => {
     for (let i = 0; i < data.length; i++) {
         if (data[i].children) {
-            [max, min] = getMaxMinColorValues(data[i].children, colorfield, max, min)
+            [max, min] = getMaxMinValues(data[i].children, field, max, min)
         } else {
-            if (data[i][colorfield] !== "null" && !max || data[i][colorfield] > max) {
-                max = data[i][colorfield]
+            if (data[i][field] !== "null" && !max || data[i][field] > max) {
+                max = data[i][field]
             }
-            if (data[i][colorfield] !== "null" && !min || data[i][colorfield] < min) {
-                min = data[i][colorfield]
+            if (data[i][field] !== "null" && !min || data[i][field] < min) {
+                min = data[i][field]
             }
         }
     }
