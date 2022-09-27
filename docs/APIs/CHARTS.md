@@ -317,19 +317,20 @@ This component shows a city in boats.
 | building_separation | Separation of the buildings by a numeric factor                                                                             | number                 | 0.25          |
 | legend_lookat       | Element that the legend will follow in terms of rotation                                                                    | string                 | `[camera]`    |
 | legend_scale        | Scale for the legend                                                                                                        | number                 | 1             |
+| metricsInfoId       | Id of the HTML entity where the metrics information (max, min and avg) will be displayed                                    | string                 | -             |
 | highlightQuarter    | Option to highlight a quarter when a building is clicked                                                                    | boolean                | false         |
 | border              | Size of border around buildings (streets are built on it)                                                                   | number                 | 0.5           |
 | extra               | Extra factor for total area with respect to built area                                                                      | number                 | 1.0           |
 | zone_elevation      | Zone: elevation for each "depth" of quarters, over the previous one, ABSOLUTE value (scale does not affects this parameter) | number                 | 0.3           |
 | building_color      | Color of the buildings                                                                                                      | color                  | #E6B9A1       |
 | base_color          | Quarter color                                                                                                               | color                  | #98e690       |
-| gradientBaseColor   | Quarter color following a green gradient from hsl(140, 100%, 15%) to hsl(140, 100%, 100%)                                 | boolean                | false         |
+| gradientBaseColor   | Quarter color following a green gradient from hsl(140, 100%, 15%) to hsl(140, 100%, 100%)                                   | boolean                | false         |
 | data                | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.                         | JSON (list of objects) | -             |
 | field               | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**)                                                | string                 | `uid`         |
 | autoscale           | Force the scale of the boats-city in a fit space (**Only in x and z axis**), it also affects to the animation¡              | boolean                | false         |
 | autoscaleSizeX      | Max size (absolute units) in x-axis for the autoscale                                                                       | number                 | 3             |
 | autoscaleSizeZ      | Max size (absolute units) in z-axis for the autoscale                                                                       | number                 | 3             |
-| treeLayout      | New layout that forms trees - **WIP** for strictly hierarchy data                                                                     | boolean                 | false             |
+| treeLayout          | New layout that forms trees - **WIP** for strictly hierarchy data                                                           | boolean                | false         |
 
 
 #### Data format example

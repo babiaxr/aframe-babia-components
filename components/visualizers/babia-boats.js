@@ -37,6 +37,7 @@ AFRAME.registerComponent('babia-boats', {
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
         legend_lookat: { type: 'string', default: "[camera]" },
+        metricsInfoId: { type: 'string', default: "" },
         highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
@@ -1062,14 +1063,63 @@ AFRAME.registerComponent('babia-boats', {
 
         // If color metric activated, save in the metadata the max and min value for mapping
         if (data.color) {
-            let [color_max, color_min] = getMaxMinValues(this.newData, data.color)
+            let [color_max, color_min, color_values] = getMaxMinValues(this.newData, data.color, [])
             this.babiaMetadata['color_max'] = color_max
             this.babiaMetadata['color_min'] = color_min
+            let colorAvg = Math.round(color_values.reduce((a, b) => a + b, 0) / color_values.length)
+            this.babiaMetadata['colorAvg'] = colorAvg
         }
-        let [heightMax, heightMin] = getMaxMinValues(this.newData, data.height)
+        // Get important data for normalize metrics
+        let [heightMax, heightMin, height_values] = getMaxMinValues(this.newData, data.height, [])
         this.babiaMetadata['heightMax'] = heightMax
         this.babiaMetadata['heightMin'] = heightMin
+        let heightAvg = Math.round(height_values.reduce((a, b) => a + b, 0) / height_values.length)
+        this.babiaMetadata['heightAvg'] = heightAvg
         this.babiaMetadata['maxLevels'] = getLevels(this.newData, 0)
+
+        if (data.area) {
+            let [areaMax, areaMin, area_values] = getMaxMinValues(this.newData, data.area, [])
+            this.babiaMetadata['areaMax'] = areaMax
+            this.babiaMetadata['areaMin'] = areaMin
+            this.babiaMetadata['areaAvg'] = Math.round(area_values.reduce((a, b) => a + b, 0) / area_values.length)
+        } else {
+            let [widthMax, widthMin, width_values] = getMaxMinValues(this.newData, data.width, [])
+            this.babiaMetadata['widthMax'] = widthMax
+            this.babiaMetadata['widthMin'] = widthMin
+            this.babiaMetadata['widthAvg'] = Math.round(width_values.reduce((a, b) => a + b, 0) / width_values.length)
+
+            let [depthMax, depthMin, depth_values] = getMaxMinValues(this.newData, data.depth, [])
+            this.babiaMetadata['depthMax'] = depthMax
+            this.babiaMetadata['depthMin'] = depthMin
+            this.babiaMetadata['depthAvg'] = Math.round(depth_values.reduce((a, b) => a + b, 0) / depth_values.length)
+        }
+
+        // Update place where metric info if activated
+        if (this.data.metricsInfoId) {
+            let text = `Metric - max - min - avg\n\nHeight (${data.height}) - ${heightMax} - ${heightMin} - ${heightAvg}`
+            if (this.data.area) {
+                text += `\nArea (${data.area}) - ${this.babiaMetadata['areaMax']} - ${this.babiaMetadata['areaMin']} - ${this.babiaMetadata['areaAvg']}`
+            } else {
+                text += `\nWidth (${data.width}) - ${this.babiaMetadata['widthMax']} - ${this.babiaMetadata['widthMin']} - ${this.babiaMetadata['widthAvg']}`
+                text += `\nDepth (${data.depth}) - ${this.babiaMetadata['depthMax']} - ${this.babiaMetadata['depthMin']} - ${this.babiaMetadata['depthAvg']}`
+            }
+
+            if (this.data.color && typeof this.babiaMetadata['color_max'] !== 'string') {
+                text += `\nColor (${data.color}) - ${this.babiaMetadata['color_max']} - ${this.babiaMetadata['color_min']} - ${this.babiaMetadata['colorAvg']}`
+            }
+
+
+            let placeToInsertInfo = document.getElementById(this.data.metricsInfoId)
+            placeToInsertInfo.setAttribute('text', {
+                'value': text,
+                'align': 'center',
+                'width': 3,
+                'color': 'black',
+                'alphaTest': 6,
+                'opacity': 6,
+                'transparent': false
+            })
+        }
 
         this.notiBuffer.set(this.newData)
         // Create city
@@ -1394,10 +1444,10 @@ let getLevels = (elements, levels) => {
     return max_level;
 }
 
-let getMaxMinValues = (data, field, max, min) => {
+let getMaxMinValues = (data, field, valuesToAvg, max, min) => {
     for (let i = 0; i < data.length; i++) {
         if (data[i].children) {
-            [max, min] = getMaxMinValues(data[i].children, field, max, min)
+            [max, min] = getMaxMinValues(data[i].children, field, valuesToAvg, max, min)
         } else {
             if (data[i][field] !== "null" && !max || data[i][field] > max) {
                 max = data[i][field]
@@ -1405,9 +1455,10 @@ let getMaxMinValues = (data, field, max, min) => {
             if (data[i][field] !== "null" && !min || data[i][field] < min) {
                 min = data[i][field]
             }
+            valuesToAvg.push(data[i][field])
         }
     }
-    return [max, min]
+    return [max, min, valuesToAvg]
 }
 
 function heatMapColorforValue(val, max, min) {

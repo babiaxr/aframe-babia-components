@@ -95,23 +95,34 @@
 
                 <!-- Visualizer Components -->
                 <a-entity id="boats"
-                        babia-boats="from: treebuilder; area: commits; height: size; color: license; height_building_legend: -0.5; extra: 10; highlightQuarter: false; treeLayout: true; gradientBaseColor: true;
+                        babia-boats="from: treebuilder; area: commits; height: size; color: license; height_building_legend: -0.5; extra: 10; highlightQuarter: false; treeLayout: true; gradientBaseColor: true; metricsInfoId: boatsmetricsinfo;
                         legend_scale: 0.25; height_quarter_legend_box: 3; height_quarter_legend_title: 1.5; legend_lookat: [camera]; zone_elevation: 0.01; maxBuildingHeight: 1.8; building_separation: 50; autoscale: true"
                         position="0 0.3 -1" scale="1 1 1" rotation="0 180 0"></a-entity>
 
-                        <a-entity id="interface" babia-ui="target: boats"
-                        position="-3 1.5 0" rotation="0 90 0" scale="0.1 0.1 0.1"></a-entity>
+                <a-entity id="interface" babia-ui="target: boats" position="-3 1.5 0" rotation="0 90 0"
+                        scale="0.1 0.1 0.1"></a-entity>
 
-                        <!-- <a-entity id="slider" babia-slider="min: 0; max: 20; value: 10; size: 2"
+                <!-- <a-entity id="slider" babia-slider="min: 0; max: 20; value: 10; size: 2"
                         position="-3 2.1 1" rotation="0 90 0" scale="1 1 1"></a-entity> -->
-
+                <a-entity id="bardescription" position="2.5 0.6 0.6" rotation="-30 -90 0" scale="0.6 0.6 0.6">
+                        <!-- Close tooltips -->
+                        <a-plane id="closelegends" babia-lookat="[laser-controls]" class="babiaxraycasterclass"
+                                scale="0.8 0.8 0.8" position="0 1.5 0"
+                                geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
+                                text="value: Close All Tooltips; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
+                        </a-plane>
+                        <a-box src="#floor" height="2.2" width="3.2" depth="0.1" position="0 0 0"></a-box>
+                        <a-box src="#metalic" height="2" width="3" depth="0.05" position="0 0 0.05"></a-box>
+                        <a-entity position="0 0.1 0.1" id="boatsmetricsinfo"></a-entity>
+                </a-entity>
 
 
                 <!-- Lights -->
-                <a-entity position="5 50 0" light="type: hemisphere; color: #CEE4F0; intensity: 1; groundColor: #454545">
+                <a-entity position="5 50 0"
+                        light="type: hemisphere; color: #CEE4F0; intensity: 1; groundColor: #454545">
                 </a-entity>
-                
-        
+
+
 
                 <!-- Controls and Camera -->
                 <a-entity id="cameraRig" position="0 1.6 3">
