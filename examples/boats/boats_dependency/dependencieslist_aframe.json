@@ -2842,9 +2842,9 @@
                 "id": "tslib@2.4.0",
                 "version": "2.4.0",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/graphql-tag/tslib",
+                "parentsPath": "/sortignhat-ui/graphql-tag/tslib/tslib@version",
                 "size": 49968,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -2870,9 +2870,9 @@
         "id": "tslib@2.4.0",
         "version": "2.4.0",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/graphql-tag/tslib",
+        "parentsPath": "/sortignhat-ui/graphql-tag/tslib/tslib@version",
         "size": 49968,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -2896,7 +2896,7 @@
         "id": "graphql@15.8.0",
         "version": "15.8.0",
         "license": "MIT",
-        "parentsPath": "/sortignhat-ui/graphql",
+        "parentsPath": "/sortignhat-ui/graphql/graphql@version",
         "size": 2118862,
         "repository": "github.com/graphql/graphql-js",
         "commits": 4677,
@@ -2922,9 +2922,9 @@
         "id": "core-js@3.25.2",
         "version": "3.25.2",
         "license": "MIT",
-        "parentsPath": "/sortignhat-ui/core-js",
+        "parentsPath": "/sortignhat-ui/core-js/core-js@version",
         "size": 1022636,
-        "repository": "github.com/zloirock/core-js",
+        "repository": "github.com/zloirock/core-js/core-js@version",
         "commits": 5752,
         "commiters": 114,
         "last_act": 1663638132000.0,
@@ -2957,9 +2957,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "apollo-link-http-common",
@@ -2975,9 +2975,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -2993,9 +2993,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -3032,9 +3032,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -3043,9 +3043,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "ts-invariant",
@@ -3061,9 +3061,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -3081,9 +3081,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     },
                                     {
                                         "pkgName": "ts-invariant",
@@ -3099,9 +3099,9 @@
                                                 "id": "tslib@1.14.1",
                                                 "version": "1.14.1",
                                                 "license": "0BSD",
-                                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                                 "size": 33965,
-                                                "repository": "github.com/Microsoft/tslib"
+                                                "repository": "github.com/Microsoft/tslib/tslib@version"
                                             }
                                         ]
                                     },
@@ -3129,9 +3129,9 @@
                                                 "id": "tslib@1.14.1",
                                                 "version": "1.14.1",
                                                 "license": "0BSD",
-                                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                                 "size": 33965,
-                                                "repository": "github.com/Microsoft/tslib"
+                                                "repository": "github.com/Microsoft/tslib/tslib@version"
                                             }
                                         ]
                                     }
@@ -3174,9 +3174,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -3185,9 +3185,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -3203,9 +3203,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -3223,9 +3223,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "ts-invariant",
@@ -3241,9 +3241,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -3271,9 +3271,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             }
@@ -3305,9 +3305,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -3340,9 +3340,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -3358,9 +3358,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -3397,9 +3397,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -3408,9 +3408,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -3426,9 +3426,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -3446,9 +3446,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "ts-invariant",
@@ -3464,9 +3464,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -3494,9 +3494,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             }
@@ -3528,9 +3528,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -3563,9 +3563,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -3591,9 +3591,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -3645,9 +3645,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -3656,9 +3656,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -3674,9 +3674,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -3694,9 +3694,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -3712,9 +3712,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -3742,9 +3742,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -3793,9 +3793,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 1434,
@@ -3848,9 +3848,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/zen-observable-ts/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -3874,9 +3874,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -3909,9 +3909,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -3937,9 +3937,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -3972,9 +3972,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -3990,9 +3990,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -4020,9 +4020,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -4050,9 +4050,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4085,9 +4085,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -4113,9 +4113,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4175,9 +4175,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -4202,9 +4202,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link-http-common/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4256,9 +4256,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -4267,9 +4267,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -4285,9 +4285,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -4305,9 +4305,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -4323,9 +4323,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -4353,9 +4353,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -4404,9 +4404,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 1434,
@@ -4459,9 +4459,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/zen-observable-ts/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4485,9 +4485,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4520,9 +4520,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -4548,9 +4548,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4583,9 +4583,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -4601,9 +4601,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -4631,9 +4631,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -4661,9 +4661,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4696,9 +4696,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -4724,9 +4724,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4786,9 +4786,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -4813,9 +4813,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link-http/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -4867,9 +4867,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link/zen-observable-ts/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link/zen-observable-ts/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -4878,9 +4878,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -4896,9 +4896,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -4916,9 +4916,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -4934,9 +4934,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -4964,9 +4964,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -5015,9 +5015,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link/zen-observable-ts/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link/zen-observable-ts/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 1434,
@@ -5070,9 +5070,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link/zen-observable-ts/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link/zen-observable-ts/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5096,9 +5096,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5131,9 +5131,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -5159,9 +5159,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5194,9 +5194,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -5212,9 +5212,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -5242,9 +5242,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -5272,9 +5272,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5307,9 +5307,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -5335,9 +5335,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5397,9 +5397,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -5424,9 +5424,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5469,9 +5469,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -5487,9 +5487,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -5516,9 +5516,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -5534,9 +5534,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -5564,9 +5564,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -5605,9 +5605,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -5616,9 +5616,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -5634,9 +5634,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -5654,9 +5654,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "ts-invariant",
@@ -5672,9 +5672,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -5702,9 +5702,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             }
@@ -5726,9 +5726,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "apollo-utilities",
@@ -5744,9 +5744,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "ts-invariant",
@@ -5762,9 +5762,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -5792,9 +5792,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             }
@@ -5863,9 +5863,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5898,9 +5898,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -5926,9 +5926,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -5988,9 +5988,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -6006,9 +6006,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -6036,9 +6036,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -6066,9 +6066,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6101,9 +6101,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -6129,9 +6129,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6191,9 +6191,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -6218,9 +6218,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6272,9 +6272,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -6283,9 +6283,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -6301,9 +6301,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -6321,9 +6321,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -6339,9 +6339,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -6369,9 +6369,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -6420,9 +6420,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 1434,
@@ -6475,9 +6475,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/zen-observable-ts/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6501,9 +6501,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6536,9 +6536,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -6564,9 +6564,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6599,9 +6599,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -6617,9 +6617,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -6647,9 +6647,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -6677,9 +6677,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6712,9 +6712,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -6740,9 +6740,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6802,9 +6802,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -6829,9 +6829,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-link/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6864,9 +6864,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "apollo-utilities",
@@ -6882,9 +6882,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -6900,9 +6900,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -6930,9 +6930,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -6962,9 +6962,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -6997,9 +6997,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -7015,9 +7015,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -7045,9 +7045,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -7075,9 +7075,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7110,9 +7110,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -7138,9 +7138,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7200,9 +7200,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -7227,9 +7227,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-client/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7288,9 +7288,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -7306,9 +7306,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -7335,9 +7335,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "@types-node",
@@ -7367,9 +7367,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -7385,9 +7385,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -7415,9 +7415,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -7437,9 +7437,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "apollo-utilities",
@@ -7455,9 +7455,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             },
                             {
                                 "pkgName": "ts-invariant",
@@ -7473,9 +7473,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             },
@@ -7503,9 +7503,9 @@
                                         "id": "tslib@1.14.1",
                                         "version": "1.14.1",
                                         "license": "0BSD",
-                                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                                         "size": 33965,
-                                        "repository": "github.com/Microsoft/tslib"
+                                        "repository": "github.com/Microsoft/tslib/tslib@version"
                                     }
                                 ]
                             }
@@ -7537,9 +7537,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7572,9 +7572,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -7600,9 +7600,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7644,9 +7644,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "@types-node",
@@ -7693,9 +7693,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "@types-node",
@@ -7730,9 +7730,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/optimism/@wry-context/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7791,9 +7791,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -7809,9 +7809,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -7839,9 +7839,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -7869,9 +7869,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7904,9 +7904,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -7932,9 +7932,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -7994,9 +7994,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -8021,9 +8021,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -8056,9 +8056,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "apollo-utilities",
@@ -8074,9 +8074,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     },
                     {
                         "pkgName": "ts-invariant",
@@ -8092,9 +8092,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     },
@@ -8122,9 +8122,9 @@
                                 "id": "tslib@1.14.1",
                                 "version": "1.14.1",
                                 "license": "0BSD",
-                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                                 "size": 33965,
-                                "repository": "github.com/Microsoft/tslib"
+                                "repository": "github.com/Microsoft/tslib/tslib@version"
                             }
                         ]
                     }
@@ -8154,9 +8154,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -8189,9 +8189,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             },
             {
                 "pkgName": "ts-invariant",
@@ -8207,9 +8207,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             },
@@ -8237,9 +8237,9 @@
                         "id": "tslib@1.14.1",
                         "version": "1.14.1",
                         "license": "0BSD",
-                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                         "size": 33965,
-                        "repository": "github.com/Microsoft/tslib"
+                        "repository": "github.com/Microsoft/tslib/tslib@version"
                     }
                 ]
             }
@@ -8267,9 +8267,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -8302,9 +8302,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 224,
@@ -8330,9 +8330,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/ts-invariant/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,
@@ -8392,9 +8392,9 @@
                 "id": "tslib@1.14.1",
                 "version": "1.14.1",
                 "license": "0BSD",
-                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib",
+                "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
                 "size": 33965,
-                "repository": "github.com/Microsoft/tslib"
+                "repository": "github.com/Microsoft/tslib/tslib@version"
             }
         ],
         "commits": 356,
@@ -8419,9 +8419,9 @@
         "id": "tslib@1.14.1",
         "version": "1.14.1",
         "license": "0BSD",
-        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib",
+        "parentsPath": "/sortignhat-ui/apollo-cache-inmemory/apollo-cache/apollo-utilities/@wry-equality/tslib/tslib@version",
         "size": 33965,
-        "repository": "github.com/Microsoft/tslib",
+        "repository": "github.com/Microsoft/tslib/tslib@version",
         "commits": 257,
         "commiters": 39,
         "last_act": 1661959387000.0,

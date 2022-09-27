@@ -323,11 +323,14 @@ This component shows a city in boats.
 | zone_elevation      | Zone: elevation for each "depth" of quarters, over the previous one, ABSOLUTE value (scale does not affects this parameter) | number                 | 0.3           |
 | building_color      | Color of the buildings                                                                                                      | color                  | #E6B9A1       |
 | base_color          | Quarter color                                                                                                               | color                  | #98e690       |
+| gradientBaseColor   | Quarter color following a green gradient from hsl(140, 100%, 15%) to hsl(140, 100%, 100%)                                 | boolean                | false         |
 | data                | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.                         | JSON (list of objects) | -             |
 | field               | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**)                                                | string                 | `uid`         |
 | autoscale           | Force the scale of the boats-city in a fit space (**Only in x and z axis**), it also affects to the animation¡              | boolean                | false         |
 | autoscaleSizeX      | Max size (absolute units) in x-axis for the autoscale                                                                       | number                 | 3             |
 | autoscaleSizeZ      | Max size (absolute units) in z-axis for the autoscale                                                                       | number                 | 3             |
+| treeLayout      | New layout that forms trees - **WIP** for strictly hierarchy data                                                                     | boolean                 | false             |
+
 
 #### Data format example
 ```json

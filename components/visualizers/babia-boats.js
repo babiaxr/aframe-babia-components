@@ -29,6 +29,7 @@ AFRAME.registerComponent('babia-boats', {
         extra: { type: 'number', default: 1.0 },
         levels: { type: 'number' },
         building_color: { type: 'string', default: "#E6B9A1" },
+        gradientBaseColor: { type: 'boolean', default: false },
         base_color: { type: 'color', default: '#98e690' },
         // To add into the doc
         height_quarter_legend_box: { type: 'number', default: 11 },
@@ -44,6 +45,9 @@ AFRAME.registerComponent('babia-boats', {
         autoscaleSizeX: { type: 'number', default: 3 },
         autoscaleSizeZ: { type: 'number', default: 3 },
         //autoscaleSizeY: { type: 'number', default: 2 }
+
+        // New layout
+        treeLayout: { type: 'boolean', default: false }
     },
 
     /**
@@ -324,6 +328,17 @@ AFRAME.registerComponent('babia-boats', {
                 }
                 element.height = this.data.zone_elevation / scale.y;
                 increment -= this.data.border * this.data.extra;
+
+                // TEST TREE
+                if (self.data.treeLayout) {
+                    element.children.forEach(el => {
+                        if (!el.children) {
+                            element.treeMetaphorHeight = el[self.data.height]
+                            return
+                        }
+                    });
+                }
+
                 [element.width, element.depth, translate_matrix, children] = this.generateElements(element.children, children, translate_matrix, increment);
                 translate_matrix.y = element.height;
                 increment = inc;
@@ -406,9 +421,22 @@ AFRAME.registerComponent('babia-boats', {
                     height: element.height,
                     depth: element.depth,
                     children: children,
-                    translate_matrix: translate_matrix,
-                    color: self.data.base_color
+                    translate_matrix: translate_matrix
                 }
+
+                // TEST TREE
+                if (self.data.treeLayout) {
+                    figure.treeMetaphorHeight = element.treeMetaphorHeight
+                }
+
+                // Gradient color
+                if (self.data.gradientBaseColor) {
+                    let hierarchyLevel = figure.name.split("/").length - 1
+                    figure.color = greenColorsurface(Math.round(self.normalizeValues(1, self.babiaMetadata['maxLevels'], 15, 100, hierarchyLevel)));
+                } else {
+                    figure.color = self.data.base_color;
+                }
+
             } else {
                 if (this.data.area) {
                     figure = {
@@ -499,6 +527,7 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     drawElements: function (element, figures, translate) {
+        const self = this
 
         for (let i in figures) {
 
@@ -509,6 +538,15 @@ AFRAME.registerComponent('babia-boats', {
                 x: x - translate.x,
                 y: (height / 2 + translate.y / 2),
                 z: -y + translate.z
+            }
+
+            // TEST TREE
+            if (self.data.treeLayout) {
+                if (figures[i].treeMetaphorHeight) {
+                    position.y = ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figures[i].treeMetaphorHeight)))
+                } else {
+                    position.y = ((height / 2 + translate.y / 2)) - height - 0.001
+                }
             }
 
             let entity = this.createElement(figures[i], position);
@@ -773,6 +811,7 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     setFigures: function (figures, translate) {
+        const self = this
         figures.forEach(figure => {
             let entity = document.getElementById(figure.id);
             if (entity) {
@@ -794,11 +833,30 @@ AFRAME.registerComponent('babia-boats', {
                     setOpacity(entity, 1)
                 }
 
-                entity.object3D.position.set(
-                    figure.posX - translate.x,
-                    ((parseFloat(figure.height) + translate.y) / 2),
-                    (- figure.posY + translate.z),
-                )
+                // TEST TREE 
+                if (self.data.treeLayout) {
+                    if (figure.treeMetaphorHeight) {
+                        entity.object3D.position.set(
+                            figure.posX - translate.x,
+                            ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figure.treeMetaphorHeight))),
+                            (- figure.posY + translate.z),
+                        )
+                    } else {
+                        entity.object3D.position.set(
+                            figure.posX - translate.x,
+                            ((figure.height / 2 + translate.y / 2)) - figure.height - 0.001,
+                            (- figure.posY + translate.z),
+                        )
+                    }
+                } else {
+                    // Lo de no tree, lo que estaba antes
+                    entity.object3D.position.set(
+                        figure.posX - translate.x,
+                        ((parseFloat(figure.height) + translate.y) / 2),
+                        (- figure.posY + translate.z),
+                    )
+                }
+
                 if (figure.children) {
                     this.setFigures(figure.children, figure.translate_matrix);
                 }
@@ -807,6 +865,7 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     resize: function (entity, new_time, delta, figure, figure_old) {
+        const self = this
         if (((new_time - this.start_time) < this.duration) &&
             ((figure.width != figure_old.width) ||
                 (figure.height != figure_old.height) ||
@@ -940,7 +999,13 @@ AFRAME.registerComponent('babia-boats', {
 
         // set color
         if (figure.children) {
-            color = self.data.base_color;;
+            // Gradient color depending on the level for the base
+            if (self.data.gradientBaseColor) {
+                let hierarchyLevel = figure.name.split("/").length - 1
+                color = greenColorsurface(Math.round(self.normalizeValues(1, self.babiaMetadata['maxLevels'], 15, 100, hierarchyLevel)));
+            } else {
+                color = self.data.base_color;
+            }
         } else {
             if (self.data.color) {
                 if (typeof figure.rawData[self.data.color] === 'number') {
@@ -958,6 +1023,8 @@ AFRAME.registerComponent('babia-boats', {
                             self.categoricColorIndex = 0
                         }
                     }
+                } else {
+                    color = self.data.building_color;
                 }
             } else {
                 color = self.data.building_color;
@@ -1002,6 +1069,7 @@ AFRAME.registerComponent('babia-boats', {
         let [heightMax, heightMin] = getMaxMinValues(this.newData, data.height)
         this.babiaMetadata['heightMax'] = heightMax
         this.babiaMetadata['heightMin'] = heightMin
+        this.babiaMetadata['maxLevels'] = getLevels(this.newData, 0)
 
         this.notiBuffer.set(this.newData)
         // Create city
@@ -1164,7 +1232,7 @@ AFRAME.registerComponent('babia-boats', {
                         if (!entity.parentElement.getAttribute('babiaxrHightlighted') || parseInt(entity.parentElement.getAttribute('babiaxrHightlighted')) == 0) {
                             let oldPosition = entity.parentElement.getAttribute("position")
                             entity.parentElement.setAttribute('babiaxrFirstYPosition', oldPosition.y)
-                            entity.parentElement.setAttribute("position", { x: oldPosition.x, y: oldPosition.y + 0.3, z: oldPosition.z })
+                            entity.parentElement.setAttribute("position", { x: oldPosition.x, y: oldPosition.y + 0.2, z: oldPosition.z })
                             entity.parentElement.setAttribute('babiaxrFirstColor', entity.parentElement.getAttribute("material")["color"])
                             entity.parentElement.setAttribute('material', 'color', '#bfbfbf')
                             entity.parentElement.setAttribute('babiaxrHightlighted', 1)
@@ -1370,4 +1438,8 @@ let findIndex = (list, condicion) => {
         }
     }
     return -1
+}
+
+let greenColorsurface = (perc) => {
+    return "hsl(140, 100%," + perc + "%)"
 }
