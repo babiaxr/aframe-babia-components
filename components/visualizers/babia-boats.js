@@ -29,8 +29,10 @@ AFRAME.registerComponent('babia-boats', {
         extra: { type: 'number', default: 1.0 },
         levels: { type: 'number' },
         building_color: { type: 'string', default: "#E6B9A1" },
+        buildingAlpha: { type: 'number', default: 1 },
         gradientBaseColor: { type: 'boolean', default: false },
         base_color: { type: 'color', default: '#98e690' },
+        baseAlpha: { type: 'number', default: 1 },
         // To add into the doc
         height_quarter_legend_box: { type: 'number', default: 11 },
         height_quarter_legend_title: { type: 'number', default: 12 },
@@ -422,6 +424,7 @@ AFRAME.registerComponent('babia-boats', {
                     height: element.height,
                     depth: element.depth,
                     children: children,
+                    alpha: self.data.baseAlpha,
                     translate_matrix: translate_matrix
                 }
 
@@ -447,6 +450,7 @@ AFRAME.registerComponent('babia-boats', {
                         posY: posY,
                         width: Math.sqrt(element.area),
                         height: element.height,
+                        alpha: self.data.buildingAlpha,
                         depth: Math.sqrt(element.area)
                     }
                 } else {
@@ -457,6 +461,7 @@ AFRAME.registerComponent('babia-boats', {
                         posY: posY,
                         width: element.width,
                         height: element.height,
+                        alpha: self.data.buildingAlpha,
                         depth: element.depth
                     }
                 }
@@ -828,10 +833,14 @@ AFRAME.registerComponent('babia-boats', {
                 if (entity.getAttribute('color') != figure.color) {
                     entity.setAttribute('color', figure.color);
                 }
-
+                
                 //TODO: Full opacity because it was in 0.5 if new building/quarter
                 if (entity.components.material.data.opacity < 1) {
                     setOpacity(entity, 1)
+                }
+
+                if (entity.getAttribute('material').opacity != figure.alpha) {
+                    setOpacity(entity, figure.alpha);
                 }
 
                 // TEST TREE 
@@ -1048,6 +1057,9 @@ AFRAME.registerComponent('babia-boats', {
             y: position.y,
             z: position.z
         });
+
+        // add opacity
+        entity.setAttribute('material', 'opacity', figure.alpha);
 
         return entity;
     },

@@ -313,7 +313,7 @@ This component shows a city in boats.
 | height              | Field in data items to represent as building height                                                                         | string                 | height        |
 | minBuildingHeight   | Min value for the building height                                                                                           | number                 | 0.03          |
 | maxBuildingHeight   | Max value for the building height                                                                                           | number                 | 2             |
-| color               | Field in data items to represent the color of the buildings as HSL heatmap                                                  | string                 | -             |
+| color               | Field in data items to represent the color of the buildings as HSL heatmap (or categoric)                                   | string                 | -             |
 | building_separation | Separation of the buildings by a numeric factor                                                                             | number                 | 0.25          |
 | legend_lookat       | Element that the legend will follow in terms of rotation                                                                    | string                 | `[camera]`    |
 | legend_scale        | Scale for the legend                                                                                                        | number                 | 1             |
@@ -323,7 +323,9 @@ This component shows a city in boats.
 | extra               | Extra factor for total area with respect to built area                                                                      | number                 | 1.0           |
 | zone_elevation      | Zone: elevation for each "depth" of quarters, over the previous one, ABSOLUTE value (scale does not affects this parameter) | number                 | 0.3           |
 | building_color      | Color of the buildings                                                                                                      | color                  | #E6B9A1       |
+| buildingAlpha       | Alpha of the buildings - opacity                                                                                            | number                 | 1             |
 | base_color          | Quarter color                                                                                                               | color                  | #98e690       |
+| baseAlpha           | Quarter alpha - opacity                                                                                                     | number                 | 1             |
 | gradientBaseColor   | Quarter color following a green gradient from hsl(140, 100%, 15%) to hsl(140, 100%, 100%)                                   | boolean                | false         |
 | data                | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.                         | JSON (list of objects) | -             |
 | field               | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**)                                                | string                 | `uid`         |
