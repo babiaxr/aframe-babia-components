@@ -90,11 +90,16 @@
                 <a-entity id="cloudinaryquerier" babia-queryjson="url:./dependencieslist_cloudinary.json;"></a-entity>
                 <a-entity id="aframequerier" babia-queryjson="url:./dependencieslist_sh.json;"></a-entity>
                 <a-entity id="expressquerier" babia-queryjson="url:./dependencieslist_express.json;"></a-entity>
+                <a-entity id="karmaquerier" babia-queryjson="url:./dependencieslist_karma.json;"></a-entity>
+                <a-entity id="pm2querier" babia-queryjson="url:./dependencieslist_pm2.json;"></a-entity>
+
                 <!-- Treebuilder -->
                 <a-entity id="portainer" babia-treebuilder="field: parentsPath; split_by: /; from: portainerquerier"></a-entity>
                 <a-entity id="cloudinary" babia-treebuilder="field: parentsPath; split_by: /; from: cloudinaryquerier"></a-entity>
                 <a-entity id="express" babia-treebuilder="field: parentsPath; split_by: /; from: expressquerier"></a-entity>
                 <a-entity id="sortinghat" babia-treebuilder="field: parentsPath; split_by: /; from: aframequerier"></a-entity>
+                <a-entity id="karma" babia-treebuilder="field: parentsPath; split_by: /; from: karmaquerier"></a-entity>
+                <a-entity id="pm2" babia-treebuilder="field: parentsPath; split_by: /; from: pm2querier"></a-entity>
 
 
                 <!-- Visualizer Components -->
