@@ -96,7 +96,8 @@
 
         <!-- Treebuilder -->
         <a-entity id="portainer" babia-treebuilder="field: parentsPath; split_by: /; from: portainerquerier"></a-entity>
-        <a-entity id="cloudinary" babia-treebuilder="field: parentsPath; split_by: /; from: cloudinaryquerier"></a-entity>
+        <a-entity id="cloudinary" babia-treebuilder="field: parentsPath; split_by: /; from: cloudinaryquerier">
+        </a-entity>
         <a-entity id="express" babia-treebuilder="field: parentsPath; split_by: /; from: expressquerier"></a-entity>
         <a-entity id="sortinghat" babia-treebuilder="field: parentsPath; split_by: /; from: aframequerier"></a-entity>
         <a-entity id="karma" babia-treebuilder="field: parentsPath; split_by: /; from: karmaquerier"></a-entity>
@@ -118,9 +119,9 @@
 
         <a-entity id="bardescription" position="2.5 0.6 0.6" rotation="-30 -90 0" scale="0.6 0.6 0.6">
             <!-- Close tooltips -->
-            <a-plane id="closelegends" babia-lookat="[laser-controls]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
+            <a-plane id="rotatecity" babia-lookat="[laser-controls]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
                 position="0 1.5 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
-                text="value: Close All Tooltips; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
+                text="value: Rotate City; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
             </a-plane>
             <a-box src="#floor" height="2.2" width="3.2" depth="0.1" position="0 0 0"></a-box>
             <a-box src="#metalic" height="2" width="3" depth="0.05" position="0 0 0.05"></a-box>
@@ -179,6 +180,28 @@
                         d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
                 </g>
             </svg></a></div>
+
+    <script>
+        document.getElementById("rotatecity").addEventListener('click', function (event) {
+            let ewl = document.getElementById("boats")
+            let currentRotation = ewl.getAttribute("rotation") || { x: 0, y: 0, z: 0 }
+            let currentPosition = ewl.getAttribute("position")
+            let newZrotation = currentRotation.z + 90
+            ewl.setAttribute("rotation", { x: currentRotation.x, y: currentRotation.y, z: newZrotation })
+            if (newZrotation === 180) {
+                ewl.setAttribute("position", { x: currentPosition.x + 1.5, y: currentPosition.y + 1.3, z: currentPosition.z })
+            } else if (newZrotation === 360) {
+                ewl.setAttribute("rotation", { x: currentRotation.x, y: currentRotation.y, z: 0 })
+                ewl.setAttribute("position", { x: currentPosition.x - 1.5, y: currentPosition.y - 1.3, z: currentPosition.z })
+            } else if (newZrotation === 90) {
+                ewl.setAttribute("position", { x: currentPosition.x - 1.5, y: currentPosition.y + 1.2, z: currentPosition.z })
+            } else if (newZrotation === 270) {
+                ewl.setAttribute("position", { x: currentPosition.x + 1.5, y: currentPosition.y - 1.2, z: currentPosition.z })
+            }
+
+        }, false);
+
+    </script>
 </body>
 
 </html>
