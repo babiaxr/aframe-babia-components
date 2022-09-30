@@ -50,7 +50,9 @@ AFRAME.registerComponent('babia-boats', {
         //autoscaleSizeY: { type: 'number', default: 2 }
 
         // New layout
-        treeLayout: { type: 'boolean', default: false }
+        treeLayout: { type: 'boolean', default: false },
+        treeQuartersLevelHeight: { type: 'number', default: 0.2 },
+        treeFixQuarterHeight: { type: 'boolean', default: false }
     },
 
     /**
@@ -548,11 +550,37 @@ AFRAME.registerComponent('babia-boats', {
 
             // TEST TREE
             if (self.data.treeLayout) {
-                if (figures[i].treeMetaphorHeight) {
-                    position.y = ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figures[i].treeMetaphorHeight)))
+                if (self.data.treeFixQuarterHeight) {
+                    // Fix position y for quarters
+                    if (figures[i].treeMetaphorHeight) {
+                        position.y = (height / 2 + translate.y / 2) + self.data.treeQuartersLevelHeight
+                    } else {
+                        position.y = ((height / 2 + translate.y / 2)) - self.data.treeQuartersLevelHeight - self.data.zone_elevation
+                        if (figures[i].height < self.data.treeQuartersLevelHeight) {
+                            // First get top
+                            let topBuildingY = position.y
+                            // Get where the quarter is
+                            let quarterPosY = position.y + (self.data.treeQuartersLevelHeight - (height/2))
+                            // Draw the line in the space
+                            let line = document.createElement('a-entity')
+                            line.setAttribute('class', 'babiaboatstreelines')
+                            line.setAttribute('line', {
+                                start: { x: position.x, y: topBuildingY, z: position.z },
+                                end: { x: position.x, y: quarterPosY, z: position.z },
+                                color: 'yellow'
+                            })
+                            element.appendChild(line)
+                        }
+                    }
                 } else {
-                    position.y = ((height / 2 + translate.y / 2)) - height - 0.001
+                    // Quarters on top of the buildings
+                    if (figures[i].treeMetaphorHeight) {
+                        position.y = ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figures[i].treeMetaphorHeight)))
+                    } else {
+                        position.y = ((height / 2 + translate.y / 2)) - height - 0.001
+                    }
                 }
+
             }
 
             let entity = this.createElement(figures[i], position);
@@ -833,7 +861,7 @@ AFRAME.registerComponent('babia-boats', {
                 if (entity.getAttribute('color') != figure.color) {
                     entity.setAttribute('color', figure.color);
                 }
-                
+
                 //TODO: Full opacity because it was in 0.5 if new building/quarter
                 if (entity.components.material.data.opacity < 1) {
                     setOpacity(entity, 1)
@@ -845,18 +873,54 @@ AFRAME.registerComponent('babia-boats', {
 
                 // TEST TREE 
                 if (self.data.treeLayout) {
-                    if (figure.treeMetaphorHeight) {
-                        entity.object3D.position.set(
-                            figure.posX - translate.x,
-                            ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figure.treeMetaphorHeight))),
-                            (- figure.posY + translate.z),
-                        )
+                    if (self.data.treeFixQuarterHeight) {
+                        // Fix position y for quarters
+                        if (figure.treeMetaphorHeight) {
+                            entity.object3D.position.set(
+                                figure.posX - translate.x,
+                                (figure.height / 2 + translate.y / 2) + self.data.treeQuartersLevelHeight,
+                                (- figure.posY + translate.z),
+                            )
+                        } else {
+                            let positionYFixed = ((figure.height / 2 + translate.y / 2)) - self.data.treeQuartersLevelHeight - self.data.zone_elevation
+                            let positionX = figure.posX - translate.x
+                            let positionZ = (- figure.posY + translate.z)
+                            entity.object3D.position.set(
+                                positionX,
+                                positionYFixed,
+                                positionZ,
+                            )
+                            // DRAW LINE WHEN DOES NOT ACHIEVE THE QUARTER (TOO LOW)
+                            if (figure.height < self.data.treeQuartersLevelHeight) {
+                                // First get top
+                                let topBuildingY = positionYFixed
+                                // Get where the quarter is
+                                let quarterPosY = positionYFixed + (self.treeQuartersLevelHeight - figure.height/2)
+                                // Draw the line in the space
+                                let line = document.createElement('a-entity')
+                                line.setAttribute('class', 'babiaboatstreelines')
+                                line.setAttribute('line', {
+                                    start: { x: positionX, y: topBuildingY, z: positionZ },
+                                    end: { x: positionX, y: quarterPosY, z: positionZ },
+                                    color: 'yellow'
+                                })
+                                entity.parentElement.appendChild(line)
+                            }
+                        }
                     } else {
-                        entity.object3D.position.set(
-                            figure.posX - translate.x,
-                            ((figure.height / 2 + translate.y / 2)) - figure.height - 0.001,
-                            (- figure.posY + translate.z),
-                        )
+                        if (figure.treeMetaphorHeight) {
+                            entity.object3D.position.set(
+                                figure.posX - translate.x,
+                                ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figure.treeMetaphorHeight))),
+                                (- figure.posY + translate.z),
+                            )
+                        } else {
+                            entity.object3D.position.set(
+                                figure.posX - translate.x,
+                                ((figure.height / 2 + translate.y / 2)) - figure.height - 0.001,
+                                (- figure.posY + translate.z),
+                            )
+                        }
                     }
                 } else {
                     // Lo de no tree, lo que estaba antes
@@ -1134,8 +1198,21 @@ AFRAME.registerComponent('babia-boats', {
         }
 
         this.notiBuffer.set(this.newData)
+
+        // Remove lines if activated the fixed position
+        if (this.data.treeLayout && this.data.treeFixQuarterHeight) {
+            this.removeTreeLines()
+        }
+
         // Create city
         this.updateChart(this.newData)
+    },
+
+    removeTreeLines: function () {
+        let currentLines = this.el.querySelectorAll(".babiaboatstreelines");
+        for (line of currentLines) {
+            line.remove()
+        }
     },
 
     normalizeValues: function (valmin, valmax, newmin, newmax, val) {

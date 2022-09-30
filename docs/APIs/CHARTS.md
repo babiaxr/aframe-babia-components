@@ -304,35 +304,39 @@ This component shows a city in boats.
 
 #### API
 
-| Property            | Description                                                                                                                 | Type                   | Default value |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------------- |
-| from                | The treebuilder entity ID where  is the data for the chart                                                                  | string                 | -             |
-| area                | Field in data items to represent as building area. **DON'T USE IT WITH WIDTH/DEPTH PARAMETERS**.                            | string                 | -             |
-| width               | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**.                                   | string                 | width         |
-| depth               | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**.                                   | string                 | depth         |
-| height              | Field in data items to represent as building height                                                                         | string                 | height        |
-| minBuildingHeight   | Min value for the building height                                                                                           | number                 | 0.03          |
-| maxBuildingHeight   | Max value for the building height                                                                                           | number                 | 2             |
-| color               | Field in data items to represent the color of the buildings as HSL heatmap (or categoric)                                   | string                 | -             |
-| building_separation | Separation of the buildings by a numeric factor                                                                             | number                 | 0.25          |
-| legend_lookat       | Element that the legend will follow in terms of rotation                                                                    | string                 | `[camera]`    |
-| legend_scale        | Scale for the legend                                                                                                        | number                 | 1             |
-| metricsInfoId       | Id of the HTML entity where the metrics information (max, min and avg) will be displayed                                    | string                 | -             |
-| highlightQuarter    | Option to highlight a quarter when a building is clicked                                                                    | boolean                | false         |
-| border              | Size of border around buildings (streets are built on it)                                                                   | number                 | 0.5           |
-| extra               | Extra factor for total area with respect to built area                                                                      | number                 | 1.0           |
-| zone_elevation      | Zone: elevation for each "depth" of quarters, over the previous one, ABSOLUTE value (scale does not affects this parameter) | number                 | 0.3           |
-| building_color      | Color of the buildings                                                                                                      | color                  | #E6B9A1       |
-| buildingAlpha       | Alpha of the buildings - opacity                                                                                            | number                 | 1             |
-| base_color          | Quarter color                                                                                                               | color                  | #98e690       |
-| baseAlpha           | Quarter alpha - opacity                                                                                                     | number                 | 1             |
-| gradientBaseColor   | Quarter color following a green gradient from hsl(140, 100%, 15%) to hsl(140, 100%, 100%)                                   | boolean                | false         |
-| data                | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.                         | JSON (list of objects) | -             |
-| field               | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**)                                                | string                 | `uid`         |
-| autoscale           | Force the scale of the boats-city in a fit space (**Only in x and z axis**), it also affects to the animation¡              | boolean                | false         |
-| autoscaleSizeX      | Max size (absolute units) in x-axis for the autoscale                                                                       | number                 | 3             |
-| autoscaleSizeZ      | Max size (absolute units) in z-axis for the autoscale                                                                       | number                 | 3             |
-| treeLayout          | New layout that forms trees - **WIP** for strictly hierarchy data                                                           | boolean                | false         |
+| Property                | Description                                                                                                                 | Type                   | Default value |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------------- |
+| from                    | The treebuilder entity ID where  is the data for the chart                                                                  | string                 | -             |
+| area                    | Field in data items to represent as building area. **DON'T USE IT WITH WIDTH/DEPTH PARAMETERS**.                            | string                 | -             |
+| width                   | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**.                                   | string                 | width         |
+| depth                   | Field in data items to represent as building area. **DON'T USE IT WITH AREA PARAMETERS**.                                   | string                 | depth         |
+| height                  | Field in data items to represent as building height                                                                         | string                 | height        |
+| minBuildingHeight       | Min value for the building height                                                                                           | number                 | 0.03          |
+| maxBuildingHeight       | Max value for the building height                                                                                           | number                 | 2             |
+| color                   | Field in data items to represent the color of the buildings as HSL heatmap (or categoric)                                   | string                 | -             |
+| building_separation     | Separation of the buildings by a numeric factor                                                                             | number                 | 0.25          |
+| legend_lookat           | Element that the legend will follow in terms of rotation                                                                    | string                 | `[camera]`    |
+| legend_scale            | Scale for the legend                                                                                                        | number                 | 1             |
+| metricsInfoId           | Id of the HTML entity where the metrics information (max, min and avg) will be displayed                                    | string                 | -             |
+| highlightQuarter        | Option to highlight a quarter when a building is clicked                                                                    | boolean                | false         |
+| border                  | Size of border around buildings (streets are built on it)                                                                   | number                 | 0.5           |
+| extra                   | Extra factor for total area with respect to built area                                                                      | number                 | 1.0           |
+| zone_elevation          | Zone: elevation for each "depth" of quarters, over the previous one, ABSOLUTE value (scale does not affects this parameter) | number                 | 0.3           |
+| building_color          | Color of the buildings                                                                                                      | color                  | #E6B9A1       |
+| buildingAlpha           | Alpha of the buildings - opacity                                                                                            | number                 | 1             |
+| base_color              | Quarter color                                                                                                               | color                  | #98e690       |
+| baseAlpha               | Quarter alpha - opacity                                                                                                     | number                 | 1             |
+| gradientBaseColor       | Quarter color following a green gradient from hsl(140, 100%, 15%) to hsl(140, 100%, 100%)                                   | boolean                | false         |
+| data                    | Data to show with the chart. **Important**: Using this attribute will disable the `from` attribute.                         | JSON (list of objects) | -             |
+| field                   | Field of the data that will define the tree (**DON'T USE WITH TREEBUILDER**)                                                | string                 | `uid`         |
+| autoscale               | Force the scale of the boats-city in a fit space (**Only in x and z axis**), it also affects to the animation¡              | boolean                | false         |
+| autoscaleSizeX          | Max size (absolute units) in x-axis for the autoscale                                                                       | number                 | 3             |
+| autoscaleSizeZ          | Max size (absolute units) in z-axis for the autoscale                                                                       | number                 | 3             |
+| treeLayout              | New layout that forms trees - **WIP** for strictly hierarchy data                                                           | boolean                | false         |
+| treeFixQuarterHeight    | **Only when treeLayout activated**: Fix the position of the quarters in a defined height                                    | boolean                | false         |
+| treeQuartersLevelHeight | **Only when treeLayout and treeFixQuarterHeight activated**: Distance where the quarters will be fixed                      | number                 | 0.2           |
+
+
 
 
 #### Data format example
