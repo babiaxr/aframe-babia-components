@@ -12,6 +12,7 @@ AFRAME.registerComponent('babia-experiment', {
         closeTaskImg: { type: 'string' },
         timeLimitEnding: { type: 'boolean', default: false }, // If false, go for the button
         timeLimitTime: { type: 'number', default: 300 }, // In seconds
+        forceFinishWhenTimeLimit: { type: 'boolean', default: false }, // In seconds
         finishButton: { type: 'boolean', default: true },
         recordDelta: { type: 'number', default: 3000 }, // In milliseconds, each delta the position and rotation will be recorded
         recordAudio: { type: 'boolean', default: true },
@@ -200,41 +201,41 @@ AFRAME.registerComponent('babia-experiment', {
     /**
      * Things related to the audio task
      */
-     videoPlaying: false,
-     addVideoTask: function () {
-         const self = this
- 
-         this.taskVideoEntity = document.createElement('a-video');
-         this.taskVideoEntity.setAttribute('class', 'babiaxrayscasterclass')
-         this.taskVideoEntity.setAttribute('id', 'babiaTaskVideo')
-         this.taskVideoEntity.setAttribute('src', self.data.taskVideoId)
-         this.taskVideoStream = document.querySelector(self.data.taskVideoId)
-         this.taskVideoEntity.setAttribute('width', self.data.taskVideoWidth)
-         this.taskVideoEntity.setAttribute('height', self.data.taskVideoHeight)
-         
- 
-         // Play Sound when click
-         this.taskVideoEntity.addEventListener('click', function (event) {
-             if (self.videoPlaying) {
-                 self.videoPlaying = false
-                 self.taskVideoStream.pause();
-             } else {
-                 self.videoPlaying = true
-                 self.taskVideoStream.play();
-             }
- 
-         }, false)
- 
- 
-         // Add position
-         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
-         this.taskVideoEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
-         this.taskVideoEntity.setAttribute('babia-lookat', '[camera]')
- 
- 
-         // Add to the scene
-         this.el.parentElement.append(this.taskVideoEntity)
-     },
+    videoPlaying: false,
+    addVideoTask: function () {
+        const self = this
+
+        this.taskVideoEntity = document.createElement('a-video');
+        this.taskVideoEntity.setAttribute('class', 'babiaxrayscasterclass')
+        this.taskVideoEntity.setAttribute('id', 'babiaTaskVideo')
+        this.taskVideoEntity.setAttribute('src', self.data.taskVideoId)
+        this.taskVideoStream = document.querySelector(self.data.taskVideoId)
+        this.taskVideoEntity.setAttribute('width', self.data.taskVideoWidth)
+        this.taskVideoEntity.setAttribute('height', self.data.taskVideoHeight)
+
+
+        // Play Sound when click
+        this.taskVideoEntity.addEventListener('click', function (event) {
+            if (self.videoPlaying) {
+                self.videoPlaying = false
+                self.taskVideoStream.pause();
+            } else {
+                self.videoPlaying = true
+                self.taskVideoStream.play();
+            }
+
+        }, false)
+
+
+        // Add position
+        this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
+        this.taskVideoEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
+        this.taskVideoEntity.setAttribute('babia-lookat', '[camera]')
+
+
+        // Add to the scene
+        this.el.parentElement.append(this.taskVideoEntity)
+    },
 
     addStartButton: function () {
         const self = this
@@ -278,7 +279,10 @@ AFRAME.registerComponent('babia-experiment', {
             // Show finish button
             if (self.data.finishButton) {
                 self.finishButtonEntity.setAttribute('visible', true)
-            } else if (self.data.timeLimitEnding) {
+            }
+
+            // Time Limit defined
+            if (self.data.timeLimitEnding) {
                 self.recordedData['maxTime'] = self.recordedData['startTime'] + self.data.timeLimitTime * 1000
             }
 
@@ -346,7 +350,6 @@ AFRAME.registerComponent('babia-experiment', {
 
     tick: function () {
         const self = this
-
         // Check if the experiment is running
         if (this.runningExperiment) {
             // Check if the time limit
@@ -356,6 +359,20 @@ AFRAME.registerComponent('babia-experiment', {
                     this.recordedData['finishTime'] = this.recordedData.maxTime
                     this.recordedData['totalDuration'] = this.recordedData['finishTime'] - this.recordedData['startTime'];
                     this.runningExperiment = false
+                    // If forced, hide charts and download data
+                    if (this.data.forceFinishWhenTimeLimit) {
+                        alert("The time limit is done! Thank you!")
+                        this.hideCharts()
+                        downloadObjectAsJson(self.recordedData, "experimentdetails")
+                        self.finishButtonEntity.setAttribute('visible', false)
+                        recordData(self)
+                        clearInterval(this.recordingData)
+                        if (self.audioRecorder) {
+                            self.stopAndDownloadAudio()
+                        }
+                    } else {
+                        alert("The time limit is done, but you can continue doing the experiment, please, click on Finish when done!")
+                    }
                 }
             }
         }
