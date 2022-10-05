@@ -72,13 +72,15 @@ AFRAME.registerComponent('babia-experiment', {
             this.findBabiaCharts()
             // Hide babia visualizations
             this.hideCharts()
-            // Add task
-            if (this.data.taskAudio) {
-                this.addAudioTask()
-            } else if (this.data.taskVideo) {
-                this.addVideoTask()
-            } else {
-                this.addTask()
+            // Add task if not babia task
+            if (this.el.querySelectorAll('[babia-task]').length == 0) {
+                if (this.data.taskAudio) {
+                    this.addAudioTask()
+                } else if (this.data.taskVideo) {
+                    this.addVideoTask()
+                } else {
+                    this.addTask()
+                }
             }
             // Add start button
             this.addStartButton()
@@ -258,6 +260,7 @@ AFRAME.registerComponent('babia-experiment', {
             width: 3.6
         })
 
+        this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
         this.startButtonEntity.setAttribute('position', { x: this.babiaCameraPosition.x - 3.5, y: this.babiaCameraPosition.y + 1, z: this.babiaCameraPosition.z - 3.5 })
 
         // Start recording time

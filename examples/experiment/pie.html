@@ -24,7 +24,10 @@
             <video id="videosample" loop="true" src="sample.mp4"></video>
         </a-assets>
 
-        <a-entity babia-experiment="taskVideo: true; taskVideoId: #videosample; timeLimitEnding: true; timeLimitTime: 3; forceFinishWhenTimeLimit: true;" id="experiment">
+        <a-entity babia-experiment id="experiment">
+            <a-entity id="task3" babia-task="offsetX: -3"></a-entity>
+            <a-entity id="task1" babia-task="taskVideo: true; taskVideoId: #videosample"></a-entity>
+            <a-entity id="task2" babia-task="offsetX: 3; taskAudio: true; taskAudioUrl: sample-3s.mp3"></a-entity>
             <a-entity environment></a-entity>
             <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 

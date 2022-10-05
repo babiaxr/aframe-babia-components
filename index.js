@@ -42,6 +42,7 @@ require('./components/others/babia-camera')
 require('./components/others/babia-range-selector')
 require('./components/others/babia-experiment')
 require('./components/others/babia-poster')
+require('./components/others/babia-task')
 
 // Geometries
 require('./components/geometries/babia-bar')
