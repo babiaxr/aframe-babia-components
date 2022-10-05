@@ -14,7 +14,9 @@ AFRAME.registerComponent('babia-experiment', {
         timeLimitTime: { type: 'number', default: 300 }, // In seconds
         finishButton: { type: 'boolean', default: true },
         recordDelta: { type: 'number', default: 3000 }, // In milliseconds, each delta the position and rotation will be recorded
-        recordAudio: { type: 'boolean', default: true }
+        recordAudio: { type: 'boolean', default: true },
+        taskAudio: { type: 'boolean', default: false },
+        taskAudioUrl: { type: 'string', default: null }
     },
 
     /**
@@ -53,8 +55,8 @@ AFRAME.registerComponent('babia-experiment', {
                 // Add raycaster things and others attributes
                 let babiaCameraAttribute = this.babiaCameraEl.getAttribute("babia-camera")
                 this.babiaCameraEl.setAttribute("babia-camera", {
-                    raycasterMouse: babiaCameraAttribute['raycasterMouse'] + ', #babiaTaskPopup,  #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton',
-                    raycasterHand: babiaCameraAttribute['raycasterHand'] + ', #babiaTaskPopup, #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton'
+                    raycasterMouse: babiaCameraAttribute['raycasterMouse'] + ', #babiaTaskPopup,  #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton, #babiaTaskAudio',
+                    raycasterHand: babiaCameraAttribute['raycasterHand'] + ', #babiaTaskPopup, #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton, #babiaTaskAudio'
                 })
 
             } else {
@@ -66,7 +68,11 @@ AFRAME.registerComponent('babia-experiment', {
             // Hide babia visualizations
             this.hideCharts()
             // Add task
-            this.addTask()
+            if (this.data.taskAudio) {
+                this.addAudioTask()
+            } else {
+                this.addTask()
+            }
             // Add start button
             this.addStartButton()
 
@@ -126,6 +132,63 @@ AFRAME.registerComponent('babia-experiment', {
 
         // Add to the scene
         this.el.parentElement.append(this.taskEntity)
+    },
+
+    /**
+     * Things related to the audio task
+     */
+    audioPlaying: false,
+    addAudioTask: function () {
+        const self = this
+
+        this.taskAudioEntity = document.createElement('a-entity');
+        this.taskAudioEntity.setAttribute('class', 'babiaxrayscasterclass')
+        this.taskAudioEntity.setAttribute('geometry', {
+            primitive: 'plane',
+            width: 1.1,
+            height: 0.5
+        })
+        this.taskAudioEntity.setAttribute('text', {
+            value: 'Play audio!',
+            color: 'white',
+            align: 'center',
+            wrapCount: 30,
+            width: 3.6,
+        })
+        this.taskAudioEntity.setAttribute('id', 'babiaTaskAudio')
+        this.taskAudioEntity.setAttribute('sound', {
+            src: `url(${self.data.taskAudioUrl})`
+        })
+
+        // Play Sound when click
+        this.taskAudioEntity.addEventListener('click', function (event) {
+            if (self.audioPlaying) {
+                self.audioPlaying = false
+                self.taskAudioEntity.components.sound.stopSound()
+                self.taskAudioEntity.setAttribute('text', 'value', 'Play audio!')
+            } else {
+                self.audioPlaying = true
+                self.taskAudioEntity.components.sound.playSound()
+                self.taskAudioEntity.setAttribute('text', 'value', 'Stop audio!')
+            }
+
+        }, false)
+        
+        // When audio finished
+        this.taskAudioEntity.addEventListener('sound-ended', function (event) {
+            self.audioPlaying = false
+            self.taskAudioEntity.setAttribute('text', 'value', 'Play audio!')
+        }, false)
+
+
+        // Add position
+        this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
+        this.taskAudioEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
+        this.taskAudioEntity.setAttribute('babia-lookat', '[camera]')
+
+
+        // Add to the scene
+        this.el.parentElement.append(this.taskAudioEntity)
     },
 
     addStartButton: function () {
