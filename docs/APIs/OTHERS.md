@@ -16,9 +16,9 @@ This component lets us select the data and the metrics that we want to show in t
 
 #### API
 
-| Property        | Description           | Type   | Default value |
-| --------        | -----------           | ----   | ----- |
-| target          | ID of the visualizer that will manage | string | - |
+| Property | Description                           | Type   | Default value |
+| -------- | ------------------------------------- | ------ | ------------- |
+| target   | ID of the visualizer that will manage | string | -             |
 
 ```html
     <a-entity babia-ui = 'target: visualizerid'></a-entity>
@@ -33,7 +33,7 @@ The look-at component defines the behavior for an entity to dynamically rotate o
 #### API
 
 | Type     | Description                                                                                                                                   |
-|----------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | selector | A query selector indicating another entity to track. If the other entity is moving then the `look-at` component will track the moving entity. |
 | vec3     | An XYZ coordinate. The entity will face towards a static position.                                                                            |
 ```html
@@ -51,10 +51,10 @@ To work needs to indicate it inside the selector
 ```
 #### API
 
-| Property        | Description           | Type   | Default value |
-| --------        | -----------           | ----   | ----- |
-| direction | Direction of the time evolution (`forward` or `rewind`). If is empty or it gets a different value, it behaves like `forward`. **Important:** Do not set this value manually, it will be updated with the direction value of the selector via notiBuffer. | string | `forward`
-| state | State of the time evolution (`play` or `pause`). If is empty or it gets a different value, it behaves like `play`. **Important:** Do not set this value manually, it will be updated with the state value of the selector via notiBuffer | string | `play`
+| Property  | Description                                                                                                                                                                                                                                              | Type   | Default value |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------- |
+| direction | Direction of the time evolution (`forward` or `rewind`). If is empty or it gets a different value, it behaves like `forward`. **Important:** Do not set this value manually, it will be updated with the direction value of the selector via notiBuffer. | string | `forward`     |
+| state     | State of the time evolution (`play` or `pause`). If is empty or it gets a different value, it behaves like `play`. **Important:** Do not set this value manually, it will be updated with the state value of the selector via notiBuffer                 | string | `play`        |
 
 ### babia-axis components
 
@@ -66,17 +66,17 @@ This component adds a x axis to the graph.
 
 #### API
 
-| Property       | Description           | Type   | Default value |
-| --------       | -----------           | ----   | ----- |
-| labels         | List of labels to show | array | - |
-| ticks          | Points where labels are added in the axis | array | - |
-| length         | Length of the axis | number | - |
-| color          | Color for axis and labels | color | #000 |
-| palette        | Color palette for axis and labels:`blues` `bussiness` `sunset`. [See more](CHARTS.md)) **Important**: If the value is not **None**, it will disable `color` attribute. | string | ' ' |
-| animation      | Animates the axis if true | boolean | true |
-| dur            | Duration of animation | number | 2000 |
-| align          | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**| string | front |
-| name           | Metric name to show on title label. | string | - |
+| Property  | Description                                                                                                                                                            | Type    | Default value |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------- |
+| labels    | List of labels to show                                                                                                                                                 | array   | -             |
+| ticks     | Points where labels are added in the axis                                                                                                                              | array   | -             |
+| length    | Length of the axis                                                                                                                                                     | number  | -             |
+| color     | Color for axis and labels                                                                                                                                              | color   | #000          |
+| palette   | Color palette for axis and labels:`blues` `bussiness` `sunset`. [See more](CHARTS.md)) **Important**: If the value is not **None**, it will disable `color` attribute. | string  | ' '           |
+| animation | Animates the axis if true                                                                                                                                              | boolean | true          |
+| dur       | Duration of animation                                                                                                                                                  | number  | 2000          |
+| align     | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**                                               | string  | front         |
+| name      | Metric name to show on title label.                                                                                                                                    | string  | -             |
 
 ```html
     <a-entity babia-axis-x = 'labels: countries, ticks: calculatedTicks, length: 10, palette: ubuntu,
@@ -90,16 +90,16 @@ This component adds a y axis to the graph.
 
 #### API
 
-| Property       | Description           | Type   | Default value |
-| --------       | -----------           | ----   | ----- |
-| maxValue       | Maximum value that this axis will show | number | - |
-| length         | Length of the axis | number | - |
-| minSteps       | Minimum number of steps | number | 6 |
-| color          | Color for axis and labels | color | #000 |
-| animation      | Animates the axis if true | boolean | true |
-| dur            | Duration of animation | number | 2000 |
-| align          | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**| string | front |
-| name           | Metric name to show on title label. | string | - |
+| Property  | Description                                                                                                              | Type    | Default value |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ | ------- | ------------- |
+| maxValue  | Maximum value that this axis will show                                                                                   | number  | -             |
+| length    | Length of the axis                                                                                                       | number  | -             |
+| minSteps  | Minimum number of steps                                                                                                  | number  | 6             |
+| color     | Color for axis and labels                                                                                                | color   | #000          |
+| animation | Animates the axis if true                                                                                                | boolean | true          |
+| dur       | Duration of animation                                                                                                    | number  | 2000          |
+| align     | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind** | string  | front         |
+| name      | Metric name to show on title label.                                                                                      | string  | -             |
 
 ```html
     <a-entity babia-axis-y = 'maxValue: 250, length: 10, color: #fff,
@@ -112,17 +112,17 @@ This component adds a z axis to the graph.
 
 #### API
 
-| Property       | Description           | Type   | Default value |
-| --------       | -----------           | ----   | ----- |
-| labels         | List of labels to show | array | - |
-| ticks          | Points where labels are added in the axis | array | - |
-| length         | Length of the axis | number | - |
-| color          | Color for axis and labels | color | #000 |
-| palette        | Color palette for axis and labels. **Important**: If the value is not **None**, it will disable `color` attribute. | string | ' ' |
-| animation      | Animates the axis if true | boolean | true |
-| dur            | Duration of animation | number | 2000 |
-| align          | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind**| string | front |
-| name           | Metric name to show on title label. | string | - |
+| Property  | Description                                                                                                              | Type    | Default value |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ | ------- | ------------- |
+| labels    | List of labels to show                                                                                                   | array   | -             |
+| ticks     | Points where labels are added in the axis                                                                                | array   | -             |
+| length    | Length of the axis                                                                                                       | number  | -             |
+| color     | Color for axis and labels                                                                                                | color   | #000          |
+| palette   | Color palette for axis and labels. **Important**: If the value is not **None**, it will disable `color` attribute.       | string  | ' '           |
+| animation | Animates the axis if true                                                                                                | boolean | true          |
+| dur       | Duration of animation                                                                                                    | number  | 2000          |
+| align     | Sets the position of the labels related to the axis. It accepts the values **right**, **left**, **front** and **behind** | string  | front         |
+| name      | Metric name to show on title label.                                                                                      | string  | -             |
 
 ```html
     <a-entity babia-axis-z = 'labels: continents, ticks: calculatedTicks, length: 10, palette: pearl,
@@ -135,16 +135,16 @@ This component built the needed things related to the camera for changing betwee
 
 #### API
 
-| Property       | Description           | Type   | Default value |
-| --------       | -----------           | ----   | ----- |
-| raycasterMouse         | Objects the raycaster can interact with  | string | .babiaxraycasterclass |
-| raycasterHand          | Objects the raycaster can interact with | string | .babiaxraycasterclass |
-| tipsOpened         | Displays tips about hand controllers | boolean | true |
-| triggerRLabel          | Action label for this button | string | Click |
-| triggerLLabel          | Action label for this button | string | Teleport |
-| gridRLabel          | Action label for this button | string | Open/Close Tips |
-| grigLLabel          | Action label for this button | string | Stop Audio |
-| teleportCollision     | Selector of the meshes used to check the collisions | string | .environmentGround |
+| Property          | Description                                         | Type    | Default value         |
+| ----------------- | --------------------------------------------------- | ------- | --------------------- |
+| raycasterMouse    | Objects the raycaster can interact with             | string  | .babiaxraycasterclass |
+| raycasterHand     | Objects the raycaster can interact with             | string  | .babiaxraycasterclass |
+| tipsOpened        | Displays tips about hand controllers                | boolean | true                  |
+| triggerRLabel     | Action label for this button                        | string  | Click                 |
+| triggerLLabel     | Action label for this button                        | string  | Teleport              |
+| gridRLabel        | Action label for this button                        | string  | Open/Close Tips       |
+| grigLLabel        | Action label for this button                        | string  | Stop Audio            |
+| teleportCollision | Selector of the meshes used to check the collisions | string  | .environmentGround    |
 
 ```html
     <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button; raycasterHand: .babiaxraycasterclass, #audio_button" look-controls wasd-controls="fly: false"></a-entity>
@@ -156,9 +156,9 @@ This component uses the queryes component in order to change the time range in t
 
 #### API
 
-| Property       | Description           | Type   | Default value |
-| --------       | -----------           | ----   | ----- |
-| defaultRange           | Default time range in the list, options: `Last 5 years, Last 2 years, Last 1 year, Last 6 months, Last 90 days, Last 60 days, Last 30 days, Last 7 days, Last 24 hours, Last 12 hours, Last 4 hours, Last 1 hour, Last 30 minutes, Last 15 minutes` | string | `Last 1 year` | 
+| Property     | Description                                                                                                                                                                                                                                         | Type   | Default value |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------- |
+| defaultRange | Default time range in the list, options: `Last 5 years, Last 2 years, Last 1 year, Last 6 months, Last 90 days, Last 60 days, Last 30 days, Last 7 days, Last 24 hours, Last 12 hours, Last 4 hours, Last 1 hour, Last 30 minutes, Last 15 minutes` | string | `Last 1 year` |
 
 ```html
     <!-- UI -->
@@ -170,28 +170,75 @@ This component uses the queryes component in order to change the time range in t
 
 **This component is a soft fork of aframe-dialog-component**: https://github.com/editvr/aframe-dialog-popup-component#readme
 
-| Property               | Description                 | Default Value                 |
-| ---------------------- | --------------------------- | ----------------------------- |
-| title                  | String containing title.    | New Dialog                    |
-| titleColor             | Text color of title.        | black                         |
-| titleFont              | Title font.                 | mozillavr                     |
-| titleWrapCount         | Title entity wrap count.    | 24                            |
-| body                   | String containing body.     | This dialog has no body yet.  |
-| bodyColor              | Text color of body.         | black                         |
-| bodyFont               | Body  font.                 | mozillavr                     |
-| bodyWrapCount          | Body entity wrap count.     | 30                            |
-| openOn                 | Open/Close event.           | click                         |
-| active                 | Turn dialog on/off.         | true                          |
-| openIconImage          | Icon image for open button. | None                          |
-| openIconRadius         | Radius for open icon.       | 0.3                           |
-| openIconColor          | Color for open icon.        | white                         |
-| closeIconImage         | Icon image for open button. | None                          |
-| closeIconRadius        | Radius for close icon.      | 0.3                           |
-| closeIconColor         | Color for close icon.       | white                         |
-| image                  | Path to Dialog hero image.  | None                          |
-| imageWidth             | Dialog hero image width.    | 2                             |
-| imageHeight            | Dialog hero image height.   | 2                             |
-| dialogBoxWidth         | Dialog box width.           | 4                             |
-| dialogBoxHeight        | Dialog box height.          | 4                             |
-| dialogBoxColor         | Dialog box background color.| white                         |
-| dialogBoxPadding       | Dialog box padding.         | 0.2                           |
+| Property         | Description                  | Default Value                |
+| ---------------- | ---------------------------- | ---------------------------- |
+| title            | String containing title.     | New Dialog                   |
+| titleColor       | Text color of title.         | black                        |
+| titleFont        | Title font.                  | mozillavr                    |
+| titleWrapCount   | Title entity wrap count.     | 24                           |
+| body             | String containing body.      | This dialog has no body yet. |
+| bodyColor        | Text color of body.          | black                        |
+| bodyFont         | Body  font.                  | mozillavr                    |
+| bodyWrapCount    | Body entity wrap count.      | 30                           |
+| openOn           | Open/Close event.            | click                        |
+| active           | Turn dialog on/off.          | true                         |
+| openIconImage    | Icon image for open button.  | None                         |
+| openIconRadius   | Radius for open icon.        | 0.3                          |
+| openIconColor    | Color for open icon.         | white                        |
+| closeIconImage   | Icon image for open button.  | None                         |
+| closeIconRadius  | Radius for close icon.       | 0.3                          |
+| closeIconColor   | Color for close icon.        | white                        |
+| image            | Path to Dialog hero image.   | None                         |
+| imageWidth       | Dialog hero image width.     | 2                            |
+| imageHeight      | Dialog hero image height.    | 2                            |
+| dialogBoxWidth   | Dialog box width.            | 4                            |
+| dialogBoxHeight  | Dialog box height.           | 4                            |
+| dialogBoxColor   | Dialog box background color. | white                        |
+| dialogBoxPadding | Dialog box padding.          | 0.2                          |
+
+#### **babia-experiment component**
+
+**We recomment to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
+
+| Property                 | Description                                                                  | Type         | Default value      |
+| ------------------------ | ---------------------------------------------------------------------------- | ------------ | ------------------ |
+| taskTitle                | Title of the task poster                                                     | string       | Default task title |
+| taskDescription          | Description of the task poster                                               | string       | Default task text  |
+| openTaskImg              | Img of the popup icon of the task poster                                     | string       | -                  |
+| closeTaskImg             | Img of the popup icon of the task poster (for closing)                       | string       | -                  |
+| timeLimitEnding          | If the experiment last a defined time                                        | boolean      | false              |
+| timeLimitTime            | Time that the user has for conducting the experiment                         | seconds      | 300                |
+| forceFinishWhenTimeLimit | Force experiment finish when time hiding the charts and downloading the data | boolean      | false              |
+| finishButton             | Button to finish the experiment                                              | boolean      | true               |
+| recordDelta              | Time delta for recording the position and rotation of the camera             | milliseconds | 3000               |
+| recordAudio              | Record audio of the participant with the microphone                          | boolean      | true               |
+| taskAudio                | If the task is defined by an audio                                           | boolean      | false              |
+| taskAudioUrl             | URL of the mp3 audio for defining the task                                   | string       | -                  |
+| taskVideo                | If the task is defined by an video                                           | boolean      | false              |
+| taskVideoId              | ID of the asset with the video for defining the task                         | string       | -                  |
+| taskVideoWidth           | Width of the video panel                                                     | boolean      | 3                  |
+| taskVideoWidth           | Height of the video panel                                                    | boolean      | 1.75               |
+| lookat                   | What everything created by this component will follow in rotation            | string       | `[camera]`         |
+
+
+
+#### **babia-task component**
+
+**We recomment to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
+
+**This component only works when using the babia-experiment component, as a child**
+
+ | Property        | Description                                                                          | Type    | Default value      |
+ | --------------- | ------------------------------------------------------------------------------------ | ------- | ------------------ |
+ | taskTitle       | Title of the task poster                                                             | string  | Default task title |
+ | taskDescription | Description of the task poster                                                       | string  | Default task text  |
+ | openTaskImg     | Img of the popup icon of the task poster                                             | string  | -                  |
+ | closeTaskImg    | Img of the popup icon of the task poster (for closing)                               | string  | -                  |
+ | taskAudio       | If the task is defined by an audio                                                   | boolean | false              |
+ | taskAudioUrl    | URL of the mp3 audio for defining the task                                           | string  | -                  |
+ | taskVideo       | If the task is defined by an video                                                   | boolean | false              |
+ | taskVideoId     | ID of the asset with the video for defining the task                                 | string  | -                  |
+ | taskVideoWidth  | Width of the video panel                                                             | boolean | 3                  |
+ | taskVideoWidth  | Height of the video panel                                                            | boolean | 1.75               |
+ | offsetX         | Offset in the X axis for positioning the task (useful when more than one babia-task) | number  | 0                  |
+ | lookat          | What everything created by this component will follow in rotation                    | string  | `[camera]`         |

@@ -21,7 +21,8 @@ AFRAME.registerComponent('babia-experiment', {
         taskVideo: { type: 'boolean', default: false },
         taskVideoId: { type: 'string', default: null },
         taskVideoWidth: { type: 'number', default: 3 },
-        taskVideoHeight: { type: 'number', default: 1.75 }
+        taskVideoHeight: { type: 'number', default: 1.75 },
+        lookat: {type: 'string', default: "[camera]" }
     },
 
     /**
@@ -136,7 +137,7 @@ AFRAME.registerComponent('babia-experiment', {
         // Add position
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
         this.taskEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
-        this.taskEntity.setAttribute('babia-lookat', '[camera]')
+        this.taskEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
         // Add to the scene
@@ -193,7 +194,7 @@ AFRAME.registerComponent('babia-experiment', {
         // Add position
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
         this.taskAudioEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
-        this.taskAudioEntity.setAttribute('babia-lookat', '[camera]')
+        this.taskAudioEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
         // Add to the scene
@@ -232,7 +233,7 @@ AFRAME.registerComponent('babia-experiment', {
         // Add position
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
         this.taskVideoEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
-        this.taskVideoEntity.setAttribute('babia-lookat', '[camera]')
+        this.taskVideoEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
         // Add to the scene
@@ -244,7 +245,7 @@ AFRAME.registerComponent('babia-experiment', {
         this.startButtonEntity = document.createElement('a-plane')
         this.startButtonEntity.setAttribute('id', 'babiaStartButton')
         this.startButtonEntity.setAttribute('scale', { x: 1.2, y: 1.2, z: 1.2 })
-        this.startButtonEntity.setAttribute('babia-lookat', '[camera]')
+        this.startButtonEntity.setAttribute('babia-lookat', this.data.lookat)
         this.startButtonEntity.setAttribute('class', '.babiaxrayscasterclass')
         this.startButtonEntity.setAttribute('color', '#3ac961')
         this.startButtonEntity.setAttribute('geometry', {
@@ -299,7 +300,7 @@ AFRAME.registerComponent('babia-experiment', {
         this.finishButtonEntity = document.createElement('a-plane')
         this.finishButtonEntity.setAttribute('id', 'babiaFinishButton')
         this.finishButtonEntity.setAttribute('scale', { x: 1.2, y: 1.2, z: 1.2 })
-        this.finishButtonEntity.setAttribute('babia-lookat', '[camera]')
+        this.finishButtonEntity.setAttribute('babia-lookat', this.data.lookat)
         this.finishButtonEntity.setAttribute('class', 'babiaxrayscasterclass')
         this.finishButtonEntity.setAttribute('color', '#9e0000')
         this.finishButtonEntity.setAttribute('visible', false)

@@ -16,7 +16,8 @@ AFRAME.registerComponent('babia-task', {
         taskVideoId: { type: 'string', default: null },
         taskVideoWidth: { type: 'number', default: 3 },
         taskVideoHeight: { type: 'number', default: 1.75 },
-        offsetX: {type: 'number', default: 0}
+        offsetX: {type: 'number', default: 0},
+        lookat: {type: 'string', default: "[camera]" },
     },
 
     /**
@@ -109,7 +110,7 @@ AFRAME.registerComponent('babia-task', {
 
         // Add position
         this.taskEntity.setAttribute('position', { x: this.data.offsetX, y: 3, z: -4 })
-        this.taskEntity.setAttribute('babia-lookat', '[camera]')
+        this.taskEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
         // Add to the scene
@@ -165,7 +166,7 @@ AFRAME.registerComponent('babia-task', {
 
         // Add position
         this.taskAudioEntity.setAttribute('position', { x: this.data.offsetX, y: 3, z: -4 })
-        this.taskAudioEntity.setAttribute('babia-lookat', '[camera]')
+        this.taskAudioEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
         // Add to the scene
@@ -203,7 +204,7 @@ AFRAME.registerComponent('babia-task', {
 
         // Add position
         this.taskVideoEntity.setAttribute('position', { x: this.data.offsetX, y: 3, z: -4 })
-        this.taskVideoEntity.setAttribute('babia-lookat', '[camera]')
+        this.taskVideoEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
         // Add to the scene
