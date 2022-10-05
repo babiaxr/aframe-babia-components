@@ -16,7 +16,11 @@ AFRAME.registerComponent('babia-experiment', {
         recordDelta: { type: 'number', default: 3000 }, // In milliseconds, each delta the position and rotation will be recorded
         recordAudio: { type: 'boolean', default: true },
         taskAudio: { type: 'boolean', default: false },
-        taskAudioUrl: { type: 'string', default: null }
+        taskAudioUrl: { type: 'string', default: null },
+        taskVideo: { type: 'boolean', default: false },
+        taskVideoId: { type: 'string', default: null },
+        taskVideoWidth: { type: 'number', default: 3 },
+        taskVideoHeight: { type: 'number', default: 1.75 }
     },
 
     /**
@@ -55,8 +59,8 @@ AFRAME.registerComponent('babia-experiment', {
                 // Add raycaster things and others attributes
                 let babiaCameraAttribute = this.babiaCameraEl.getAttribute("babia-camera")
                 this.babiaCameraEl.setAttribute("babia-camera", {
-                    raycasterMouse: babiaCameraAttribute['raycasterMouse'] + ', #babiaTaskPopup,  #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton, #babiaTaskAudio',
-                    raycasterHand: babiaCameraAttribute['raycasterHand'] + ', #babiaTaskPopup, #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton, #babiaTaskAudio'
+                    raycasterMouse: babiaCameraAttribute['raycasterMouse'] + ', #babiaTaskPopup,  #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton, #babiaTaskAudio, #babiaTaskVideo',
+                    raycasterHand: babiaCameraAttribute['raycasterHand'] + ', #babiaTaskPopup, #babiaTaskPopup--close-icon, #babiaStartButton, #babiaFinishButton, #babiaTaskAudio, #babiaTaskVideo'
                 })
 
             } else {
@@ -70,6 +74,8 @@ AFRAME.registerComponent('babia-experiment', {
             // Add task
             if (this.data.taskAudio) {
                 this.addAudioTask()
+            } else if (this.data.taskVideo) {
+                this.addVideoTask()
             } else {
                 this.addTask()
             }
@@ -173,7 +179,7 @@ AFRAME.registerComponent('babia-experiment', {
             }
 
         }, false)
-        
+
         // When audio finished
         this.taskAudioEntity.addEventListener('sound-ended', function (event) {
             self.audioPlaying = false
@@ -190,6 +196,45 @@ AFRAME.registerComponent('babia-experiment', {
         // Add to the scene
         this.el.parentElement.append(this.taskAudioEntity)
     },
+
+    /**
+     * Things related to the audio task
+     */
+     videoPlaying: false,
+     addVideoTask: function () {
+         const self = this
+ 
+         this.taskVideoEntity = document.createElement('a-video');
+         this.taskVideoEntity.setAttribute('class', 'babiaxrayscasterclass')
+         this.taskVideoEntity.setAttribute('id', 'babiaTaskVideo')
+         this.taskVideoEntity.setAttribute('src', self.data.taskVideoId)
+         this.taskVideoStream = document.querySelector(self.data.taskVideoId)
+         this.taskVideoEntity.setAttribute('width', self.data.taskVideoWidth)
+         this.taskVideoEntity.setAttribute('height', self.data.taskVideoHeight)
+         
+ 
+         // Play Sound when click
+         this.taskVideoEntity.addEventListener('click', function (event) {
+             if (self.videoPlaying) {
+                 self.videoPlaying = false
+                 self.taskVideoStream.pause();
+             } else {
+                 self.videoPlaying = true
+                 self.taskVideoStream.play();
+             }
+ 
+         }, false)
+ 
+ 
+         // Add position
+         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
+         this.taskVideoEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
+         this.taskVideoEntity.setAttribute('babia-lookat', '[camera]')
+ 
+ 
+         // Add to the scene
+         this.el.parentElement.append(this.taskVideoEntity)
+     },
 
     addStartButton: function () {
         const self = this

@@ -21,9 +21,10 @@
             <a-asset-item id="optimerBoldFont"
                 src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json">
             </a-asset-item>
+            <video id="videosample" loop="true" src="sample.mp4"></video>
         </a-assets>
 
-        <a-entity babia-experiment="taskAudio: true; taskAudioUrl: sample-3s.mp3;" id="experiment">
+        <a-entity babia-experiment="taskVideo: true; taskVideoId: #videosample;" id="experiment">
             <a-entity environment></a-entity>
             <a-light type="point" intensity="1" position="-10 20 30"></a-light>
 
