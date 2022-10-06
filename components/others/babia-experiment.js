@@ -131,12 +131,13 @@ AFRAME.registerComponent('babia-experiment', {
             posterBoxHeight: 4.5,
             body: self.data.taskDescription
         })
+        this.taskEntity.setAttribute('scale', { x: 0.5, y: 0.5, z: 0.5 })
 
 
 
         // Add position
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
-        this.taskEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
+        this.taskEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 1.5, z: this.babiaCameraPosition.z - 4 })
         this.taskEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
@@ -193,7 +194,7 @@ AFRAME.registerComponent('babia-experiment', {
 
         // Add position
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
-        this.taskAudioEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
+        this.taskAudioEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 1.5, z: this.babiaCameraPosition.z - 4 })
         this.taskAudioEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
@@ -232,7 +233,7 @@ AFRAME.registerComponent('babia-experiment', {
 
         // Add position
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
-        this.taskVideoEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 3, z: this.babiaCameraPosition.z - 4 })
+        this.taskVideoEntity.setAttribute('position', { x: this.babiaCameraPosition.x, y: this.babiaCameraPosition.y + 1.5, z: this.babiaCameraPosition.z - 4 })
         this.taskVideoEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
@@ -244,7 +245,7 @@ AFRAME.registerComponent('babia-experiment', {
         const self = this
         this.startButtonEntity = document.createElement('a-plane')
         this.startButtonEntity.setAttribute('id', 'babiaStartButton')
-        this.startButtonEntity.setAttribute('scale', { x: 1.2, y: 1.2, z: 1.2 })
+        this.startButtonEntity.setAttribute('scale', { x: 0.4, y: 0.4, z: 0.4 })
         this.startButtonEntity.setAttribute('babia-lookat', this.data.lookat)
         this.startButtonEntity.setAttribute('class', '.babiaxrayscasterclass')
         this.startButtonEntity.setAttribute('color', '#3ac961')
@@ -262,7 +263,7 @@ AFRAME.registerComponent('babia-experiment', {
         })
 
         this.babiaCameraPosition = this.babiaCameraEl.getAttribute('position')
-        this.startButtonEntity.setAttribute('position', { x: this.babiaCameraPosition.x - 3.5, y: this.babiaCameraPosition.y + 1, z: this.babiaCameraPosition.z - 3.5 })
+        this.startButtonEntity.setAttribute('position', { x: this.babiaCameraPosition.x - 0.5, y: this.babiaCameraPosition.y + 1, z: this.babiaCameraPosition.z - 1.5 })
 
         // Start recording time
         this.startButtonEntity.addEventListener('click', async function (event) {
@@ -299,7 +300,7 @@ AFRAME.registerComponent('babia-experiment', {
         const self = this
         this.finishButtonEntity = document.createElement('a-plane')
         this.finishButtonEntity.setAttribute('id', 'babiaFinishButton')
-        this.finishButtonEntity.setAttribute('scale', { x: 1.2, y: 1.2, z: 1.2 })
+        this.finishButtonEntity.setAttribute('scale', { x: 0.4, y: 0.4, z: 0.4 })
         this.finishButtonEntity.setAttribute('babia-lookat', this.data.lookat)
         this.finishButtonEntity.setAttribute('class', 'babiaxrayscasterclass')
         this.finishButtonEntity.setAttribute('color', '#9e0000')
@@ -317,7 +318,7 @@ AFRAME.registerComponent('babia-experiment', {
             width: 3.6
         })
 
-        this.finishButtonEntity.setAttribute('position', { x: this.babiaCameraPosition.x + 3.5, y: this.babiaCameraPosition.y + 1, z: this.babiaCameraPosition.z - 3.5 })
+        this.finishButtonEntity.setAttribute('position', { x: this.babiaCameraPosition.x + 0.5, y: this.babiaCameraPosition.y + 1, z: this.babiaCameraPosition.z - 1.5 })
 
         // Start recording time
         this.finishButtonEntity.addEventListener('click', function (event) {
