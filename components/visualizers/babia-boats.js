@@ -52,7 +52,8 @@ AFRAME.registerComponent('babia-boats', {
         // New layout
         treeLayout: { type: 'boolean', default: false },
         treeQuartersLevelHeight: { type: 'number', default: 0.2 },
-        treeFixQuarterHeight: { type: 'boolean', default: false }
+        treeFixQuarterHeight: { type: 'boolean', default: false },
+        treeHideOneSonQuarters: { type: 'boolean', default: false }
     },
 
     /**
@@ -550,26 +551,38 @@ AFRAME.registerComponent('babia-boats', {
 
             // TEST TREE
             if (self.data.treeLayout) {
+                // // Hide quarters that has not children
+                if (self.data.treeHideOneSonQuarters && (figures[i].children && figures[i].children.length === 1)) {
+                    figures[i].alphaTest = 1
+                    figures[i].dontAddEvents = true
+                    figures[i].children[0].dontAddLine = true
+                }
+
                 if (self.data.treeFixQuarterHeight) {
                     // Fix position y for quarters
                     if (figures[i].treeMetaphorHeight) {
                         position.y = (height / 2 + translate.y / 2) + self.data.treeQuartersLevelHeight
                     } else {
                         position.y = ((height / 2 + translate.y / 2)) - self.data.treeQuartersLevelHeight - self.data.zone_elevation
+
                         if (figures[i].height < self.data.treeQuartersLevelHeight) {
-                            // First get top
-                            let topBuildingY = position.y
-                            // Get where the quarter is
-                            let quarterPosY = position.y + (self.data.treeQuartersLevelHeight - (height/2))
-                            // Draw the line in the space
-                            let line = document.createElement('a-entity')
-                            line.setAttribute('class', 'babiaboatstreelines')
-                            line.setAttribute('line', {
-                                start: { x: position.x, y: topBuildingY, z: position.z },
-                                end: { x: position.x, y: quarterPosY, z: position.z },
-                                color: 'yellow'
-                            })
-                            element.appendChild(line)
+                            // If flag to hide activated and the parent has only one son, not needed to draw the line
+                            if (!(self.data.treeHideOneSonQuarters && figures[i].dontAddLine)) {
+                                // First get top
+                                let topBuildingY = position.y
+                                // Get where the quarter is
+                                let quarterPosY = position.y + (self.data.treeQuartersLevelHeight - (height / 2))
+                                // Draw the line in the space
+                                let line = document.createElement('a-entity')
+                                line.setAttribute('class', 'babiaboatstreelines')
+                                line.setAttribute('line', {
+                                    start: { x: position.x, y: topBuildingY, z: position.z },
+                                    end: { x: position.x, y: quarterPosY, z: position.z },
+                                    color: 'yellow'
+                                })
+                                element.appendChild(line)
+                            }
+
                         }
                     }
                 } else {
@@ -892,19 +905,22 @@ AFRAME.registerComponent('babia-boats', {
                             )
                             // DRAW LINE WHEN DOES NOT ACHIEVE THE QUARTER (TOO LOW)
                             if (figure.height < self.data.treeQuartersLevelHeight) {
-                                // First get top
-                                let topBuildingY = positionYFixed
-                                // Get where the quarter is
-                                let quarterPosY = positionYFixed + (self.treeQuartersLevelHeight - figure.height/2)
-                                // Draw the line in the space
-                                let line = document.createElement('a-entity')
-                                line.setAttribute('class', 'babiaboatstreelines')
-                                line.setAttribute('line', {
-                                    start: { x: positionX, y: topBuildingY, z: positionZ },
-                                    end: { x: positionX, y: quarterPosY, z: positionZ },
-                                    color: 'yellow'
-                                })
-                                entity.parentElement.appendChild(line)
+                                // If flag to hide activated and the parent has only one son, not needed to draw the line
+                                if (!(self.data.treeHideOneSonQuarters && figure.dontAddLine)) {
+                                    // First get top
+                                    let topBuildingY = positionYFixed
+                                    // Get where the quarter is
+                                    let quarterPosY = positionYFixed + (self.treeQuartersLevelHeight - figure.height / 2)
+                                    // Draw the line in the space
+                                    let line = document.createElement('a-entity')
+                                    line.setAttribute('class', 'babiaboatstreelines')
+                                    line.setAttribute('line', {
+                                        start: { x: positionX, y: topBuildingY, z: positionZ },
+                                        end: { x: positionX, y: quarterPosY, z: positionZ },
+                                        color: 'yellow'
+                                    })
+                                    entity.parentElement.appendChild(line)
+                                }
                             }
                         }
                     } else {
@@ -1125,6 +1141,12 @@ AFRAME.registerComponent('babia-boats', {
         // add opacity
         entity.setAttribute('material', 'opacity', figure.alpha);
 
+        // transparent if alphaTest
+        if (figure.alphaTest) {
+            entity.setAttribute('material', 'alphaTest', figure.alphaTest);
+            entity.removeAttribute('class'); 
+        }
+
         return entity;
     },
 
@@ -1223,66 +1245,69 @@ AFRAME.registerComponent('babia-boats', {
         let self = this;
         if (figure.children) {
             // Quarter
-            let transparentBox;
-            entity.addEventListener('click', function (e) {
-                // Just launch the event on the child
-                if (e.target !== this)
-                    return;
+            // dont add events flag (if transparent)
+            if (!figure.dontAddEvents) {
+                let transparentBox;
+                entity.addEventListener('click', function (e) {
+                    // Just launch the event on the child
+                    if (e.target !== this)
+                        return;
 
-                if (entity.legend) {
-                    self.el.parentElement.removeChild(transparentBox)
-                    entity.classList.remove("babiaquarterboxactivated");
-                    self.el.parentElement.removeChild(entity.legend)
+                    if (entity.legend) {
+                        self.el.parentElement.removeChild(transparentBox)
+                        entity.classList.remove("babiaquarterboxactivated");
+                        self.el.parentElement.removeChild(entity.legend)
 
-                    // Remove from the array that has the entity activated and the legend
-                    const index = self.entitiesWithLegend.findIndex(item => item.entity === entity);
-                    if (index > -1) {
-                        self.entitiesWithLegend.splice(index, 1);
+                        // Remove from the array that has the entity activated and the legend
+                        const index = self.entitiesWithLegend.findIndex(item => item.entity === entity);
+                        if (index > -1) {
+                            self.entitiesWithLegend.splice(index, 1);
+                        }
+                        const indexLegend = self.legendsActive.indexOf(entity.legend);
+                        if (index > -1) {
+                            self.legendsActive.splice(indexLegend, 1);
+                        }
+
+                        entity.legend = undefined
+                        transparentBox = undefined
+
+                    } else {
+                        transparentBox = document.createElement('a-entity');
+                        transparentBox.setAttribute('class', 'babiaquarterlegendbox')
+                        entity.classList.add("babiaquarterboxactivated");
+                        let oldGeometry = entity.getAttribute('geometry')
+                        let scale = self.el.getAttribute("scale") || { x: 1, y: 1, z: 1 }
+                        let tsBoxHeight = (oldGeometry.height * scale.y) + self.data.height_quarter_legend_box
+                        transparentBox.setAttribute('geometry', {
+                            height: tsBoxHeight,
+                            depth: oldGeometry.depth * scale.z,
+                            width: oldGeometry.width * scale.x
+                        });
+                        transparentBox.setAttribute('material', {
+                            'visible': true,
+                            'opacity': 0.4
+                        });
+                        let worldPos = new THREE.Vector3();
+                        let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
+                        transparentBox.setAttribute('position', coordinates)
+                        self.el.parentElement.appendChild(transparentBox)
+
+                        let coordinatesFinal = {
+                            x: coordinates.x,
+                            y: self.data.height_quarter_legend_title,
+                            z: coordinates.z
+                        }
+                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
+                        entity.legend.setAttribute('position', coordinatesFinal)
+                        entity.legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(entity.legend)
+
+                        // Add to the elements that has the legend activated
+                        self.entitiesWithLegend.push({ 'figure': figure, 'entity': entity })
+                        self.legendsActive.push(entity.legend)
                     }
-                    const indexLegend = self.legendsActive.indexOf(entity.legend);
-                    if (index > -1) {
-                        self.legendsActive.splice(indexLegend, 1);
-                    }
-
-                    entity.legend = undefined
-                    transparentBox = undefined
-
-                } else {
-                    transparentBox = document.createElement('a-entity');
-                    transparentBox.setAttribute('class', 'babiaquarterlegendbox')
-                    entity.classList.add("babiaquarterboxactivated");
-                    let oldGeometry = entity.getAttribute('geometry')
-                    let scale = self.el.getAttribute("scale") || { x: 1, y: 1, z: 1 }
-                    let tsBoxHeight = (oldGeometry.height * scale.y) + self.data.height_quarter_legend_box
-                    transparentBox.setAttribute('geometry', {
-                        height: tsBoxHeight,
-                        depth: oldGeometry.depth * scale.z,
-                        width: oldGeometry.width * scale.x
-                    });
-                    transparentBox.setAttribute('material', {
-                        'visible': true,
-                        'opacity': 0.4
-                    });
-                    let worldPos = new THREE.Vector3();
-                    let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                    transparentBox.setAttribute('position', coordinates)
-                    self.el.parentElement.appendChild(transparentBox)
-
-                    let coordinatesFinal = {
-                        x: coordinates.x,
-                        y: self.data.height_quarter_legend_title,
-                        z: coordinates.z
-                    }
-                    entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
-                    entity.legend.setAttribute('position', coordinatesFinal)
-                    entity.legend.setAttribute('visible', true);
-                    self.el.parentElement.appendChild(entity.legend)
-
-                    // Add to the elements that has the legend activated
-                    self.entitiesWithLegend.push({ 'figure': figure, 'entity': entity })
-                    self.legendsActive.push(entity.legend)
-                }
-            })
+                })
+            }
 
             this.drawElements(entity, figure.children, figure.translate_matrix);
         } else {
