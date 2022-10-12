@@ -886,6 +886,13 @@ AFRAME.registerComponent('babia-boats', {
 
                 // TEST TREE 
                 if (self.data.treeLayout) {
+                    // Hide quarters that has not children
+                    if (self.data.treeHideOneSonQuarters && (figure.children && figure.children.length === 1)) {
+                        figure.alphaTest = 1
+                        figure.dontAddEvents = true
+                        figure.children[0].dontAddLine = true
+                    }
+
                     if (self.data.treeFixQuarterHeight) {
                         // Fix position y for quarters
                         if (figure.treeMetaphorHeight) {
@@ -1144,7 +1151,7 @@ AFRAME.registerComponent('babia-boats', {
         // transparent if alphaTest
         if (figure.alphaTest) {
             entity.setAttribute('material', 'alphaTest', figure.alphaTest);
-            entity.removeAttribute('class'); 
+            entity.removeAttribute('class');
         }
 
         return entity;
