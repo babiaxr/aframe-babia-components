@@ -419,7 +419,7 @@ AFRAME.registerComponent('babia-boats', {
             let figure
             if (elements[i].children) {
                 figure = {
-                    id: id = "boat-" + elements[i][this.data.field],
+                    id: "boat-" + elements[i][this.data.field],
                     name: elements[i][this.data.field],
                     posX: posX,
                     posY: posY,
@@ -880,8 +880,9 @@ AFRAME.registerComponent('babia-boats', {
                     setOpacity(entity, 1)
                 }
 
+                // Quarters to alpha if tree fix position
                 if (entity.getAttribute('material').opacity != figure.alpha) {
-                    setOpacity(entity, figure.alpha);
+                    entity.setAttribute('material', 'opacity', figure.alpha);
                 }
 
                 // TEST TREE 

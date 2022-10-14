@@ -37,7 +37,7 @@ AFRAME.registerComponent('babia-treebuilder', {
     /**
     * Called once when component is attached. Generally for initial setup.
     */
-    init: function () { 
+    init: function () {
         this.notiBuffer = new NotiBuffer();
     },
 
@@ -45,24 +45,24 @@ AFRAME.registerComponent('babia-treebuilder', {
     * Called when component is attached and when component data changes.
     * Generally modifies the entity based on the data.
     */
-    update: function (oldData){
+    update: function (oldData) {
         let data = this.data;
         let el = this.el;
 
-        if (data.data && (oldData.data !== data.data || data.field !== oldData.field || data.split_by !== oldData.split_by)){
+        if (data.data && (oldData.data !== data.data || data.field !== oldData.field || data.split_by !== oldData.split_by)) {
             let _data = parseJson(data.data);
-            this.processData(_data);         
-        } else if ((data.from !== oldData.from || data.field !== oldData.field || data.split_by !== oldData.split_by)){
+            this.processData(_data);
+        } else if ((data.from !== oldData.from || data.field !== oldData.field || data.split_by !== oldData.split_by)) {
             // Unregister from old notiBuffer
-            if(this.prodComponent) {
+            if (this.prodComponent) {
                 this.prodComponent.notiBuffer.unregister(this.notiBufferId)
             };
 
             // Register for the new one
             // (It will also invoke processData once if there is already data)
             this.prodComponent = findProdComponent(data, el, "babia-treebuilder")
-            if (this.prodComponent.notiBuffer){
-            this.notiBufferId = this.prodComponent.notiBuffer.register(this.processData.bind(this))
+            if (this.prodComponent.notiBuffer) {
+                this.notiBufferId = this.prodComponent.notiBuffer.register(this.processData.bind(this))
             }
         }
     },
@@ -78,10 +78,10 @@ AFRAME.registerComponent('babia-treebuilder', {
             for (let j = 0; j < path.length; j++) {
                 // Check if starts with the split char
                 if (!path[j]) { continue }
-    
+
                 let part = path[j];
                 let existingPath = findWhere(currentLevel, 'name', part);
-    
+
                 if (existingPath) {
                     currentLevel = existingPath.children;
                 } else {
@@ -91,8 +91,13 @@ AFRAME.registerComponent('babia-treebuilder', {
                     } else {
                         newPart['children'] = []
                     }
-                    newPart['uid'] = paths[i][data.field].split(part + data.split_by)[0] + part
-                    newPart['name'] = part                  
+                    let findUid = paths[i][data.field].split(data.split_by + part + data.split_by)
+                    // No pop if it is a building beacuse it breaks
+                    if (findUid.length > 1) {
+                        let rest = findUid.pop()
+                    }
+                    newPart['uid'] = findUid.join(data.split_by + part + data.split_by) + data.split_by + part
+                    newPart['name'] = part
                     currentLevel.push(newPart);
                     currentLevel = newPart.children;
                 }
