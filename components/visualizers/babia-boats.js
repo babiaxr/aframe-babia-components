@@ -598,11 +598,6 @@ AFRAME.registerComponent('babia-boats', {
             }
 
             let entity = this.createElement(figures[i], position);
-            entity.setAttribute("babiatranslatey", translate.y)
-            entity.setAttribute("babiaheight", height)
-            entity.setAttribute("babiatreemetaphorheight", figures[i].treeMetaphorHeight)
-            entity.setAttribute("babiapositiony", position.y)
-            entity.setAttribute("babiaauqerterlive", self.data.treeQuartersLevelHeight)
             this.addEvents(entity, figures[i]);
 
             element.appendChild(entity);
@@ -769,7 +764,7 @@ AFRAME.registerComponent('babia-boats', {
                         // TRASLATE
                         this.traslate(entity, new_time, delta, figures[i], figures_old[index], translate, translate_old);
                         // COLOR
-                        if (entity.getAttribute('color') != figures[i].color) {
+                        if (entity.getAttribute('color') != figures[i].color && !self.inEntitiesWithLegend(entity)) {
                             entity.setAttribute('color', figures[i].color);
                         }
 
@@ -863,6 +858,17 @@ AFRAME.registerComponent('babia-boats', {
         }
     },
 
+    inEntitiesWithLegend(obj) {
+        let i;
+        for (i = 0; i < this.entitiesWithLegend.length; i++) {
+            if (this.entitiesWithLegend[i].entity === obj) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
     setFigures: function (figures, translate) {
         const self = this
         figures.forEach(figure => {
@@ -877,8 +883,13 @@ AFRAME.registerComponent('babia-boats', {
                 if (entity.getAttribute('depth') != figure.depth) {
                     entity.setAttribute('depth', figure.depth);
                 }
-                if (entity.getAttribute('color') != figure.color) {
-                    entity.setAttribute('color', figure.color);
+                // If legend active, don't force change color, put it as the color before
+                if (self.inEntitiesWithLegend(entity)) {
+                    entity.setAttribute('babiaxrFirstColor', figure.color)
+                } else {
+                    if (entity.getAttribute('color') != figure.color) {
+                        entity.setAttribute('color', figure.color);
+                    }
                 }
 
                 //TODO: Full opacity because it was in 0.5 if new building/quarter
@@ -1580,7 +1591,7 @@ let getMaxMinValues = (data, field, valuesToAvg, max, min) => {
             if (data[i][field] !== "null" && !max || data[i][field] > max) {
                 max = data[i][field]
             }
-            if (data[i][field] !== "null" && !min || data[i][field] < min) {
+            if (data[i][field] !== "null" && !(min !== undefined) || data[i][field] < min) {
                 min = data[i][field]
             }
             valuesToAvg.push(data[i][field])
