@@ -560,7 +560,8 @@ AFRAME.registerComponent('babia-boats', {
 
                 if (self.data.treeFixQuarterHeight) {
                     // Fix position y for quarters
-                    if (figures[i].treeMetaphorHeight) {
+                    // Check if not undefined because if it is 0, it returns false (thx JS)
+                    if (figures[i].treeMetaphorHeight !== undefined) {
                         position.y = (height / 2 + translate.y / 2) + self.data.treeQuartersLevelHeight
                     } else {
                         position.y = ((height / 2 + translate.y / 2)) - self.data.treeQuartersLevelHeight - self.data.zone_elevation
@@ -597,6 +598,11 @@ AFRAME.registerComponent('babia-boats', {
             }
 
             let entity = this.createElement(figures[i], position);
+            entity.setAttribute("babiatranslatey", translate.y)
+            entity.setAttribute("babiaheight", height)
+            entity.setAttribute("babiatreemetaphorheight", figures[i].treeMetaphorHeight)
+            entity.setAttribute("babiapositiony", position.y)
+            entity.setAttribute("babiaauqerterlive", self.data.treeQuartersLevelHeight)
             this.addEvents(entity, figures[i]);
 
             element.appendChild(entity);
