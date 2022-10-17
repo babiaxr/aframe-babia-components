@@ -92,8 +92,15 @@
         <a-entity id="expressquerier" babia-queryjson="url:./dependencieslist_express.json;"></a-entity>
         <a-entity id="karmaquerier" babia-queryjson="url:./dependencieslist_karma.json;"></a-entity>
         <a-entity id="pm2querier" babia-queryjson="url:./dependencieslist_pm2.json;"></a-entity>
+        <a-entity id="filestashquerier" babia-queryjson="url:./dependencieslist_filestash.json;"></a-entity>
+        <a-entity id="ghquerier" babia-queryjson="url:./dependencieslist_ghdesktop.json;"></a-entity>
+
 
         <!-- Treebuilder -->
+        <a-entity id="ghdesktop" babia-treebuilder="field: parentsPath; split_by: /; from: ghquerier">
+        </a-entity>
+        <a-entity id="filestash" babia-treebuilder="field: parentsPath; split_by: /; from: filestashquerier">
+        </a-entity>
         <a-entity id="portainer" babia-treebuilder="field: parentsPath; split_by: /; from: portainerquerier">
         </a-entity>
         <a-entity id="cloudinary" babia-treebuilder="field: parentsPath; split_by: /; from: cloudinaryquerier">
@@ -219,12 +226,15 @@
         /* Set username and password for ElasticSearch queriers*/
         let buildingsep = getValueFromQueryString('buildingsep');
         let quarterheight = getValueFromQueryString('quarterheight');
+        let extra = getValueFromQueryString('extra');
         if (buildingsep) {
-            console.log("BVUILDING SEPARARTITIAOJKNS")
             document.getElementById("boats").setAttribute('babia-boats', 'building_separation', parseFloat(buildingsep))
         }
         if (quarterheight) {
             document.getElementById("boats").setAttribute('babia-boats', 'treeQuartersLevelHeight', parseFloat(quarterheight))
+        }
+        if (extra) {
+            document.getElementById("boats").setAttribute('babia-boats', 'extra', parseFloat(extra))
         }
     </script>
 
