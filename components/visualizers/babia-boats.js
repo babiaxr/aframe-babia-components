@@ -43,6 +43,9 @@ AFRAME.registerComponent('babia-boats', {
         highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
+        // Wireframe by repeated IDs
+        wireframeByRepeatedField: { type: 'string' },
+
         // Autoscale when animating or starting
         autoscale: { type: 'boolean', default: false },
         autoscaleSizeX: { type: 'number', default: 3 },
@@ -207,6 +210,7 @@ AFRAME.registerComponent('babia-boats', {
     updateChart: function (items) {
         console.log('Data Loaded.');
         let t = { x: 0, y: 0, z: 0 };
+        this.idsToNotRepeat = []
 
         // when animation not finished, delete figures and opa 1 to inserted
         if (this.animation) {
@@ -535,6 +539,9 @@ AFRAME.registerComponent('babia-boats', {
         return [width, depth, translate, figures];
     },
 
+    // If wireframerepeated activated
+    idsToNotRepeat: [],
+
     drawElements: function (element, figures, translate) {
         const self = this
 
@@ -588,7 +595,7 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 } else {
                     // Quarters on top of the buildings
-                    if (figures[i].treeMetaphorHeight) {
+                    if (figures[i].treeMetaphorHeight !== undefined) {
                         position.y = ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figures[i].treeMetaphorHeight)))
                     } else {
                         position.y = ((height / 2 + translate.y / 2)) - height - 0.001
@@ -599,6 +606,13 @@ AFRAME.registerComponent('babia-boats', {
 
             let entity = this.createElement(figures[i], position);
             this.addEvents(entity, figures[i]);
+
+            // Put wireframe to those buildings that share same value for a field selected
+            if (self.data.wireframeByRepeatedField && (!figures[i].children && self.idsToNotRepeat.includes(figures[i].rawData[self.data.wireframeByRepeatedField]))){
+                entity.setAttribute("material", "wireframe", true)
+            } else {
+                self.idsToNotRepeat.push(figures[i].rawData[self.data.wireframeByRepeatedField])
+            }
 
             element.appendChild(entity);
         }
@@ -913,7 +927,7 @@ AFRAME.registerComponent('babia-boats', {
 
                     if (self.data.treeFixQuarterHeight) {
                         // Fix position y for quarters
-                        if (figure.treeMetaphorHeight) {
+                        if (figure.treeMetaphorHeight !== undefined) {
                             entity.object3D.position.set(
                                 figure.posX - translate.x,
                                 (figure.height / 2 + translate.y / 2) + self.data.treeQuartersLevelHeight,
@@ -949,7 +963,7 @@ AFRAME.registerComponent('babia-boats', {
                             }
                         }
                     } else {
-                        if (figure.treeMetaphorHeight) {
+                        if (figure.treeMetaphorHeight !== undefined) {
                             entity.object3D.position.set(
                                 figure.posX - translate.x,
                                 ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figure.treeMetaphorHeight))),
