@@ -13,6 +13,8 @@ let MAX_SIZE_BAR = 10
 AFRAME.registerComponent('babia-ui', {
     schema: {
         target: { type: 'string' },
+        hideFields: { type: 'array' },
+        hideRows: { type: 'array' }
     },
 
     /**
@@ -154,6 +156,28 @@ AFRAME.registerComponent('babia-ui', {
                 this.dataQueriers.push(querier.id)
             });
         }
+    },
+
+    hideAndInsertMetrics: function (dataMetrics, property, metrics) {
+        const self = this
+        let toAdd = {
+            property: property,
+            metrics: metrics
+        }
+
+        if (self.data.hideFields.length != 0){
+            let metricsFiltered = []
+            metrics.forEach(metric => {
+                if (!self.data.hideFields.includes(metric)){
+                    metricsFiltered.push(metric)
+                }
+            })
+            toAdd.metrics = metricsFiltered
+        }
+
+        if (!self.data.hideRows.includes(property)) {
+            dataMetrics.push(toAdd)
+        }
     }
 })
 
@@ -199,17 +223,17 @@ let getDataMetrics = (self, data, properties) => {
 
             properties['nodes'].forEach(property => {
                 if (number_properties.includes(property)) {
-                    self.dataMetrics['nodes'].push({ property: property, metrics: number_metrics })
+                    self.hideAndInsertMetrics(self.dataMetrics['nodes'], property, number_metrics)
                 } else {
-                    self.dataMetrics['nodes'].push({ property: property, metrics: Object.keys(data.nodes[0]) })
+                    self.hideAndInsertMetrics(self.dataMetrics['nodes'], property, Object.keys(data.nodes[0]))
                 }
             });
 
             properties['links1'].forEach(property => {
                 if (number_properties.includes(property)) {
-                    self.dataMetrics['links'].push({ property: property, metrics: number_metrics })
+                    self.hideAndInsertMetrics(self.dataMetrics['links'], property, number_metrics)
                 } else {
-                    self.dataMetrics['links'].push({ property: property, metrics: Object.keys(data.links[0]) })
+                    self.hideAndInsertMetrics(self.dataMetrics['links'], property, Object.keys(data.links[0]))
                 }
             });
         } else {
@@ -230,17 +254,17 @@ let getDataMetrics = (self, data, properties) => {
 
             properties['nodes'].forEach(property => {
                 if (number_properties.includes(property)) {
-                    self.dataMetrics.push({ property: property, metrics: number_metrics })
+                    self.hideAndInsertMetrics(self.dataMetrics, property, number_metrics)
                 } else {
-                    self.dataMetrics.push({ property: property, metrics: Object.keys(data[0]) })
+                    self.hideAndInsertMetrics(self.dataMetrics, property, Object.keys(data[0]))
                 }
             });
 
             properties['links0'].forEach(property => {
                 if (number_properties.includes(property)) {
-                    self.dataMetrics.push({ property: property, metrics: number_metrics })
+                    self.hideAndInsertMetrics(self.dataMetrics, property, number_metrics)
                 } else {
-                    self.dataMetrics.push({ property: property, metrics: Object.keys(data[0]) })
+                    self.hideAndInsertMetrics(self.dataMetrics, property, Object.keys(data[0]))
                 }
             });
         }
@@ -270,7 +294,7 @@ let getDataMetrics = (self, data, properties) => {
 
         properties.forEach(property => {
             if (number_properties.includes(property)) {
-                self.dataMetrics.push({ property: property, metrics: number_metrics })
+                self.hideAndInsertMetrics(self.dataMetrics, property, number_metrics)
 
                 // Specific case for categoric color in boats
                 if (property === "color") {
@@ -282,12 +306,12 @@ let getDataMetrics = (self, data, properties) => {
                             }
                         }
 
-                        self.dataMetrics.push({ property: property, metrics: categoric_colors })
+                        self.hideAndInsertMetrics(self.dataMetrics, property, categoric_colors)
                     }
                 }
 
             } else {
-                self.dataMetrics.push({ property: property, metrics: Object.keys(data[0]) })
+                self.hideAndInsertMetrics(self.dataMetrics, property, Object.keys(data[0]))
             }
         });
     }

@@ -24,7 +24,7 @@ AFRAME.registerComponent('babia-boats', {
         height: { type: 'string', default: 'height' },
         maxBuildingHeight: { type: 'number', default: 2 },
         minBuildingHeight: { type: 'number', default: 0.03 },
-        zone_elevation: { type: 'number', default: 0.3 },
+        zone_elevation: { type: 'number', default: 0.01 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
         levels: { type: 'number' },

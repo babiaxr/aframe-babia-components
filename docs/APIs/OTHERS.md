@@ -16,9 +16,11 @@ This component lets us select the data and the metrics that we want to show in t
 
 #### API
 
-| Property | Description                           | Type   | Default value |
-| -------- | ------------------------------------- | ------ | ------------- |
-| target   | ID of the visualizer that will manage | string | -             |
+| Property   | Description                                | Type   | Default value |
+| ---------- | ------------------------------------------ | ------ | ------------- |
+| target     | ID of the visualizer that will manage      | string | -             |
+| hideRows   | Array of the rows that want to be hidden   | array  | -             |
+| hideFields | Array of the fields that want to be hidden | array  | -             |
 
 ```html
     <a-entity babia-ui = 'target: visualizerid'></a-entity>
