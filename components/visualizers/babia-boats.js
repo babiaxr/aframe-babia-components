@@ -43,8 +43,10 @@ AFRAME.registerComponent('babia-boats', {
         highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
-        // Wireframe by repeated IDs
+        // Wireframe & Transparency by repeated IDs
         wireframeByRepeatedField: { type: 'string' },
+        transparent80ByRepeatedField: { type: 'string' },
+        transparent20ByRepeatedField: { type: 'string' },
 
         // Autoscale when animating or starting
         autoscale: { type: 'boolean', default: false },
@@ -210,7 +212,9 @@ AFRAME.registerComponent('babia-boats', {
     updateChart: function (items) {
         console.log('Data Loaded.');
         let t = { x: 0, y: 0, z: 0 };
-        this.idsToNotRepeat = []
+        this.idsToNotRepeatWireframe = []
+        this.idsToNotRepeat20Transparent = []
+        this.idsToNotRepeat80Transparent = []
 
         // when animation not finished, delete figures and opa 1 to inserted
         if (this.animation) {
@@ -441,8 +445,10 @@ AFRAME.registerComponent('babia-boats', {
                 }
 
                 // Gradient color
+                let hierarchyLevel = figure.name.split("/").length - 1
+                figure.hierarchyLevel = hierarchyLevel
+                figure.renderOrder = hierarchyLevel
                 if (self.data.gradientBaseColor) {
-                    let hierarchyLevel = figure.name.split("/").length - 1
                     figure.color = greenColorsurface(Math.round(self.normalizeValues(1, self.babiaMetadata['maxLevels'], 15, 100, hierarchyLevel)));
                 } else {
                     figure.color = self.data.base_color;
@@ -489,8 +495,29 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 }
 
+
+
             }
             figure.rawData = elements[i]
+
+            // If transparency by a field on buildings
+            // Put transparent 80% to those buildings that share same value for a field selected
+            if (self.data.transparent80ByRepeatedField && (!figure.children && self.idsToNotRepeat80Transparent.includes(figure.rawData[self.data.transparent80ByRepeatedField]))) {
+                figure.alpha = 0.8
+                figure.renderOrder = 2000
+            } else {
+                self.idsToNotRepeat80Transparent.push(figure.rawData[self.data.transparent80ByRepeatedField])
+            }
+
+            // Put transparent 20% to those buildings that share same value for a field selected
+            if (self.data.transparent20ByRepeatedField && (!figure.children && self.idsToNotRepeat20Transparent.includes(figure.rawData[self.data.transparent20ByRepeatedField]))) {
+                figure.alpha = 0.2
+                figure.renderOrder = 2000
+            } else {
+                self.idsToNotRepeat20Transparent.push(figure.rawData[self.data.transparent20ByRepeatedField])
+            }
+
+            
             figures.push(figure);
         }
 
@@ -540,7 +567,9 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     // If wireframerepeated activated
-    idsToNotRepeat: [],
+    idsToNotRepeatWireframe: [],
+    idsToNotRepeat80Transparent: [],
+    idsToNotRepeat20Transparent: [],
 
     drawElements: function (element, figures, translate) {
         const self = this
@@ -608,11 +637,14 @@ AFRAME.registerComponent('babia-boats', {
             this.addEvents(entity, figures[i]);
 
             // Put wireframe to those buildings that share same value for a field selected
-            if (self.data.wireframeByRepeatedField && (!figures[i].children && self.idsToNotRepeat.includes(figures[i].rawData[self.data.wireframeByRepeatedField]))){
+            if (self.data.wireframeByRepeatedField && (!figures[i].children && self.idsToNotRepeatWireframe.includes(figures[i].rawData[self.data.wireframeByRepeatedField]))) {
                 entity.setAttribute("material", "wireframe", true)
+                entity.setAttribute("material", "wireframeLinewidth", 1.0)
             } else {
-                self.idsToNotRepeat.push(figures[i].rawData[self.data.wireframeByRepeatedField])
+                self.idsToNotRepeatWireframe.push(figures[i].rawData[self.data.wireframeByRepeatedField])
             }
+
+
 
             element.appendChild(entity);
         }
@@ -1129,8 +1161,10 @@ AFRAME.registerComponent('babia-boats', {
         // set color
         if (figure.children) {
             // Gradient color depending on the level for the base
+            let hierarchyLevel = figure.name.split("/").length - 1
+            figure.hierarchyLevel = hierarchyLevel
+            entity.object3D.renderOrder = hierarchyLevel
             if (self.data.gradientBaseColor) {
-                let hierarchyLevel = figure.name.split("/").length - 1
                 color = greenColorsurface(Math.round(self.normalizeValues(1, self.babiaMetadata['maxLevels'], 15, 100, hierarchyLevel)));
             } else {
                 color = self.data.base_color;
@@ -1165,6 +1199,7 @@ AFRAME.registerComponent('babia-boats', {
         entity.setAttribute('width', width);
         entity.setAttribute('height', height);
         entity.setAttribute('depth', depth);
+        entity.object3D.renderOrder = figure.renderOrder
         // rawData building
         if (figure.rawData) {
             entity.babiaRawData = figure.rawData
@@ -1326,6 +1361,8 @@ AFRAME.registerComponent('babia-boats', {
                             'visible': true,
                             'opacity': 0.4
                         });
+                        // This is because the webGL render order does not work well with the transparencies
+                        transparentBox.object3D.renderOrder = 1000000000
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         transparentBox.setAttribute('position', coordinates)
