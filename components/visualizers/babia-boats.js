@@ -43,6 +43,9 @@ AFRAME.registerComponent('babia-boats', {
         highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
+
+        highlightBuildingByField: { type: 'string' },
+
         // Wireframe & Transparency by repeated IDs
         wireframeByRepeatedField: { type: 'string' },
         transparent80ByRepeatedField: { type: 'string' },
@@ -1219,6 +1222,11 @@ AFRAME.registerComponent('babia-boats', {
             entity.babiaRawData = figure.rawData
         }
 
+        // Higlight repeated
+        if (self.data.highlightBuildingByField && figure.rawData) {
+            entity.setAttribute("babia-highlightbuildingbyfield", figure.rawData[self.data.highlightBuildingByField])
+        }
+
         // add into scene
         entity.setAttribute('position', {
             x: position.x,
@@ -1451,9 +1459,29 @@ AFRAME.registerComponent('babia-boats', {
                         self.legendsActive.splice(indexLegend, 1);
                     }
 
+                    // Remove Hihglight by field
+                    if (self.data.highlightBuildingByField) {
+                        let fieldValue = entity.getAttribute("babia-highlightbuildingbyfield")
+                        let toRemoveHighlight = document.querySelectorAll(`[babia-highlightbuildingbyfield=${fieldValue}]`)
+                        toRemoveHighlight.forEach(element => {
+                            if (entity !== element) {
+                                if (element.highlightbuildingbyfieldactive && !element.alreadyActive) {
+                                    let oldColor = element.getAttribute('babiaxrBeforeBuildingHighlight')
+                                    element.setAttribute("material", "color", oldColor)
+                                    element.highlightbuildingbyfieldactive = false
+                                }
+                            }
+                        });
+                    }
+
                     entity.legend = undefined
                     entity.alreadyActive = false
                 } else {
+                    // Avoid to click if higlighted by building field
+                    if (entity.highlightbuildingbyfieldactive){
+                        return
+                    }
+
                     entity.alreadyActive = true
 
                     // If clicked again but not mouseover
@@ -1498,6 +1526,19 @@ AFRAME.registerComponent('babia-boats', {
                             let currentActives = parseInt(entity.parentElement.getAttribute('babiaxrHightlighted'))
                             entity.parentElement.setAttribute('babiaxrHightlighted', currentActives + 1)
                         }
+                    }
+
+                    // Hihglight by field
+                    if (self.data.highlightBuildingByField) {
+                        let fieldValue = entity.getAttribute("babia-highlightbuildingbyfield")
+                        let toHighlight = document.querySelectorAll(`[babia-highlightbuildingbyfield=${fieldValue}]`)
+                        toHighlight.forEach(element => {
+                            if (entity !== element && !element.highlightbuildingbyfieldactive && !element.alreadyActive) {
+                                element.highlightbuildingbyfieldactive = true
+                                element.setAttribute('babiaxrBeforeBuildingHighlight', element.getAttribute("material")["color"])
+                                element.setAttribute("material", "color", "#FFFF00")
+                            }
+                        });
                     }
 
                     // Add to the elements that has the legend activated
