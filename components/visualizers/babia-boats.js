@@ -517,7 +517,16 @@ AFRAME.registerComponent('babia-boats', {
                 self.idsToNotRepeat20Transparent.push(figure.rawData[self.data.transparent20ByRepeatedField])
             }
 
-            
+            // Put wireframe to those buildings that share same value for a field selected
+            if (self.data.wireframeByRepeatedField && (!figure.children && self.idsToNotRepeatWireframe.includes(figure.rawData[self.data.wireframeByRepeatedField]))) {
+                figure.wireframe = true
+            } else {
+                figure.wireframe = false
+                self.idsToNotRepeatWireframe.push(figure.rawData[self.data.wireframeByRepeatedField])
+            }
+
+
+
             figures.push(figure);
         }
 
@@ -636,13 +645,6 @@ AFRAME.registerComponent('babia-boats', {
             let entity = this.createElement(figures[i], position);
             this.addEvents(entity, figures[i]);
 
-            // Put wireframe to those buildings that share same value for a field selected
-            if (self.data.wireframeByRepeatedField && (!figures[i].children && self.idsToNotRepeatWireframe.includes(figures[i].rawData[self.data.wireframeByRepeatedField]))) {
-                entity.setAttribute("material", "wireframe", true)
-                entity.setAttribute("material", "wireframeLinewidth", 1.0)
-            } else {
-                self.idsToNotRepeatWireframe.push(figures[i].rawData[self.data.wireframeByRepeatedField])
-            }
 
 
 
@@ -803,6 +805,10 @@ AFRAME.registerComponent('babia-boats', {
                         if (entity.getAttribute('color') != figures[i].color) {
                             entity.setAttribute('color', figures[i].color);
                         }
+                        if (entity.getAttribute('material').wireframe != figures[i].wireframe) {
+                            entity.setAttribute('material', 'wireframe', figures[i].wireframe);
+                            entity.setAttribute('material', 'wireframeLinewidth', 0.1);
+                        }
 
                     } else {
                         // RESIZE
@@ -812,6 +818,14 @@ AFRAME.registerComponent('babia-boats', {
                         // COLOR
                         if (entity.getAttribute('color') != figures[i].color && !self.inEntitiesWithLegend(entity)) {
                             entity.setAttribute('color', figures[i].color);
+                        }
+                        if (entity.getAttribute('material').wireframe != figures[i].wireframe) {
+                            entity.setAttribute('material', 'wireframe', figures[i].wireframe);
+                            entity.setAttribute('material', 'wireframeLinewidth', 0.1);
+                        }
+                        if (entity.getAttribute('material').opacity != figures[i].alpha) {
+                            entity.setAttribute('material', 'opacity', figures[i].alpha);
+                            entity.object3D.renderOrder = figures[i].renderOrder
                         }
 
                         if (figures[i].children) {
@@ -1214,6 +1228,10 @@ AFRAME.registerComponent('babia-boats', {
 
         // add opacity
         entity.setAttribute('material', 'opacity', figure.alpha);
+
+        // add opacity
+        entity.setAttribute('material', 'wireframe', figure.wireframe);
+        entity.setAttribute('material', 'wireframeLinewidth', 0.1);
 
         // transparent if alphaTest
         if (figure.alphaTest) {
