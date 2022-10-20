@@ -21,6 +21,8 @@ This component lets us select the data and the metrics that we want to show in t
 | target     | ID of the visualizer that will manage      | string | -             |
 | hideRows   | Array of the rows that want to be hidden   | array  | -             |
 | hideFields | Array of the fields that want to be hidden | array  | -             |
+| showOnly | Array of the fields that only want to show, format **property:field**, example: **babia-ui="showOnly: height:field, color:otherfield"** | array  | -             |
+
 
 ```html
     <a-entity babia-ui = 'target: visualizerid'></a-entity>

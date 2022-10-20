@@ -14,7 +14,8 @@ AFRAME.registerComponent('babia-ui', {
     schema: {
         target: { type: 'string' },
         hideFields: { type: 'array' },
-        hideRows: { type: 'array' }
+        hideRows: { type: 'array' },
+        showOnly: { type: 'array' }
     },
 
     /**
@@ -165,14 +166,27 @@ AFRAME.registerComponent('babia-ui', {
             metrics: metrics
         }
 
-        if (self.data.hideFields.length != 0){
+        if (self.data.hideFields.length != 0) {
             let metricsFiltered = []
             metrics.forEach(metric => {
-                if (!self.data.hideFields.includes(metric)){
+                if (!self.data.hideFields.includes(metric)) {
                     metricsFiltered.push(metric)
                 }
             })
             toAdd.metrics = metricsFiltered
+        }
+
+        // Show only activated
+        if (self.data.showOnly) {
+            let onlyShowThis = []
+            for (let i = 0; i < self.data.showOnly.length; i++) {
+                const toShow = self.data.showOnly[i].split(":");
+                if (property == toShow[0]) {
+                    onlyShowThis.push(toShow[1])
+                }
+            }
+
+            toAdd.metrics = onlyShowThis
         }
 
         if (!self.data.hideRows.includes(property)) {
@@ -306,7 +320,10 @@ let getDataMetrics = (self, data, properties) => {
                             }
                         }
 
-                        self.hideAndInsertMetrics(self.dataMetrics, property, categoric_colors)
+                        // Solo si no está activado
+                        if (!self.data.showOnly) {
+                            self.hideAndInsertMetrics(self.dataMetrics, property, categoric_colors)
+                        }
                     }
                 }
 
