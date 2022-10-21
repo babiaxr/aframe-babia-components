@@ -339,7 +339,8 @@ This component shows a city in boats.
 | wireframeByRepeatedField      | If a building share the same value of the field selected in this parameter, it will be printed as a wireframe                                                                                | string                 | -             |
 | transparency80ByRepeatedField | If a building share the same value of the field selected in this parameter, it will be printed with opacity 0.8 **IMPORTANT TO DEFINE THE RENDERER OF A-FRAME WITH sortObjects set at true** | string                 | -             |
 | transparency20ByRepeatedField | If a building share the same value of the field selected in this parameter, it will be printed with opacity 0.2 **IMPORTANT TO DEFINE THE RENDERER OF A-FRAME WITH sortObjects set at true** | string                 | -             |
-| highlightBuildingByField | Field that will determine if a building will be highlighted (by putting it color to yellow) if share the same value to the building clicked | string                 | -             |
+| highlightBuildingByField      | Field that will determine if a building will be highlighted (by putting it color to yellow) if share the same value to the building clicked                                                  | string                 | -             |
+| highlightBuildingByFieldColor | Color for highlighting the previous attribute                                                                                                                                                | string                 | white         |
 
 
 

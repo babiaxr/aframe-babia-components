@@ -43,8 +43,9 @@ AFRAME.registerComponent('babia-boats', {
         highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
-
+        // Highlight building by field
         highlightBuildingByField: { type: 'string' },
+        highlightBuildingByFieldColor: { type: 'string', default: 'white' },
 
         // Wireframe & Transparency by repeated IDs
         wireframeByRepeatedField: { type: 'string' },
@@ -1071,7 +1072,7 @@ AFRAME.registerComponent('babia-boats', {
 
             let new_height;
             if (figure.height - figure_old.height < 0) {
-                new_height = last_height - inc_height;
+                new_height = last_height - inc_height; AF
             } else {
                 new_height = last_height + inc_height;
             }
@@ -1478,7 +1479,7 @@ AFRAME.registerComponent('babia-boats', {
                     entity.alreadyActive = false
                 } else {
                     // Avoid to click if higlighted by building field
-                    if (entity.highlightbuildingbyfieldactive){
+                    if (entity.highlightbuildingbyfieldactive) {
                         return
                     }
 
@@ -1536,7 +1537,7 @@ AFRAME.registerComponent('babia-boats', {
                             if (entity !== element && !element.highlightbuildingbyfieldactive && !element.alreadyActive) {
                                 element.highlightbuildingbyfieldactive = true
                                 element.setAttribute('babiaxrBeforeBuildingHighlight', element.getAttribute("material")["color"])
-                                element.setAttribute("material", "color", "white")
+                                element.setAttribute("material", "color", self.data.highlightBuildingByFieldColor)
                             }
                         });
                     }
