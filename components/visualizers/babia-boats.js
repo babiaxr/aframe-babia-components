@@ -515,7 +515,7 @@ AFRAME.registerComponent('babia-boats', {
 
             // Put transparent 20% to those buildings that share same value for a field selected
             if (self.data.transparent20ByRepeatedField && (!figure.children && self.idsToNotRepeat20Transparent.includes(figure.rawData[self.data.transparent20ByRepeatedField]))) {
-                figure.alpha = 0.2
+                figure.alpha = 0.3
                 figure.renderOrder = 2000
             } else {
                 self.idsToNotRepeat20Transparent.push(figure.rawData[self.data.transparent20ByRepeatedField])
@@ -1072,7 +1072,7 @@ AFRAME.registerComponent('babia-boats', {
 
             let new_height;
             if (figure.height - figure_old.height < 0) {
-                new_height = last_height - inc_height; AF
+                new_height = last_height - inc_height;
             } else {
                 new_height = last_height + inc_height;
             }
@@ -1225,7 +1225,7 @@ AFRAME.registerComponent('babia-boats', {
 
         // Higlight repeated
         if (self.data.highlightBuildingByField && figure.rawData) {
-            entity.setAttribute("babia-highlightbuildingbyfield", figure.rawData[self.data.highlightBuildingByField])
+            entity.setAttribute("babia-highlightbuildingbyfield", String(figure.rawData[self.data.highlightBuildingByField]).replace("/", "").replace("@", ""))
         }
 
         // add into scene
@@ -1575,6 +1575,19 @@ AFRAME.registerComponent('babia-boats', {
                     entity.legend.setAttribute('position', coordinatesFinal)
                     entity.legend.setAttribute('visible', true);
                     self.el.parentElement.appendChild(entity.legend);
+
+                    // Hihglight by field
+                    if (self.data.highlightBuildingByField) {
+                        let fieldValue = entity.getAttribute("babia-highlightbuildingbyfield")
+                        let toHighlight = document.querySelectorAll(`[babia-highlightbuildingbyfield=${fieldValue}]`)
+                        toHighlight.forEach(element => {
+                            if (entity !== element && !element.highlightbuildingbyfieldactive && !element.alreadyActive) {
+                                element.highlightbuildingbyfieldactive = true
+                                element.setAttribute('babiaxrBeforeBuildingHighlight', element.getAttribute("material")["color"])
+                                element.setAttribute("material", "color", self.data.highlightBuildingByFieldColor)
+                            }
+                        });
+                    }
                 }
 
             });
@@ -1591,6 +1604,23 @@ AFRAME.registerComponent('babia-boats', {
                     });
                     self.el.parentElement.removeChild(entity.legend)
                     entity.legend = undefined
+                }
+
+                // Remove Hihglight by field
+                if (self.data.highlightBuildingByField) {
+                    if (!entity.alreadyActive && !entity.highlightbuildingbyfieldactive) {
+                        let fieldValue = entity.getAttribute("babia-highlightbuildingbyfield")
+                        let toRemoveHighlight = document.querySelectorAll(`[babia-highlightbuildingbyfield=${fieldValue}]`)
+                        toRemoveHighlight.forEach(element => {
+                            if (entity !== element) {
+                                if (element.highlightbuildingbyfieldactive && !element.alreadyActive) {
+                                    let oldColor = element.getAttribute('babiaxrBeforeBuildingHighlight')
+                                    element.setAttribute("material", "color", oldColor)
+                                    element.highlightbuildingbyfieldactive = false
+                                }
+                            }
+                        });
+                    }
                 }
             });
         }

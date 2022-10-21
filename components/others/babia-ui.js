@@ -15,7 +15,12 @@ AFRAME.registerComponent('babia-ui', {
         target: { type: 'string' },
         hideFields: { type: 'array' },
         hideRows: { type: 'array' },
-        showOnly: { type: 'array' }
+        showOnly: { type: 'array' },
+        maxPerRow: { type: 'number', default: 5 },
+        linesSeparation: { type: 'number', default: 0.3 },
+        customQuerierLabel: { type: 'string', default: 'Data' },
+        customAttributeSwitch: { type: 'array' },
+        customAttributeLabel: { type: 'array' }
     },
 
     /**
@@ -203,14 +208,6 @@ let insertInterfaceOnHand = (self, hand) => {
     self.interface.setAttribute('scale', { x: scale, y: scale, z: scale })
     self.interface.setAttribute('position', { x: -scale * self.interface.width / 2, y: scale * self.interface.height / 2, z: -0.1 })
     self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
-    self.interface.setAttribute('rotation', { x: -60 })
     openCloseMenu(self.handController, self.interface)
 }
 
@@ -351,19 +348,59 @@ let generateInterface = (self, metrics, parent) => {
     let posX = 0
     let maxX = 0
 
+    // Custom attribute changes
+    if (self.data.customAttributeSwitch) {
+        if (self.data.customAttributeLabel) {
+            self.customAttributesLabel = {}
+            self.data.customAttributeLabel.forEach(pair => {
+                let el = pair.split(":")
+                Object.defineProperty(self.customAttributesLabel, el[0], { value: el[1] })
+                //self.customAttributeLabel[el[0]] = el[1]
+            });
+        }
+
+        let button = createProperty("Atrributes", posX, posY)
+        self.interface.appendChild(button)
+        self.data.customAttributeSwitch.forEach((data, i) => {
+            let attributeValue = data.split(":")
+            posX += 3.25
+            let button = createAttributeSelect(self, attributeValue, posX, posY)
+            button.classList.add("babiaxraycasterclass")
+            self.interface.appendChild(button)
+
+            // Two lines
+            if (((i + 1) % self.data.maxPerRow) == 0) {
+                --posY
+                posX = 0
+            }
+        });
+
+        --posY
+        --posY
+        if (maxX < posX) { maxX = posX }
+        posX = 0
+    }
+
     if (self.targetComponent.el.components['babia-network'] && (self.targetComponent.el.components['babia-network'].data.nodesFrom || self.targetComponent.el.components['babia-network'].data.nodes)) {
         // Nodes files
         if (self.nodesQueriers.length > 1) {
             let button = createProperty("Nodes", posX, posY)
             self.interface.appendChild(button)
-            self.nodesQueriers.forEach(data => {
+            self.nodesQueriers.forEach((data, i) => {
                 posX += 3.25
                 let button = createDataSelect(self, data, posX, posY, 'nodes')
                 button.classList.add("babiaxraycasterclass")
                 self.interface.appendChild(button)
+
+                // Two lines
+                if (((i + 1) % self.data.maxPerRow) == 0) {
+                    --posY
+                    posX = 0
+                }
             });
         }
         --posY
+        posY = posY - self.data.linesSeparation
         if (maxX < posX) { maxX = posX }
         posX = 0
 
@@ -371,14 +408,21 @@ let generateInterface = (self, metrics, parent) => {
         if (self.linksQueriers.length > 1) {
             let button = createProperty("Links", posX, posY)
             self.interface.appendChild(button)
-            self.linksQueriers.forEach(data => {
+            self.linksQueriers.forEach((data, i) => {
                 posX += 3.25
                 let button = createDataSelect(self, data, posX, posY, 'links')
                 button.classList.add("babiaxraycasterclass")
                 self.interface.appendChild(button)
+
+                // Two lines
+                if (((i + 1) % self.data.maxPerRow) == 0) {
+                    --posY
+                    posX = 0
+                }
             });
         }
         --posY
+        posY = posY - self.data.linesSeparation
         if (maxX < posX) { maxX = posX }
         posX = 0
 
@@ -386,11 +430,17 @@ let generateInterface = (self, metrics, parent) => {
         metrics.nodes.forEach(property => {
             let button = createProperty(property.property, posX, posY)
             self.interface.appendChild(button)
-            property.metrics.forEach(metric => {
+            property.metrics.forEach((metric, i) => {
                 posX += 3.25
                 let button = createMetric(self, property.property, metric, posX, posY)
                 button.classList.add("babiaxraycasterclass")
                 self.interface.appendChild(button)
+
+                // Two lines
+                if (((i + 1) % self.data.maxPerRow) == 0) {
+                    --posY
+                    posX = 0
+                }
             });
             --posY
             if (maxX < posX) { maxX = posX }
@@ -400,11 +450,18 @@ let generateInterface = (self, metrics, parent) => {
         metrics.links.forEach(property => {
             let button = createProperty(property.property, posX, posY)
             self.interface.appendChild(button)
-            property.metrics.forEach(metric => {
+            property.metrics.forEach((metric, i) => {
                 posX += 3.25
                 let button = createMetric(self, property.property, metric, posX, posY)
                 button.classList.add("babiaxraycasterclass")
                 self.interface.appendChild(button)
+
+                // Two lines
+                if (((i + 1) % self.data.maxPerRow) == 0) {
+                    --posY
+                    posX = 0
+                }
+
             });
             --posY
             if (maxX < posX) { maxX = posX }
@@ -413,7 +470,7 @@ let generateInterface = (self, metrics, parent) => {
     } else {
         // Data files
         if (self.dataQueriers.length > 1) {
-            let button = createProperty("Data", posX, posY)
+            let button = createProperty(self.data.customQuerierLabel, posX, posY)
             self.interface.appendChild(button)
             self.dataQueriers.forEach(data => {
                 posX += 3.25
@@ -423,6 +480,7 @@ let generateInterface = (self, metrics, parent) => {
             });
         }
         --posY
+        posY = posY - self.data.linesSeparation
         if (maxX < posX) { maxX = posX }
         posX = 0
 
@@ -430,13 +488,22 @@ let generateInterface = (self, metrics, parent) => {
         metrics.forEach(property => {
             let button = createProperty(property.property, posX, posY)
             self.interface.appendChild(button)
-            property.metrics.forEach(metric => {
+
+            property.metrics.forEach((metric, i) => {
                 posX += 3.25
                 let button = createMetric(self, property.property, metric, posX, posY)
                 button.classList.add("babiaxraycasterclass")
                 self.interface.appendChild(button)
+
+                // Two lines
+                if (((i + 1) % self.data.maxPerRow) == 0) {
+                    --posY
+                    posX = 0
+                }
+
             });
             --posY
+            posY = posY - self.data.linesSeparation
             if (maxX < posX) { maxX = posX }
             posX = 0
         });
@@ -583,6 +650,44 @@ let createDataSelect = (self, id, positionX, positionY, networkType) => {
     }
 
     selection_events(entity, self.targetComponent, true)
+
+    return entity
+}
+
+let createAttributeSelect = (self, [name, value], positionX, positionY) => {
+    let entity = document.createElement('a-box')
+    entity.classList.add("babiaxraycasterclass")
+    entity.setAttribute('position', { x: positionX, y: positionY, z: 0 })
+    entity.setAttribute('rotation', { x: 0, y: 0, z: 0 })
+    entity.setAttribute('height', 0.8)
+    entity.setAttribute('width', 3)
+    entity.setAttribute('depth', 0.01)
+
+    let text = document.createElement('a-entity')
+    let textToButton = name
+    if (self.customAttributesLabel && self.customAttributesLabel[name]) {
+        textToButton = self.customAttributesLabel[name]
+    }
+    text.setAttribute('text', {
+        'value': textToButton,
+        'align': 'center',
+        'width': '10',
+        'color': 'white'
+    })
+    text.setAttribute('position', "0 0 0.01")
+    entity.appendChild(text)
+
+    entity.setAttribute('color', 'blue')
+
+    // Change attributes
+    entity.addEventListener('click', function () {
+        let attrsComponent = self.targetComponent.el.getAttribute(self.targetComponent.attrName)
+        if (attrsComponent[name] && attrsComponent[name] == value) {
+            self.targetComponent.el.removeAttribute("babia-boats", name)
+        } else {
+            self.targetComponent.el.setAttribute("babia-boats", name, value)
+        }
+    })
 
     return entity
 }

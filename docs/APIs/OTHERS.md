@@ -16,12 +16,17 @@ This component lets us select the data and the metrics that we want to show in t
 
 #### API
 
-| Property   | Description                                | Type   | Default value |
-| ---------- | ------------------------------------------ | ------ | ------------- |
-| target     | ID of the visualizer that will manage      | string | -             |
-| hideRows   | Array of the rows that want to be hidden   | array  | -             |
-| hideFields | Array of the fields that want to be hidden | array  | -             |
-| showOnly | Array of the fields that only want to show, format **property:field**, example: **babia-ui="showOnly: height:field, color:otherfield"** | array  | -             |
+| Property              | Description                                                                                                                                                                                                                          | Type   | Default value |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------------- |
+| target                | ID of the visualizer that will manage                                                                                                                                                                                                | string | -             |
+| hideRows              | Array of the rows that want to be hidden                                                                                                                                                                                             | array  | -             |
+| hideFields            | Array of the fields that want to be hidden                                                                                                                                                                                           | array  | -             |
+| showOnly              | Array of the fields that only want to show, format **property:field**, example: **babia-ui="showOnly: height:field, color:otherfield"**                                                                                              | array  | -             |
+| maxPerRow             | Max items per row, if more, a breakline will be added                                                                                                                                                                                | number | 5             |
+| linesSeparation       | Distance between lines of the UI                                                                                                                                                                                                     | number | 0.3           |
+| customQuerierLabel    | Custom label of the first row when there are more than one querier                                                                                                                                                                   | string | Data          |
+| customAttributeSwitch | Atrributes to remove/add to the targer. Format **attr:value**, example: **babia-ui="customAttributeSwitch: wireframe:true, color:blue"**                                                                                             | array  | -             |
+| customAttributeLabel  | Custom label for the attributes to represent in the customAttributeSwitch row. Format **attr:label**,  example: **babia-ui="customAttributeSwitch: trasnparency20byBuildingField:Transparency, wireframeByBuildingField:Wireframe"** | array  | -             |
 
 
 ```html
