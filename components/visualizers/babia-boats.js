@@ -1536,7 +1536,7 @@ AFRAME.registerComponent('babia-boats', {
                             if (entity !== element && !element.highlightbuildingbyfieldactive && !element.alreadyActive) {
                                 element.highlightbuildingbyfieldactive = true
                                 element.setAttribute('babiaxrBeforeBuildingHighlight', element.getAttribute("material")["color"])
-                                element.setAttribute("material", "color", "#FFFF00")
+                                element.setAttribute("material", "color", "white")
                             }
                         });
                     }
