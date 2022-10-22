@@ -1,3 +1,5 @@
+const { randFloatSpread } = require("three/src/math/MathUtils");
+
 /* global AFRAME */
 if (typeof AFRAME === 'undefined') {
     throw new Error('Component attempted to register before AFRAME was available.');
@@ -16,8 +18,8 @@ AFRAME.registerComponent('babia-task', {
         taskVideoId: { type: 'string', default: null },
         taskVideoWidth: { type: 'number', default: 3 },
         taskVideoHeight: { type: 'number', default: 1.75 },
-        offsetX: {type: 'number', default: 0},
-        lookat: {type: 'string', default: "[camera]" },
+        offsetX: { type: 'number', default: 0 },
+        lookat: { type: 'string', default: "[camera]" },
     },
 
     /**
@@ -71,7 +73,7 @@ AFRAME.registerComponent('babia-task', {
                 }
 
             } else {
-                //this.babiaCameraEl = this.el.sceneEl.camera.el;
+                this.babiaCameraEl = this.el.sceneEl.camera.el;
             }
 
             // Add task if not babia task
@@ -109,7 +111,16 @@ AFRAME.registerComponent('babia-task', {
 
 
         // Add position
-        this.taskEntity.setAttribute('position', { x: this.data.offsetX, y: 3, z: -4 })
+        let x,y,z
+        if (this.babiaCameraEl.attributes['position']){
+            [x, y, z] = this.babiaCameraEl.attributes['position'].value.split(" ")
+        }else{
+            x = 0
+            y = 0
+            z = 0
+        }
+
+        this.taskEntity.setAttribute('position', { x: parseFloat(x) + this.data.offsetX, y: parseFloat(y) + 1.5, z: parseFloat(z) - 6 })
         this.taskEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
@@ -165,7 +176,16 @@ AFRAME.registerComponent('babia-task', {
 
 
         // Add position
-        this.taskAudioEntity.setAttribute('position', { x: this.data.offsetX, y: 3, z: -4 })
+        let x,y,z
+        if (this.babiaCameraEl.attributes['position']){
+            [x, y, z] = this.babiaCameraEl.attributes['position'].value.split(" ")
+        }else{
+            x = 0
+            y = 0
+            z = 0
+        }
+
+        this.taskAudioEntity.setAttribute('position', { x: parseFloat(x) + this.data.offsetX, y: parseFloat(y) + 3, z: parseFloat(z) - 6 })
         this.taskAudioEntity.setAttribute('babia-lookat', this.data.lookat)
 
 
@@ -203,7 +223,15 @@ AFRAME.registerComponent('babia-task', {
 
 
         // Add position
-        this.taskVideoEntity.setAttribute('position', { x: this.data.offsetX, y: 3, z: -4 })
+        let x,y,z
+        if (this.babiaCameraEl.attributes['position']){
+            [x, y, z] = this.babiaCameraEl.attributes['position'].value.split(" ")
+        }else{
+            x = 0
+            y = 0
+            z = 0
+        }
+        this.taskVideoEntity.setAttribute('position', { x: parseFloat(x) + this.data.offsetX, y: parseFloat(y) + 3, z: parseFloat(z) - 6 })
         this.taskVideoEntity.setAttribute('babia-lookat', this.data.lookat)
 
 

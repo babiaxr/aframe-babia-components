@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>JetUML 2021 | BabiaXR Experiment</title>
+    <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
+    </meta>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+    <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+    <script src="../codecityjs/projects_analysis/dist/aframe-lounge-component.min.js"></script>
+    <script
+        src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.3/dist/aframe-dialog-popup-component.min.js"></script>
+    <script src="../../dist/aframe-babia-components.js"></script>
+    <style>
+        h1 {
+            color: #AAAAAA;
+            font-family: 'Archivo', sans-serif;
+            font-size: 45px;
+            text-align: center;
+            text-shadow: black 0.1em 0.1em 0.2em
+        }
+
+        p {
+            color: #444444;
+            font-family: 'Archivo', sans-serif;
+            font-size: 26px;
+            text-align: justify;
+            text-shadow: #AAAAAA 0.1em 0.1em 0.2em
+        }
+    </style>
+</head>
+
+<body>
+    <a-scene id="scene" light="defaultLightsEnabled: false">
+
+        <!-- Assets -->
+        <a-assets>
+            <img id="sky" src="../assets/textures/360-panorama.jpg">
+            <img id="floor" src="../assets/textures/floor-texture.jpg">
+            <img id="metalic" src="../assets/textures/metalic-texture.jpg">
+            <video id="videosample" loop="true" src="sample.mp4"></video>
+        </a-assets>
+
+        <a-entity babia-experiment id="experiment">
+            <a-entity id="task3" babia-task="offsetX: -3"></a-entity>
+            <a-entity id="task1" babia-task="taskVideo: true; taskVideoId: #videosample"></a-entity>
+            <a-entity id="task2" babia-task="offsetX: 3; taskAudio: true; taskAudioUrl: sample-3s.mp3"></a-entity>
+
+            <!-- Querier Components -->
+            <a-entity id="argoumldata" babia-queryjson="url: ./staticdata/jetuml_code_data.json;"></a-entity>
+            <a-entity id="jetumlcity" babia-treebuilder="field: file_path; split_by: /; from: argoumldata"></a-entity>
+
+            <!-- Enviroment -->
+            <a-sky src="#sky"></a-sky>
+
+            <!-- Information popup -->
+            <a-entity rotation="0 -90 0" position="7 0 -4.5">
+                <a-entity id="navbarpopup" position="2 -1 -5"
+                    dialog-popup="
+      openIconImage: ../assets/popups/info.jpg;
+      closeIconImage: ../assets/popups/close.jpg;
+      title: Welcome!;
+      titleWrapCount: 30;
+      titleColor: white;
+      bodyColor: white;
+      dialogBoxColor: black;
+      bodyFont: roboto;
+      dialogBoxHeight: 8.7;
+      body: \n In this experiment we want to assess whether it is better to navigate 3D visualizations on-screen or using Virtual Reality (VR) headsets. \n Below on your left you see a 3D representation of JetUML using the City metaphor. If you want to know more, please read the legend on the right of the city. \n
+      = CONTROLS AND INTERACTIONS \n Click and drag with the mouse to look around and use the WASD keys to fly around with the camera. \n
+      To show a tooltip with additional information on a building, hover on it with the mouse. If you click on a building, the tooltip will remain open. To show information on a quarter, you need to click on it. To close all tooltips, you can press the button above the legend. \n
+      If you feel lost and want to reset the view, please refresh the page. \n
+      = START THE EXPERIMENT \n Please make sure that your supervisor acitvated both voice and screen recording. When you are ready, close this information dialog by hitting the (X) and press the trigger on the button labeled with (0). Remember that the city is below on your left.;"
+                    babia-lookat="[camera]"></a-entity>
+            </a-entity>
+
+
+
+            <!-- Aframe Lounge -->
+            <a-entity position="3 -5 0.9" id="city"
+                babia-boats="height_building_legend: -0.5; legend_scale: 0.25; extra: 1; zone_elevation: 0.01; from: jetumlcity; area: num_funs; height: loc_per_function; color: ccn; height_quarter_legend_box: 1; height_quarter_legend_title: -3; autoscale: true">
+            </a-entity>
+
+            <a-entity id="lounge" position="5 0 0" lounge="width: 20; depth: 25; height: 11;
+                            north: barrier; 
+                            floorTexture: ../assets/textures/floor-texture.jpg">
+
+                <a-entity position="-1 0 0.9" lounge-plinth="width: 4; depth: 3.2" lounge-staydown>
+                    <a-entity></a-entity>
+                </a-entity>
+
+
+
+            </a-entity>
+
+
+
+
+
+            <a-entity id="bardescription" position="7.4 -4.7 -1.5" rotation="-30 0 0" scale="0.8 0.8 0.8">
+                <!-- Close tooltips -->
+                <a-plane id="closelegends" babia-lookat="[camera]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
+                    position="0 1.5 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
+                    text="value: Close All Tooltips; color: white; align: center; wrapCount: 30; width: 3.6; transparent: false; alphaTest: 6; opacity: 6">
+                </a-plane>
+                <a-box src="#floor" height="2.2" width="2.2" depth="0.1" position="0 0 0"></a-box>
+                <a-box src="#metalic" height="2" width="2" depth="0.05" position="0 0 0.05"></a-box>
+                <a-entity htmlembed position="0 0.1 0.1" style="width: 480px; height: 500px;">
+                    <h1>JetUML (Mar 25, 2021)</h1>
+                    <p>Each building represents a file in the source code of the system. Each quarter represents a
+                        folder.
+                        Quarters can be nested to represent nested folders. On each building, we mapped the values
+                        of three
+                        software metrics:</p>
+                    <p>
+                        Area: Number of functions <br />
+                        Height: LOC per function<br />
+                        Color: Cyclomatic Complexity (CCN)<br />
+                    </p>
+                    <p>Interactions: Click (or hover) on a building or click on a quarter to discover more.
+                    </p>
+                </a-entity>
+            </a-entity>
+
+            <!-- Lights -->
+            <a-entity position="5 50 0" light="type: hemisphere; color: #CEE4F0; intensity: 1; groundColor: #454545">
+            </a-entity>
+
+            <!-- Controls and Camera -->
+            <a-entity lounge-entry-point rotation="0 -90 0">
+
+            </a-entity>
+            <a-entity position="4 -4 5" camera
+                babia-camera="raycasterMouse: .babiaxraycasterclass; raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom"
+                look-controls wasd-controls="fly: true"></a-entity>
+        </a-entity>
+
+    </a-scene>
+
+    <!-- Remove legends when clicking on close legends -->
+    <script>
+        document.querySelector('a-scene').addEventListener('loaded', function () {
+            let infoPanel = document.getElementById(`navbarpopup--dialog-plane`);
+            infoPanel.setAttribute("visible", "true")
+
+            // rotate popups to the camera
+            let popups = document.querySelectorAll('[dialog-popup]');
+            Array.from(popups).forEach(function (popup) {
+                popup.addEventListener('click', function (event) {
+                    let plane = document.getElementById(`${event.target.id}--dialog-plane`);
+                    plane.setAttribute("babia-lookat", "[camera]")
+                }, false);
+            });
+
+        })
+
+
+        document.getElementById("closelegends").addEventListener('click', function (event) {
+            let ewl = document.getElementById("city").components['babia-boats'].entitiesWithLegend
+            let newEwl = []
+            for (let i = 0; i < ewl.length; i++) {
+                newEwl.push(ewl[i])
+            }
+            for (let v = 0; v < newEwl.length; v++) {
+                newEwl[v].click()
+            }
+        }, false);
+
+        // rotate popups to the camera
+        let popups = document.querySelectorAll('[dialog-popup]');
+        Array.from(popups).forEach(function (popup) {
+            popup.addEventListener('click', function (event) {
+                console.log(event.target.childNodes)
+                let plane = document.getElementById(`${event.target.id}--dialog-plane`);
+                plane.setAttribute("babia-lookat", "[camera]")
+                console.log(plane)
+            }, false);
+        });
+    </script>
+
+    <style>
+        .gitlab-corner-wrapper {
+            overflow: hidden;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            right: 0
+        }
+
+        .gitlab-corner {
+            position: absolute;
+            top: -16px;
+            right: -50px;
+            transform: rotate(45deg);
+            background: #548;
+            border: 44px solid #548;
+            border-bottom: none;
+            border-top: #548 solid 16px
+        }
+
+        .gitlab-corner svg {
+            width: 60px;
+            height: 60px;
+            margin-bottom: -4px
+        }
+
+        .cls-1 {
+            fill: #fc6d26
+        }
+
+        .cls-2 {
+            fill: #e24329
+        }
+
+        .cls-3 {
+            fill: #fca326
+        }
+
+        .gitlab-corner:hover .cls-1 {
+            animation: cycle .6s
+        }
+
+        .gitlab-corner:hover .cls-2 {
+            animation: cycleMid .6s
+        }
+
+        .gitlab-corner:hover .cls-3 {
+            animation: cycleEnd .6s
+        }
+
+        @keyframes cycle {
+
+            100%,
+            15%,
+            60% {
+                fill: #fc6d26
+            }
+
+            30%,
+            75% {
+                fill: #e24329
+            }
+
+            45%,
+            90% {
+                fill: #fca326
+            }
+        }
+
+        @keyframes cycleMid {
+
+            100%,
+            15%,
+            60% {
+                fill: #e24329
+            }
+
+            30%,
+            75% {
+                fill: #fca326
+            }
+
+            45%,
+            90% {
+                fill: #fc6d26
+            }
+        }
+
+        @keyframes cycleEnd {
+
+            100%,
+            15%,
+            60% {
+                fill: #fca326
+            }
+
+            30%,
+            75% {
+                fill: #fc6d26
+            }
+
+            45%,
+            90% {
+                fill: #e24329
+            }
+        }
+
+        @media (max-width:500px) {
+
+            .gitlab-corner:hover .cls-1,
+            .gitlab-corner:hover .cls-2,
+            .gitlab-corner:hover .cls-3 {
+                animation: none
+            }
+
+            .gitlab-corner .cls-1 {
+                animation: cycle .6s
+            }
+
+            .gitlab-corner .cls-2 {
+                animation: cycleMid .6s
+            }
+
+            .gitlab-corner .cls-3 {
+                animation: cycleEnd .6s
+            }
+        }
+    </style>
+    <div class="gitlab-corner-wrapper"><a href="https://gitlab.com/babiaxr/aframe-babia-components"
+            class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                <g id="g44">
+                    <path id="path46" class="cls-1"
+                        d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                </g>
+                <g id="g48">
+                    <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                </g>
+                <g id="g56">
+                    <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                </g>
+                <g id="g64">
+                    <path id="path66" class="cls-3"
+                        d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                </g>
+                <g id="g72">
+                    <path id="path74" class="cls-2"
+                        d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                </g>
+                <g id="g76">
+                    <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                </g>
+                <g id="g80">
+                    <path id="path82" class="cls-3"
+                        d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                </g>
+                <g id="g84">
+                    <path id="path86" class="cls-2"
+                        d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                </g>
+            </svg></a></div>
+</body>
+
+</html>

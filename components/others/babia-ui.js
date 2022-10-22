@@ -182,7 +182,7 @@ AFRAME.registerComponent('babia-ui', {
         }
 
         // Show only activated
-        if (self.data.showOnly) {
+        if (self.data.showOnly.length > 0) {
             let onlyShowThis = []
             for (let i = 0; i < self.data.showOnly.length; i++) {
                 const toShow = self.data.showOnly[i].split(":");
@@ -349,7 +349,7 @@ let generateInterface = (self, metrics, parent) => {
     let maxX = 0
 
     // Custom attribute changes
-    if (self.data.customAttributeSwitch) {
+    if (self.data.customAttributeSwitch.length > 0) {
         if (self.data.customAttributeLabel) {
             self.customAttributesLabel = {}
             self.data.customAttributeLabel.forEach(pair => {
