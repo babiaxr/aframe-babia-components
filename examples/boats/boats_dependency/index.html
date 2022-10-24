@@ -23,6 +23,7 @@
             <img id="floor" src="../../assets/textures/floor-texture.jpg">
             <img id="metalic" src="../../assets/textures/metalic-texture.jpg">
             <img id="wall" src="../../assets/textures/white-wall-texture.jpg">
+            <img id="colorlegend" src="../../assets/palettes/bluetored.jpg">
             <a-asset-item id="door-obj" src="../../assets/door/door.obj"></a-asset-item>
             <a-asset-item id="door-mtl" src="../../assets/door/door.mtl"></a-asset-item>
         </a-assets>
@@ -135,7 +136,7 @@
                 scale="0.8 0.8 0.8" position="0 3 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
                 text="value: Rotate City; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
             </a-plane>
-            <a-plane id="wireframe" babia-lookat="[laser-controls]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
+            <a-plane id="wireframe" visible="false" babia-lookat="[laser-controls]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
                 position="0 2.5 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
                 text="value: Wireframe; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
             </a-plane>
@@ -143,11 +144,12 @@
                 scale="0.8 0.8 0.8" position="0 2 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
                 text="value: Transparencies 80%; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
             </a-plane> -->
-            <a-plane id="transparencies20" babia-lookat="[laser-controls]" class="babiaxraycasterclass"
+            <a-plane id="transparencies20" visible="false" babia-lookat="[laser-controls]" class="babiaxraycasterclass"
                 scale="0.8 0.8 0.8" position="0 1.5 0" geometry="primitive: plane; width: 2; height: 0.5"
                 color="#012752"
                 text="value: Transparencies; color: white; align: center; wrapCount: 30; width: 3.6;  transparent: false; alphaTest: 6; opacity: 6">
             </a-plane>
+            <a-plane src="#colorlegend" height="0.5" width="1" position="0 -0.7 0.1"></a-plane>
             <a-box src="#floor" height="2.2" width="3.2" depth="0.1" position="0 0 0"></a-box>
             <a-box src="#metalic" height="2" width="3" depth="0.05" position="0 0 0.05"></a-box>
             <a-entity position="0 0.1 0.1" id="boatsmetricsinfo"></a-entity>

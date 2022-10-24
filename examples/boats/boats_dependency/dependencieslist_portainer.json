@@ -16733,7 +16733,7 @@
         "nissues_closed_ratio": 1.0,
         "nissues_closed_ratio_lastyear": 0.1044776119402985,
         "age_days": 3365,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "ansi-styles",
@@ -21339,7 +21339,7 @@
         "nissues_closed_ratio": 1.0,
         "nissues_closed_ratio_lastyear": 0.1044776119402985,
         "age_days": 3365,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "ansi-styles",
@@ -22825,7 +22825,7 @@
         "nissues_closed_ratio": 0.5680933852140078,
         "nissues_closed_ratio_lastyear": 0.17509727626459143,
         "age_days": 1316,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "chalk",
@@ -22879,7 +22879,7 @@
         "nissues_closed_ratio": 1.0,
         "nissues_closed_ratio_lastyear": 0.1044776119402985,
         "age_days": 3365,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "ansi-styles",
@@ -24263,7 +24263,7 @@
         "nissues_closed_ratio": 1.0,
         "nissues_closed_ratio_lastyear": 0.1044776119402985,
         "age_days": 3365,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "ansi-styles",
@@ -24693,7 +24693,7 @@
         "nissues_closed_ratio": 1.0,
         "nissues_closed_ratio_lastyear": 0.1044776119402985,
         "age_days": 3365,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "is-unicode-supported",
@@ -25965,7 +25965,7 @@
         "nissues_closed_ratio": 0.5680933852140078,
         "nissues_closed_ratio_lastyear": 0.17509727626459143,
         "age_days": 1316,
-        "last_act_days": -1
+        "last_act_days": 0
     },
     {
         "name": "yargs",

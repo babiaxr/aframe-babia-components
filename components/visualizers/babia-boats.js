@@ -1295,16 +1295,16 @@ AFRAME.registerComponent('babia-boats', {
 
         // Update place where metric info if activated
         if (this.data.metricsInfoId) {
-            let text = `Metric - max - min - avg\n\nHeight (${data.height}) - ${heightMax} - ${heightMin} - ${heightAvg}`
+            let text = `Metrics information\nMETRIC (FIELD): MIN - MAX - AVG\n\nHeight (${data.height}) - ${heightMin} - ${heightMax} - ${heightAvg}`
             if (this.data.area) {
-                text += `\nArea (${data.area}) - ${this.babiaMetadata['areaMax']} - ${this.babiaMetadata['areaMin']} - ${this.babiaMetadata['areaAvg']}`
+                text += `\nArea (${data.area}) - ${this.babiaMetadata['areaMin']} - ${this.babiaMetadata['areaMax']} - ${this.babiaMetadata['areaAvg']}`
             } else {
-                text += `\nWidth (${data.width}) - ${this.babiaMetadata['widthMax']} - ${this.babiaMetadata['widthMin']} - ${this.babiaMetadata['widthAvg']}`
-                text += `\nDepth (${data.depth}) - ${this.babiaMetadata['depthMax']} - ${this.babiaMetadata['depthMin']} - ${this.babiaMetadata['depthAvg']}`
+                text += `\nWidth (${data.width}) - ${this.babiaMetadata['widthMin']} - ${this.babiaMetadata['widthMax']} - ${this.babiaMetadata['widthAvg']}`
+                text += `\nDepth (${data.depth}) - ${this.babiaMetadata['depthMin']} - ${this.babiaMetadata['depthMax']} - ${this.babiaMetadata['depthAvg']}`
             }
 
             if (this.data.color && typeof this.babiaMetadata['color_max'] !== 'string') {
-                text += `\nColor (${data.color}) - ${this.babiaMetadata['color_max']} - ${this.babiaMetadata['color_min']} - ${this.babiaMetadata['colorAvg']}`
+                text += `\nColor (${data.color}) - ${this.babiaMetadata['color_min']} - ${this.babiaMetadata['color_max']} - ${this.babiaMetadata['colorAvg']}`
             }
 
 
