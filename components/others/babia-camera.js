@@ -141,6 +141,7 @@ AFRAME.registerComponent('babia-camera', {
                 self.rightHand.setAttribute('laser-controls', { hand: 'right' });
                 self.rightHand.setAttribute('raycaster', {
                     objects: this.data.raycasterHand,
+                    lineOpacity: 1,
                 });
                 /** TIP TRIGGER R */
                 tipTriggerRconfig = {
