@@ -120,11 +120,11 @@
         <a-entity id="boats"
             babia-boats="from: portainer; area: loc_age; height: age_days; color: last_act_days; height_building_legend: -0.5; extra: 0.01; treeQuartersLevelHeight: 0.1;
                         highlightQuarter: false; treeLayout: true; gradientBaseColor: true; metricsInfoId: boatsmetricsinfo; treeFixQuarterHeight: true; treeHideOneSonQuarters: true;
-                        legend_scale: 0.25; height_quarter_legend_box: 3; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 0.8; minBuildingHeight: 0.01; building_separation: 0.2; autoscale: true; baseAlpha: 0.6; highlightBuildingByField: depName; transparent20ByRepeatedField: depName;"
+                        legend_scale: 0.25; height_quarter_legend_box: 3; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 0.25; minBuildingHeight: 0.005; building_separation: 0.2; autoscale: true; baseAlpha: 0.6; highlightBuildingByField: depName; transparent20ByRepeatedField: depName;"
             position="0 0.3 -1" scale="1 1 1" rotation="0 180 0"></a-entity>
 
         <a-entity id="interface"
-            babia-ui="target: boats; showOnly: height:age_days, height:commits_alltime, area:loc_age, area:size_age, area:commits_alltime_age, color:license, color:timesInstalled, color:timesAppears, color:last_act, color:last_act_days, color:nvuln, color:commits_lastyear, color:commiters_lastyear, color:nissues_closed_ratio_lastyear; hideRows: depth, width; hideFields: noMetric, level, timesAppearsSameId, nvuln, nvuln_critic, nvuln_high, nvuln_mod, nvuln_low, nvuln_info; customQuerierLabel: Project; customAttributeSwitch: transparent20ByRepeatedField:depName, wireframeByRepeatedField:depName; customAttributeLabel: transparent20ByRepeatedField:Transparency, wireframeByRepeatedField:Wireframe"
+            babia-ui="target: boats; showOnly: height:age_days, height:ncommits, area:loc_age, area:size_age, area:ncommits/age, color:license, color:timesInstalled, color:timesAppears, color:last_act, color:last_act_days, color:nvuln, color:ncommits_ly, color:commiters_ly, color:nissues_ratio; hideRows: depth, width; hideFields: noMetric, level, timesAppearsSameId, nvuln, nvuln_critic, nvuln_high, nvuln_mod, nvuln_low, nvuln_info; customQuerierLabel: Project; customAttributeSwitch: transparent20ByRepeatedField:depName, wireframeByRepeatedField:depName; customAttributeLabel: transparent20ByRepeatedField:Transparency, wireframeByRepeatedField:Wireframe"
             position="-3 1.5 0" rotation="0 90 0" scale="0.1 0.1 0.1">
         </a-entity>
 
