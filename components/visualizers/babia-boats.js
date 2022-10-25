@@ -515,7 +515,7 @@ AFRAME.registerComponent('babia-boats', {
 
             // Put transparent 20% to those buildings that share same value for a field selected
             if (self.data.transparent20ByRepeatedField && (!figure.children && self.idsToNotRepeat20Transparent.includes(figure.rawData[self.data.transparent20ByRepeatedField]))) {
-                figure.alpha = 0.5
+                figure.alpha = 0.45
                 figure.renderOrder = 2000
             } else {
                 self.idsToNotRepeat20Transparent.push(figure.rawData[self.data.transparent20ByRepeatedField])
