@@ -43,6 +43,9 @@ AFRAME.registerComponent('babia-boats', {
         highlightQuarter: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
+        // Numeric color legend entity to hide/show
+        numericColorLegendId: { type: 'string' },
+
         // Highlight building by field
         highlightBuildingByField: { type: 'string' },
         highlightBuildingByFieldColor: { type: 'string', default: 'white' },
@@ -1255,10 +1258,13 @@ AFRAME.registerComponent('babia-boats', {
     * Process data obtained from producer
     */
     processData: function (_data) {
+        const self = this
         console.log("processData", _data);
         let data = this.data;
         this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
+        this.categoricColorMaps = {}
+        this.categoricColorIndex = 0
 
         // If color metric activated, save in the metadata the max and min value for mapping
         if (data.color) {
@@ -1304,6 +1310,7 @@ AFRAME.registerComponent('babia-boats', {
             }
 
             if (this.data.color && typeof this.babiaMetadata['color_max'] !== 'string') {
+                document.getElementById(this.data.numericColorLegendId).setAttribute("visible", true)
                 text += `\nColor (${data.color}) - ${this.babiaMetadata['color_min']} - ${this.babiaMetadata['color_max']} - ${this.babiaMetadata['colorAvg']}`
             }
 
@@ -1329,6 +1336,57 @@ AFRAME.registerComponent('babia-boats', {
 
         // Create city
         this.updateChart(this.newData)
+
+        // Categoric color legend
+        if (this.data.metricsInfoId && typeof (this.babiaMetadata['color_max']) !== "number") {
+            // Hide numericlegend
+            document.getElementById(self.data.numericColorLegendId).setAttribute("visible", false)
+
+            // If already exists, just show
+            if (self.entityCatColorLegend) {
+                self.entityCatColorLegend.remove()
+                self.entityCatColorLegend = undefined
+            }
+            let placeToInsertInfo = document.getElementById(this.data.metricsInfoId)
+            self.entityCatColorLegend = document.createElement("a-plane")
+            self.entityCatColorLegend.setAttribute("position", '-3 0 0')
+            self.entityCatColorLegend.setAttribute("width", 2.8)
+            self.entityCatColorLegend.setAttribute("height", 5)
+            self.entityCatColorLegend.setAttribute("position", '-3 0 0')
+            self.entityCatColorLegend.setAttribute("material", 'color', "#B7B7B7")
+            let posY = 2.2
+            let text = `COLOR LEGEND (${this.data.color})`
+            let entity = document.createElement("a-entity")
+            entity.setAttribute('text', {
+                'value': text,
+                'align': 'center',
+                'width': 3,
+                'color': 'black',
+            })
+            entity.setAttribute("position", { x: 0, y: posY, z: 0 })
+            posY = posY - 0.2
+            self.entityCatColorLegend.appendChild(entity)
+            for (const [key, value] of Object.entries(this.categoricColorMaps)) {
+                let text = `${key}: ${value}`;
+                let entity = document.createElement("a-entity")
+                entity.setAttribute('text', {
+                    'value': text,
+                    'align': 'center',
+                    'width': 3,
+                    'color': value,
+                })
+                entity.setAttribute("position", { x: 0, y: posY, z: 0 })
+                posY = posY - 0.15
+                self.entityCatColorLegend.appendChild(entity)
+
+            }
+            placeToInsertInfo.appendChild(self.entityCatColorLegend)
+        } else if (this.data.metricsInfoId && typeof (this.babiaMetadata['color_max']) === "number") {
+            if (self.entityCatColorLegend) {
+                self.entityCatColorLegend.remove()
+                self.entityCatColorLegend = undefined
+            }
+        }
     },
 
     removeTreeLines: function () {
