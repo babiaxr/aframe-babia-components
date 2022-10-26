@@ -36,7 +36,7 @@
         "last_act": 1666350166000.0,
         "pkg_age": 1403376970000.0,
         "ncommits_ly": 138,
-        "commiters_lastyear": 6,
+        "ncommiters_ly": 6,
         "commits_last6m": 77,
         "commiters_last6m": 4,
         "commits_per_committer_alltime": 48.166666666666664,
@@ -50,7 +50,7 @@
         "last_act_days": 0,
         "size_commits": 2.8346020761245674,
         "loc_commits": 2.859515570934256,
-        "nissues_ratio": 0.901060070671378,
+        "nissues_ratio": -0.901060070671378,
         "nissues_closed_ratio_lastyear": 0.9166666666666666
     },
     {
@@ -90,7 +90,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -104,7 +104,7 @@
         "last_act_days": 0,
         "size_commits": 69.401611328125,
         "loc_commits": 0.5062662760416666,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -144,7 +144,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -158,7 +158,7 @@
         "last_act_days": 0,
         "size_commits": 7.893310546875,
         "loc_commits": 0.08040364583333333,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -198,7 +198,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -212,7 +212,7 @@
         "last_act_days": 0,
         "size_commits": 46.181477864583336,
         "loc_commits": 0.3916829427083333,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -252,7 +252,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -266,7 +266,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -306,7 +306,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -320,7 +320,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -360,7 +360,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -374,7 +374,7 @@
         "last_act_days": 0,
         "size_commits": 46.181477864583336,
         "loc_commits": 0.3916829427083333,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -414,7 +414,7 @@
         "last_act": 1666303389000.0,
         "pkg_age": 1553774077000.0,
         "ncommits_ly": 37,
-        "commiters_lastyear": 2,
+        "ncommiters_ly": 2,
         "commits_last6m": 30,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 39.888888888888886,
@@ -428,7 +428,7 @@
         "last_act_days": 0,
         "size_commits": 81.37604456824512,
         "loc_commits": 0.5041782729805014,
-        "nissues_ratio": 0.4,
+        "nissues_ratio": -0.4,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -468,7 +468,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -482,7 +482,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -522,7 +522,7 @@
         "last_act": 1627886518000.0,
         "pkg_age": 1373928823000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 5.214285714285714,
@@ -534,7 +534,7 @@
         "last_act_days": 445,
         "size_commits": 232.31506849315068,
         "loc_commits": 2.2054794520547945,
-        "nissues_ratio": 0.2222222222222222,
+        "nissues_ratio": -0.2222222222222222,
         "nissues_closed_ratio_lastyear": 0.0
     },
     {
@@ -574,7 +574,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -588,7 +588,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -628,7 +628,7 @@
         "last_act": 1666281642000.0,
         "pkg_age": 1548950816000.0,
         "ncommits_ly": 32,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 15,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 22.4,
@@ -642,7 +642,7 @@
         "last_act_days": 0,
         "size_commits": 74.41071428571429,
         "loc_commits": 0.53125,
-        "nissues_ratio": 0.75,
+        "nissues_ratio": -0.75,
         "nissues_closed_ratio_lastyear": 0.4
     },
     {
@@ -682,7 +682,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -696,7 +696,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -736,7 +736,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -750,7 +750,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -790,7 +790,7 @@
         "last_act": 1666325104000.0,
         "pkg_age": 1475319814000.0,
         "ncommits_ly": 5,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 5,
         "commiters_last6m": 1,
         "commits_per_committer_alltime": 48.714285714285715,
@@ -804,7 +804,7 @@
         "last_act_days": 0,
         "size_commits": 313.3431085043988,
         "loc_commits": 1.93841642228739,
-        "nissues_ratio": 0.875,
+        "nissues_ratio": -0.875,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -844,7 +844,7 @@
         "last_act": 1666303389000.0,
         "pkg_age": 1553774077000.0,
         "ncommits_ly": 37,
-        "commiters_lastyear": 2,
+        "ncommiters_ly": 2,
         "commits_last6m": 30,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 39.888888888888886,
@@ -858,7 +858,7 @@
         "last_act_days": 0,
         "size_commits": 122.46239554317549,
         "loc_commits": 0.9442896935933147,
-        "nissues_ratio": 0.4,
+        "nissues_ratio": -0.4,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -898,7 +898,7 @@
         "last_act": 1666300087000.0,
         "pkg_age": 1349429986000.0,
         "ncommits_ly": 4177,
-        "commiters_lastyear": 2103,
+        "ncommiters_ly": 2103,
         "commits_last6m": 1869,
         "commiters_last6m": 1034,
         "commits_per_committer_alltime": 4.232195272671095,
@@ -912,7 +912,7 @@
         "last_act_days": 0,
         "size_commits": 8.593149601508792,
         "loc_commits": 0.08183975177952181,
-        "nissues_ratio": 0.9184170081967213,
+        "nissues_ratio": -0.9184170081967213,
         "nissues_closed_ratio_lastyear": 0.444
     },
     {
@@ -952,7 +952,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -966,7 +966,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -1006,7 +1006,7 @@
         "last_act": 1666281642000.0,
         "pkg_age": 1548950816000.0,
         "ncommits_ly": 32,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 15,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 22.4,
@@ -1020,7 +1020,7 @@
         "last_act_days": 0,
         "size_commits": 74.41071428571429,
         "loc_commits": 0.53125,
-        "nissues_ratio": 0.75,
+        "nissues_ratio": -0.75,
         "nissues_closed_ratio_lastyear": 0.4
     },
     {
@@ -1060,7 +1060,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -1074,7 +1074,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -1114,7 +1114,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -1128,7 +1128,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -1168,7 +1168,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -1182,7 +1182,7 @@
         "last_act_days": 0,
         "size_commits": 93.94384765625,
         "loc_commits": 0.5948893229166666,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -1222,7 +1222,7 @@
         "last_act": 1666300087000.0,
         "pkg_age": 1349429986000.0,
         "ncommits_ly": 4177,
-        "commiters_lastyear": 2103,
+        "ncommiters_ly": 2103,
         "commits_last6m": 1869,
         "commiters_last6m": 1034,
         "commits_per_committer_alltime": 4.232195272671095,
@@ -1236,7 +1236,7 @@
         "last_act_days": 0,
         "size_commits": 0.06037598101843402,
         "loc_commits": 0.00045020380848086633,
-        "nissues_ratio": 0.9184170081967213,
+        "nissues_ratio": -0.9184170081967213,
         "nissues_closed_ratio_lastyear": 0.444
     },
     {
@@ -1276,7 +1276,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -1290,7 +1290,7 @@
         "last_act_days": 0,
         "size_commits": 7.893310546875,
         "loc_commits": 0.08040364583333333,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -1330,7 +1330,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -1342,7 +1342,7 @@
         "last_act_days": 823,
         "size_commits": 69.9560669456067,
         "loc_commits": 0.5237099023709902,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -1382,7 +1382,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -1396,7 +1396,7 @@
         "last_act_days": 0,
         "size_commits": 46.181477864583336,
         "loc_commits": 0.3916829427083333,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -1436,7 +1436,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -1450,7 +1450,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -1490,7 +1490,7 @@
         "last_act": 1641378558000.0,
         "pkg_age": 1447957293000.0,
         "ncommits_ly": 1,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 4.318181818181818,
@@ -1504,7 +1504,7 @@
         "last_act_days": 289,
         "size_commits": 43.11578947368421,
         "loc_commits": 0.7052631578947368,
-        "nissues_ratio": 0,
+        "nissues_ratio": -0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -1544,7 +1544,7 @@
         "last_act": 1666281642000.0,
         "pkg_age": 1548950816000.0,
         "ncommits_ly": 32,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 15,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 22.4,
@@ -1558,7 +1558,7 @@
         "last_act_days": 0,
         "size_commits": 74.41071428571429,
         "loc_commits": 0.53125,
-        "nissues_ratio": 0.75,
+        "nissues_ratio": -0.75,
         "nissues_closed_ratio_lastyear": 0.4
     },
     {
@@ -1598,7 +1598,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -1612,7 +1612,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -1652,7 +1652,7 @@
         "last_act": 1644556168000.0,
         "pkg_age": 1441071367000.0,
         "ncommits_ly": 1,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.0,
@@ -1666,7 +1666,7 @@
         "last_act_days": 252,
         "size_commits": 402.8,
         "loc_commits": 8.966666666666667,
-        "nissues_ratio": 0.7297297297297297,
+        "nissues_ratio": -0.7297297297297297,
         "nissues_closed_ratio_lastyear": 0.0
     },
     {
@@ -1706,7 +1706,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -1718,7 +1718,7 @@
         "last_act_days": 823,
         "size_commits": 60.741980474198044,
         "loc_commits": 0.3172942817294282,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -1758,7 +1758,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -1770,7 +1770,7 @@
         "last_act_days": 823,
         "size_commits": 44.741980474198044,
         "loc_commits": 0.3138075313807531,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -1810,7 +1810,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -1822,7 +1822,7 @@
         "last_act_days": 823,
         "size_commits": 69.9560669456067,
         "loc_commits": 0.5237099023709902,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -1862,7 +1862,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -1876,7 +1876,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -1916,7 +1916,7 @@
         "last_act": 1666281642000.0,
         "pkg_age": 1548950816000.0,
         "ncommits_ly": 32,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 15,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 22.4,
@@ -1930,7 +1930,7 @@
         "last_act_days": 0,
         "size_commits": 74.41071428571429,
         "loc_commits": 0.53125,
-        "nissues_ratio": 0.75,
+        "nissues_ratio": -0.75,
         "nissues_closed_ratio_lastyear": 0.4
     },
     {
@@ -1970,7 +1970,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -1984,7 +1984,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -2024,7 +2024,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -2036,7 +2036,7 @@
         "last_act_days": 823,
         "size_commits": 69.9560669456067,
         "loc_commits": 0.5237099023709902,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -2076,7 +2076,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -2090,7 +2090,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -2130,7 +2130,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -2144,7 +2144,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -2184,7 +2184,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -2196,7 +2196,7 @@
         "last_act_days": 823,
         "size_commits": 69.9560669456067,
         "loc_commits": 0.5237099023709902,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -2236,7 +2236,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -2250,7 +2250,7 @@
         "last_act_days": 0,
         "size_commits": 46.181477864583336,
         "loc_commits": 0.3916829427083333,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -2290,7 +2290,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -2304,7 +2304,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -2344,7 +2344,7 @@
         "last_act": 1666281642000.0,
         "pkg_age": 1548950816000.0,
         "ncommits_ly": 32,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 15,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 22.4,
@@ -2358,7 +2358,7 @@
         "last_act_days": 0,
         "size_commits": 74.41071428571429,
         "loc_commits": 0.53125,
-        "nissues_ratio": 0.75,
+        "nissues_ratio": -0.75,
         "nissues_closed_ratio_lastyear": 0.4
     },
     {
@@ -2398,7 +2398,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -2412,7 +2412,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -2452,7 +2452,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -2464,7 +2464,7 @@
         "last_act_days": 823,
         "size_commits": 9.852859135285913,
         "loc_commits": 0.04741980474198047,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -2504,7 +2504,7 @@
         "last_act": 1663865891000.0,
         "pkg_age": 1429709562000.0,
         "ncommits_ly": 19,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.45,
@@ -2518,7 +2518,7 @@
         "last_act_days": 28,
         "size_commits": 156.06201550387595,
         "loc_commits": 1.37984496124031,
-        "nissues_ratio": 0.5714285714285714,
+        "nissues_ratio": -0.5714285714285714,
         "nissues_closed_ratio_lastyear": 0.4166666666666667
     },
     {
@@ -2558,7 +2558,7 @@
         "last_act": 1644556168000.0,
         "pkg_age": 1441071367000.0,
         "ncommits_ly": 1,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.0,
@@ -2572,7 +2572,7 @@
         "last_act_days": 252,
         "size_commits": 402.8,
         "loc_commits": 8.966666666666667,
-        "nissues_ratio": 0.7297297297297297,
+        "nissues_ratio": -0.7297297297297297,
         "nissues_closed_ratio_lastyear": 0.0
     },
     {
@@ -2612,7 +2612,7 @@
         "last_act": 1666368172000.0,
         "pkg_age": 1374163963000.0,
         "ncommits_ly": 945,
-        "commiters_lastyear": 15,
+        "ncommiters_ly": 15,
         "commits_last6m": 466,
         "commiters_last6m": 6,
         "commits_per_committer_alltime": 49.142857142857146,
@@ -2626,7 +2626,7 @@
         "last_act_days": 0,
         "size_commits": 113.50170998632011,
         "loc_commits": 2.13953488372093,
-        "nissues_ratio": 0.9732360097323601,
+        "nissues_ratio": -0.9732360097323601,
         "nissues_closed_ratio_lastyear": 0.9418604651162791
     },
     {
@@ -2666,7 +2666,7 @@
         "last_act": 1666177254000.0,
         "pkg_age": 1466775154000.0,
         "ncommits_ly": 27,
-        "commiters_lastyear": 5,
+        "ncommiters_ly": 5,
         "commits_last6m": 21,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 4.8108108108108105,
@@ -2680,7 +2680,7 @@
         "last_act_days": 1,
         "size_commits": 182.46067415730337,
         "loc_commits": 1.3342696629213484,
-        "nissues_ratio": 0.6844444444444444,
+        "nissues_ratio": -0.6844444444444444,
         "nissues_closed_ratio_lastyear": 0.15384615384615385
     },
     {
@@ -2720,7 +2720,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -2734,7 +2734,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -2774,7 +2774,7 @@
         "last_act": 1666190685000.0,
         "pkg_age": 1435803769000.0,
         "ncommits_ly": 515,
-        "commiters_lastyear": 23,
+        "ncommiters_ly": 23,
         "commits_last6m": 287,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 20.62719298245614,
@@ -2788,7 +2788,7 @@
         "last_act_days": 1,
         "size_commits": 401.42887518605147,
         "loc_commits": 2.6895598554114395,
-        "nissues_ratio": 0.8709677419354839,
+        "nissues_ratio": -0.8709677419354839,
         "nissues_closed_ratio_lastyear": 0.6
     },
     {
@@ -2828,7 +2828,7 @@
         "last_act": 1666128578000.0,
         "pkg_age": 1349097162000.0,
         "ncommits_ly": 27,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 9,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 13.781818181818181,
@@ -2842,7 +2842,7 @@
         "last_act_days": 2,
         "size_commits": 36.43007915567282,
         "loc_commits": 0.12269129287598944,
-        "nissues_ratio": 0.9980732177263969,
+        "nissues_ratio": -0.9980732177263969,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -2882,7 +2882,7 @@
         "last_act": 1651241830000.0,
         "pkg_age": 1353848239000.0,
         "ncommits_ly": 4,
-        "commiters_lastyear": 2,
+        "ncommiters_ly": 2,
         "commits_last6m": 1,
         "commiters_last6m": 1,
         "commits_per_committer_alltime": 4.444444444444445,
@@ -2896,7 +2896,7 @@
         "last_act_days": 174,
         "size_commits": 266.9,
         "loc_commits": 2.2625,
-        "nissues_ratio": 0.9047619047619048,
+        "nissues_ratio": -0.9047619047619048,
         "nissues_closed_ratio_lastyear": 0.4
     },
     {
@@ -2936,7 +2936,7 @@
         "last_act": 1536010977000.0,
         "pkg_age": 1463994549000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 2.0,
@@ -2948,7 +2948,7 @@
         "last_act_days": 1508,
         "size_commits": 1024.0,
         "loc_commits": 4.25,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -2988,7 +2988,7 @@
         "last_act": 1482453613000.0,
         "pkg_age": 1463994992000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 1.5,
@@ -3000,7 +3000,7 @@
         "last_act_days": 2128,
         "size_commits": 1365.3333333333333,
         "loc_commits": 18.0,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -3040,7 +3040,7 @@
         "last_act": 1604434401000.0,
         "pkg_age": 1414695423000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 11.11111111111111,
@@ -3052,7 +3052,7 @@
         "last_act_days": 716,
         "size_commits": 40.96,
         "loc_commits": 0.26,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -3092,7 +3092,7 @@
         "last_act": 1664987415000.0,
         "pkg_age": 1474231446000.0,
         "ncommits_ly": 75,
-        "commiters_lastyear": 17,
+        "ncommiters_ly": 17,
         "commits_last6m": 42,
         "commiters_last6m": 14,
         "commits_per_committer_alltime": 6.626666666666667,
@@ -3106,7 +3106,7 @@
         "last_act_days": 15,
         "size_commits": 164.5523138832998,
         "loc_commits": 2.7364185110663986,
-        "nissues_ratio": 0,
+        "nissues_ratio": -0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -3146,7 +3146,7 @@
         "last_act": 1666281558000.0,
         "pkg_age": 1456489500000.0,
         "ncommits_ly": 1188,
-        "commiters_lastyear": 96,
+        "ncommiters_ly": 96,
         "commits_last6m": 607,
         "commiters_last6m": 68,
         "commits_per_committer_alltime": 14.52482269503546,
@@ -3160,7 +3160,7 @@
         "last_act_days": 0,
         "size_commits": 93.94384765625,
         "loc_commits": 0.5948893229166666,
-        "nissues_ratio": 0.8582537213952455,
+        "nissues_ratio": -0.8582537213952455,
         "nissues_closed_ratio_lastyear": 0.4305555555555556
     },
     {
@@ -3200,7 +3200,7 @@
         "last_act": 1595236780000.0,
         "pkg_age": 1496847618000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.958333333333334,
@@ -3212,7 +3212,7 @@
         "last_act_days": 823,
         "size_commits": 69.9560669456067,
         "loc_commits": 0.5237099023709902,
-        "nissues_ratio": 0.5384615384615384,
+        "nissues_ratio": -0.5384615384615384,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -3252,7 +3252,7 @@
         "last_act": 1666286991000.0,
         "pkg_age": 1375496338000.0,
         "ncommits_ly": 23,
-        "commiters_lastyear": 7,
+        "ncommiters_ly": 7,
         "commits_last6m": 11,
         "commiters_last6m": 4,
         "commits_per_committer_alltime": 4.861111111111111,
@@ -3266,7 +3266,7 @@
         "last_act_days": 0,
         "size_commits": 76.92571428571429,
         "loc_commits": 0.7742857142857142,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -3306,7 +3306,7 @@
         "last_act": 1665617621000.0,
         "pkg_age": 1375318561000.0,
         "ncommits_ly": 8,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 7,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 4.913043478260869,
@@ -3320,7 +3320,7 @@
         "last_act_days": 8,
         "size_commits": 82.929203539823,
         "loc_commits": 0.9469026548672567,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -3360,7 +3360,7 @@
         "last_act": 1657292830000.0,
         "pkg_age": 1387763524000.0,
         "ncommits_ly": 1,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 1,
         "commiters_last6m": 1,
         "commits_per_committer_alltime": 3.282051282051282,
@@ -3374,7 +3374,7 @@
         "last_act_days": 104,
         "size_commits": 210.65625,
         "loc_commits": 5.2578125,
-        "nissues_ratio": 0.8043478260869565,
+        "nissues_ratio": -0.8043478260869565,
         "nissues_closed_ratio_lastyear": 0.75
     },
     {
@@ -3414,7 +3414,7 @@
         "last_act": 1537537733000.0,
         "pkg_age": 1416770302000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 3.090909090909091,
@@ -3426,7 +3426,7 @@
         "last_act_days": 1490,
         "size_commits": 120.47058823529412,
         "loc_commits": 4.5,
-        "nissues_ratio": 0,
+        "nissues_ratio": -0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -3466,7 +3466,7 @@
         "last_act": 1618699539000.0,
         "pkg_age": 1403629467000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 4.285714285714286,
@@ -3478,7 +3478,7 @@
         "last_act_days": 551,
         "size_commits": 136.53333333333333,
         "loc_commits": 0.16666666666666666,
-        "nissues_ratio": 0.9615384615384616,
+        "nissues_ratio": -0.9615384615384616,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -3518,7 +3518,7 @@
         "last_act": 1662550171000.0,
         "pkg_age": 1375495233000.0,
         "ncommits_ly": 10,
-        "commiters_lastyear": 4,
+        "ncommiters_ly": 4,
         "commits_last6m": 2,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 4.309523809523809,
@@ -3532,7 +3532,7 @@
         "last_act_days": 43,
         "size_commits": 36.629834254143645,
         "loc_commits": 0.425414364640884,
-        "nissues_ratio": 0.9523809523809523,
+        "nissues_ratio": -0.9523809523809523,
         "nissues_closed_ratio_lastyear": 0.8
     },
     {
@@ -3572,7 +3572,7 @@
         "last_act": 1626715967000.0,
         "pkg_age": 1436316191000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 3.142857142857143,
@@ -3584,7 +3584,7 @@
         "last_act_days": 458,
         "size_commits": 186.1818181818182,
         "loc_commits": 0.2727272727272727,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -3624,7 +3624,7 @@
         "last_act": 1666177254000.0,
         "pkg_age": 1466775154000.0,
         "ncommits_ly": 27,
-        "commiters_lastyear": 5,
+        "ncommiters_ly": 5,
         "commits_last6m": 21,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 4.8108108108108105,
@@ -3638,7 +3638,7 @@
         "last_act_days": 1,
         "size_commits": 182.46067415730337,
         "loc_commits": 1.3342696629213484,
-        "nissues_ratio": 0.6844444444444444,
+        "nissues_ratio": -0.6844444444444444,
         "nissues_closed_ratio_lastyear": 0.15384615384615385
     },
     {
@@ -3678,7 +3678,7 @@
         "last_act": 1666011767000.0,
         "pkg_age": 1410264070000.0,
         "ncommits_ly": 9,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 2,
         "commiters_last6m": 1,
         "commits_per_committer_alltime": 5.913043478260869,
@@ -3692,7 +3692,7 @@
         "last_act_days": 3,
         "size_commits": 109.05147058823529,
         "loc_commits": 0.7058823529411765,
-        "nissues_ratio": 0.5094339622641509,
+        "nissues_ratio": -0.5094339622641509,
         "nissues_closed_ratio_lastyear": 0.25
     },
     {
@@ -3732,7 +3732,7 @@
         "last_act": 1651486610000.0,
         "pkg_age": 1419092027000.0,
         "ncommits_ly": 26,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 3,
         "commiters_last6m": 2,
         "commits_per_committer_alltime": 4.823529411764706,
@@ -3746,7 +3746,7 @@
         "last_act_days": 172,
         "size_commits": 419.8658536585366,
         "loc_commits": 0.926829268292683,
-        "nissues_ratio": 0.90625,
+        "nissues_ratio": -0.90625,
         "nissues_closed_ratio_lastyear": 0.875
     },
     {
@@ -3786,7 +3786,7 @@
         "last_act": 1665676679000.0,
         "pkg_age": 1431047589000.0,
         "ncommits_ly": 103,
-        "commiters_lastyear": 13,
+        "ncommiters_ly": 13,
         "commits_last6m": 73,
         "commiters_last6m": 6,
         "commits_per_committer_alltime": 6.440579710144927,
@@ -3800,7 +3800,7 @@
         "last_act_days": 7,
         "size_commits": 218.5954095409541,
         "loc_commits": 4.072907290729073,
-        "nissues_ratio": 0.9770444763271162,
+        "nissues_ratio": -0.9770444763271162,
         "nissues_closed_ratio_lastyear": 0.967032967032967
     },
     {
@@ -3840,7 +3840,7 @@
         "last_act": 1666183559000.0,
         "pkg_age": 1374944661000.0,
         "ncommits_ly": 306,
-        "commiters_lastyear": 38,
+        "ncommiters_ly": 38,
         "commits_last6m": 287,
         "commiters_last6m": 33,
         "commits_per_committer_alltime": 13.593877551020409,
@@ -3854,7 +3854,7 @@
         "last_act_days": 1,
         "size_commits": 447.6878847019967,
         "loc_commits": 8.044287644497823,
-        "nissues_ratio": 0.9653465346534653,
+        "nissues_ratio": -0.9653465346534653,
         "nissues_closed_ratio_lastyear": 0.8963210702341137
     },
     {
@@ -3894,7 +3894,7 @@
         "last_act": 1666146296000.0,
         "pkg_age": 1473626446000.0,
         "ncommits_ly": 1365,
-        "commiters_lastyear": 75,
+        "ncommiters_ly": 75,
         "commits_last6m": 701,
         "commiters_last6m": 48,
         "commits_per_committer_alltime": 17.166666666666668,
@@ -3908,7 +3908,7 @@
         "last_act_days": 2,
         "size_commits": 1241.4742507387084,
         "loc_commits": 6.2485577599549735,
-        "nissues_ratio": 0.906236099991104,
+        "nissues_ratio": -0.906236099991104,
         "nissues_closed_ratio_lastyear": 0.7295336787564767
     },
     {
@@ -3948,7 +3948,7 @@
         "last_act": 1666183559000.0,
         "pkg_age": 1374944661000.0,
         "ncommits_ly": 306,
-        "commiters_lastyear": 38,
+        "ncommiters_ly": 38,
         "commits_last6m": 287,
         "commiters_last6m": 33,
         "commits_per_committer_alltime": 13.593877551020409,
@@ -3962,7 +3962,7 @@
         "last_act_days": 1,
         "size_commits": 447.6878847019967,
         "loc_commits": 8.044287644497823,
-        "nissues_ratio": 0.9653465346534653,
+        "nissues_ratio": -0.9653465346534653,
         "nissues_closed_ratio_lastyear": 0.8963210702341137
     },
     {
@@ -4002,7 +4002,7 @@
         "last_act": 1665853773000.0,
         "pkg_age": 1448673282000.0,
         "ncommits_ly": 21,
-        "commiters_lastyear": 8,
+        "ncommiters_ly": 8,
         "commits_last6m": 8,
         "commiters_last6m": 4,
         "commits_per_committer_alltime": 3.610958904109589,
@@ -4016,7 +4016,7 @@
         "last_act_days": 5,
         "size_commits": 133.30349013657056,
         "loc_commits": 1.9597875569044005,
-        "nissues_ratio": 0.9356395816572808,
+        "nissues_ratio": -0.9356395816572808,
         "nissues_closed_ratio_lastyear": 0.7121212121212122
     },
     {
@@ -4056,7 +4056,7 @@
         "last_act": 1666183559000.0,
         "pkg_age": 1374944661000.0,
         "ncommits_ly": 306,
-        "commiters_lastyear": 38,
+        "ncommiters_ly": 38,
         "commits_last6m": 287,
         "commiters_last6m": 33,
         "commits_per_committer_alltime": 13.593877551020409,
@@ -4070,7 +4070,7 @@
         "last_act_days": 1,
         "size_commits": 447.6878847019967,
         "loc_commits": 8.044287644497823,
-        "nissues_ratio": 0.9653465346534653,
+        "nissues_ratio": -0.9653465346534653,
         "nissues_closed_ratio_lastyear": 0.8963210702341137
     },
     {
@@ -4110,7 +4110,7 @@
         "last_act": 1665501080000.0,
         "pkg_age": 1348934926000.0,
         "ncommits_ly": 83,
-        "commiters_lastyear": 34,
+        "ncommiters_ly": 34,
         "commits_last6m": 32,
         "commiters_last6m": 16,
         "commits_per_committer_alltime": 6.555172413793104,
@@ -4124,7 +4124,7 @@
         "last_act_days": 9,
         "size_commits": 143.6743819042609,
         "loc_commits": 1.3271962125197265,
-        "nissues_ratio": 0.7102564102564103,
+        "nissues_ratio": -0.7102564102564103,
         "nissues_closed_ratio_lastyear": 0.3389830508474576
     },
     {
@@ -4164,7 +4164,7 @@
         "last_act": 1665513267000.0,
         "pkg_age": 1429540174000.0,
         "ncommits_ly": 18,
-        "commiters_lastyear": 5,
+        "ncommiters_ly": 5,
         "commits_last6m": 17,
         "commiters_last6m": 4,
         "commits_per_committer_alltime": 7.173913043478261,
@@ -4178,7 +4178,7 @@
         "last_act_days": 9,
         "size_commits": 185.43030303030304,
         "loc_commits": 1.2181818181818183,
-        "nissues_ratio": 0.5,
+        "nissues_ratio": -0.5,
         "nissues_closed_ratio_lastyear": 0.6666666666666666
     },
     {
@@ -4218,7 +4218,7 @@
         "last_act": 1646061704000.0,
         "pkg_age": 1437091513000.0,
         "ncommits_ly": 7,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 4.333333333333333,
@@ -4232,7 +4232,7 @@
         "last_act_days": 234,
         "size_commits": 100.98076923076923,
         "loc_commits": 0.40384615384615385,
-        "nissues_ratio": 0.7916666666666666,
+        "nissues_ratio": -0.7916666666666666,
         "nissues_closed_ratio_lastyear": 0.5555555555555556
     },
     {
@@ -4272,7 +4272,7 @@
         "last_act": 1632440087000.0,
         "pkg_age": 1386462503000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 6.090909090909091,
@@ -4284,7 +4284,7 @@
         "last_act_days": 392,
         "size_commits": 60.134328358208954,
         "loc_commits": 0.05970149253731343,
-        "nissues_ratio": 0.9523809523809523,
+        "nissues_ratio": -0.9523809523809523,
         "nissues_closed_ratio_lastyear": 0.8
     },
     {
@@ -4324,7 +4324,7 @@
         "last_act": 1648394884000.0,
         "pkg_age": 1401821917000.0,
         "ncommits_ly": 4,
-        "commiters_lastyear": 2,
+        "ncommiters_ly": 2,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 3.4444444444444446,
@@ -4338,7 +4338,7 @@
         "last_act_days": 207,
         "size_commits": 91.80645161290323,
         "loc_commits": 0.14516129032258066,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -4378,7 +4378,7 @@
         "last_act": 1631582265000.0,
         "pkg_age": 1440035570000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 6.090909090909091,
@@ -4390,7 +4390,7 @@
         "last_act_days": 402,
         "size_commits": 158.92537313432837,
         "loc_commits": 1.7761194029850746,
-        "nissues_ratio": 0.8695652173913043,
+        "nissues_ratio": -0.8695652173913043,
         "nissues_closed_ratio_lastyear": 0.75
     },
     {
@@ -4430,7 +4430,7 @@
         "last_act": 1665617621000.0,
         "pkg_age": 1375318561000.0,
         "ncommits_ly": 8,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 7,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 4.913043478260869,
@@ -4444,7 +4444,7 @@
         "last_act_days": 8,
         "size_commits": 130.34513274336283,
         "loc_commits": 1.6194690265486726,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 1.0
     },
     {
@@ -4484,7 +4484,7 @@
         "last_act": 1666300087000.0,
         "pkg_age": 1349429986000.0,
         "ncommits_ly": 4177,
-        "commiters_lastyear": 2103,
+        "ncommiters_ly": 2103,
         "commits_last6m": 1869,
         "commiters_last6m": 1034,
         "commits_per_committer_alltime": 4.232195272671095,
@@ -4498,7 +4498,7 @@
         "last_act_days": 0,
         "size_commits": 0.08535620855387237,
         "loc_commits": 0.0018129829044229483,
-        "nissues_ratio": 0.9184170081967213,
+        "nissues_ratio": -0.9184170081967213,
         "nissues_closed_ratio_lastyear": 0.444
     },
     {
@@ -4538,7 +4538,7 @@
         "last_act": 1657292830000.0,
         "pkg_age": 1387763524000.0,
         "ncommits_ly": 1,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 1,
         "commiters_last6m": 1,
         "commits_per_committer_alltime": 3.282051282051282,
@@ -4552,7 +4552,7 @@
         "last_act_days": 104,
         "size_commits": 212.4140625,
         "loc_commits": 5.0078125,
-        "nissues_ratio": 0.8043478260869565,
+        "nissues_ratio": -0.8043478260869565,
         "nissues_closed_ratio_lastyear": 0.75
     },
     {
@@ -4592,7 +4592,7 @@
         "last_act": 1537537733000.0,
         "pkg_age": 1416770302000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 3.090909090909091,
@@ -4604,7 +4604,7 @@
         "last_act_days": 1490,
         "size_commits": 196.85294117647058,
         "loc_commits": 4.382352941176471,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -4644,7 +4644,7 @@
         "last_act": 1646061704000.0,
         "pkg_age": 1437091513000.0,
         "ncommits_ly": 7,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 4.333333333333333,
@@ -4658,7 +4658,7 @@
         "last_act_days": 234,
         "size_commits": 100.98076923076923,
         "loc_commits": 0.40384615384615385,
-        "nissues_ratio": 0.7916666666666666,
+        "nissues_ratio": -0.7916666666666666,
         "nissues_closed_ratio_lastyear": 0.5555555555555556
     },
     {
@@ -4698,7 +4698,7 @@
         "last_act": 1632440087000.0,
         "pkg_age": 1386462503000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 6.090909090909091,
@@ -4710,7 +4710,7 @@
         "last_act_days": 392,
         "size_commits": 60.134328358208954,
         "loc_commits": 0.05970149253731343,
-        "nissues_ratio": 0.9523809523809523,
+        "nissues_ratio": -0.9523809523809523,
         "nissues_closed_ratio_lastyear": 0.8
     },
     {
@@ -4750,7 +4750,7 @@
         "last_act": 1602543819000.0,
         "pkg_age": 1592525191000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 13.333333333333334,
@@ -4762,7 +4762,7 @@
         "last_act_days": 738,
         "size_commits": 285.85,
         "loc_commits": 0.8,
-        "nissues_ratio": 1.0,
+        "nissues_ratio": -1.0,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -4802,7 +4802,7 @@
         "last_act": 1644539685000.0,
         "pkg_age": 1451478328000.0,
         "ncommits_ly": 1,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 9.0,
@@ -4816,7 +4816,7 @@
         "last_act_days": 252,
         "size_commits": 87.38888888888889,
         "loc_commits": 0.2222222222222222,
-        "nissues_ratio": 0.75,
+        "nissues_ratio": -0.75,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -4856,7 +4856,7 @@
         "last_act": 1474389263000.0,
         "pkg_age": 1355086294000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 7.3,
@@ -4868,7 +4868,7 @@
         "last_act_days": 2221,
         "size_commits": 56.10958904109589,
         "loc_commits": 0.6164383561643836,
-        "nissues_ratio": 0.35,
+        "nissues_ratio": -0.35,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -4908,7 +4908,7 @@
         "last_act": 1646061704000.0,
         "pkg_age": 1437091513000.0,
         "ncommits_ly": 7,
-        "commiters_lastyear": 3,
+        "ncommiters_ly": 3,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 4.333333333333333,
@@ -4922,7 +4922,7 @@
         "last_act_days": 234,
         "size_commits": 100.98076923076923,
         "loc_commits": 0.40384615384615385,
-        "nissues_ratio": 0.7916666666666666,
+        "nissues_ratio": -0.7916666666666666,
         "nissues_closed_ratio_lastyear": 0.5555555555555556
     },
     {
@@ -4962,7 +4962,7 @@
         "last_act": 1664483227000.0,
         "pkg_age": 1411913375000.0,
         "ncommits_ly": 11,
-        "commiters_lastyear": 4,
+        "ncommiters_ly": 4,
         "commits_last6m": 6,
         "commiters_last6m": 3,
         "commits_per_committer_alltime": 6.8125,
@@ -4976,7 +4976,7 @@
         "last_act_days": 21,
         "size_commits": 442.70642201834863,
         "loc_commits": 0.1834862385321101,
-        "nissues_ratio": 0.9420289855072463,
+        "nissues_ratio": -0.9420289855072463,
         "nissues_closed_ratio_lastyear": 0.3333333333333333
     },
     {
@@ -5016,7 +5016,7 @@
         "last_act": 1618577332000.0,
         "pkg_age": 1437091174000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 2.7142857142857144,
@@ -5028,7 +5028,7 @@
         "last_act_days": 552,
         "size_commits": 262.8421052631579,
         "loc_commits": 1.368421052631579,
-        "nissues_ratio": 0.5,
+        "nissues_ratio": -0.5,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -5068,7 +5068,7 @@
         "last_act": 1632440087000.0,
         "pkg_age": 1386462503000.0,
         "ncommits_ly": 0,
-        "commiters_lastyear": 0,
+        "ncommiters_ly": 0,
         "commits_last6m": 0,
         "commiters_last6m": 0,
         "commits_per_committer_alltime": 6.090909090909091,
@@ -5080,7 +5080,7 @@
         "last_act_days": 392,
         "size_commits": 60.134328358208954,
         "loc_commits": 0.05970149253731343,
-        "nissues_ratio": 0.9523809523809523,
+        "nissues_ratio": -0.9523809523809523,
         "nissues_closed_ratio_lastyear": 0.8
     },
     {
@@ -5120,7 +5120,7 @@
         "last_act": 1652656799000.0,
         "pkg_age": 1437880776000.0,
         "ncommits_ly": 3,
-        "commiters_lastyear": 1,
+        "ncommiters_ly": 1,
         "commits_last6m": 1,
         "commiters_last6m": 1,
         "commits_per_committer_alltime": 7.555555555555555,
@@ -5134,7 +5134,7 @@
         "last_act_days": 158,
         "size_commits": 114.87745098039215,
         "loc_commits": 0.7058823529411765,
-        "nissues_ratio": 0.8076923076923077,
+        "nissues_ratio": -0.8076923076923077,
         "nissues_closed_ratio_lastyear": 0
     },
     {
@@ -5174,7 +5174,7 @@
         "last_act": 1664353831000.0,
         "pkg_age": 1453554514000.0,
         "ncommits_ly": 38,
-        "commiters_lastyear": 12,
+        "ncommiters_ly": 12,
         "commits_last6m": 22,
         "commiters_last6m": 8,
         "commits_per_committer_alltime": 6.114285714285714,
@@ -5188,7 +5188,7 @@
         "last_act_days": 23,
         "size_commits": 290.69392523364485,
         "loc_commits": 1.8738317757009346,
-        "nissues_ratio": 0.6428571428571429,
+        "nissues_ratio": -0.6428571428571429,
         "nissues_closed_ratio_lastyear": 0.7777777777777778
     }
 ]
