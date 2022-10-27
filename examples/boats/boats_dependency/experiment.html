@@ -110,21 +110,21 @@
         </a-entity> -->
         <a-entity id="sortinghat" babia-treebuilder="field: parentsPath; split_by: /; from: aframequerier">
         </a-entity>
-        <!-- <a-entity id="karma" babia-treebuilder="field: parentsPath; split_by: /; from: karmaquerier"></a-entity>
-        <a-entity id="pm2" babia-treebuilder="field: parentsPath; split_by: /; from: pm2querier"></a-entity> -->
+        <!-- <a-entity id="karma" babia-treebuilder="field: parentsPath; split_by: /; from: karmaquerier"></a-entity> -->
+        <a-entity id="pm2" babia-treebuilder="field: parentsPath; split_by: /; from: pm2querier"></a-entity>
 
 
 
 
         <!-- Visualizer Components -->
         <a-entity id="boats"
-            babia-boats="from: sortinghat; area: loc_age; height: age_days; color: license; height_building_legend: -0.5; extra: 0.01; treeQuartersLevelHeight: 0.1;
+            babia-boats="from: sortinghat; area: loc/age; height: age_days; color: license; height_building_legend: -0.5; extra: 0.01; treeQuartersLevelHeight: 0.1;
                         highlightQuarter: false; treeLayout: true; gradientBaseColor: true; metricsInfoId: boatsmetricsinfo; treeFixQuarterHeight: true; treeHideOneSonQuarters: true;
                         legend_scale: 0.25; height_quarter_legend_box: 3; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 0.4; minBuildingHeight: 0.0025; building_separation: 0.2; autoscale: true; baseAlpha: 0.6; highlightBuildingByField: depName; transparent20ByRepeatedField: depName; numericColorLegendId: babianumericcolorlegend"
             position="0 0.3 -1" scale="1 1 1" rotation="0 180 0"></a-entity>
 
         <a-entity id="interface"
-            babia-ui="target: boats; showOnly: height:age_days, area:loc_age, area:size_age, area:ncommits/age, color:license, color:timesInstalled, color:timesAppears, color:last_act_days, color:nvuln, color:ncommits_ly, color:ncommiters_ly, color:nissues_ratio; hideRows: depth, width; hideFields: noMetric, level, timesAppearsSameId, nvuln, nvuln_critic, nvuln_high, nvuln_mod, nvuln_low, nvuln_info; customQuerierLabel: Project; customAttributeSwitch: transparent20ByRepeatedField:depName, wireframeByRepeatedField:depName; customAttributeLabel: transparent20ByRepeatedField:Transparency, wireframeByRepeatedField:Wireframe"
+            babia-ui="target: boats; showOnly: height:age_days, area:loc/age, area:size_age, area:ncommits/age, color:license, color:timesInstalled, color:timesAppears, color:last_act_days, color:nvuln, color:ncommits_ly, color:ncommiters_ly, color:nissues_ratio; hideRows: depth, width; hideFields: noMetric, level, timesAppearsSameId, nvuln, nvuln_critic, nvuln_high, nvuln_mod, nvuln_low, nvuln_info; customQuerierLabel: Project; customAttributeSwitch: transparent20ByRepeatedField:depName, wireframeByRepeatedField:depName; customAttributeLabel: transparent20ByRepeatedField:Transparency, wireframeByRepeatedField:Wireframe"
             position="-3 1.5 0" rotation="0 90 0" scale="0.1 0.1 0.1">
         </a-entity>
 
