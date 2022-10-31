@@ -631,9 +631,7 @@
         "parentsPath": "/pm2/@pm2-agent/nssocket/lazy/lazy@1.0.11",
         "noMetric": 1,
         "level": 3,
-        "license": {
-            "type": "MIT"
-        },
+        "license": "MIT",
         "repository": "github.com/pkrumins/node-lazy",
         "size": 4096,
         "loc": 822,
@@ -11091,16 +11089,7 @@
         "parentsPath": "/pm2/pm2-deploy/tv4/tv4@1.3.0",
         "noMetric": 1,
         "level": 2,
-        "license": [
-            {
-                "type": "Public Domain",
-                "url": "http://geraintluff.github.io/tv4/LICENSE.txt"
-            },
-            {
-                "type": "MIT",
-                "url": "http://jsonary.com/LICENSE.txt"
-            }
-        ],
+        "license": "MIT",
         "repository": "github.com/geraintluff/tv4",
         "size": 4096,
         "loc": 1462,
