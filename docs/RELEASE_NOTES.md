@@ -4,6 +4,11 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### NPM 1.2.6 version
+
+Added `babia-experiment` and eveything related to the experiments feature.
+
+
 ### NPM 1.2.5 version
 
 #### Colors palettes
