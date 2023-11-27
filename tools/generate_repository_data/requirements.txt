@@ -2,7 +2,7 @@ pandas
 sklearn
 numpy
 urllib3==1.24.3
-requests==2.21.0
+requests==2.31.0
 PyMySQL==0.9.3
 wheel
 configparser
