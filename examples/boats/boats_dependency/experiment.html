@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Babia Template - Visualize your Data </title>
-    <meta name="description" content="Museum build aframe and babia">
+    <title>BabiaXR example: Elevated city showing package dependencies</title>
+    <meta name="description" content="BabiaXR example: Elevated city showing package dependencies">
     </meta>
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 <!--    <script
         src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.1.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-tooltip-component/dist/aframe-tooltip-component.min.js"></script>
     <script src="../../../dist/aframe-babia-components.js"></script>
     <link rel="stylesheet" href="../../../assets/gitlab-corner.css">
@@ -169,7 +170,7 @@
 
 
         <!-- Controls and Camera -->
-        <a-entity id="cameraRig" position="0 1.6 3">
+        <a-entity id="cameraRig" position="0 1.6 3" movement-controls>
             <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass; 
                         raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom" look-controls
                 wasd-controls="fly: true; acceleration: 10">
