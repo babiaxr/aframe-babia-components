@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>BabiaXR Dashboard - Github Pull Requests Timing - CHAOSS Bitergia Analytics</title>
+        <meta name="description" content="Data museum, with data about the CHAOSS project, built with A-Frame and BabiaXR">
+        </meta>
+        <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+        <script
+                src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
+        <script
+                src="https://unpkg.com/aframe-text-geometry-component@0.5.2/dist/aframe-text-geometry-component.min.js"></script>
+        <script src="https://unpkg.com/aframe-tooltip-component/dist/aframe-tooltip-component.min.js"></script>
+        <script src="../../../dist/aframe-babia-components.js"></script>
+        <script
+                src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
+        <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+</head>
+
+<body>
+        <a-scene id="scene">
+
+                <!-- Assets -->
+                <a-assets>
+                        <img id="sky" src="../../assets/textures/360-panorama.jpg">
+                        <img id="wood" src="../../assets/textures/floor-texture.jpg">
+                        <img id="metalic" src="../../assets/textures/metalic-texture.jpg">
+                        <img id="wall" src="../../assets/textures/white-wall-texture.jpg">
+                        <a-asset-item id="door-obj" src="../../assets/door/door.obj"></a-asset-item>
+                        <a-asset-item id="door-mtl" src="../../assets/door/door.mtl"></a-asset-item>
+                        <a-asset-item id="font"
+                                src="https://rawgit.com/mrdoob/three.js/dev/examples/fonts/optimer_bold.typeface.json">
+                        </a-asset-item>
+                </a-assets>
+
+                <!-- Enviroment -->
+                <a-sky src="#sky"></a-sky>
+
+                <!-- Lights -->
+                <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+
+                <!-- UI -->
+                <!-- <a-entity id="interface" babia-range-selector position="3.376 1.072 -3.073" rotation="0 -90 0"
+                        scale="0.132 0.132 0.132"></a-entity> -->
+
+                <!-- Room -->
+                <a-entity id="Room">
+                        <a-entity id="floorRoom" material="shader: flat; src: #wood"
+                                geometry="primitive: box; width: 7; depth: 9; height: 0.1"></a-entity>
+                        <a-entity id="ceiling" geometry="primitive: box; width: 7; depth: 9; height: 0.1"
+                                position="0 3 0" material="shader: flat; src: #wall"></a-entity>
+                        <a-entity id="door" obj-model="obj: #door-obj; mtl: #door-mtl" position="3.4 1.2 -2.7"
+                                rotation="-90 -90 0" scale="0.013 0.013 0.011"></a-entity>
+                        <a-entity id="wall1" position="3.65 1.5 0">
+                                <a-entity id="wall1-1" geometry="primitive: box; width: 0.5; depth: 8.7; height: 3"
+                                        material="shader: flat; src: #wall"></a-entity>
+                                <a-entity id="medianopenshelf" position="-1.5 0 0">
+                                        <a-entity id="shelf1-1"
+                                                geometry="primitive: box; width: 0.35; depth: 2.5; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="-0.4 -1 0"
+                                                rotation="0 0 0">
+                                                <!-- Median Open Time (days) Pull Requests -->
+                                                <a-entity id="median-open-time-pr"
+                                                        babia-queryjson="url: ./staticdata/median-open-time-pr.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: value; x_axis: key_as_string; legend: true; chartHeight: 35; animation: false; palette: ubuntuextra;'
+                                                        position="0.021 0.075 -1.187" rotation="0 -90 0"
+                                                        scale="0.015 0.015 0.015"></a-entity>
+                                                <!-- 80 Percent Open Time (days) Pull Request -->
+                                                <a-entity id="80-percent-open-time-pr"
+                                                        babia-queryjson="url: ./staticdata/80-percent-open-time-pr.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: value; x_axis: key_as_string; legend: true; chartHeight: 35; animation: false; palette: ubuntuextra;'
+                                                        position="0.021 0.075 0.042" rotation="0 -90 0"
+                                                        scale="0.015 0.015 0.015"></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: PRs Median Open Time (days) over time; font: #font'
+                                                        material='color: #000' position='-0.179 -0.019 -1.158'
+                                                        rotation='0 -90 0' scale='0.08 0.08 0.08'></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: PRs 80 Percent Open Time (days) over time; font: #font'
+                                                        material='color: #000' position='-0.179 -0.019 0.035'
+                                                        rotation='0 -90 0' scale='0.08 0.08 0.08'></a-entity>
+                                        </a-entity>
+                                        <a-entity id="shelf1-2"
+                                                geometry="primitive: box; width: 0.35; depth: 2.5; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="-0.165 -0.33 0"
+                                                rotation="0 0 0">
+                                                <!-- Median Open Time (days) Issues -->
+                                                <a-entity id="median-open-time-issues"
+                                                        babia-queryjson="url: ./staticdata/median-open-time-issues.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: value; x_axis: key_as_string; legend: true; chartHeight: 35; palette: bluesextra; animation: false'
+                                                        position="-0.057 0.075 -1.187" rotation="0 -90 0"
+                                                        scale="0.015 0.015 0.015"></a-entity>
+                                                <!-- 80 Percent Open Time (days) Issues -->
+                                                <a-entity id="80-percent-open-time-issues2"
+                                                        babia-queryjson="url: ./staticdata/80-percent-open-time-issues2.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: value; x_axis: key_as_string; legend: true; chartHeight: 35; palette: bluesextra; animation: false'
+                                                        position="-0.057 0.075 0.042" rotation="0 -90 0"
+                                                        scale="0.015 0.015 0.015"></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Issues Median Open Time (days) over time; font: #font'
+                                                        material='color: #000' position='-0.179 -0.019 -1.158'
+                                                        rotation='0 -90 0' scale='0.08 0.08 0.08'></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Issues 80 Percent Open Time (days) over time; font: #font'
+                                                        material='color: #000' position='-0.179 -0.019 0.035'
+                                                        rotation='0 -90 0' scale='0.08 0.08 0.08'></a-entity>
+                                        </a-entity>
+                                </a-entity>
+                                <a-entity id="submittersshelf" position="-0.8 0 1.5" rotation="0 -90 0">
+                                        <a-entity id="shelf1-3"
+                                                geometry="primitive: box; width: 0.41; depth: 2.5; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="-0.3 -1 2.75"
+                                                rotation="0 0 0">
+                                                <!-- Submitters Pull Requests -->
+                                                <a-entity id="submitters-pr"
+                                                        babia-queryjson="url: ./staticdata/submitters-pr.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: value; x_axis: key_as_string; legend: true; chartHeight: 25; animation: false; palette: ubuntuextra;'
+                                                        scale="0.009 0.01 0.01" position="-0.07 0.075 -1.2"
+                                                        rotation="0 -90 0"></a-entity>
+                                                <!-- Submitter Pull Requests -->
+                                                <a-entity id="submitter-pr-avgdays"
+                                                        babia-queryjson="url: ./staticdata/submitter-pr-avgdays.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: avgdays; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: ubuntudiver; animation: false'
+                                                        scale="0.014 0.015 0.015" position="-0.14 0.075 0.8"
+                                                        rotation="0 -60 0"></a-entity>
+                                                <a-entity id="submitter-pr-repo"
+                                                        babia-queryjson="url: ./staticdata/submitter-pr-repo.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: Repositories; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: ubuntudiver; animation: false'
+                                                        scale="0.014 0.015 0.015" position="-0.14 0.075 0.36"
+                                                        rotation="0 -60 0"></a-entity>
+                                                <a-entity id="submitter-pr-count"
+                                                        babia-queryjson="url: ./staticdata/submitter-pr-count.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: doc_count; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: ubuntudiver; animation: false'
+                                                        scale="0.014 0.015 0.015" position="-0.14 0.075 -0.086"
+                                                        rotation="0 -60 0"></a-entity>
+                                                <a-entity text-geometry='value: PRs submitters over time; font: #font'
+                                                        material='color: #000' position='-0.216 -0.012 -1.116'
+                                                        rotation='0 -90 0' scale='0.1 0.1 0.1'></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Opened PRs, Repositories, and Avg Days Open by Submitter; font: #font'
+                                                        material='color: #000' position='-0.216 -0.012 0.05'
+                                                        rotation='0 -90 0' scale='0.06 0.06 0.06'></a-entity>
+
+                                        </a-entity>
+                                        <a-entity id="shelf1-4"
+                                                geometry="primitive: box; width: 0.41; depth: 2.5; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="-0.3 -0.33 2.75"
+                                                rotation="0 0 0">
+                                                <!-- Submitters Issues -->
+                                                <a-entity id="submitters-issues"
+                                                        babia-queryjson="url: ./staticdata/submitters-issues.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: value; x_axis: key_as_string; legend: true; chartHeight: 25; palette: bluesextra; animation: false'
+                                                        scale="0.009 0.01 0.01" position="-0.11 0.075 -1.2"
+                                                        rotation="0 -90 0"></a-entity>
+                                                <!-- Submitter Issues -->
+                                                <a-entity id="submitter-issues-avgdays"
+                                                        babia-queryjson="url: ./staticdata/submitter-issues-avgdays.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: avgdays; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: bluesdiver; animation: false'
+                                                        scale="0.014 0.015 0.015" position="-0.14 0.075 0.8"
+                                                        rotation="0 -60 0"></a-entity>
+                                                <a-entity id="submitter-issues-repo"
+                                                        babia-queryjson="url: ./staticdata/submitter-issues-repo.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: Repositories; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: bluesdiver; animation: false'
+                                                        scale="0.014 0.015 0.015" position="-0.14 0.075 0.36"
+                                                        rotation="0 -60 0"></a-entity>
+                                                <a-entity id="submitter-issues-count"
+                                                        babia-queryjson="url: ./staticdata/submitter-issues-count.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: doc_count; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: bluesdiver; animation: false'
+                                                        scale="0.014 0.015 0.015" position="-0.14 0.075 -0.086"
+                                                        rotation="0 -60 0"></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Issues submitters over time; font: #font'
+                                                        material='color: #000' position='-0.216 -0.012 -1.116'
+                                                        rotation='0 -90 0' scale='0.1 0.1 0.1'></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Opened Issues, Repositories, and Avg Days Open by Submitter; font: #font'
+                                                        material='color: #000' position='-0.216 -0.012 0.05'
+                                                        rotation='0 -90 0' scale='0.06 0.06 0.06'></a-entity>
+                                        </a-entity>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="wall2" position="-3.5 1.5 0">
+                                <a-entity id="wall2-1" geometry="primitive: box; width: 0.3; depth: 8.7; height: 1"
+                                        material="shader: flat; src: #wall; repeat: 5 1" position="0 -1 0"></a-entity>
+                                <a-entity id="wall2-2" geometry="primitive: box; width: 0.3; depth: 8.7; height: 0.3"
+                                        material="shader: flat; src: #wall; repeat: 5 1" position="0 1.35 0"></a-entity>
+                                <a-entity id="wall2-3" geometry="primitive: box; width: 0.3; depth: 0.5; height: 1.7"
+                                        material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 0">
+                                        <!-- sign -->
+                                        <a-entity id="sign" geometry="primitive: box; width: 0.1; depth: 3; height: 0.3"
+                                                material="src: #wood;" position="0.183 0.516 0" rotation="0 0 0">
+                                                <a-entity text-geometry='value: CHAOSS Bitergia Analytics; font: #font'
+                                                        material='color: #000' position='0.051 -0.03 1.180'
+                                                        rotation='0 90 0' scale='0.3 0.3 0.3'></a-entity>
+                                                <a-entity text-geometry='value: CHAOSS Bitergia Analytics; font: #font'
+                                                        material='color: #000' position='-0.048 -0.03 -1.264'
+                                                        rotation='0 -90 0' scale='0.3 0.3 0.3'></a-entity>
+                                        </a-entity>
+                                </a-entity>
+                                <a-entity id="wall2-4" geometry="primitive: box; width: 0.3; depth: 0.6; height: 1.7"
+                                        material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 4.35">
+                                </a-entity>
+                                <a-entity id="wall2-5" geometry="primitive: box; width: 0.3; depth: 0.6; height: 1.7"
+                                        material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 -4.35">
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="wall3" position="0 1.5 -4.5">
+                                <a-entity id="wall3-1" geometry="primitive: box; width: 7; depth: 0.3; height: 3"
+                                        material="shader: flat; src: #wall"></a-entity>
+                                <a-entity id="column3" geometry="primitive: box; width: 0.3; depth: 0.3; height: 3"
+                                        material="shader: flat; src: #wall; repeat: 1 5" position="0 0 0.15"></a-entity>
+                                <a-entity id="piesshelf" scale="0.8 0.8 0.8" position="0 0 0.5" rotation="0 45 0">
+                                        <a-entity id="shelf3-1"
+                                                geometry="primitive: box; width: 0.5; depth: 2; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="-1.75 -1.2 0.4"
+                                                rotation="0 90 0">
+                                                <!-- Status Pull Requests-->
+                                                <a-entity id="status-pr"
+                                                        babia-queryjson="url: ./staticdata/status-pr.json"
+                                                        babia-pie='legend_lookat: [laser-controls];size: doc_count; legend: true; animation: false; palette: ubuntu;'
+                                                        position="-0.04 0.45 -0.4" rotation="90 -90 0"
+                                                        scale="0.3 0.15 0.3">
+                                                </a-entity>
+                                                <!-- Pull Requests by Organization -->
+                                                <a-entity id="pull-requests-by-organization"
+                                                        babia-queryjson="url: ./staticdata/pull-requests-by-organization.json"
+                                                        babia-doughnut='legend_lookat: [laser-controls];size: doc_count; legend: true; animation: false; palette: ubuntu;'
+                                                        position="-0.04 0.45 0.4" rotation="90 -90 0"
+                                                        scale="0.2 0.15 0.2">
+                                                </a-entity>
+                                                <a-entity text-geometry='value: PRs Status; font: #font'
+                                                        material='color: #000' position='-0.248 -0.021 -0.606'
+                                                        rotation='0 -90 0' scale='0.1 0.1 0.1'>
+                                                </a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Pull Requests by Organization; font: #font'
+                                                        material='color: #000' position='-0.248 -0.021 -0.002'
+                                                        rotation='0 -90 0' scale='0.1 0.1 0.1'></a-entity>
+                                        </a-entity>
+                                        <a-entity id="shelf3-2"
+                                                geometry="primitive: box; width: 0.5; depth: 2; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="-1.75 -0.35 0.10"
+                                                rotation="0 90 0">
+                                                <!-- Status Issues-->
+                                                <a-entity id="status-issues"
+                                                        babia-queryjson="url: ./staticdata/status-issues.json"
+                                                        babia-pie='legend_lookat: [laser-controls];size: doc_count; legend: true; palette: flat; animation: false'
+                                                        position="-0.04 0.45 -0.4" rotation="90 -90 0"
+                                                        scale="0.3 0.15 0.3">
+                                                </a-entity>
+                                                <!-- Issues by Organization -->
+                                                <a-entity id="issues-by-organization"
+                                                        babia-queryjson="url: ./staticdata/issues-by-organization.json"
+                                                        babia-doughnut='legend_lookat: [laser-controls];size: doc_count; legend: true; palette: flat; animation: false'
+                                                        position="-0.04 0.45 0.4" rotation="90 -90 0"
+                                                        scale="0.2 0.15 0.2">
+                                                </a-entity>
+                                                <a-entity text-geometry='value: Issues Status; font: #font'
+                                                        material='color: #000' position='-0.248 -0.021 -0.606'
+                                                        rotation='0 -90 0' scale='0.1 0.1 0.1'>
+                                                </a-entity>
+                                                <a-entity text-geometry='value: Issues by Organization; font: #font'
+                                                        material='color: #000' position='-0.248 -0.021 0.217'
+                                                        rotation='0 -90 0' scale='0.1 0.1 0.1'></a-entity>
+                                        </a-entity>
+                                </a-entity>
+                                <a-entity id="projectrepositoriesshelf" position="0 0 0.8" rotation="0 -45 0">
+                                        <a-entity id="shelf3-3"
+                                                geometry="primitive: box; width: 0.5; depth: 2; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="1.75 -1.2 0.3"
+                                                rotation="0 90 0">
+                                                <!-- Projects Pull Request -->
+                                                <a-entity id="projects-pr"
+                                                        babia-queryjson="url: ./staticdata/projects-pr.json"
+                                                        babia-barsmap='legend_lookat: [laser-controls]; legend_scale: 5; height: value; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 20; animation: false; palette: ubuntudiver;'
+                                                        scale="0.03 0.03 0.03" position="0.006 0.075 -0.782"
+                                                        rotation="0 -90 0">
+                                                </a-entity>
+                                                <a-entity text-geometry='value: PRs Opened, repositories, 
+submitters, Avg Open days
+by project; font: #font' material='color: #000' position='-0.253 0 -0.912' rotation='0 -90 0' scale='0.05 0.05 0.05'>
+                                                </a-entity>
+                                                <!-- Repositories Pull Request -->
+                                                <a-entity id="repositories-pr-count"
+                                                        babia-queryjson="url: ./staticdata/repositories-pr-count.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: doc_count; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: ubuntudiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 -0.20"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity id="repositories-pr-asignees"
+                                                        babia-queryjson="url: ./staticdata/repositories-pr-asignees.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: asignees; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: ubuntudiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 0.10"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity id="repositories-pr-submitters"
+                                                        babia-queryjson="url: ./staticdata/repositories-pr-submitters.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: submitters; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: ubuntudiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 0.32"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity id="repositories-pr-avgdays"
+                                                        babia-queryjson="url: ./staticdata/repositories-pr-avgdays.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: avgdays; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: ubuntudiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 0.620"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity text-geometry='value: PRs Opened, asignees, submitters,
+Avg Open days by repository; font: #font' material='color: #000' position='-0.253 0 0.108' rotation='0 -90 0'
+                                                        scale='0.07 0.07 0.07'></a-entity>
+                                        </a-entity>
+                                        <a-entity id="shelf3-4"
+                                                geometry="primitive: box; width: 0.5; depth: 2; height: 0.15"
+                                                material="shader: flat; src: #wood;" position="1.75 -0.35 0.09"
+                                                rotation="0 90 0">
+                                                <!-- Projects Issues -->
+                                                <a-entity id="projects-issues"
+                                                        babia-queryjson="url: ./staticdata/projects-issues.json"
+                                                        babia-barsmap='legend_lookat: [laser-controls]; legend_scale: 5; height: value; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 20; palette: bluesdiver; animation: false'
+                                                        scale="0.03 0.03 0.03" position="0.006 0.075 -0.782"
+                                                        rotation="0 -90 0">
+                                                </a-entity>
+                                                <a-entity text-geometry='value: Issues Opened, repositories,
+submitters, Avg Open days
+by project; font: #font' material='color: #000' position='-0.253 0.022 -0.912' rotation='0 -90 0'
+                                                        scale='0.055 0.055 0.055'></a-entity>
+                                                <!-- Repositories Issues -->
+                                                <a-entity id="repositories-issues-count"
+                                                        babia-queryjson="url: ./staticdata/repositories-issues-count.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: doc_count; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: bluesdiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 -0.20"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity id="repositories-issues-asignees"
+                                                        babia-queryjson="url: ./staticdata/repositories-issues-asignees.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: asignees; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: bluesdiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 0.10"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity id="repositories-issues-submitters"
+                                                        babia-queryjson="url: ./staticdata/repositories-issues-submitters.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: submitters; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: bluesdiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 0.32"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity id="repositories-issues-avgdays"
+                                                        babia-queryjson="url: ./staticdata/repositories-issues-avgdays.json"
+                                                        babia-bars='legend_lookat: [laser-controls]; legend_scale: 5; height: avgdays; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 30; animation: false; palette: bluesdiver;'
+                                                        scale="0.015 0.015 0.015" position="-0.160 0.075 0.620"
+                                                        rotation="0 -40 0"></a-entity>
+                                                <a-entity text-geometry='value: Issues Opened, asignees, submitters,
+Avg Open days by repository; font: #font' material='color: #000' position='-0.253 0 0.108' rotation='0 -90 0'
+                                                        scale='0.07 0.07 0.07'></a-entity>
+                                        </a-entity>
+                                </a-entity>
+                        </a-entity>
+                        <a-entity id="wall4" position="0 1.5 4.5">
+                                <a-entity id="wall4-1" geometry="primitive: box; width: 7.3; depth: 0.3; height: 1"
+                                        material="shader: flat; src: #wall; repeat: 5 1" position="0 -1 0"></a-entity>
+                                <a-entity id="wall4-2" geometry="primitive: box; width: 7.3; depth: 0.3; height: 0.3"
+                                        material="shader: flat; src: #wall; repeat: 5 1" position="0 1.35 0"></a-entity>
+                                <a-entity id="wall4-3" geometry="primitive: box; width: 0.5; depth: 0.3; height: 1.7"
+                                        material="shader: flat; src: #wall; repeat: 1 3" position="0 0.35 0"></a-entity>
+                                <a-entity id="wall4-4" geometry="primitive: box; width: 0.3; depth: 0.3; height: 1.7"
+                                        material="shader: flat; src: #wall; repeat: 1 3" position="-3.2 0.35 0">
+                                </a-entity>
+                                <a-entity id="wall4-5" geometry="primitive: box; width: 0.6; depth: 0.3; height: 1.7"
+                                        material="shader: flat; src: #wall; repeat: 1 3" position="3.4 0.35 0">
+                                </a-entity>
+                                <a-entity id="column4" geometry="primitive: box; width: 0.3; depth: 0.3; height: 3"
+                                        material="shader: flat; src: #wall; repeat: 1 5" position="0 0 -0.15">
+                                </a-entity>
+                        </a-entity>
+
+                        <a-entity id="self" position="-3 0 0" scale="1 1 1" rotation="0 0 0">
+                                <a-entity id="plank" position="1.5 0 -0.65">
+                                        <a-entity id="plank1-1"
+                                                geometry="primitive: box; width: 0.5; depth: 3; height: 0.15"
+                                                material="src: #wood;" position="0 1.1 0" rotation="0 0 0">
+                                                <!-- Issues -->
+                                                <a-entity id="issues"
+                                                        babia-queryjson="url: ./staticdata/issues.json"
+                                                        babia-barsmap='legend_lookat: [laser-controls]; legend_scale: 5; height: count; x_axis: key_as_string; z_axis: key; legend: true; chartHeight: 25; palette: bluesextra; animation: false'
+                                                        scale="0.015 0.015 0.015" position="0.2 0.075 1.173"
+                                                        rotation="0 90 0"></a-entity>
+                                                <!-- Organizations Issues-->
+                                                <a-entity id="organizations-issues"
+                                                        babia-queryjson="url: ./staticdata/organizations-issues.json"
+                                                        babia-barsmap='legend_lookat: [laser-controls]; legend_scale: 5; height: value; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; palette: bluesdiver; animation: false'
+                                                        scale="0.015 0.015 0.015" position="0.2 0.075 -0.503"
+                                                        rotation="0 90 0"></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Issues (opened and closed) over time; font: #font'
+                                                        material='color: #000' position='0.253 -0.011 1.3'
+                                                        rotation='0 90 0' scale='0.1 0.1 0.1'>
+                                                </a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Opened Issues, Avg Days Open, Asignees and Submitters by Organization; font: #font'
+                                                        material='color: #000' position='0.253 -0.011 -0.16'
+                                                        rotation='0 90 0' scale='0.06 0.06 0.06'></a-entity>
+                                        </a-entity>
+                                        <a-entity id="plank1-2"
+                                                geometry="primitive: box; width: 0.5; depth: 3; height: 0.15"
+                                                material="src: #wood;" position="0 0.4 0" rotation="0 0 0">
+                                                <!-- Pull Requests-->
+                                                <a-entity id="pull-requests"
+                                                        babia-queryjson="url: ./staticdata/pull-requests.json"
+                                                        babia-barsmap='legend_lookat: [laser-controls]; legend_scale: 5; height: count; x_axis: key_as_string; z_axis: key; legend: true; chartHeight: 25; animation: false; palette: ubuntuextra;'
+                                                        scale="0.015 0.015 0.015" position="0.2 0.075 1.173"
+                                                        rotation="0 90 0"></a-entity>
+                                                <!-- Organizations Pull Request-->
+                                                <a-entity id="organizations-pr"
+                                                        babia-queryjson="url: ./staticdata/organizations-pr.json"
+                                                        babia-barsmap='legend_lookat: [laser-controls]; legend_scale: 5; height: value; z_axis: key_as_string; x_axis: key; legend: true; chartHeight: 25; animation: false; palette: ubuntudiver;'
+                                                        scale="0.015 0.015 0.015" position="0.2 0.075 -0.503"
+                                                        rotation="0 90 0"></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Pull Requests (opened and closed) over time; font: #font'
+                                                        material='color: #000' position='0.253 -0.011 1.37'
+                                                        rotation='0 90 0' scale='0.1 0.1 0.1'></a-entity>
+                                                <a-entity
+                                                        text-geometry='value: Opened PRs, Avg Days Open, Asignees and Submitters by Organization; font: #font'
+                                                        material='color: #000' position='0.253 -0.011 -0.16'
+                                                        rotation='0 90 0' scale='0.06 0.06 0.06'></a-entity>
+                                        </a-entity>
+                                        <a-entity id="leg1-1"
+                                                geometry="primitive: box; width: 0.08; depth: 0.08; height: 2"
+                                                material="src: #wood;" position="0.25 1 -1.5" rotation="0 0 0">
+                                        </a-entity>
+                                        <a-entity id="leg1-2"
+                                                geometry="primitive: box; width: 0.08; depth: 0.1; height: 2"
+                                                material="src: #wood;" position="-0.25 1 -1.5" rotation="0 0 0">
+                                        </a-entity>
+                                        <a-entity id="leg1-3"
+                                                geometry="primitive: box; width: 0.08; depth: 0.08; height: 2"
+                                                material="src: #wood;" position="0.25 1 1.5" rotation="0 0 0">
+                                        </a-entity>
+                                        <a-entity id="leg1-4"
+                                                geometry="primitive: box; width: 0.08; depth: 0.08; height: 2"
+                                                material="src: #wood;" position="-0.25 1 1.5" rotation="0 0 0">
+                                        </a-entity>
+                                </a-entity>
+                        </a-entity>
+                </a-entity>
+
+                <!-- Information popup -->
+<!--
+                <a-entity rotation="0 0 0" position="-1.65 1.5 0" scale="0.2 0.2 0.2">
+                        <a-entity id="navbarpopup" position="9.5 1 -5"
+                                dialog-popup="
+          openIconImage: ../../assets/popups/info.jpg;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: Welcome! (please, read carefully while the visualizations are loading);
+          titleWrapCount: 100;
+          bodyWrapCount: 100;
+          titleColor: white;
+          bodyColor: white;
+          dialogBoxColor: black;
+          bodyFont: roboto;
+          dialogBoxHeight: 5.5;
+          dialogBoxWidth: 10;
+          body: \n In this experiment we want to assess whether it is better to navigate 3D visualizations on-screen or using Virtual Reality (VR) headsets. 
+          \n This scene represents the data about the Pull Requests and Issues timing of the CHAOSS project. Each visualization represents different aggregations of the data (e.g Organizations, submitters, time, etc.). By default, you are seeing data from the last 5 years, please take into account that you can change this time snapshot using the menu that is on your left controller. You can open and close the time snapshot menu by clicking on the inside trigger of the left menu.
+          
+          \n The color defines the difference between the Issues and Pull Requests charts, the Red palette defines the Pull Requests charts, and the Blues palette defines the Issues charts. 
+    
+          \n There are several visualizations around you, moreover, you can use the teleport with the left trigger. Don't go far away!.
+    
+          \n To reset the view, please press and hold the Oculus Button. If you want to reset the position, please exit the browser and refresh the page.
+        
+    
+          = START THE EXPERIMENT \n Please make sure that your supervisor acitvated both voice and screen recording. When you are ready, close this information dialog by hitting the (X) and press the trigger on the button labeled with (0). Remember that there are visualizations around you; "
+                                babia-lookat="[laser-controls]">
+                        </a-entity>
+-->
+
+                        <!-- \n First of all, make sure that the supervisor acitvated the recording (voice and screen).
+          \n In the information panel close to the city you will see details of how to interact with it and the project and metrics that it shows.
+          \n If you want to reset the camera, you can hold the Oculus Button.
+          \n When ready, please, go to the 0 circle and click it!
+          \n Click on X button to close this information (you can reopen it by clicking on the 'i' button) -->
+
+                        <!-- <a-entity id="presurvey" position="7 0 -6" dialog-popup="
+          openIconImage: ../../assets/popups/0.png;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: Task 0 - Demographics;
+          titleWrapCount: 30;
+          titleColor: black;
+          bodyColor: black;
+          dialogBoxColor: white;
+          bodyFont: roboto;
+          dialogBoxHeight: 11;
+          body: From now on, for the whole duration of the experiment, you are kindly requested to speak aloud. Please read aloud all the questions and provide all the answers loud and clear.\n
+    
+          - How old are you? \n
+          - Gender (e.g. Female, Male, Other (please specify)) \n
+          - What's your current position? (e.g., student, developer, researcher, project manager) \n
+          - Please provide your experience level (i.e., None, Beginner, Knowledgeable, Advanced, Expert) in... \n 1) Programming \n 2) in using a tool for data analysis (Kibana, Grafana, Excel, etc.) \n 
+          - How many years of experience (i.e., Less than 1, 1-3, 4-5, 7-10, 10+) do you have in... \n 1) Programming \n 2) in using a tool for data analysis (Kibana, Grafana, Excel, etc.) \n 
+          - Are you familiar with CHAOSS? (i.e., None, Beginner, Knowledgeable, Advanced, Expert) \n 
+          - Experience with Software Visualization? (i.e., None, Beginner, Knowledgeable, Advanced, Expert) \n 
+          - Do you have experience with Virtual Reality (VR) Headsets (e.g., Oculus)? (i.e., None, Beginner, Knowledgeable, Advanced, Expert) \n 
+          Close this Task by pressing the (X) button and go to Task (1);
+          " babia-lookat="[laser-controls]"></a-entity> -->
+<!--
+                        <a-entity id="onesurvey" position="8 0 -6" dialog-popup="
+          openIconImage: ../../assets/popups/1.png;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: For the Organizations;
+          titleWrapCount: 30;
+          titleColor: black;
+          bodyColor: black;
+          dialogBoxColor: white;
+          bodyFont: roboto;
+          dialogBoxHeight: 7;
+          body: Please, notify the supervisor that homework is about to begin and remember to talk aloud.
+
+          \n During the LAST YEAR tell me:
+                \n - The name of the TOP 3 ORGANIZATIONS by number of issues
+                \n - For each of those 3 organizations, the NUMBER of PULL REQUESTS for the same period.
+
+          \n When you are done, please comment on the following sentence: The task was difficult (choose one: strongly agree, agree,  don’t know, disagree, strongly disagree). 
+          \n Please notify the supervisor that the task has been completed. \n
+          Close this Task by pressing the (X) button and go to Task (3);
+          " babia-lookat="[laser-controls]"></a-entity>
+
+                        <a-entity id="twosurvey" position="9 0 -6" dialog-popup="
+          openIconImage: ../../assets/popups/2.png;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: For the CHAOSS Project;
+          titleWrapCount: 30;
+          titleColor: black;
+          bodyColor: black;
+          dialogBoxColor: white;
+          bodyFont: roboto;
+          dialogBoxHeight: 9;
+          body: Please, notify the supervisor that homework is about to begin and remember to talk aloud.
+          
+          \n For ISSUES, during the LAST 90 DAYS, tell me:
+                \n - The number of opened and closed
+                \n - When is the higher time open? (time open as median in days)
+
+        \n For PULL REQUESTS, during the LAST 90 DAYS, tell me:
+                \n - The number of opened and closed
+                \n - When is the higher time open? (time open as median in days)
+
+
+          \n When you are done, please comment on the following sentence: The task was difficult (choose one: strongly agree, agree,  don’t know, disagree, strongly disagree). 
+          \n Please notify the supervisor that the task has been completed. \n
+          Close this Task by pressing the (X) button and go to Task (2);
+          " babia-lookat="[laser-controls]"></a-entity>
+
+                        <a-entity id="threesurvey" class="babiapopups" position="10 0 -6" dialog-popup="
+          openIconImage: ../../assets/popups/3.png;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: For Submitters of pull requests and issues;
+          titleWrapCount: 30;
+          titleColor: black;
+          bodyColor: black;
+          dialogBoxColor: white;
+          bodyFont: roboto;
+          dialogBoxHeight: 7;
+          body: Please, notify the supervisor that homework is about to begin and remember to talk aloud. \n 
+          
+          \n During the LAST 5 YEARS:
+                \n - For PULL REQUESTS submitters, who are the top three? 
+                \n - For each of them, for how long their ISSUES stayed open (days in average)
+
+          
+          \n When you are done, please comment on the following sentence: The task was difficult (choose one: strongly agree, agree,  don’t know, disagree, strongly disagree). 
+          \n Please notify the supervisor that the task has been completed. \n
+          Close this Task by pressing the (X) button and go to Task (4);
+          " babia-lookat="[laser-controls]"></a-entity>
+
+                        <a-entity id="foursurvey" position="11 0 -6" dialog-popup="
+          openIconImage: ../../assets/popups/4.png;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: For Repositories;
+          titleWrapCount: 30;
+          titleColor: black;
+          bodyColor: black;
+          dialogBoxColor: white;
+          bodyFont: roboto;
+          dialogBoxHeight: 7;
+          body: Please, notify the supervisor that homework is about to begin and remember to talk aloud. \n 
+          
+          \n During the LAST 2 YEARS tell me:
+                \n - The name of the TOP 3 REPOSITORIES by number of PULL REQUESTS SUBMITTERS 
+                \n - The name of the TOP 3 REPOSITORIES by number of ISSUES opened.
+
+
+          \n When you are done, please comment on the following sentence: The task was difficult (choose one: strongly agree, agree,  don’t know, disagree, strongly disagree). 
+          \n Please notify the supervisor that the task has been completed. \n
+          Close this Task by pressing the (X) button and go to Task (5);
+          " babia-lookat="[laser-controls]"></a-entity>
+
+                        <a-entity id="fivesurvey" position="12 0 -6" dialog-popup="
+          openIconImage: ../../assets/popups/5.png;
+          closeIconImage: ../../assets/popups/close.jpg;
+          title: For Submitters of pull requests and issues;
+          titleWrapCount: 30;
+          titleColor: black;
+          bodyColor: black;
+          dialogBoxColor: white;
+          bodyFont: roboto;
+          dialogBoxHeight: 8;
+          body: Please, notify the supervisor that homework is about to begin and remember to talk aloud. \n 
+          
+          \n During the LAST 6 MONTHS, tell me:
+                \n - The name of the TOP 3 SUBMITTERS by longest time to resolve their ISSUES (average days open).
+                \n - For each of those 3 submitters, the NUMBER of PULL REQUESTS submitted
+
+          
+          \n When you are done, please comment on the following sentence: The task was difficult (choose one: strongly agree, agree,  don’t know, disagree, strongly disagree). 
+          \n Please notify the supervisor that the task has been completed. \n
+          Click on the button below to finish the experiment!;
+          " babia-lookat="[laser-controls]">
+                                <a-plane id="exitscene" scale="1.2 1.2 1.2" visible="false"
+                                        babia-lookat="[laser-controls]" class="babiaxraycasterclass" position="0 -2.8 2"
+                                        geometry="primitive: plane; width: 1.8; height: 0.5" color="#004d00"
+                                        text="value: Finish!; color: white; align: center; wrapCount: 30; width: 3.6;">
+                                </a-plane>
+                        </a-entity>
+
+                </a-entity>
+
+-->
+
+                <!-- Controls and Camera -->
+                <a-entity id="cameraRig" position="0.25 1.6 0.35">
+                        <a-entity id="head"
+                                babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon, .surveys, .surveys--close-icon, #presurvey, #presurvey--close-icon, #onesurvey, #onesurvey--close-icon, #twosurvey, #twosurvey--close-icon, #threesurvey, #threesurvey--close-icon, #foursurvey, #foursurvey--close-icon, #fivesurvey, #fivesurvey--close-icon, #sixsurvey, #sixsurvey--close-icon, #sevensurvey, #sevensurvey--close-icon, #eightsurvey, #eightsurvey--close-icon, #fivesurveyother, #fivesurveyother--close-icon, #iteractionpopup, #iteractionpopup--close-icon, #cityinformation, #cityinformation--close-icon, #ninesurvey, #ninesurvey--close-icon, #tensurvey, #tensurvey--close-icon, #elevensurvey, #elevensurvey--close-icon, #twelvesurvey, #twelvesurvey--close-icon, #thirteensurvey, #thirteensurvey--close-icon;
+                        raycasterHand: .babiaxraycasterclass, #audio_button, #navbarpopup, #navbarpopup--close-icon, .surveys, .surveys--close-icon, #presurvey, #presurvey--close-icon, #onesurvey, #onesurvey--close-icon, #twosurvey, #twosurvey--close-icon, #threesurvey, #threesurvey--close-icon, #foursurvey, #foursurvey--close-icon, #fivesurvey, #fivesurvey--close-icon, #sixsurvey, #sixsurvey--close-icon, #sevensurvey, #sevensurvey--close-icon, #eightsurvey, #eightsurvey--close-icon, #fivesurveyother, #fivesurveyother--close-icon, #iteractionpopup, #iteractionpopup--close-icon, #cityinformation, #cityinformation--close-icon, #ninesurvey, #ninesurvey--close-icon, #tensurvey, #tensurvey--close-icon, #elevensurvey, #elevensurvey--close-icon, #twelvesurvey, #twelvesurvey--close-icon, #thirteensurvey, #thirteensurvey--close-icon; teleportCollision: #floorRoom"
+                                look-controls wasd-controls="fly: false">
+                                <a-entity></a-entity>
+                        </a-entity>
+                </a-entity>
+
+
+
+        </a-scene>
+
+        <script>
+                // Get Query string values
+                function getValueFromQueryString(string) {
+                        string = string.replace(/[\[\]]/g, '\\$&');
+                        var regex = new RegExp('[?&]' + string + '(=([^&#]*)|&|#|$)'),
+                                results = regex.exec(window.location.href);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                }
+
+                /* Set username and password for ElasticSearch queriers*/
+                let username = getValueFromQueryString('esUser');
+                let password = getValueFromQueryString('esPsw');
+                let esUrl = getValueFromQueryString('esUrl');
+                let queriers = document.querySelectorAll('[babia-queryes]');
+                if (username && password) {
+                        queriers.forEach(function (querier) {
+
+                                querier.setAttribute('babia-queryes', 'user', username);
+                                querier.setAttribute('babia-queryes', 'password', password);
+                                querier.setAttribute('babia-queryes', 'elasticsearch_url', esUrl);
+                        })
+                }
+        </script>
+
+        <script>
+                let listenersDone = false;
+                document.querySelector('a-scene').addEventListener('loaded', function () {
+                        // rotate popups to the camera
+                        let popups = document.querySelectorAll('[dialog-popup]');
+                        if (!listenersDone) {
+                                popups.forEach(function (popup) {
+                                        popup.addEventListener('click', function (event) {
+                                                let plane = document.getElementById(`${event.target.id}--dialog-plane`);
+                                                if (plane) {
+                                                        // Opened task
+                                                        hidePopups(popup)
+                                                        plane.setAttribute("babia-lookat", "[laser-controls]")
+                                                } else {
+                                                        // Closed task
+                                                        showPopups()
+                                                }
+                                        }, false);
+                                });
+
+                                let infoPanel = document.getElementById(`navbarpopup--dialog-plane`);
+                                infoPanel.setAttribute("visible", "true")
+                                listenersDone = true;
+                        }
+
+                        function hidePopups(popupExcept) {
+                                popups.forEach(popup => {
+                                        if (popup !== popupExcept) {
+                                                popup.setAttribute("visible", "false")
+                                        }
+                                });
+                        }
+
+                        function showPopups() {
+                                popups.forEach(popup => {
+                                        popup.setAttribute("visible", "true")
+                                });
+                        }
+                })
+
+                //Exit scene logic
+                let exitScene = document.getElementById("exitscene");
+
+                document.getElementById("fivesurvey").addEventListener('click', function (event) {
+                        console.log(event)
+                        if (event.target.id === "fivesurvey--close-icon") {
+                                exitScene.setAttribute("visible", "false")
+                        } else if (event.target.id === "fivesurvey") {
+                                exitScene.setAttribute("visible", "true")
+                        }
+
+                }, false);
+
+                exitScene.addEventListener('click', function (event) {
+                        if (exitScene.getAttribute("visible")) {
+                                window.location.replace("./end.html")
+                        }
+                }, false);
+
+        </script>
+
+        <div class="gitlab-corner-wrapper"><a
+                        href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/dashboard/chaoss-dashboards.html"
+                        class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                                <g id="g44">
+                                        <path id="path46" class="cls-1"
+                                                d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                                </g>
+                                <g id="g48">
+                                        <path id="path50" class="cls-2"
+                                                d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                                </g>
+                                <g id="g56">
+                                        <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                                </g>
+                                <g id="g64">
+                                        <path id="path66" class="cls-3"
+                                                d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                                </g>
+                                <g id="g72">
+                                        <path id="path74" class="cls-2"
+                                                d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                                </g>
+                                <g id="g76">
+                                        <path id="path78" class="cls-1"
+                                                d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                                </g>
+                                <g id="g80">
+                                        <path id="path82" class="cls-3"
+                                                d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                                </g>
+                                <g id="g84">
+                                        <path id="path86" class="cls-2"
+                                                d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                                </g>
+                        </svg></a></div>
+</body>
+
+</html>
+

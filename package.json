@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "networked-aframe": "^0.8.0",
-    "papaparse": "^5.3.1"
+    "papaparse": "^5.3.1",
+    "three-bmfont-text": "^3.0.1"
   },
   "repository": {
     "type": "git",

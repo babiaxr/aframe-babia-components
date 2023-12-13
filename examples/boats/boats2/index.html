@@ -14,7 +14,7 @@
     <a-scene environment="preset: yavapai" renderer="antialias: true">
         
         <a-entity id="queriertest" babia-queryjson="url: data.json;"></a-entity>
-        <a-entity babia-boats="from: queriertest" position="0 1 0"></a-entity>  
+        <a-entity babia-boats="from: queriertest; field: id" position="0 1 0"></a-entity>  
 
         <a-entity movement-controls="fly: true" position="-6 10 25" rotation="-10 -30 0">
             <a-entity camera look-controls></a-entity>

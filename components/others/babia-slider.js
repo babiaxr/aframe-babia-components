@@ -19,7 +19,7 @@ AFRAME.registerComponent('babia-slider', {
       multiple: true,
     
       init: function () {
-        this.loader = new THREE.FontLoader();
+        this.loader = new FontLoader.FontLoader();
 
         let material = new THREE.MeshBasicMaterial({color: this.data.color });
         this.material = material
@@ -52,7 +52,7 @@ AFRAME.registerComponent('babia-slider', {
       },
 
       createTextGeometry: function(text, x, y) {
-        let textGeometry = new THREE.TextGeometry(text.toString(), {
+        let textGeometry = new TextGeometry.TextGeometry(text.toString(), {
             font: this.font,
             size: .07,
             height: .01,
