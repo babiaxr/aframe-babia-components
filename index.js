@@ -57,3 +57,7 @@ playButton = require('./components/others/models/play_button.gltf')
 skipButton = require('./components/others/models/skip_button.gltf')
 rewindButton = require('./components/others/models/rewind_button.gltf')
 tooltip = require('./components/others/assets/tooltip.png')
+
+// THREE imports for slider
+FontLoader = require('three/examples/jsm/loaders/FontLoader')
+TextGeometry = require('three/examples/jsm/geometries/TextGeometry')
