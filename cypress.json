@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://localhost:7000",
+    "baseUrl": "https://localhost:8080",
     "integrationFolder": "tests",
     "testFiles": "**/*.js",
     "video": true,

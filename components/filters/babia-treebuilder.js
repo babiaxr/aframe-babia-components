@@ -14,7 +14,9 @@ AFRAME.registerComponent('babia-treebuilder', {
     schema: {
         from: { type: 'string' },
         field: { type: 'string' },
-        split_by: { type: 'string' },
+        split_by: { type: 'string', default: '/' },
+        // Build a root node, hanging all the tree from it
+        build_root: { type: 'boolean', default: false},
         // data, for debugging, highest priority
         data: { type: 'string' }
     },
@@ -70,7 +72,13 @@ AFRAME.registerComponent('babia-treebuilder', {
     // Generate the datatree and save it
     processData: function (paths) {
         let data = this.data;
-        let tree = [];
+
+        let maintree = [];
+        let tree = maintree;
+        if (data.build_root) {
+            maintree = [{name: '', id: '', children: []}];
+            tree = maintree[0].children;
+        };
 
         for (let i = 0; i < paths.length; i++) {
             let path = paths[i][data.field].split(data.split_by);
@@ -80,6 +88,7 @@ AFRAME.registerComponent('babia-treebuilder', {
                 if (!path[j]) { continue }
 
                 let part = path[j];
+                console.log("currentLevel", currentLevel)
                 let existingPath = findWhere(currentLevel, 'name', part);
 
                 if (existingPath) {
@@ -103,8 +112,7 @@ AFRAME.registerComponent('babia-treebuilder', {
                 }
             }
         }
-        //console.log(tree)
-        this.notiBuffer.set(tree);
+        this.notiBuffer.set(maintree);
     }
 })
 
