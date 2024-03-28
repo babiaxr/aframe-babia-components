@@ -291,6 +291,26 @@ AFRAME.registerComponent('babia-boats', {
     categoricColorIndex: 0,
     categoricColorMaps: {},
 
+    /**
+     * generateElements
+     * 
+     * Generate width, depth and translation coords for the center,
+     * and list of figures to visualize, from a tree of data elements and
+     * a partial list of figures.
+     * 
+     * Each element is a data element, obtained from the data to visualize,
+     * which may include children elements (so, in fact, it may also be the root
+     * of a tree of elements).
+     * 
+     * Each figure includes all data needed to visualize it (which will be done
+     * later, in another function).
+     * 
+     * @param {*} elements Array of elements
+     * @param {*} figures Array of figures
+     * @param {*} translate Translation from the center
+     * @param {*} inc Increment
+     * @returns [width, depth, translate, figures]
+     */
     generateElements: function (elements, figures, translate, inc) {
         const self = this;
         var increment = inc;
@@ -376,7 +396,8 @@ AFRAME.registerComponent('babia-boats', {
                     });
                 }
 
-                [element.width, element.depth, translate_matrix, children] = this.generateElements(element.children, children, translate_matrix, increment);
+                [element.width, element.depth, translate_matrix, children]
+                    = this.generateElements(element.children, children, translate_matrix, increment);
                 translate_matrix.y = element.height;
                 increment = inc;
             }
