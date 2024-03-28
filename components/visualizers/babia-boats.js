@@ -22,8 +22,14 @@ AFRAME.registerComponent('babia-boats', {
         area: { type: 'string' },
         color: { type: 'string' },
         height: { type: 'string', default: 'height' },
+        // Maximum height for a building, in VR units (meters)
         maxBuildingHeight: { type: 'number', default: 2 },
+        // Minimum height for a building, in VR units (meters)
         minBuildingHeight: { type: 'number', default: 0.03 },
+        // Differential heights for buildings (the height of
+        // buildings is calculated relative to the difference between
+        // highest and lowest value)
+        diffBuildingHeight: {type: 'boolean', default: false},
         zone_elevation: { type: 'number', default: 0.01 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
@@ -328,7 +334,16 @@ AFRAME.registerComponent('babia-boats', {
                 element.width = elements[i][this.data.width] || 0.5
             }
             if (this.data.height) {
-                element.height = self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, elements[i][this.data.height]) || this.data.minBuildingHeight
+                let height_min = 0;
+                if (self.data.diffBuildingHeight) {
+                    height_min = self.babiaMetadata['heightMin'];
+                };
+                element.height = self.normalizeValues(height_min,
+                                                      self.babiaMetadata['heightMax'],
+                                                      self.data.minBuildingHeight,
+                                                      self.data.maxBuildingHeight,
+                                                      elements[i][this.data.height])
+                                || this.data.minBuildingHeight
             }
             if (this.data.depth) {
                 element.depth = elements[i][this.data.depth] || 0.5
@@ -337,6 +352,7 @@ AFRAME.registerComponent('babia-boats', {
                 element.area = elements[i][this.data.area] || 0.5
             }
             if (elements[i].children) {
+                // There are elements hanging from this element
                 element.children = elements[i].children
                 this.quarter = true;
                 var children = [];
@@ -365,6 +381,7 @@ AFRAME.registerComponent('babia-boats', {
                 increment = inc;
             }
             if (i == 0) {
+                // This is the first element to place
                 if (this.data.area && !elements[i].children) {
                     limit_up += Math.sqrt(element.area) / 2;
                     limit_down -= Math.sqrt(element.area) / 2;
@@ -431,60 +448,54 @@ AFRAME.registerComponent('babia-boats', {
             }
 
             // Save information about the figure
-            let figure
-            if (elements[i].children) {
-                figure = {
-                    id: "boat-" + elements[i][this.data.field],
-                    name: elements[i][this.data.field],
-                    posX: posX,
-                    posY: posY,
-                    width: element.width,
-                    height: element.height,
-                    depth: element.depth,
-                    children: children,
-                    alpha: self.data.baseAlpha,
-                    translate_matrix: translate_matrix
-                }
+            // First, fill in common properties, then add those specific for
+            // bases or buildings
+            let figure = {
+                id: "boat-" + elements[i][this.data.field],
+                posX: posX,
+                posY: posY,
+                height: element.height,
+                translate_matrix: translate_matrix
+            }
 
+            if (elements[i].children) {
+                // This is the base for a quarter
+                figure.name = elements[i][this.data.field],
+                figure.width = element.width,
+                figure.depth = element.depth,
+                figure.children = children,
+                figure.alpha = self.data.baseAlpha,
+                figure.translate_matrix = translate_matrix
                 // TEST TREE
                 if (self.data.treeLayout) {
                     figure.treeMetaphorHeight = element.treeMetaphorHeight
                 }
-
                 // Gradient color
                 let hierarchyLevel = figure.name.split("/").length - 1
                 figure.hierarchyLevel = hierarchyLevel
                 figure.renderOrder = hierarchyLevel
                 if (self.data.gradientBaseColor) {
-                    figure.color = greenColorsurface(Math.round(self.normalizeValues(1, self.babiaMetadata['maxLevels'], 15, 100, hierarchyLevel)));
+                    figure.color = greenColorsurface(Math.round(
+                        self.normalizeValues(1,
+                                             self.babiaMetadata['maxLevels'],
+                                             15,
+                                             100,
+                                             hierarchyLevel)
+                    ));
                 } else {
                     figure.color = self.data.base_color;
                 }
-
             } else {
+                // This is a building
+                figure.name = (elements[i].name) ? elements[i].name : elements[i][this.data.field],
+                figure.alpha = self.data.buildingAlpha
                 if (this.data.area) {
-                    figure = {
-                        id: "boat-" + elements[i][this.data.field],
-                        name: (elements[i].name) ? elements[i].name : elements[i][this.data.field],
-                        posX: posX,
-                        posY: posY,
-                        width: Math.sqrt(element.area),
-                        height: element.height,
-                        alpha: self.data.buildingAlpha,
-                        depth: Math.sqrt(element.area)
-                    }
+                    figure.width = Math.sqrt(element.area);
+                    figure.depth = Math.sqrt(element.area);
                 } else {
-                    figure = {
-                        id: "boat-" + elements[i][this.data.field],
-                        name: (elements[i].name) ? elements[i].name : elements[i][this.data.field],
-                        posX: posX,
-                        posY: posY,
-                        width: element.width,
-                        height: element.height,
-                        alpha: self.data.buildingAlpha,
-                        depth: element.depth
-                    }
-                }
+                    figure.width = element.width;
+                    figure.depth = element.depth;
+                };
                 if (typeof elements[i][self.data.color] === 'number') {
                     figure.color = heatMapColorforValue(elements[i][self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
                 } else if (typeof elements[i][self.data.color] === 'string') {
@@ -641,7 +652,15 @@ AFRAME.registerComponent('babia-boats', {
                 } else {
                     // Quarters on top of the buildings
                     if (figures[i].treeMetaphorHeight !== undefined) {
-                        position.y = ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figures[i].treeMetaphorHeight)))
+                        let height_min = 0;
+                        if (self.data.diffBuildingHeight) {
+                            height_min = self.babiaMetadata['heightMin'];
+                        };        
+                        position.y = (self.normalizeValues(height_min,
+                                                           self.babiaMetadata['heightMax'],
+                                                           self.data.minBuildingHeight,
+                                                           self.data.maxBuildingHeight,
+                                                           figures[i].treeMetaphorHeight))
                     } else {
                         position.y = ((height / 2 + translate.y / 2)) - height - 0.001
                     }
@@ -1017,10 +1036,18 @@ AFRAME.registerComponent('babia-boats', {
                         }
                     } else {
                         if (figure.treeMetaphorHeight !== undefined) {
+                            let height_min = 0;
+                            if (self.data.diffBuildingHeight) {
+                                height_min = self.babiaMetadata['heightMin'];
+                            };            
                             entity.object3D.position.set(
                                 figure.posX - translate.x,
-                                ((self.normalizeValues(self.babiaMetadata['heightMin'], self.babiaMetadata['heightMax'], self.data.minBuildingHeight, self.data.maxBuildingHeight, figure.treeMetaphorHeight))),
-                                (- figure.posY + translate.z),
+                                self.normalizeValues(height_min,
+                                                     self.babiaMetadata['heightMax'],
+                                                     self.data.minBuildingHeight,
+                                                     self.data.maxBuildingHeight,
+                                                     figure.treeMetaphorHeight),
+                                - figure.posY + translate.z,
                             )
                         } else {
                             entity.object3D.position.set(
