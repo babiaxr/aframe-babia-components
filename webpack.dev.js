@@ -10,11 +10,16 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
-    publicPath: "/dist/",
-    contentBase: path.resolve(__dirname, "."),
-    https: {
-      cert: './babia_cert.pem',
-      key: './babia_key.pem'
+    static: {
+      directory: path.join(__dirname, '.'),
+    },
+    server: {
+      type: 'https',
+      options: {
+        cert: './babia_cert.pem',
+        key: './babia_key.pem'
+      }
     }
   }
 });
+

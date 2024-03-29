@@ -10,7 +10,8 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
-    publicPath: "/dist/",
-    contentBase: path.resolve(__dirname, ".")
+    static: {
+      directory: path.join(__dirname, '.'),
+    },
   }
 });
