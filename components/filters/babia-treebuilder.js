@@ -17,6 +17,8 @@ AFRAME.registerComponent('babia-treebuilder', {
         split_by: { type: 'string', default: '/' },
         // Build a root node, hanging all the tree from it
         build_root: { type: 'boolean', default: false},
+        // Name of the root node, if build_root
+        root_name: { type: 'string' , default: 'Main'},
         // data, for debugging, highest priority
         data: { type: 'string' }
     },
@@ -76,7 +78,7 @@ AFRAME.registerComponent('babia-treebuilder', {
         let maintree = [];
         let tree = maintree;
         if (data.build_root) {
-            maintree = [{name: '', id: '', children: []}];
+            maintree = [{name: data.root_name, id: '', children: []}];
             tree = maintree[0].children;
         };
 

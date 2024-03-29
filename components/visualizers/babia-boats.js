@@ -481,7 +481,7 @@ AFRAME.registerComponent('babia-boats', {
 
             if (elements[i].children) {
                 // This is the base for a quarter
-                figure.name = elements[i][this.data.field],
+                figure.name = elements[i][this.data.field] || '',
                 figure.width = element.width,
                 figure.depth = element.depth,
                 figure.children = children,
