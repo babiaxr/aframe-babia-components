@@ -15,8 +15,11 @@ class NotiBuffer {
         this.currentId = 0;
         this.notifiers = {};
         this.data;
-        // Optional: Functions to be executed by producer if details are received when registering
+        // Optional: Function to be executed by producer
+        // if details are received when registering
         this.function1 = func1; 
+        // Optional: Function to be executed by producer
+        // if details are received when unregistering
         this.function2 = func2;
     }
 
