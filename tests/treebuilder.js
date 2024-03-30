@@ -58,7 +58,7 @@ describe ('Tree builder component', () => {
         cy.get('a-entity[babia-treebuilder]')
             .its('0.components.babia-treebuilder.notiBuffer.data')
             .should('deep.equal',
-                [{"name": "", "id": "", "children": [
+                [{"name": "Main", "id": "", "children": [
                     {"name": "One", "fieldA": 110, "fieldB": 10, uid: "One/One"},
                     {"name": "Two", "fieldA": 120, "fieldB": 20, uid: "Two/Two"},
                     {"name": "Three", "fieldA": 130, "fieldB": 30, uid: "Three/Three"}
