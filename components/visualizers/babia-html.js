@@ -1,6 +1,7 @@
 AFRAME.registerComponent('babia-html', {
     schema: {
-        html: { type: 'string' }
+        html: { type: 'string' },
+        distanceLevels: { type: 'float', default: 0.7 }
     },
 
     babiaDiv: null,
@@ -59,10 +60,10 @@ AFRAME.registerComponent('babia-html', {
 
             // Create box
             const box = document.createElement('a-box');
-            box.setAttribute('position', `${offsetX} ${offsetY} ${childrenLevel * 0.2}`);
+            box.setAttribute('position', `${offsetX} ${offsetY} ${childrenLevel * this.data.distanceLevels}`);
             box.setAttribute('width', rect.width / 100);
             box.setAttribute('height', rect.height / 100);
-            box.setAttribute('depth', 0.1);
+            box.setAttribute('depth', 0.01);
             box.setAttribute('color', this.colors_grad[childrenLevel]); // You can change the color or set it based on some logic
 
             // Clickable
@@ -99,6 +100,18 @@ AFRAME.registerComponent('babia-html', {
 
             el.appendChild(box);
 
+            // Create line to the parent
+            if (childrenLevel > 0) {
+                let line = document.createElement('a-entity')
+                line.setAttribute('line', {
+                    start: `${offsetX} ${offsetY} ${childrenLevel * this.data.distanceLevels}`,
+                    end: `${offsetX} ${offsetY} ${(childrenLevel * this.data.distanceLevels) - this.data.distanceLevels}`,
+                    color: 'yellow'
+                })
+                el.appendChild(line);
+            }
+            
+
             if (child.children.length > 0) {
                 let newLevel = childrenLevel + 1;
                 this.processNodeNoOffset(child, firstOffestToDelete, newLevel);
@@ -116,11 +129,11 @@ AFRAME.registerComponent('babia-html', {
         const plane = document.createElement('a-plane');
         plane.setAttribute('class', `${type}-plane`);
         let boxposition = box.getAttribute('position')
-        plane.setAttribute('position', {x: boxposition.x, y: boxposition.y + 1, z: boxposition.z + 0.2});
+        plane.setAttribute('position', { x: boxposition.x, y: boxposition.y + 1, z: boxposition.z + 0.2 });
         plane.setAttribute('width', '3'); // Adjust width as needed
         const lines = htmlContent.split('\n').length;
         const lineHeight = 0.15; // Adjust based on font size and desired spacing
-        const planeHeight = Math.max(lines * lineHeight, 0.2); 
+        const planeHeight = Math.max(lines * lineHeight, 0.2);
         plane.setAttribute('height', planeHeight); // Adjust height as needed
         plane.setAttribute('color', 'white');
 
@@ -140,7 +153,7 @@ AFRAME.registerComponent('babia-html', {
             box.permanentPlane = plane;
         }
     },
-    
+
     removeHtmlContent: function (type, box) {
         if (type === 'temp') {
             const tempPlane = document.querySelector('.temp-plane');
