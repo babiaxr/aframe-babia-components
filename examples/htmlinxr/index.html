@@ -22,43 +22,25 @@
         <!-- scene -->
         <a-entity position="-5 2 0" babia-html='distanceLevels: 0.7; html:  <h2>HTML Table</h2>
 
-            <table>
-              <tr>
-                <th>Company</th>
-                <th>Contact</th>
-                <th>Country</th>
-              </tr>
-              <tr>
-                <td>Alfreds Futterkiste</td>
-                <td>Maria Anders</td>
-                <td>Germany</td>
-              </tr>
-              <tr>
-                <td>Centro comercial Moctezuma</td>
-                <td>Francisco Chang</td>
-                <td>Mexico</td>
-              </tr>
-              <tr>
-                <td>Ernst Handel</td>
-                <td>Roland Mendel</td>
-                <td>Austria</td>
-              </tr>
-              <tr>
-                <td>Island Trading</td>
-                <td>Helen Bennett</td>
-                <td>UK</td>
-              </tr>
-              <tr>
-                <td>Laughing Bacchus Winecellars</td>
-                <td>Yoshi Tannamuri</td>
-                <td>Canada</td>
-              </tr>
-              <tr>
-                <td>Magazzini Alimentari Riuniti</td>
-                <td>Giovanni Rovelli</td>
-                <td>Italy</td>
-              </tr>
-            </table>'></a-entity>
+            <form>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" />
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" />
+                <input type="radio" name="gender" value="male" />Male<br/>
+                <input type="radio" name="gender" value="female" />Female<br/>
+                <input type="radio" name="gender" value="other" />Other
+                <input list="Options" />
+                <datalist id="Options">
+                  <option value="Option1"></option>
+                  <option value="Option2"></option>
+                  <option value="Option3"></option>
+                </datalist>
+              
+                <input type="submit" value="Submit" />
+                <input type="color" />
+                <input type="checkbox" name="correct" value="correct" />Correct
+              </form>'></a-entity>
 
         <!-- Controls and Camera -->
         <a-entity id="cameraRig" position="0 1.6 3">

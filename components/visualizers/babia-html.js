@@ -13,7 +13,7 @@ AFRAME.registerComponent('babia-html', {
         let data = this.data;
 
         // Crear un observador para detectar la adición del div al DOM
-        let observer = new MutationObserver(function (mutations) {
+        this.observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 if (mutation.addedNodes) {
                     mutation.addedNodes.forEach(function (node) {
@@ -22,7 +22,7 @@ AFRAME.registerComponent('babia-html', {
 
                             self.processNodeNoOffset(node, null, 0);
 
-                            observer.disconnect(); // Desconectar el observador si ya no se necesita
+                            self.observer.disconnect(); // Desconectar el observador si ya no se necesita
                         }
                     });
                 }
@@ -30,7 +30,7 @@ AFRAME.registerComponent('babia-html', {
         });
 
         // Configuración del observador para observar cambios en el cuerpo del documento
-        observer.observe(document.body, { childList: true, subtree: true });
+        this.observer.observe(document.body, { childList: true, subtree: true });
 
         // Insert the HTML in order to render it
         babiaDiv = document.createElement('div');
@@ -110,7 +110,7 @@ AFRAME.registerComponent('babia-html', {
                 })
                 el.appendChild(line);
             }
-            
+
 
             if (child.children.length > 0) {
                 let newLevel = childrenLevel + 1;
@@ -198,7 +198,23 @@ AFRAME.registerComponent('babia-html', {
     ],
 
     update: function () {
+        let data = this.data
+        let oldData = this.oldData;
 
+        if (data.html != oldData.html || data.distanceLevels != data.distanceLevels) {
+            // Disconnect the old observer if it exists
+            if (this.observer) {
+                this.observer.disconnect();
+            }
+
+            // Remove existing boxes and planes
+            while (this.el.firstChild) {
+                this.el.removeChild(this.el.firstChild);
+            }
+
+            // Call init again to reinitialize the component
+            this.init();
+        }
 
     }
 
