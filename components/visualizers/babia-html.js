@@ -2,7 +2,8 @@ AFRAME.registerComponent('babia-html', {
     schema: {
         html: { type: 'string' },
         distanceLevels: { type: 'float', default: 0.7 },
-        renderHTML: { type: 'boolean', default: false }
+        renderHTML: { type: 'boolean', default: false },
+        renderHTMLOnlyLeafs: { type: 'boolean', default: false },
     },
 
     babiaDiv: null,
@@ -101,12 +102,28 @@ AFRAME.registerComponent('babia-html', {
 
             //Select if we want to render the HTML content as a plane or a texture, if not, color
             if (this.data.renderHTML && typeof html2canvas !== "undefined") {
-                html2canvas(child).then(function (canvas) {
-                    box.setAttribute('material', {
-                        shader: 'flat',
-                        src: canvas.toDataURL()
-                    });
-                })
+                // Render all, or render only the last child
+                if (this.data.renderHTMLOnlyLeafs) {
+                    if (child.children.length == 0) {
+                        // That's a leaf
+                        html2canvas(child).then(function (canvas) {
+                            box.setAttribute('material', {
+                                shader: 'flat',
+                                src: canvas.toDataURL()
+                            });
+                        })
+                    }else{
+                        box.setAttribute('color', this.colors_grad[childrenLevel]);
+                    }
+
+                } else {
+                    html2canvas(child).then(function (canvas) {
+                        box.setAttribute('material', {
+                            shader: 'flat',
+                            src: canvas.toDataURL()
+                        });
+                    })
+                }
             } else {
                 // If renderHTML is not set, we use the color attribute to color the box
                 box.setAttribute('color', this.colors_grad[childrenLevel]);
