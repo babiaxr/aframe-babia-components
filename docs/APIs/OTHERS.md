@@ -69,7 +69,7 @@ To work needs to indicate it inside the selector
 
 The axis components add axis to the graphs. It is currently available for babia-bars and babia-barsmap components.
 
-#### **babia-axis-x component**
+### **babia-axis-x component**
 
 This component adds a x axis to the graph.
 
@@ -93,7 +93,7 @@ This component adds a x axis to the graph.
 ```
 
 
-#### **babia-axis-y component**
+### **babia-axis-y component**
 
 This component adds a y axis to the graph.
 
@@ -115,7 +115,7 @@ This component adds a y axis to the graph.
     align: left'></a-entity>
 ```
 
-#### **babia-axis-z component**
+### **babia-axis-z component**
 
 This component adds a z axis to the graph.
 
@@ -138,7 +138,7 @@ This component adds a z axis to the graph.
     align: front, name: continent'></a-entity>
 ```
 
-#### **babia-camera component**
+### **babia-camera component**
 
 This component built the needed things related to the camera for changing between VR and On-Screen, it adds cursor components and inserts oculus controllers.
 
@@ -159,7 +159,7 @@ This component built the needed things related to the camera for changing betwee
     <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass, #audio_button; raycasterHand: .babiaxraycasterclass, #audio_button" look-controls wasd-controls="fly: false"></a-entity>
 ```
 
-#### **babia-range-selector component**
+### **babia-range-selector component**
 
 This component uses the queryes component in order to change the time range in the query (only used in requests). It includes 
 
@@ -175,7 +175,7 @@ This component uses the queryes component in order to change the time range in t
 ```
 
 
-#### **babia-poster component**
+### **babia-poster component**
 
 **This component is a soft fork of aframe-dialog-component**: https://github.com/editvr/aframe-dialog-popup-component#readme
 
@@ -205,7 +205,7 @@ This component uses the queryes component in order to change the time range in t
 | dialogBoxColor   | Dialog box background color. | white                        |
 | dialogBoxPadding | Dialog box padding.          | 0.2                          |
 
-#### **babia-experiment component**
+### **babia-experiment component**
 
 **We recomment to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
 
@@ -231,7 +231,7 @@ This component uses the queryes component in order to change the time range in t
 
 
 
-#### **babia-task component**
+### **babia-task component**
 
 **We recomment to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
 
@@ -251,3 +251,13 @@ This component uses the queryes component in order to change the time range in t
  | taskVideoWidth  | Height of the video panel                                                            | boolean | 1.75               |
  | offsetX         | Offset in the X axis for positioning the task (useful when more than one babia-task) | number  | 0                  |
  | lookat          | What everything created by this component will follow in rotation                    | string  | `[camera]`         |
+
+### **babia-html component**
+
+**This component shows the DOM structure rendered in 3D**
+
+ | Property       | Description                                                                                                                                                                                                                              | Type    | Default value |
+ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------- |
+ | html           | HTML stringifyed to represent in 3D                                                                                                                                                                                                      | string  | ''            |
+ | distanceLevels | Distance between children levels                                                                                                                                                                                                         | float   | 0.7           |
+ | renderHTML     | If you want to render as a texture the HTML of each item. **IMPORTANT: You need to add into your html the `html2canvas` dependency `<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>` | boolean | false         |

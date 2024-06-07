@@ -1,7 +1,8 @@
 AFRAME.registerComponent('babia-html', {
     schema: {
         html: { type: 'string' },
-        distanceLevels: { type: 'float', default: 0.7 }
+        distanceLevels: { type: 'float', default: 0.7 },
+        renderHTML: { type: 'boolean', default: false }
     },
 
     babiaDiv: null,
@@ -64,7 +65,7 @@ AFRAME.registerComponent('babia-html', {
             box.setAttribute('width', rect.width / 100);
             box.setAttribute('height', rect.height / 100);
             box.setAttribute('depth', 0.01);
-            box.setAttribute('color', this.colors_grad[childrenLevel]); // You can change the color or set it based on some logic
+
 
             // Clickable
             box.classList.add("babiaxraycasterclass")
@@ -96,6 +97,22 @@ AFRAME.registerComponent('babia-html', {
                     this.showHtmlContent(box, child.outerHTML, 'permanent');
                 }
             });
+
+
+            //Select if we want to render the HTML content as a plane or a texture, if not, color
+            if (this.data.renderHTML && typeof html2canvas !== "undefined") {
+                html2canvas(child).then(function (canvas) {
+                    box.setAttribute('material', {
+                        shader: 'flat',
+                        src: canvas.toDataURL()
+                    });
+                })
+            } else {
+                // If renderHTML is not set, we use the color attribute to color the box
+                box.setAttribute('color', this.colors_grad[childrenLevel]);
+            }
+
+
 
 
             el.appendChild(box);
