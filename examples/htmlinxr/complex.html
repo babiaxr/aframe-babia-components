@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="A BabiaXR example - " />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.2.0/dist/aframe-extras.min.js"></script>
+    <script
+        src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="../../dist/aframe-babia-components.js"></script>
+    <script src="../../components/visualizers/babia-html.js"></script>
+    <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+</head>
+
+<body>
+    <a-scene background="color: #A8F3FF" id="AframeScene">
+        <!-- <a-entity environment="playArea: 10"></a-entity> -->
+        <a-light type="point" intensity="1" position="-10 20 30"></a-light>
+
+        <!-- scene -->
+        <a-entity scale="0.3 0.3 0.3" position="-2 2 0" id="htmlDOM" babia-html='renderHTML: true; renderHTMLOnlyLeafs: true; distanceLevels: 0.7; html:  <div class="wrapper">
+            <header>
+                <div class="branding">
+                    <h1>Brand Name</h1>
+                    <nav>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#products">Products</a>
+                                <ul>
+                                    <li><a href="#product1">Product 1</a></li>
+                                    <li><a href="#product2">Product 2</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main>
+                <section class="intro">
+                    <h2>Welcome</h2>
+                    <p>Introduction content here.</p>
+                </section>
+                <section class="features">
+                    <div class="feature">
+                        <h3>Feature 1</h3>
+                        <p>Description of feature 1.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Feature 2</h3>
+                        <p>Description of feature 2.</p>
+                    </div>
+                </section>
+                <article class="highlight">
+                    <h2>Highlighted Article</h2>
+                    <p>Content of the highlighted article.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column 1</th>
+                                <th>Column 2</th>
+                                <th>Column 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data 1</td>
+                                <td>Data 2</td>
+                                <td>Data 3</td>
+                            </tr>
+                            <tr>
+                                <td>Data 4</td>
+                                <td>Data 5</td>
+                                <td>Data 6</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </main>
+            <footer>
+                <p>&copy; 2024 Company Name</p>
+            </footer>
+        </div>'></a-entity>
+
+        <!-- buttons -->
+        <a-entity position="0 3 0">
+            <!-- RotateX button -->
+            <a-plane id="rotateX" class="babiaxraycasterclass" position="-1 1 -3" width="1" height="0.5" color="blue"
+                rotation="0 0 0" text="value: RotateX; color: white; align: center; width: 3;"></a-plane>
+
+            <!-- RotateY button -->
+            <a-plane id="rotateY" class="babiaxraycasterclass" position="0 1 -3" width="1" height="0.5" color="green"
+                rotation="0 0 0" text="value: RotateY; color: white; align: center; width: 3;"></a-plane>
+
+            <!-- RotateZ button -->
+            <a-plane id="rotateZ" class="babiaxraycasterclass" position="1 1 -3" width="1" height="0.5" color="red"
+                rotation="0 0 0" text="value: RotateZ; color: white; align: center; width: 3;"></a-plane>
+
+            <!-- Collapse button -->
+            <a-plane id="collapse" class="babiaxraycasterclass" position="-1 0.5 -3" width="1" height="0.5"
+                color="yellow" rotation="0 0 0"
+                text="value: Collapse; color: black; align: center; width: 3;"></a-plane>
+
+            <!-- Expand button -->
+            <a-plane id="expand" class="babiaxraycasterclass" position="1 0.5 -3" width="1" height="0.5" color="purple"
+                rotation="0 0 0" text="value: Expand; color: white; align: center; width: 3;"></a-plane>
+        </a-entity>
+
+
+        <!-- Controls and Camera -->
+        <a-entity id="cameraRig" position="0 1.6 3">
+            <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass; 
+                        raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom" look-controls
+                wasd-controls="fly: true; acceleration: 10">
+                <a-entity></a-entity>
+            </a-entity>
+        </a-entity>
+
+    </a-scene>
+
+    <script>// RotateX button
+        document.querySelector('#rotateX').addEventListener('click', function () {
+            let entity = document.querySelector('#htmlDOM');
+            let rotation = entity.getAttribute('rotation');
+            entity.setAttribute('rotation', { x: rotation.x + 90, y: rotation.y, z: rotation.z });
+        });
+
+        // RotateY button
+        document.querySelector('#rotateY').addEventListener('click', function () {
+            let entity = document.querySelector('#htmlDOM');
+            let rotation = entity.getAttribute('rotation');
+            entity.setAttribute('rotation', { x: rotation.x, y: rotation.y + 90, z: rotation.z });
+        });
+
+        // RotateZ button
+        document.querySelector('#rotateZ').addEventListener('click', function () {
+            let entity = document.querySelector('#htmlDOM');
+            let rotation = entity.getAttribute('rotation');
+            entity.setAttribute('rotation', { x: rotation.x, y: rotation.y, z: rotation.z + 90 });
+        });
+
+        // Collapse button
+        document.querySelector('#collapse').addEventListener('click', function () {
+            let entity = document.querySelector('#htmlDOM');
+            entity.setAttribute('babia-html', 'distanceLevels: 0.01');
+        });
+
+        // Expand button
+        document.querySelector('#expand').addEventListener('click', function () {
+            let entity = document.querySelector('#htmlDOM');
+            entity.setAttribute('babia-html', 'distanceLevels: 0.7');
+        });
+    </script>
+
+    <!-- GITLAB CORNER-->
+    <div class="gitlab-corner-wrapper"><a
+            href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples///index.html"
+            class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                <g id="g44">
+                    <path id="path46" class="cls-1"
+                        d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                </g>
+                <g id="g48">
+                    <path id="path50" class="cls-2" d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                </g>
+                <g id="g56">
+                    <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                </g>
+                <g id="g64">
+                    <path id="path66" class="cls-3"
+                        d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                </g>
+                <g id="g72">
+                    <path id="path74" class="cls-2"
+                        d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                </g>
+                <g id="g76">
+                    <path id="path78" class="cls-1" d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                </g>
+                <g id="g80">
+                    <path id="path82" class="cls-3"
+                        d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                </g>
+                <g id="g84">
+                    <path id="path86" class="cls-2"
+                        d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                </g>
+            </svg></a></div>
+
+</body>
+
+
+</html>

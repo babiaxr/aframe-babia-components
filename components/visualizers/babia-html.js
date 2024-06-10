@@ -233,9 +233,9 @@ AFRAME.registerComponent('babia-html', {
 
     update: function () {
         let data = this.data
-        let oldData = this.oldData;
+        let oldData = this.previousOldData;
 
-        if (data.html != oldData.html || data.distanceLevels != data.distanceLevels) {
+        if (data.html != oldData.html || data.distanceLevels != oldData.distanceLevels) {
             // Disconnect the old observer if it exists
             if (this.observer) {
                 this.observer.disconnect();
