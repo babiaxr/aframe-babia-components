@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -17,7 +16,7 @@
     <script src="./aframe-lounge-component.min.js"></script>
     <script
         src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.3/dist/aframe-dialog-popup-component.min.js"></script>
-        <script src="../../../dist/aframe-babia-components.js"></script>
+    <script src="../../../dist/aframe-babia-components.js"></script>
     <style>
         h1 {
             color: #AAAAAA;
@@ -55,7 +54,7 @@
         <a-sky src="#sky"></a-sky>
 
         <!-- Information popup -->
-        <a-entity rotation="0 -90 0" position="6 -3.5 6.5" scale="0.2 0.2 0.2">
+        <a-entity rotation="0 -90 0" position="6 1.5 6.5" scale="0.2 0.2 0.2">
             <a-entity id="navbarpopup" position="11 1 -5.5" babia-lookat="[laser-controls]"
                 dialog-popup="
       openIconImage: ../../assets/popups/info.jpg;
@@ -241,7 +240,7 @@
         </a-entity>
 
         <!-- Aframe Lounge -->
-        <a-entity id="lounge" position="5 0 2" lounge="width: 20; depth: 25; height: 11;
+        <a-entity id="lounge" position="5 4 2" lounge="width: 20; depth: 25; height: 11;
                             north: barrier; 
                             floorTexture: ../../assets/textures/floor-texture.jpg">
 
@@ -253,13 +252,13 @@
 
         </a-entity>
 
-        <a-entity position="4.5 -5 7" scale="0.01 0.5 0.01" id="city"
+        <a-entity position="4.5 -1 7" scale="0.01 0.5 0.01" id="city"
             babia-boats="height_building_legend: -0.5; legend_scale: 0.25; legend_lookat: [laser-controls]; extra: 1; zone_elevation: 0.01; from: jetumlcity; area: num_funs; height: loc_per_function; color: ccn; height_quarter_legend_box: 0.01; height_quarter_legend_title: -3.5">
         </a-entity>
 
 
 
-        <a-entity id="bardescription" position="7.4 -4.7 5.5" rotation="-30 90 0" scale="0.8 0.8 0.8">
+        <a-entity id="bardescription" position="7.4 -0.7 5.5" rotation="-30 180 0" scale="0.8 0.8 0.8">
             <!-- Close tooltips -->
             <a-plane id="closelegends" babia-lookat="[laser-controls]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
                 position="0 1.5 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
@@ -288,7 +287,7 @@
 
         <!-- Controls and Camera -->
         <a-entity lounge-entry-point rotation="0 -90 0">
-            <a-entity camera position="4 -4 -5" look-controls wasd-controls="fly: false"></a-entity>
+            <a-entity camera position="4 0 -5" look-controls wasd-controls="fly: false"></a-entity>
             <a-entity laser-controls raycaster="objects: .babiaxraycasterclass, #navbarpopup, .surveys, .surveys--close-icon, #navbarpopup--close-icon, #presurvey, #presurvey--close-icon, 
             #onesurvey, #onesurvey--close-icon, 
             #twosurvey, #twosurvey--close-icon, 
