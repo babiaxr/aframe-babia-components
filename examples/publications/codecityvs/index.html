@@ -7,7 +7,7 @@
     <meta name="description" content="BabiaXR Components Gallery using covid-19 data">
     </meta>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.2.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.1.0/dist/aframe-extras.min.js"></script>
 
     <script
         src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
@@ -287,8 +287,10 @@
 
         <!-- Controls and Camera -->
         <a-entity lounge-entry-point rotation="0 -90 0">
-            <a-entity camera position="4 1.6 -5" movement-controls look-controls wasd-controls="fly: false"></a-entity>
-            <a-entity laser-controls raycaster="objects: .babiaxraycasterclass, #navbarpopup, .surveys, .surveys--close-icon, #navbarpopup--close-icon, #presurvey, #presurvey--close-icon, 
+            <a-entity id="cameraRig" position="4 1.6 -5" movement-controls>
+                <a-entity id="head" camera look-controls></a-entity>
+
+                <a-entity laser-controls raycaster="objects: .babiaxraycasterclass, #navbarpopup, .surveys, .surveys--close-icon, #navbarpopup--close-icon, #presurvey, #presurvey--close-icon, 
             #onesurvey, #onesurvey--close-icon, 
             #twosurvey, #twosurvey--close-icon, 
             #threesurvey, #threesurvey--close-icon, 
@@ -300,7 +302,7 @@
             #fivesurveyother, #fivesurveyother--close-icon,
             #iteractionpopup, #iteractionpopup--close-icon, 
       #cityinformation, #cityinformation--close-icon"></a-entity>
-            <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .surveys, .surveys--close-icon, 
+                <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .surveys, .surveys--close-icon, 
             #navbarpopup, #navbarpopup--close-icon,  
             #presurvey, #presurvey--close-icon, 
             #onesurvey, #onesurvey--close-icon, 
@@ -314,6 +316,7 @@
             #fivesurveyother, #fivesurveyother--close-icon,
             #iteractionpopup, #iteractionpopup--close-icon, 
       #cityinformation, #cityinformation--close-icon"></a-entity>
+            </a-entity>
         </a-entity>
 
     </a-scene>
