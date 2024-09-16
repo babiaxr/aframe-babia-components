@@ -61,7 +61,7 @@
             <a-sky src="#sky"></a-sky>
 
             <!-- Information popup -->
-            <a-entity rotation="0 -90 0" position="7 0 -4.5">
+            <a-entity rotation="0 -90 0" position="3 5 -4.5">
                 <a-entity id="navbarpopup" position="2 -1 -5"
                     dialog-popup="
       openIconImage: ../assets/popups/info.jpg;
@@ -84,11 +84,11 @@
 
 
             <!-- Aframe Lounge -->
-            <a-entity position="3 -1 0.9" id="city"
+            <a-entity position="-1 0.6 0.9" id="city"
                 babia-boats="height_building_legend: -0.5; legend_scale: 0.25; extra: 1; zone_elevation: 0.01; from: jetumlcity; area: num_funs; height: loc_per_function; color: ccn; height_quarter_legend_box: 1; height_quarter_legend_title: -3; autoscale: true">
             </a-entity>
 
-            <a-entity id="lounge" position="5 4 0" lounge="width: 20; depth: 25; height: 11;
+            <a-entity id="lounge" position="1 5.6 0" lounge="width: 20; depth: 25; height: 11;
                             north: barrier; 
                             floorTexture: ../assets/textures/floor-texture.jpg">
 
@@ -104,8 +104,7 @@
 
 
 
-            <a-entity id="bardescription" position="7.4 -4.7 -1.5" rotation="-30 0 0" scale="0.8 0.8 0.8">
-                <!-- Close tooltips -->
+            <!-- <a-entity id="bardescription" position="7.4 -4.7 -1.5" rotation="-30 0 0" scale="0.8 0.8 0.8">
                 <a-plane id="closelegends" babia-lookat="[camera]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
                     position="0 1.5 0" geometry="primitive: plane; width: 2; height: 0.5" color="#012752"
                     text="value: Close All Tooltips; color: white; align: center; wrapCount: 30; width: 3.6; transparent: false; alphaTest: 6; opacity: 6">
@@ -127,7 +126,7 @@
                     <p>Interactions: Click (or hover) on a building or click on a quarter to discover more.
                     </p>
                 </a-entity>
-            </a-entity>
+            </a-entity> -->
 
             <!-- Lights -->
             <a-entity position="5 50 0" light="type: hemisphere; color: #CEE4F0; intensity: 1; groundColor: #454545">
@@ -137,9 +136,14 @@
             <a-entity lounge-entry-point rotation="0 -90 0">
 
             </a-entity>
-            <a-entity position="4 0 5" camera
-                babia-camera="raycasterMouse: .babiaxraycasterclass; raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom"
-                look-controls wasd-controls="fly: true"></a-entity>
+            <!-- Controls and Camera -->
+            <a-entity id="cameraRig" position="0 1.6 5" movement-controls>
+                <a-entity id="head" camera
+                    babia-camera="raycasterMouse: .babiaxraycasterclass; raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom"
+                    look-controls wasd-controls="fly: true">
+                    <a-entity></a-entity>
+                </a-entity>
+            </a-entity>
         </a-entity>
 
     </a-scene>
