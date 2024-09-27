@@ -90,7 +90,7 @@ AFRAME.registerComponent('babia-treebuilder', {
                 if (!path[j]) { continue }
 
                 let part = path[j];
-                console.log("currentLevel", currentLevel)
+                //console.log("currentLevel", currentLevel)
                 let existingPath = findWhere(currentLevel, 'name', part);
 
                 if (existingPath) {

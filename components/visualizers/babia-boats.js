@@ -29,7 +29,7 @@ AFRAME.registerComponent('babia-boats', {
         // Differential heights for buildings (the height of
         // buildings is calculated relative to the difference between
         // highest and lowest value)
-        diffBuildingHeight: {type: 'boolean', default: false},
+        diffBuildingHeight: { type: 'boolean', default: false },
         zone_elevation: { type: 'number', default: 0.01 },
         building_separation: { type: 'number', default: 0.25 },
         extra: { type: 'number', default: 1.0 },
@@ -47,6 +47,8 @@ AFRAME.registerComponent('babia-boats', {
         legend_lookat: { type: 'string', default: "[camera]" },
         metricsInfoId: { type: 'string', default: "" },
         highlightQuarter: { type: 'boolean', default: false },
+        hideQuarterBoxLegend: { type: 'boolean', default: false },
+        highlightQuarterByClick: { type: 'boolean', default: false },
         field: { type: 'string', default: 'uid' },
 
         // Numeric color legend entity to hide/show
@@ -223,7 +225,7 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     updateChart: function (items) {
-        console.log('Data Loaded.');
+        //console.log('Data Loaded.');
         let t = { x: 0, y: 0, z: 0 };
         this.idsToNotRepeatWireframe = []
         this.idsToNotRepeat20Transparent = []
@@ -359,11 +361,11 @@ AFRAME.registerComponent('babia-boats', {
                     height_min = self.babiaMetadata['heightMin'];
                 };
                 element.height = self.normalizeValues(height_min,
-                                                      self.babiaMetadata['heightMax'],
-                                                      self.data.minBuildingHeight,
-                                                      self.data.maxBuildingHeight,
-                                                      elements[i][this.data.height])
-                                || this.data.minBuildingHeight
+                    self.babiaMetadata['heightMax'],
+                    self.data.minBuildingHeight,
+                    self.data.maxBuildingHeight,
+                    elements[i][this.data.height])
+                    || this.data.minBuildingHeight
             }
             if (this.data.depth) {
                 element.depth = elements[i][this.data.depth] || 0.5
@@ -482,11 +484,11 @@ AFRAME.registerComponent('babia-boats', {
             if (elements[i].children) {
                 // This is the base for a quarter
                 figure.name = elements[i][this.data.field] || '',
-                figure.width = element.width,
-                figure.depth = element.depth,
-                figure.children = children,
-                figure.alpha = self.data.baseAlpha,
-                figure.translate_matrix = translate_matrix
+                    figure.width = element.width,
+                    figure.depth = element.depth,
+                    figure.children = children,
+                    figure.alpha = self.data.baseAlpha,
+                    figure.translate_matrix = translate_matrix
                 // TEST TREE
                 if (self.data.treeLayout) {
                     figure.treeMetaphorHeight = element.treeMetaphorHeight
@@ -498,10 +500,10 @@ AFRAME.registerComponent('babia-boats', {
                 if (self.data.gradientBaseColor) {
                     figure.color = greenColorsurface(Math.round(
                         self.normalizeValues(1,
-                                             self.babiaMetadata['maxLevels'],
-                                             15,
-                                             100,
-                                             hierarchyLevel)
+                            self.babiaMetadata['maxLevels'],
+                            15,
+                            100,
+                            hierarchyLevel)
                     ));
                 } else {
                     figure.color = self.data.base_color;
@@ -509,7 +511,7 @@ AFRAME.registerComponent('babia-boats', {
             } else {
                 // This is a building
                 figure.name = (elements[i].name) ? elements[i].name : elements[i][this.data.field],
-                figure.alpha = self.data.buildingAlpha
+                    figure.alpha = self.data.buildingAlpha
                 if (this.data.area) {
                     figure.width = Math.sqrt(element.area);
                     figure.depth = Math.sqrt(element.area);
@@ -676,12 +678,12 @@ AFRAME.registerComponent('babia-boats', {
                         let height_min = 0;
                         if (self.data.diffBuildingHeight) {
                             height_min = self.babiaMetadata['heightMin'];
-                        };        
+                        };
                         position.y = (self.normalizeValues(height_min,
-                                                           self.babiaMetadata['heightMax'],
-                                                           self.data.minBuildingHeight,
-                                                           self.data.maxBuildingHeight,
-                                                           figures[i].treeMetaphorHeight))
+                            self.babiaMetadata['heightMax'],
+                            self.data.minBuildingHeight,
+                            self.data.maxBuildingHeight,
+                            figures[i].treeMetaphorHeight))
                     } else {
                         position.y = ((height / 2 + translate.y / 2)) - height - 0.001
                     }
@@ -836,6 +838,9 @@ AFRAME.registerComponent('babia-boats', {
                     // find index in old_figures
                     let cond = 'id=' + figures[i].id
                     let index = findIndex(figures_old, cond)
+
+                    // Update rawData
+                    entity.babiaRawData = figures[i].rawData
                     if (index < 0) {
                         // encontrar el elemento que no esta en la escena con id y darle opacidad 
                         // y cambiar sus propiedades a la nueva si es necesario 
@@ -1060,14 +1065,14 @@ AFRAME.registerComponent('babia-boats', {
                             let height_min = 0;
                             if (self.data.diffBuildingHeight) {
                                 height_min = self.babiaMetadata['heightMin'];
-                            };            
+                            };
                             entity.object3D.position.set(
                                 figure.posX - translate.x,
                                 self.normalizeValues(height_min,
-                                                     self.babiaMetadata['heightMax'],
-                                                     self.data.minBuildingHeight,
-                                                     self.data.maxBuildingHeight,
-                                                     figure.treeMetaphorHeight),
+                                    self.babiaMetadata['heightMax'],
+                                    self.data.minBuildingHeight,
+                                    self.data.maxBuildingHeight,
+                                    figure.treeMetaphorHeight),
                                 - figure.posY + translate.z,
                             )
                         } else {
@@ -1139,7 +1144,6 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('width', new_width);
             entity.setAttribute('height', new_height);
             entity.setAttribute('depth', new_depth);
-            entity.babiaRawData = figure.rawData
 
             //Check if has transparent box as a quarter
             if (entity.classList.contains('babiaquarterboxactivated')) {
@@ -1161,7 +1165,6 @@ AFRAME.registerComponent('babia-boats', {
             entity.setAttribute('width', figure.width);
             entity.setAttribute('height', figure.height);
             entity.setAttribute('depth', figure.depth);
-            entity.babiaRawData = figure.rawData
 
             //Check if has transparent box as a quarter
             if (entity.classList.contains('babiaquarterboxactivated')) {
@@ -1265,6 +1268,8 @@ AFRAME.registerComponent('babia-boats', {
 
         // create box
         entity.setAttribute('color', color);
+        // Store init color
+        entity.setAttribute('babiaxrFirstColor', color)
         entity.setAttribute('width', width);
         entity.setAttribute('height', height);
         entity.setAttribute('depth', depth);
@@ -1307,7 +1312,7 @@ AFRAME.registerComponent('babia-boats', {
     */
     processData: function (_data) {
         const self = this
-        console.log("processData", _data);
+        //console.log("processData", _data);
         let data = this.data;
         this.newData = _data;
         this.babiaMetadata = { id: this.babiaMetadata.id++ };
@@ -1455,13 +1460,24 @@ AFRAME.registerComponent('babia-boats', {
             // dont add events flag (if transparent)
             if (!figure.dontAddEvents) {
                 let transparentBox;
+                
                 entity.addEventListener('click', function (e) {
                     // Just launch the event on the child
                     if (e.target !== this)
                         return;
 
                     if (entity.legend) {
-                        self.el.parentElement.removeChild(transparentBox)
+                        // Only if it not activated
+                        if (!self.data.hideQuarterBoxLegend) {
+                            self.el.parentElement.removeChild(transparentBox)
+                        }
+
+                        // Only if highlighted activated
+                        if (self.data.highlightQuarterByClick) {
+                            entity.setAttribute('material', 'color', entity.getAttribute('babiaxrFirstColor'))
+                            entity.setAttribute('babiaxrHightlightedByClick', false)
+                        }
+
                         entity.classList.remove("babiaquarterboxactivated");
                         self.el.parentElement.removeChild(entity.legend)
 
@@ -1479,27 +1495,39 @@ AFRAME.registerComponent('babia-boats', {
                         transparentBox = undefined
 
                     } else {
-                        transparentBox = document.createElement('a-entity');
-                        transparentBox.setAttribute('class', 'babiaquarterlegendbox')
-                        entity.classList.add("babiaquarterboxactivated");
-                        let oldGeometry = entity.getAttribute('geometry')
-                        let scale = self.el.getAttribute("scale") || { x: 1, y: 1, z: 1 }
-                        let tsBoxHeight = (oldGeometry.height * scale.y) + self.data.height_quarter_legend_box
-                        transparentBox.setAttribute('geometry', {
-                            height: tsBoxHeight,
-                            depth: oldGeometry.depth * scale.z,
-                            width: oldGeometry.width * scale.x
-                        });
-                        transparentBox.setAttribute('material', {
-                            'visible': true,
-                            'opacity': 0.4
-                        });
-                        // This is because the webGL render order does not work well with the transparencies
-                        transparentBox.object3D.renderOrder = 1000000000
+                        // Global coordinates
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                        transparentBox.setAttribute('position', coordinates)
-                        self.el.parentElement.appendChild(transparentBox)
+                        
+
+                        if (!self.data.hideQuarterBoxLegend) {
+                            transparentBox = document.createElement('a-entity');
+                            transparentBox.setAttribute('class', 'babiaquarterlegendbox')
+                            entity.classList.add("babiaquarterboxactivated");
+                            let oldGeometry = entity.getAttribute('geometry')
+                            let scale = self.el.getAttribute("scale") || { x: 1, y: 1, z: 1 }
+                            let tsBoxHeight = (oldGeometry.height * scale.y) + self.data.height_quarter_legend_box
+                            transparentBox.setAttribute('geometry', {
+                                height: tsBoxHeight,
+                                depth: oldGeometry.depth * scale.z,
+                                width: oldGeometry.width * scale.x
+                            });
+                            transparentBox.setAttribute('material', {
+                                'visible': true,
+                                'opacity': 0.4
+                            });
+                            // This is because the webGL render order does not work well with the transparencies
+                            transparentBox.object3D.renderOrder = 1000000000
+
+                            transparentBox.setAttribute('position', coordinates)
+                            self.el.parentElement.appendChild(transparentBox)
+                        }
+
+                        // If quarter is highlighted using the click
+                        if (self.data.highlightQuarterByClick) {
+                            //entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
+                            entity.setAttribute('material', 'color', '#bfbfbf')
+                        }
 
                         let coordinatesFinal = {
                             x: coordinates.x,
@@ -1626,7 +1654,6 @@ AFRAME.registerComponent('babia-boats', {
                             let oldPosition = entity.parentElement.getAttribute("position")
                             entity.parentElement.setAttribute('babiaxrFirstYPosition', oldPosition.y)
                             entity.parentElement.setAttribute("position", { x: oldPosition.x, y: oldPosition.y + 0.2, z: oldPosition.z })
-                            entity.parentElement.setAttribute('babiaxrFirstColor', entity.parentElement.getAttribute("material")["color"])
                             entity.parentElement.setAttribute('material', 'color', '#bfbfbf')
                             entity.parentElement.setAttribute('babiaxrHightlighted', 1)
                         } else {
@@ -1660,7 +1687,9 @@ AFRAME.registerComponent('babia-boats', {
                     entityGeometry = entity.getAttribute('geometry')
                     let boxPosition = entity.getAttribute('position')
                     entity.setAttribute('position', boxPosition)
-                    entity.setAttribute('babiaxrFirstColor', entity.getAttribute("material")["color"])
+                    // If the color is not a field, it is stored at "color"
+                    let firstColor = entity.getAttribute("material")["color"] !== "undefined" ? entity.getAttribute("material")["color"] : self.data.building_color;
+                    entity.setAttribute('babiaxrFirstColor', firstColor)
                     entity.setAttribute('material', {
                         'color': 'white'
                     });
