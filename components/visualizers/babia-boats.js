@@ -45,6 +45,8 @@ AFRAME.registerComponent('babia-boats', {
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
         legend_lookat: { type: 'string', default: "[camera]" },
+        legendsAsChildren: { type: 'boolean', default: false },
+        legendsAsChildrenHeight: { type: 'number', default: 3 },
         metricsInfoId: { type: 'string', default: "" },
         highlightQuarter: { type: 'boolean', default: false },
         hideQuarterBoxLegend: { type: 'boolean', default: false },
@@ -193,9 +195,18 @@ AFRAME.registerComponent('babia-boats', {
                             y: self.data.height_quarter_legend_title,
                             z: coordinates.z
                         }
-                        entity.legend.setAttribute('position', coordinatesFinal)
-                        entity.legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(entity.legend)
+
+                        // If legend is a child of the building/quarter
+                        if (self.data.legendsAsChildren) {
+                            entity.legend.setAttribute('position', { x: 0, y: self.data.legendsAsChildrenHeight, z: 0 })
+                            entity.legend.setAttribute('visible', true);
+                            entity.appendChild(entity.legend)
+                        } else {
+                            entity.legend.setAttribute('position', coordinatesFinal)
+                            entity.legend.setAttribute('visible', true);
+                            self.el.parentElement.appendChild(entity.legend)
+                        }
+
 
                         self.legendsActive.push(entity.legend)
                         entity.alreadyActive = true
@@ -1460,7 +1471,7 @@ AFRAME.registerComponent('babia-boats', {
             // dont add events flag (if transparent)
             if (!figure.dontAddEvents) {
                 let transparentBox;
-                
+
                 entity.addEventListener('click', function (e) {
                     // Just launch the event on the child
                     if (e.target !== this)
@@ -1479,7 +1490,14 @@ AFRAME.registerComponent('babia-boats', {
                         }
 
                         entity.classList.remove("babiaquarterboxactivated");
-                        self.el.parentElement.removeChild(entity.legend)
+
+                        // If legend is a child of the building/quarter
+                        if (self.data.legendsAsChildren) {
+                            entity.removeChild(entity.legend)
+                        } else {
+                            self.el.parentElement.removeChild(entity.legend)
+                        }
+
 
                         // Remove from the array that has the entity activated and the legend
                         const index = self.entitiesWithLegend.findIndex(item => item.entity === entity);
@@ -1498,7 +1516,7 @@ AFRAME.registerComponent('babia-boats', {
                         // Global coordinates
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
-                        
+
 
                         if (!self.data.hideQuarterBoxLegend) {
                             transparentBox = document.createElement('a-entity');
@@ -1535,9 +1553,18 @@ AFRAME.registerComponent('babia-boats', {
                             z: coordinates.z
                         }
                         entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
-                        entity.legend.setAttribute('position', coordinatesFinal)
-                        entity.legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(entity.legend)
+
+                        // If legend is a child of the building/quarter
+                        if (self.data.legendsAsChildren) {
+                            entity.legend.setAttribute('position', { x: 0, y: self.data.legendsAsChildrenHeight, z: 0 })
+                            entity.legend.setAttribute('visible', true);
+                            entity.appendChild(entity.legend)
+                        } else {
+                            entity.legend.setAttribute('position', coordinatesFinal)
+                            entity.legend.setAttribute('visible', true);
+                            self.el.parentElement.appendChild(entity.legend)
+                        }
+
 
                         // Add to the elements that has the legend activated
                         self.entitiesWithLegend.push({ 'figure': figure, 'entity': entity })
@@ -1582,7 +1609,13 @@ AFRAME.registerComponent('babia-boats', {
                     entity.setAttribute('material', {
                         'color': entity.getAttribute('babiaxrFirstColor')
                     });
-                    self.el.parentElement.removeChild(entity.legend)
+
+                    // If legend is a child of the building/quarter
+                    if (self.data.legendsAsChildren) {
+                        entity.removeChild(entity.legend)
+                    } else {
+                        self.el.parentElement.removeChild(entity.legend)
+                    }
 
                     // Remove from the array that has the entity activated
                     const index = self.entitiesWithLegend.findIndex(item => item.entity === entity);
@@ -1643,9 +1676,19 @@ AFRAME.registerComponent('babia-boats', {
                             y: height_real.max.y + 1 + self.data.height_building_legend,
                             z: coordinates.z
                         }
-                        entity.legend.setAttribute('position', coordinatesFinal)
-                        entity.legend.setAttribute('visible', true);
-                        self.el.parentElement.appendChild(entity.legend);
+
+                        // If legend is a child of the building/quarter
+                        if (self.data.legendsAsChildren) {
+                            entity.legend.setAttribute('position', { x: 0, y: self.data.legendsAsChildrenHeight, z: 0 })
+                            entity.legend.setAttribute('visible', true);
+                            entity.appendChild(entity.legend)
+                        } else {
+                            entity.legend.setAttribute('position', coordinatesFinal)
+                            entity.legend.setAttribute('visible', true);
+                            self.el.parentElement.appendChild(entity.legend);
+                        }
+
+
                     }
 
                     // Higlight quarter
@@ -1707,9 +1750,18 @@ AFRAME.registerComponent('babia-boats', {
                         y: height_real.max.y + 1 + self.data.height_building_legend,
                         z: coordinates.z
                     }
-                    entity.legend.setAttribute('position', coordinatesFinal)
-                    entity.legend.setAttribute('visible', true);
-                    self.el.parentElement.appendChild(entity.legend);
+
+                    // If legend is a child of the building/quarter
+                    if (self.data.legendsAsChildren) {
+                        entity.legend.setAttribute('position', { x: 0, y: self.data.legendsAsChildrenHeight, z: 0 })
+                        entity.legend.setAttribute('visible', true);
+                        entity.appendChild(entity.legend)
+                    } else {
+                        entity.legend.setAttribute('position', coordinatesFinal)
+                        entity.legend.setAttribute('visible', true);
+                        self.el.parentElement.appendChild(entity.legend);
+                    }
+
 
                     // Hihglight by field
                     if (self.data.highlightBuildingByField) {
@@ -1737,7 +1789,12 @@ AFRAME.registerComponent('babia-boats', {
                     entity.setAttribute('material', {
                         'color': entity.getAttribute('babiaxrFirstColor')
                     });
-                    self.el.parentElement.removeChild(entity.legend)
+                    // If legend is a child of the building/quarter
+                    if (self.data.legendsAsChildren) {
+                        entity.removeChild(entity.legend)
+                    } else {
+                        self.el.parentElement.removeChild(entity.legend)
+                    }
                     entity.legend = undefined
                 }
 
