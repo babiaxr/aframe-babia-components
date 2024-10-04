@@ -4,6 +4,10 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### NPM 1.2.8 version
+
+`babia-boats` Improved with some attributes and bug fixes.
+
 ### NPM 1.2.6 version
 
 Added `babia-experiment` and eveything related to the experiments feature.
