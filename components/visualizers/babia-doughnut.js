@@ -57,8 +57,9 @@ AFRAME.registerComponent('babia-doughnut', {
     * Called on each scene tick.
     */
     tick: function (t, delta) {
+        let self = this
         if (this.data.animation && this.loaded) {
-            let elements = document.getElementsByClassName('babiaxrChart')[0].children
+            let elements = self.el.children[0].children
             for (let slice in this.slice_array) {
                 let delay = this.slice_array[slice].delay
                 let max_arc = this.slice_array[slice].arc
