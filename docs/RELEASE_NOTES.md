@@ -4,6 +4,10 @@ This doc gathers all the information about the releases made by the Springs/Mile
 
 ## Release notes
 
+### NPM 1.2.9 version
+
+`babia-pie` & `babia-doughnut` Fix animation issue when more than one in the scene.
+
 ### NPM 1.2.8 version
 
 `babia-boats` Improved with some attributes and bug fixes.
