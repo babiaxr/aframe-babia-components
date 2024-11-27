@@ -1,9 +1,9 @@
 # Contributing to BabiaXR
 
-This guide collects information about how to deploy babiaXR locally, how to create a new component and add it to the babiaXR set and how to create the distribution files.
+This guide collects information about how to deploy BabiaXR locally, how to create a new component and add it to the BabiaXR set and how to create the distribution files.
 
 
-> :warning: **IMPORTANT**  : BabiaXR is a set of A-Frame components based on [**Angle**](https://www.npmjs.com/package/angle), for further information, please visit the angle main page.
+> :warning: **IMPORTANT**  : BabiaXR is a set of A-Frame components based on [**angle**](https://www.npmjs.com/package/angle), for further information, please visit the angle main page.
 
 
 ## Table of Contents
@@ -22,34 +22,37 @@ A high level overview of our contributing guidelines.
 
 ## Contributing process to the project
 
-BabiaXR is an open-source project hosted on [GitLab](https://gitlab.com/babiaxr), all the information about the tasks, the repositories with the code and the webpage are there, if you are on GitHub, please visit https://gitlab.com/babiaxr.
+BabiaXR is an open-source project hosted on [GitLab](https://gitlab.com/babiaxr).
+All the information about the tasks, the repositories with the code and the webpage are there, if you are on GitHub, please visit https://gitlab.com/babiaxr.
 
 ### Team organization
 
-The core developers organize the development using springs of two weeks of duration, each spring is defined as a Milestone of GitLab. In each milestone, some tasks will have done, and the organization of the tasks is the following:
+The core developers organize the development using sprints of two weeks of duration, each sprint is defined as a Milestone of GitLab. In each milestone, some tasks are worked on, and the organization of the tasks is as follows:
 
 - Topics/Subjects of the tasks are defined as issues in GitLab with the `Theme` tag.
-- Epics are big and complex tasks that have smaller and defined subtasks as children, each epic has a topic assigned. Once all the tasks of an epic are resolved, the epic will be resolved as well. Are defined as issues in GitLab with the `Epic` tag.
+- Epics are big and complex tasks that have smaller and defined subtasks as children, each epic has a topic assigned. Once all the tasks of an epic are resolved, the epic will be resolved as well. Epics defined as issues in GitLab with the `Epic` tag.
 - The common tasks are issues on GitLab and these issues depend on an epic or are a bug/feature.
 
-#### Springs/Milestones
+#### Sprints/Milestones
 
-Please, for further information about the Springs, go to the [RELEASE_NOTES.md](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/RELEASE_NOTES.md) doc.
+Please, for further information about the sprints, go to the [RELEASE_NOTES.md](https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/docs/RELEASE_NOTES.md) doc.
 
 ### Pending tasks
 
-We follow a Kanban for each, hosted as a board on GitLab, in the "To Do" list there are the tasks that are prepared to do. In order to see the tasks related to the current spring/milestone, please filter by milestonse the kanban/tasks list:
+We follow a Kanban process for each task, hosted as a board on GitLab.
+In the "To Do" list there are the tasks that are prepared to do.
+In order to see the tasks related to the current sprint/milestone, please filter the kanban/tasks list by milestones:
 
 - Kanban: https://gitlab.com/groups/babiaxr/-/boards
 - Tasks list: https://gitlab.com/groups/babiaxr/-/issues
 
-### How to MR
+### How to Merge Request (MR)
 
-In order to submit a PR, please follow the next steps:
+In order to submit a MR, please follow the next steps:
 
 1. Fork the target repository of BabiaXR on GitLab.
-2. Do the development/action.
-3. Submit a Merge Request referring the task/issue if the development resolves it.
+2. Do the development/action (see next section).
+3. Submit a MR referring the task/issue if the development resolves it.
 
 ## Deploy a dev server locally
 
@@ -88,16 +91,16 @@ The steps to reproduce and deploy a dev server for developing babiaXR are:
 Each change in a file will automatically update the dev server.
 
 **Warning notice:** `npm run ssldevall` will listen connections in 0.0.0.0,
-which means "all network devices in this host, including localhost2".
+which means "all network devices in this host, including localhost".
 This implies that the HTTPS server will accept connections from anywhere
-in Internet. While this is quite convenient for connecting external
-devices (eg, a VR device), it also exposes your directory to anyone
-with HTTPS access to the 8080 port in your host. Use at your own risk.
+in the internet. While this is quite convenient for connecting external
+devices (e.g., a VR device), it also exposes your directory to anyone
+with HTTPS access to the 8080 port on your host. Use `ssldevall` at your own risk.
 
 
 ## Build distribution files
 
-In order to build a distribution release for babiaXR, just need to execute the next command:
+In order to build a distribution release for BabiaXR, just need to execute the next command:
 
 ```
 npm run dist
@@ -109,7 +112,7 @@ Therefore, the command will generate two distribution files, `aframe-babia-compo
 
 ## Develop code in BabiaXR
 
-In order to develop code for babia, e.g. a new component, you have to add it to the `index.js` file using `require` sintax:
+In order to develop code for BabiaXR, e.g. a new component, you have to add it to the `index.js` file using `require` sintax:
 
 ```
 // index.js file
@@ -135,11 +138,11 @@ To start testing, execute the next command:
 ```
 npm run test
 ```
-This will run all the test that you'd created into `tests` folder. 
+This will run all the test that you have created in the `tests` folder. 
 
-When a test file includes to create snapshot or videos, will save it into `/screenshots` and `/videos` folders.
+When a test file includes to create snapshots or videos, those will be saved into the `/screenshots` and `/videos` folders.
 
-While development, if you want to test some tests, you can run cypress using:
+While development, if you want to execute some tests, you can run cypress using:
 ```
 npm run devtest
 ```
@@ -153,10 +156,10 @@ or
 npm run test:chrome
 ```
 
-## Certificates for npm sun ssldev to work
+## Certificates for npm run ssldev to work
 
 This repository comes with certificates that are used by webpack to configure the HTTPS server.
-They are self-signed, which means they need to be accepted in the browser: usually you
+They are self-signed, which means they need to be accepted in the browser: Usually you
 will get a warning about certificates not being correct, and will be prompted to acept them.
 These certificates have been built as follows:
 
@@ -167,7 +170,7 @@ openssl x509 -req -days 9999 -in csr.pem -signkey babia_key.pem -out babia_cert.
 rm csr.pem
 ```
 
-More details in [How to create a HTTPS server](https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/), in the Node documentation.
+More details in [How to create a HTTPS server](https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/) (Node.js documentation).
 
-We are using those certificates to avoid Webpack generating new certificates with every new run,
+We are using those certificates to avoid webpack generating new certificates with every new run,
 which means having to accept them in browser with every new run.
