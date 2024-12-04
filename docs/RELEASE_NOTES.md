@@ -1,6 +1,6 @@
 # Release Notes for BabiaXR
 
-This doc gathers all the information about the releases made by the Springs/Milestones of BabiaXR.
+This doc gathers all the information about the releases made by the Sprints/Milestones of BabiaXR.
 
 ## Release notes
 
@@ -323,7 +323,7 @@ Selector adapted to all the components
 
 
 
-## Springs/Milestones
+## Sprints/Milestones
 
 | Name        | Start date           | End Date   | Information | Board | Release Notes | NPM version |
 | --------        | -----------           | ----   | ----- | ------ | ------ | ------- |

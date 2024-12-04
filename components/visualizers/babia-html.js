@@ -10,28 +10,30 @@ AFRAME.registerComponent('babia-html', {
     clickedBoxes: new Map(),
 
     init: function () {
-        const self = this
-        let el = this.el;
-        let data = this.data;
+        // let el = this.el;
+        const data = this.data;
 
-        // Crear un observador para detectar la adición del div al DOM
-        this.observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
+        // Create an observer to detect the addition of the div to the DOM
+        this.observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
                 if (mutation.addedNodes) {
-                    mutation.addedNodes.forEach(function (node) {
+                    mutation.addedNodes.forEach((node) => {
                         if (node.id === 'babiaHtmlDiv') {
-                            console.log('El div con id "babiaHtmlDiv" ha sido renderizado en el DOM');
+                            console.log('A div with id "babiaHtmlDiv" has been rendered in the DOM');
+                            
+                            for (let i = 0; i < node.children.length; i++) {
+                                this.processNodeNoOffset(node.children[i], null, 0);
+                            }
 
-                            self.processNodeNoOffset(node, null, 0);
-
-                            self.observer.disconnect(); // Desconectar el observador si ya no se necesita
+                            // Disconnect the observer since the div has been added
+                            this.observer.disconnect();
                         }
                     });
                 }
             });
         });
 
-        // Configuración del observador para observar cambios en el cuerpo del documento
+        // Configuring the observer to observe changes to the body of the document
         this.observer.observe(document.body, { childList: true, subtree: true });
 
         // Insert the HTML in order to render it
@@ -39,119 +41,110 @@ AFRAME.registerComponent('babia-html', {
         babiaDiv.setAttribute('id', 'babiaHtmlDiv');
         babiaDiv.innerHTML = data.html;
         document.body.appendChild(babiaDiv);
-
-
     },
 
-    processNodeNoOffset: function (node, firstOffestToDelete, childrenLevel) {
-        let el = this.el
-        const children = node.children;
+    processNodeNoOffset: function (node, firstOffsetToDelete, childrenLevel) {
+        const el = this.el;
+        const rect = node.getBoundingClientRect();
+        const NODE_SCALAR = 0.01;
 
-        for (let i = 0; i < children.length; i++) {
-            const child = children[i];
-            const rect = child.getBoundingClientRect();
+        // Remove the first Y and X offset, since the HTML is rendered below the scene
+        if (!firstOffsetToDelete) {
+            firstOffsetToDelete = { x: rect.left * NODE_SCALAR, y: rect.top * NODE_SCALAR }
+        }
 
-            // Remove the first Y and X offset, since the HTML is rendered below the scene
-            if (!firstOffestToDelete) {
-                firstOffestToDelete = { x: rect.left / 100, y: rect.top / 100 }
+        // Calculate positions, adjusting the center of the box and removing the firstOffset
+        const offsetX = rect.right * NODE_SCALAR - (rect.width * NODE_SCALAR) / 2 - firstOffsetToDelete.x;
+        const offsetY = -rect.bottom * NODE_SCALAR + (rect.height * NODE_SCALAR) / 2 + firstOffsetToDelete.y;
+
+        // Create box
+        const box = document.createElement('a-box');
+        box.setAttribute('position', `${offsetX} ${offsetY} ${childrenLevel * this.data.distanceLevels}`);
+        box.setAttribute('width', rect.width * NODE_SCALAR);
+        box.setAttribute('height', rect.height * NODE_SCALAR);
+        box.setAttribute('depth', 0.01);
+
+
+        // Make box clickable
+        box.classList.add("babiaxraycasterclass")
+
+        // Store the HTML content in the box for later use
+        box.setAttribute('html-content', node.outerHTML);
+
+        // Add mouseenter and mouseleave events
+        box.addEventListener('mouseenter', () => {
+            if (!box.classList.contains('clicked')) {
+                this.showHtmlContent(box, node.outerHTML, 'temp');
             }
+        });
 
-            // Calculate positions, adjusting the center of the box and removing the firstOffset
-            const offsetX = rect.right / 100 - (rect.width / 100) / 2 - firstOffestToDelete.x;
-            const offsetY = -rect.bottom / 100 + (rect.height / 100) / 2 + firstOffestToDelete.y;
+        box.addEventListener('mouseleave', () => {
+            if (!box.classList.contains('clicked')) {
+                this.removeHtmlContent('temp');
+            }
+        });
 
-            // Create box
-            const box = document.createElement('a-box');
-            box.setAttribute('position', `${offsetX} ${offsetY} ${childrenLevel * this.data.distanceLevels}`);
-            box.setAttribute('width', rect.width / 100);
-            box.setAttribute('height', rect.height / 100);
-            box.setAttribute('depth', 0.01);
-
-
-            // Clickable
-            box.classList.add("babiaxraycasterclass")
-
-            // Store the HTML content in the box for later use
-            box.setAttribute('html-content', child.outerHTML);
-
-            // Add mouseenter and mouseleave events
-            box.addEventListener('mouseenter', () => {
-                if (!box.classList.contains('clicked')) {
-                    this.showHtmlContent(box, child.outerHTML, 'temp');
-                }
-            });
-
-            box.addEventListener('mouseleave', () => {
-                if (!box.classList.contains('clicked')) {
-                    this.removeHtmlContent('temp');
-                }
-            });
-
-            // Add click event to toggle the plane with the HTML content
-            box.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevent mouseenter/leave events from firing
-                if (box.classList.contains('clicked')) {
-                    box.classList.remove('clicked');
-                    this.removeHtmlContent('permanent', box);
-                } else {
-                    box.classList.add('clicked');
-                    this.showHtmlContent(box, child.outerHTML, 'permanent');
-                }
-            });
+        // Add click event to toggle the plane with the HTML content
+        box.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent mouseenter/leave events from firing
+            if (box.classList.contains('clicked')) {
+                box.classList.remove('clicked');
+                this.removeHtmlContent('permanent', box);
+            } else {
+                box.classList.add('clicked');
+                this.showHtmlContent(box, node.outerHTML, 'permanent');
+            }
+        });
 
 
-            //Select if we want to render the HTML content as a plane or a texture, if not, color
-            if (this.data.renderHTML && typeof html2canvas !== "undefined") {
-                // Render all, or render only the last child
-                if (this.data.renderHTMLOnlyLeafs) {
-                    if (child.children.length == 0) {
-                        // That's a leaf
-                        html2canvas(child).then(function (canvas) {
-                            box.setAttribute('material', {
-                                shader: 'flat',
-                                src: canvas.toDataURL()
-                            });
-                        })
-                    }else{
-                        box.setAttribute('color', this.colors_grad[childrenLevel]);
-                    }
-
-                } else {
-                    html2canvas(child).then(function (canvas) {
+        // Select if we want to render the HTML content as a plane or a texture, if not, color
+        if (this.data.renderHTML && typeof html2canvas !== "undefined") {
+            // Render all, or render only the last child
+            if (this.data.renderHTMLOnlyLeafs) {
+                if (node.children.length == 0) {
+                    // Found a leaf node
+                    html2canvas(node).then(function (canvas) {
                         box.setAttribute('material', {
                             shader: 'flat',
                             src: canvas.toDataURL()
                         });
                     })
+                }else{
+                    // Render inner node
+                    box.setAttribute('color', this.colors_grad[childrenLevel % this.colors_grad.length]);
                 }
+
             } else {
-                // If renderHTML is not set, we use the color attribute to color the box
-                box.setAttribute('color', this.colors_grad[childrenLevel]);
-            }
-
-
-
-
-            el.appendChild(box);
-
-            // Create line to the parent
-            if (childrenLevel > 0) {
-                let line = document.createElement('a-entity')
-                line.setAttribute('line', {
-                    start: `${offsetX} ${offsetY} ${childrenLevel * this.data.distanceLevels}`,
-                    end: `${offsetX} ${offsetY} ${(childrenLevel * this.data.distanceLevels) - this.data.distanceLevels}`,
-                    color: 'yellow'
+                // Render node with texture
+                html2canvas(node).then(function (canvas) {
+                    box.setAttribute('material', {
+                        shader: 'flat',
+                        src: canvas.toDataURL()
+                    });
                 })
-                el.appendChild(line);
             }
-
-
-            if (child.children.length > 0) {
-                let newLevel = childrenLevel + 1;
-                this.processNodeNoOffset(child, firstOffestToDelete, newLevel);
-            }
+        } else {
+            // If renderHTML is not set, we use the color attribute to color the box
+            box.setAttribute('color', this.colors_grad[childrenLevel % this.colors_grad.length]);
         }
-    },
+
+        el.appendChild(box);
+
+        // Create line to the parent
+        if (childrenLevel > 0) {
+            let line = document.createElement('a-entity')
+            line.setAttribute('line', {
+                start: `${offsetX} ${offsetY} ${childrenLevel * this.data.distanceLevels}`,
+                end: `${offsetX} ${offsetY} ${(childrenLevel * this.data.distanceLevels) - this.data.distanceLevels}`,
+                color: 'yellow'
+            })
+            el.appendChild(line);
+        }
+
+        for (let i = 0; i < node.children.length; i++) {
+            this.processNodeNoOffset(node.children[i], firstOffsetToDelete, childrenLevel + 1);
+        }
+     },
 
     showHtmlContent: function (box, htmlContent, type) {
         // Remove any existing temporary plane
@@ -205,22 +198,7 @@ AFRAME.registerComponent('babia-html', {
         }
     },
 
-
-    colors_dif: [
-        "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF", "#800000", "#808000",
-        "#008000", "#800080", "#008080", "#000080", "#FF4500", "#2E8B57", "#4682B4", "#D2691E",
-        "#FF69B4", "#8A2BE2", "#5F9EA0", "#7FFF00", "#DDA0DD", "#B0E0E6", "#FF1493", "#32CD32",
-        "#FFD700", "#6A5ACD", "#40E0D0", "#FF6347", "#8B0000", "#9ACD32", "#00CED1", "#9400D3",
-        "#ADFF2F", "#F0E68C", "#E9967A", "#8FBC8F", "#483D8B", "#2F4F4F", "#7B68EE", "#6B8E23",
-        "#FF7F50", "#BA55D3", "#CD5C5C", "#20B2AA", "#778899", "#4682B4", "#D3D3D3", "#FFB6C1",
-        "#FFA07A", "#BDB76B", "#8B008B", "#556B2F", "#9932CC", "#B22222", "#5F9EA0", "#FFDAB9",
-        "#ADFF2F", "#E0FFFF", "#7CFC00", "#FF00FF", "#DAA520", "#32CD32", "#FA8072", "#8A2BE2",
-        "#7FFFD4", "#B8860B", "#FF4500", "#ADFF2F", "#DB7093", "#F08080", "#FF00FF", "#6495ED",
-        "#DC143C", "#00FA9A", "#B0C4DE", "#B03060", "#98FB98", "#6A5ACD", "#708090", "#FFD700",
-        "#20B2AA", "#66CDAA", "#7B68EE", "#00FF7F", "#8B0000", "#00FF00", "#F0FFF0", "#DC143C",
-        "#FF00FF", "#00BFFF", "#B22222", "#00FFFF", "#FFD700", "#DA70D6", "#F5DEB3", "#F4A460"
-    ],
-
+    // Gradient for coloring boxes (depending on depth level in DOM)
     colors_grad: [
         "#4B0082", "#800080", "#B22222", "#A0522D", "#CD5C5C", "#8B008B", "#9932CC", "#FF4500",
         "#FF8C00", "#B8860B", "#D2691E", "#DAA520", "#ADFF2F", "#7FFF00", "#32CD32", "#00FF00",
@@ -249,7 +227,6 @@ AFRAME.registerComponent('babia-html', {
             // Call init again to reinitialize the component
             this.init();
         }
-
     }
 
 });

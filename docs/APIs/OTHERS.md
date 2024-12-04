@@ -25,7 +25,7 @@ This component lets us select the data and the metrics that we want to show in t
 | maxPerRow             | Max items per row, if more, a breakline will be added                                                                                                                                                                                | number | 5             |
 | linesSeparation       | Distance between lines of the UI                                                                                                                                                                                                     | number | 0.3           |
 | customQuerierLabel    | Custom label of the first row when there are more than one querier                                                                                                                                                                   | string | Data          |
-| customAttributeSwitch | Atrributes to remove/add to the targer. Format **attr:value**, example: **babia-ui="customAttributeSwitch: wireframe:true, color:blue"**                                                                                             | array  | -             |
+| customAttributeSwitch | Attributes to remove/add to the target. Format **attr:value**, example: **babia-ui="customAttributeSwitch: wireframe:true, color:blue"**                                                                                             | array  | -             |
 | customAttributeLabel  | Custom label for the attributes to represent in the customAttributeSwitch row. Format **attr:label**,  example: **babia-ui="customAttributeSwitch: trasnparency20byBuildingField:Transparency, wireframeByBuildingField:Wireframe"** | array  | -             |
 
 
@@ -207,7 +207,7 @@ This component uses the queryes component in order to change the time range in t
 
 ### **babia-experiment component**
 
-**We recomment to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
+**We recommend to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
 
 | Property                 | Description                                                                  | Type         | Default value      |
 | ------------------------ | ---------------------------------------------------------------------------- | ------------ | ------------------ |
@@ -233,7 +233,7 @@ This component uses the queryes component in order to change the time range in t
 
 ### **babia-task component**
 
-**We recomment to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
+**We recommend to follow [this tutorial](../Tutorials/how_to_prepare_an_experiment.md) for using this component**
 
 **This component only works when using the babia-experiment component, as a child**
 
@@ -258,6 +258,6 @@ This component uses the queryes component in order to change the time range in t
 
  | Property       | Description                                                                                                                                                                                                                              | Type    | Default value |
  | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------- |
- | html           | HTML stringifyed to represent in 3D                                                                                                                                                                                                      | string  | ''            |
+ | html           | HTML stringified to represent in 3D                                                                                                                                                                                                      | string  | ''            |
  | distanceLevels | Distance between children levels                                                                                                                                                                                                         | float   | 0.7           |
  | renderHTML     | If you want to render as a texture the HTML of each item. **IMPORTANT: You need to add into your html the `html2canvas` dependency `<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>` | boolean | false         |
