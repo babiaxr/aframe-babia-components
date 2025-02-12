@@ -4,3 +4,6 @@ npm-debug*
 cypress/
 tests/videos/
 yarn*
+
+# Mac
+.DS_Store
