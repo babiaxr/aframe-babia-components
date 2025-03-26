@@ -24,7 +24,7 @@ AFRAME.registerComponent('babia-slider', {
     let material = new THREE.MeshBasicMaterial({ color: this.data.color });
     this.material = material
     let lever = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.15, 0.05), material);
-    let track = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, this.data.size, 12), material);
+    let track = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, this.data.size, 12), material);
     track.rotateZ(Math.PI / 2);
     let chassis = new THREE.Group();
 
@@ -202,35 +202,73 @@ AFRAME.registerComponent('babia-slider', {
   },
 
   mousexPositionToValue: function (x) {
-    let sliderCenter = this.el.object3D.getWorldPosition().x
-    let sliderWidth = this.data.size * this.data.innerSize * this.el.object3D.getWorldScale().x
-    let sliderRange = Math.abs(this.data.max - this.data.min)
-    let sliderMin = sliderCenter - (sliderWidth / 2)
+    // Create a THREE.Vector3 object to get the world position
+    let worldPosition = new THREE.Vector3();
+    this.el.object3D.getWorldPosition(worldPosition);
 
-    let value = (((x - sliderMin) * sliderRange) / sliderWidth) + this.data.min
-    if (value < this.data.min) {
-      return this.data.min
-    } else if (value > this.data.max) {
-      return this.data.max
-    } else {
-      return value
-    }
+    // Slider center in world coordinates
+    let sliderCenter = worldPosition.x;
+
+    // Slider width considering its scale and the parent's scale
+    let sliderWidth = this.data.size * this.el.object3D.scale.x * this.el.parentEl.object3D.scale.x;
+
+    // Number of divisions or slices we want (sliderRange)
+    let sliderRange = Math.abs(this.data.max - this.data.min);
+
+    // Calculate the left and right limits of the slider
+    let sliderMin = sliderCenter - (sliderWidth / 2);
+    let sliderMax = sliderCenter + (sliderWidth / 2);
+
+    // Ensure x is within the slider's range
+    if (x < sliderMin) return this.data.min;
+    if (x > sliderMax) return this.data.max;
+
+    // Calculate the size of each slice of the slider
+    let sliceSize = sliderWidth / sliderRange;
+
+    // Identify in which slice x falls
+    let sliceIndex = Math.floor((x - sliderMin) / sliceSize);
+
+    // Convert the slice index to the corresponding value
+    let value = this.data.min + sliceIndex;
+
+    // Return the value ensuring it is within the allowed range
+    return Math.min(Math.max(value, this.data.min), this.data.max);
   },
 
   mouseyPositionToValue: function (y) {
-    let sliderCenter = this.el.object3D.getWorldPosition().y
-    let sliderWidth = this.data.size * this.data.innerSize * this.el.object3D.getWorldScale().y
-    let sliderRange = Math.abs(this.data.max - this.data.min)
-    let sliderMin = sliderCenter - (sliderWidth / 2)
+    // Create a THREE.Vector3 object to get the world position
+    let worldPosition = new THREE.Vector3();
+    this.el.object3D.getWorldPosition(worldPosition);
 
-    let value = (((y - sliderMin) * sliderRange) / sliderWidth) + this.data.min
-    if (value < this.data.min) {
-      return this.data.min
-    } else if (value > this.data.max) {
-      return this.data.max
-    } else {
-      return value
-    }
+    // Slider center in world coordinates (Y-axis)
+    let sliderCenter = worldPosition.y;
+
+    // Slider height considering its scale and the parent's scale
+    let sliderHeight = this.data.size * this.el.object3D.scale.y * this.el.parentEl.object3D.scale.y;
+
+    // Number of divisions or slices we want (sliderRange)
+    let sliderRange = Math.abs(this.data.max - this.data.min);
+
+    // Calculate the bottom and top limits of the slider
+    let sliderMin = sliderCenter - (sliderHeight / 2);
+    let sliderMax = sliderCenter + (sliderHeight / 2);
+
+    // Ensure y is within the slider's range
+    if (y < sliderMin) return this.data.min;
+    if (y > sliderMax) return this.data.max;
+
+    // Calculate the size of each slice of the slider
+    let sliceSize = sliderHeight / sliderRange;
+
+    // Identify in which slice y falls
+    let sliceIndex = Math.floor((y - sliderMin) / sliceSize);
+
+    // Convert the slice index to the corresponding value
+    let value = this.data.min + sliceIndex;
+
+    // Return the value ensuring it is within the allowed range
+    return Math.min(Math.max(value, this.data.min), this.data.max);
   },
 
   update: function (old) {
