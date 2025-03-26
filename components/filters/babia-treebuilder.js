@@ -85,32 +85,33 @@ AFRAME.registerComponent('babia-treebuilder', {
         for (let i = 0; i < paths.length; i++) {
             let path = paths[i][data.field].split(data.split_by);
             let currentLevel = tree;
+            let currentUid = '';
+        
             for (let j = 0; j < path.length; j++) {
                 // Check if starts with the split char
                 if (!path[j]) { continue }
-
+        
                 let part = path[j];
-                //console.log("currentLevel", currentLevel)
                 let existingPath = findWhere(currentLevel, 'name', part);
-
+        
                 if (existingPath) {
                     currentLevel = existingPath.children;
+                    currentUid = existingPath.uid; // Update the UID accumulator
                 } else {
-                    let newPart = {}
+                    let newPart = {};
                     if (j === path.length - 1) {
-                        newPart = paths[i]
+                        newPart = paths[i];
                     } else {
-                        newPart['children'] = []
+                        newPart['children'] = [];
                     }
-                    let findUid = paths[i][data.field].split(data.split_by + part + data.split_by)
-                    // No pop if it is a building beacuse it breaks
-                    if (findUid.length > 1) {
-                        let rest = findUid.pop()
-                    }
-                    newPart['uid'] = findUid.join(data.split_by + part + data.split_by) + data.split_by + part
-                    newPart['name'] = part
+        
+                    // Create the UID for the part of the path
+                    newPart['uid'] = currentUid ? currentUid + data.split_by + part : part;
+                    newPart['name'] = part;
+        
                     currentLevel.push(newPart);
                     currentLevel = newPart.children;
+                    currentUid = newPart['uid']; // Update the UID accumulator
                 }
             }
         }
