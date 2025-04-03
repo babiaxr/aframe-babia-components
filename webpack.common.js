@@ -4,7 +4,7 @@ module.exports = {
   entry: path.join(__dirname, "./index.js"),
   output: {
     filename: "aframe-babia-components.js",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [

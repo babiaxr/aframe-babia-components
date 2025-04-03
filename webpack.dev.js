@@ -19,6 +19,23 @@ module.exports = merge(common, {
         cert: './babia_cert.pem',
         key: './babia_key.pem'
       }
+    },
+    open: {
+      target: ['index.html'],
+      app: {
+        name: 'chromium',
+        arguments: ['--incognito']
+      }
+    },
+    // webpack-dev-server doesn't write any output files after compiling.
+    // Instead, it keeps bundle files in memory and serves them as if
+    // they were real files mounted at the server's root path.
+    // If your page expects to find the bundle files on a different path,
+    // you can change this with the devMiddleware.publicPath option
+    // in the dev server's configuration.
+    // https://webpack.js.org/guides/development/#using-webpack-dev-server
+    devMiddleware: {
+      publicPath: '/dist/'
     }
   }
 });

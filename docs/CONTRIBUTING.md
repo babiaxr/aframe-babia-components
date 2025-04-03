@@ -97,6 +97,12 @@ in the internet. While this is quite convenient for connecting external
 devices (e.g., a VR device), it also exposes your directory to anyone
 with HTTPS access to the 8080 port on your host. Use `ssldevall` at your own risk.
 
+**Selection of browswer** The dev server will open the default browser.
+If you want to run some other browser, you can run the command that the `ssldev` command will run, but with the browser you want to run. For example:
+
+```
+npx webpack-dev-server --config webpack.dev.js --open-app-name 'chromium'
+```
 
 ## Build distribution files
 
