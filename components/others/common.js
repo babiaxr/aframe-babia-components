@@ -68,102 +68,82 @@ const colors = {
 };
 
 let findProdComponent = (data, el, selfProducer) => {
-    let prodComponent;
+    let prodComponent = null;
+    let prodComponentNodes = null;
+    let prodComponentLinks = null;
+
     if (data.from) {
         // Save the reference to the querier or filterdata
-        let prodElement = document.getElementById(data.from)
-        if (prodElement.components['babia-filter']) {
-            prodComponent = prodElement.components['babia-filter']
-        } else if (prodElement.components['babia-queryjson']) {
-            prodComponent = prodElement.components['babia-queryjson']
-        } else if (prodElement.components['babia-querycsv']) {
-            prodComponent = prodElement.components['babia-querycsv']
-        } else if (prodElement.components['babia-queryes']) {
-            prodComponent = prodElement.components['babia-queryes']
-        } else if (prodElement.components['babia-querygithub']) {
-            prodComponent = prodElement.components['babia-querygithub']
-        } else if (prodElement.components['babia-selector']) {
-            prodComponent = prodElement.components['babia-selector'];
-        } else if (prodElement.components['babia-treebuilder']) {
-            prodComponent = prodElement.components['babia-treebuilder'];
-        } else {
+        let prodElement = document.getElementById(data.from);
+        for (const component of ['babia-filter', 'babia-queryjson',
+            'babia-querycsv', 'babia-queryes', 'babia-querygithub',
+            'babia-selector', 'babia-treebuilder']) {
+            if (prodElement.components[component]) {
+                prodComponent = prodElement.components[component];
+                break;
+            };
+        };
+        if (prodComponent == null) {
             console.error("Problem registering to the querier", el);
-            return
-        }
+            return;
+        };
     } else if (data.nodesFrom) {
         // Save the reference to the querier or filterdata
-        let prodElementNodes = document.getElementById(data.nodesFrom)
-        if (prodElementNodes.components['babia-filter']) {
-            prodComponentNodes = prodElementNodes.components['babia-filter']
-        } else if (prodElementNodes.components['babia-queryjson']) {
-            prodComponentNodes = prodElementNodes.components['babia-queryjson']
-        } else if (prodElementNodes.components['babia-querycsv']) {
-            prodComponentNodes = prodElementNodes.components['babia-querycsv']
-        } else if (prodElementNodes.components['babia-queryes']) {
-            prodComponentNodes = prodElementNodes.components['babia-queryes']
-        } else if (prodElementNodes.components['babia-querygithub']) {
-            prodComponentNodes = prodElementNodes.components['babia-querygithub']
-        } else {
+        let prodElementNodes = document.getElementById(data.nodesFrom);
+        for (const component of ['babia-filter', 'babia-queryjson',
+            'babia-querycsv', 'babia-queryes', 'babia-querygithub']) {
+            if (prodElementNodes.components[component]) {
+                prodComponentNodes = prodElementNodes.components[component];
+                break;
+            };
+        };
+        if (prodComponentNodes == null) {
             console.error("Problem registering to the querier", el);
-            return
-        }
+            return;
+        };
 
         // Save the reference to the querier or filterdata
         let prodElementLinks = document.getElementById(data.linksFrom)
-        if (prodElementLinks.components['babia-filter']) {
-            prodComponentLinks = prodElementLinks.components['babia-filter']
-        } else if (prodElementLinks.components['babia-queryjson']) {
-            prodComponentLinks = prodElementLinks.components['babia-queryjson']
-        } else if (prodElementLinks.components['babia-querycsv']) {
-            prodComponentLinks = prodElementLinks.components['babia-querycsv']
-        } else if (prodElementLinks.components['babia-queryes']) {
-            prodComponentLinks = prodElementLinks.components['babia-queryes']
-        } else if (prodElementLinks.components['babia-querygithub']) {
-            prodComponentLinks = prodElementLinks.components['babia-querygithub']
-        } else {
+        for (const component of ['babia-filter', 'babia-queryjson',
+            'babia-querycsv', 'babia-queryes', 'babia-querygithub']) {
+            if (prodElementLinks.components[component]) {
+                prodComponentLinks = prodElementLinks.components[component];
+                break;
+            };
+        };
+        if (prodComponentLinks == null) {
             console.error("Problem registering to the querier", el);
-            return
-        }
+            return;
+        };
+
         return { 'nodes': prodComponentNodes, 'links': prodComponentLinks }
 
     } else {
         // Look for a querier or filterdata in the same element and register
-        if (el.components['babia-filter'] && selfProducer != 'babia-filter') {
-            prodComponent = el.components['babia-filter']
-        } else if (el.components['babia-queryjson'] && selfProducer != 'babia-queryjson') {
-            prodComponent = el.components['babia-queryjson']
-        } else if (el.components['babia-querycsv'] && selfProducer != 'babia-querycsv') {
-            prodComponent = el.components['babia-querycsv']
-        } else if (el.components['babia-queryes'] && selfProducer != 'babia-queryes') {
-            prodComponent = el.components['babia-queryes']
-        } else if (el.components['babia-querygithub'] && selfProducer != 'babia-querygithub') {
-            prodComponent = el.components['babia-querygithub']
-        } else if (el.components['babia-selector'] && selfProducer != 'babia-selector') {
-            prodComponent = el.components['babia-selector'];
-        } else if (el.components['babia-treebuilder']) {
-            prodComponent = el.components['babia-treebuilder'];
-        } else {
+        for (const component of ['babia-filter', 'babia-queryjson',
+            'babia-querycsv', 'babia-queryes', 'babia-querygithub',
+            'babia-selector', 'babia-treebuilder']) {
+            if (el.components[component] && selfProducer != component) {
+                prodComponent = el.components[component];
+                break;
+            };
+        };
+        if (prodComponent == null) {
             // Look for a querier or filterdata in the scene
-            if (document.querySelectorAll("[babia-filter]").length > 0) {
-                prodComponent = document.querySelectorAll("[babia-filter]")[0].components['babia-filter']
-            } else if (document.querySelectorAll("[babia-queryjson]").length > 0) {
-                prodComponent = document.querySelectorAll("[babia-queryjson]")[0].components['babia-queryjson']
-            } else if (document.querySelectorAll("[babia-querycsv]").length > 0) {
-                prodComponent = document.querySelectorAll("[babia-querycsv]")[0].components['babia-queryjson']
-            } else if (document.querySelectorAll("[babia-queryes]").length > 0) {
-                prodComponent = document.querySelectorAll("[babia-queryes]")[0].components['babia-queryes']
-            } else if (document.querySelectorAll("[babia-querygithub]").length > 0) {
-                prodComponent = document.querySelectorAll("[babia-querygithub]")[0].components['babia-querygithub']
-            } else if (document.querySelectorAll('[babia-selector]').length > 0) {
-                prodComponent = document.querySelectorAll('[babia-selector]')[0].components['babia-selector'];
-            } else if (document.querySelectorAll('[babia-treebuilder]').length > 0) {
-                prodComponent = document.querySelectorAll('[babia-treebuilder]')[0].components['babia-treebuilder'];
-            } else {
-                console.error("Error, querier not found", el, el.components, el.components['babia-selector']);
+            for (const component of ['babia-filter', 'babia-queryjson',
+                'babia-querycsv', 'babia-queryes', 'babia-querygithub',
+                'babia-selector', 'babia-treebuilder']) {
+                if (document.querySelectorAll("[" + component + "]").length > 0) {
+                    prodComponent = document.querySelectorAll("[" + component + "]")[0].components[component];
+                    break;
+                };
+            };
+            if (prodComponent == null) {
+                console.error("Error, querier not found", el, el.components, el.components['babia-querier']);
                 return
-            }
-        }
-    }
+            };
+        };
+    };
     return prodComponent;
 }
 
