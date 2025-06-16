@@ -3,22 +3,18 @@ let findNavComponent = require('../others/common').findNavComponent;
 let parseJson = require('../others/common').parseJson;
 
 class Selectable {
-    /*
-     * @param list {array} List of items to select from
-     * @param field {string} Field name used to select (present in all items)
+    /**
+     * Create a new Selectable object.
+     * 
+     * @param {string} field - Field of the data to select.
+     * @param {number} [current=-2] - Current value of the selection. If -2, it will be set to 0.
+     * @param {number} [step=1] - Step value for the selection.
+     * @param {number} [speed=1] - Speed value for the selection.
+     * @param {string} [state='play'] - State of the selection. 'play' or 'pause'.
+     * @param {string} [direction='forward'] - Direction of the selection. 'forward' or 'rewind'.
      */
-    constructor(list, field, current, step, speed, state, direction) {
-        this.data = {};
-        for (let item of list) {
-            let selector = item[field];
-            if ( this.data[selector] ) {
-                this.data[selector].push(item);
-            } else {
-                this.data[selector] = [item];
-            };
-        }
-        this.selectors = Object.keys(this.data).sort();
-        this.length = this.selectors.length;
+    constructor(field, current, step, speed, state, direction) {
+        this.field = field;
         if (!step){
             this.step = 1
         } else {
@@ -46,6 +42,23 @@ class Selectable {
         }
     }
 
+    /**
+     * Update the internal data structure with a new list of items
+     * @param list {array} List of items to select from
+     */
+    updateData(list) {
+        this.data = {};
+        for (let item of list) {
+            let selector = item[this.field];
+            if ( this.data[selector] ) {
+                this.data[selector].push(item);
+            } else {
+                this.data[selector] = [item];
+            };
+        }
+        this.selectors = Object.keys(this.data).sort();
+        this.length = this.selectors.length;
+    }
     next() {
         let selected = this.data[this.selectors[this.current]];
         if (this.current + this.step <= this.length - 1){
@@ -106,7 +119,7 @@ AFRAME.registerComponent('babia-selector', {
         // Id of the querier where the data comes from
         from: { type: 'string' },
         // Id of the querier where the data comes from
-        controller: { type: 'string' },
+        controller: { type: 'string', default: '' },
         // Field to use as selector
         select: { type: 'string', default: 'date'},
         // Timeout for moving to the next selection
@@ -134,6 +147,8 @@ AFRAME.registerComponent('babia-selector', {
     init: function () { 
         this.notiBuffer = new NotiBuffer();
         this.navNotiBuffer = new NotiBuffer();
+        // Create a Selectable object, set its values
+        this.selectable = new Selectable(this.data.select, this.data.current_value, this.data.step, this.data.speed); 
     },
 
     /**
@@ -167,7 +182,7 @@ AFRAME.registerComponent('babia-selector', {
         }
 
         // find controller
-        if (data.controller != oldData.controller){
+        if (data.controller && (data.controller != oldData.controller)){
             this.selectorController = document.querySelector('#' + data.controller)
             // Unregister for old navigator
             if (this.navComponent) { 
@@ -338,10 +353,7 @@ AFRAME.registerComponent('babia-selector', {
     newData: undefined,
 
     processData: function (_data) {
-        // Create a Selectable object, and set the updating interval
-        if (!this.selectable){
-            this.selectable = new Selectable(_data, this.data.select, this.data.current_value, this.data.step, this.data.speed); 
-        }
+        this.selectable.updateData(_data);
         this.navNotiBuffer.set({type: 'position', value: this.selectable.current, label: this.selectable.selectors[this.selectable.current-1]})
         let self = this;
         this.nextSelect();
