@@ -4,6 +4,13 @@ This doc gathers all the information about the releases made by the Sprints/Mile
 
 ## Release notes
 
+
+### NPM 1.3.0 version
+
+`babia-map` added as a component.
+
+[TUTORIAL](./Tutorials/HOW_TO_USE_BABIA_MAP.md)
+
 ### NPM 1.2.9 version
 
 `babia-pie` & `babia-doughnut` Fix animation issue when more than one in the scene.
