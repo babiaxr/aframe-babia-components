@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>BabiaXR Demo - Map Terrains </title>
+        <meta name="description" content="BabiaXR Map Terrain Gallery">
+        </meta>
+        <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.2.0/dist/aframe-extras.min.js"></script>
+        <script src="https://unpkg.com/aframe-environment-component@1.5.x/dist/aframe-environment-component.min.js"></script>
+        <script
+                src="https://unpkg.com/aframe-text-geometry-component@0.5.2/dist/aframe-text-geometry-component.min.js"></script>
+        <script
+                src="https://unpkg.com/aframe-geometry-merger-component/dist/aframe-geometry-merger-component.min.js"></script>
+        <script src="https://rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+        <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+        <script src="dist/aframe-lounge-component.min.js"></script>
+        <script src="../../../dist/aframe-babia-components.js"></script>
+        <link rel="stylesheet" href="../../assets/gitlab-corner.css">
+        <style>
+                h1 {
+                        color: #AAAAAA;
+                        font-family: 'Archivo', sans-serif;
+                        font-size: 45px;
+                        text-align: center;
+                        text-shadow: black 0.1em 0.1em 0.2em
+                }
+
+                p {
+                        color: #444444;
+                        font-family: 'Archivo', sans-serif;
+                        font-size: 26px;
+                        text-align: justify;
+                        text-shadow: #AAAAAA 0.1em 0.1em 0.2em
+                }
+        </style>
+</head>
+
+<body>
+        <a-scene id="scene" light="defaultLightsEnabled: false">
+
+                <a-entity environment="preset: egypt"></a-entity>
+
+                <!-- 3D Components -->
+                <a-entity class="collidable" babia-map="height: 8; width: 8; bumpScale: 1; zoom: 13; x: 4804; y: 3380; textureType: Satellite; handsUi: false;
+                        entityRightButton: {&quot;position&quot;:&quot;4.5 2 3&quot;, &quot;rotation&quot;:&quot;-90 0 0&quot;};
+                        entityLeftButton: {&quot;position&quot;:&quot;4.5 2 1.5&quot;, &quot;rotation&quot;:&quot;-90 0 0&quot;};
+
+                        rightButtons: [
+                        {&quot;height&quot;:&quot;0.5&quot;, &quot;width&quot;:&quot;1&quot;, &quot;label&quot;:&quot;Zoom In&quot;, &quot;color&quot;:&quot;blue&quot;, &quot;position&quot;:&quot;0 0.75 -0.3&quot;, &quot;rotation&quot;:&quot;0 0 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;zoomInBtn&quot;},
+                        {&quot;height&quot;:&quot;0.5&quot;, &quot;width&quot;:&quot;1&quot;, &quot;label&quot;:&quot;Zoom Out&quot;, &quot;color&quot;:&quot;purple&quot;, &quot;position&quot;:&quot;0 0 -0.3&quot;, &quot;rotation&quot;:&quot;0 0 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;zoomOutBtn&quot;}
+                        ];
+
+                        crossEntity: {&quot;position&quot;:&quot;1 0.375 0&quot;, &quot;rotation&quot;:&quot;0 0 0&quot;};
+                        crossButtons: [
+                        {&quot;height&quot;:&quot;0.2&quot;, &quot;width&quot;:&quot;0.2&quot;, &quot;label&quot;:&quot;^&quot;, &quot;color&quot;:&quot;darkgray&quot;, &quot;position&quot;:&quot;0 0.2 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;dpadUp&quot;},
+                        {&quot;height&quot;:&quot;0.2&quot;, &quot;width&quot;:&quot;0.2&quot;, &quot;label&quot;:&quot;v&quot;, &quot;color&quot;:&quot;darkgray&quot;, &quot;position&quot;:&quot;0 -0.2 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;dpadDown&quot;},
+                        {&quot;height&quot;:&quot;0.2&quot;, &quot;width&quot;:&quot;0.2&quot;, &quot;label&quot;:&quot;&lt;&quot;, &quot;color&quot;:&quot;darkgray&quot;, &quot;position&quot;:&quot;-0.3 0 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;dpadLeft&quot;},
+                        {&quot;height&quot;:&quot;0.2&quot;, &quot;width&quot;:&quot;0.2&quot;, &quot;label&quot;:&quot;&gt;&quot;, &quot;color&quot;:&quot;darkgray&quot;, &quot;position&quot;:&quot;0.3 0 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;dpadRight&quot;}
+                        ];
+
+                        leftButtons: [
+                        {&quot;height&quot;:&quot;0.5&quot;, &quot;width&quot;:&quot;1&quot;, &quot;label&quot;:&quot;Next Layer&quot;, &quot;color&quot;:&quot;green&quot;, &quot;position&quot;:&quot;0 0.75 -0.3&quot;, &quot;rotation&quot;:&quot;0 0 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;layerUpBtn&quot;},
+                        {&quot;height&quot;:&quot;0.5&quot;, &quot;width&quot;:&quot;1&quot;, &quot;label&quot;:&quot;Previous Layer&quot;, &quot;color&quot;:&quot;orange&quot;, &quot;position&quot;:&quot;0 0 -0.3&quot;, &quot;rotation&quot;:&quot;0 0 0&quot;, &quot;textSize&quot;:3, &quot;className&quot;:&quot;layerDownBtn&quot;}
+                        ];
+
+                        coordinatesText: {&quot;label&quot;:&quot;Coordinates: &quot;,&quot;color&quot;:&quot;black&quot;,&quot;position&quot;:&quot;-0.5 1.2 -0.3&quot;,&quot;rotation&quot;:&quot;0 0 0&quot;,&quot;textSize&quot;:3};
+                " position="3 5 -6" rotation="90 0 0">
+                </a-entity>
+
+                <!-- Lights -->
+                <a-entity light="color: #fff ; type: ambient; intensity: 0.85"></a-entity>
+
+                <!-- Controls and Camera -->
+                <a-entity movement-controls="fly: false" position="3 3 0">
+                        <a-entity camera position="0 0 0" look-controls></a-entity>
+                        <a-entity cursor="rayOrigin:mouse" raycaster="objects: .babiaxraycasterclass, .collidable">
+                        </a-entity>
+                        <a-entity id="rightHand" laser-controls="hand: right" oculus-touch-controls="hand: right" raycaster="objects: .babiaxraycasterclass, .collidable">
+                        </a-entity>
+                        <a-entity id="leftHand" laser-controls="hand: left" oculus-touch-controls="hand: left" raycaster="objects: .collidable"></a-entity>
+                </a-entity>
+        </a-scene>
+
+        <!-- TOKEN FORM-->
+        <form id="token-form" style="position: absolute; top: 20px; left: 30px; z-index: 999;">
+                <input type="text" id="token-input" placeholder="Introduce tu token de Mapbox" style="width: 200px;" />
+                <button type="submit">Guardar</button>
+        </form>
+
+        <div class="gitlab-corner-wrapper"><a
+                        href="https://gitlab.com/babiaxr/aframe-babia-components/-/blob/master/examples/demos/map-terrain/index_gallery.html"
+                        class="gitlab-corner" aria-label="View source on GitLab"><svg id="logo_art" data-name="logo art"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 559">
+                                <g id="g44">
+                                        <path id="path46" class="cls-1"
+                                                d="M461.17,301.83l-18.91-58.12L404.84,128.43a6.47,6.47,0,0,0-12.27,0L355.15,243.64H230.82L193.4,128.43a6.46,6.46,0,0,0-12.26,0L143.78,243.64l-18.91,58.19a12.88,12.88,0,0,0,4.66,14.39L293,435,456.44,316.22a12.9,12.9,0,0,0,4.73-14.39" />
+                                </g>
+                                <g id="g48">
+                                        <path id="path50" class="cls-2"
+                                                d="M293,434.91h0l62.16-191.28H230.87L293,434.91Z" />
+                                </g>
+                                <g id="g56">
+                                        <path id="path58" class="cls-1" d="M293,434.91,230.82,243.63h-87L293,434.91Z" />
+                                </g>
+                                <g id="g64">
+                                        <path id="path66" class="cls-3"
+                                                d="M143.75,243.69h0l-18.91,58.12a12.88,12.88,0,0,0,4.66,14.39L293,435,143.75,243.69Z" />
+                                </g>
+                                <g id="g72">
+                                        <path id="path74" class="cls-2"
+                                                d="M143.78,243.69h87.11L193.4,128.49a6.47,6.47,0,0,0-12.27,0l-37.35,115.2Z" />
+                                </g>
+                                <g id="g76">
+                                        <path id="path78" class="cls-1"
+                                                d="M293,434.91l62.16-191.28H442.3L293,434.91Z" />
+                                </g>
+                                <g id="g80">
+                                        <path id="path82" class="cls-3"
+                                                d="M442.24,243.69h0l18.91,58.12a12.85,12.85,0,0,1-4.66,14.39L293,434.91l149.2-191.22Z" />
+                                </g>
+                                <g id="g84">
+                                        <path id="path86" class="cls-2"
+                                                d="M442.28,243.69h-87.1l37.42-115.2a6.46,6.46,0,0,1,12.26,0l37.42,115.2Z" />
+                                </g>
+                        </svg></a></div>
+</body>
+
+</html>
