@@ -23,6 +23,7 @@ require('./components/visualizers/babia-terrain')
 require('./components/visualizers/babia-boats')
 require('./components/visualizers/babia-network')
 require('./components/visualizers/babia-html')
+require('./components/visualizers/babia-map')
 
 // Others
 require('./components/others/babiaxr-totem')
