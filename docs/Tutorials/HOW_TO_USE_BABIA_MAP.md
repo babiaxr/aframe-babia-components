@@ -2,7 +2,7 @@
 linktitle: "how_to_use_babia_map"
 date: 2025-06-16T16:07:05+02:00
 title: How to Use babia-map visualizer in BabiaXR.
-draft: true
+draft: false
 categories: [ "Tutorials", "Documentation" ]
 tags: ["api", "OSM", "MapBox", "VR", "guide"]
 ---
