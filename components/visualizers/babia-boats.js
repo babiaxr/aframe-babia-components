@@ -401,7 +401,7 @@ AFRAME.registerComponent('babia-boats', {
                 element.height = data.zone_elevation / scale.y;
                 increment -= data.border * data.extra;
 
-                // TEST TREE
+                // Tree layout
                 if (data.treeLayout) {
                     element.children.forEach(el => {
                         if (!el.children) {
@@ -517,25 +517,16 @@ AFRAME.registerComponent('babia-boats', {
                     figure.children = children,
                     figure.alpha = self.data.baseAlpha,
                     figure.translate_matrix = translate_matrix
-                // TEST TREE
+                // Tree layout
                 if (data.treeLayout) {
-                    figure.treeMetaphorHeight = element.treeMetaphorHeight
+                    figure.treeMetaphorHeight = element.treeMetaphorHeight;
                 }
+                // Hierarchy level
+                let hierarchyLevel = figure.name.split("/").length - 1;
+                figure.hierarchyLevel = hierarchyLevel;
+                figure.renderOrder = hierarchyLevel;
                 // Gradient color
-                let hierarchyLevel = figure.name.split("/").length - 1
-                figure.hierarchyLevel = hierarchyLevel
-                figure.renderOrder = hierarchyLevel
-                if (data.gradientBaseColor) {
-                    figure.color = greenColorsurface(Math.round(
-                        self.normalizeValues(1,
-                            self.babiaMetadata['maxLevels'],
-                            15,
-                            100,
-                            hierarchyLevel)
-                    ));
-                } else {
-                    figure.color = self.data.base_color;
-                }
+                figure.color = self.getColorBase(hierarchyLevel);
             } else {
                 // This is a building
                 figure.name = (elements[i].name) ? elements[i].name : elements[i][this.data.field],
@@ -564,30 +555,9 @@ AFRAME.registerComponent('babia-boats', {
             }
             figure.rawData = elements[i]
 
-            // If transparency by a field on buildings
-            // Put transparent 80% to those buildings that share same value for a field selected
-            if (data.transparent80ByRepeatedField && (!figure.children && self.idsToNotRepeat80Transparent.includes(figure.rawData[self.data.transparent80ByRepeatedField]))) {
-                figure.alpha = 0.8
-                figure.renderOrder = 2000
-            } else {
-                self.idsToNotRepeat80Transparent.push(figure.rawData[data.transparent80ByRepeatedField])
-            }
-
-            // Put transparent 20% to those buildings that share same value for a field selected
-            if (data.transparent20ByRepeatedField && (!figure.children && self.idsToNotRepeat20Transparent.includes(figure.rawData[self.data.transparent20ByRepeatedField]))) {
-                figure.alpha = 0.45
-                figure.renderOrder = 2000
-            } else {
-                self.idsToNotRepeat20Transparent.push(figure.rawData[data.transparent20ByRepeatedField])
-            }
-
-            // Put wireframe to those buildings that share same value for a field selected
-            if (data.wireframeByRepeatedField && (!figure.children && self.idsToNotRepeatWireframe.includes(figure.rawData[self.data.wireframeByRepeatedField]))) {
-                figure.wireframe = true
-            } else {
-                figure.wireframe = false
-                self.idsToNotRepeatWireframe.push(figure.rawData[data.wireframeByRepeatedField])
-            }
+            // Set transparency and wireframe, if appropriate
+            self.setTransparency(figure);
+            figure.wireframe = this.getWireframe(figure, data.wireframeByRepeatedField);
 
             figures.push(figure);
         }
@@ -643,9 +613,9 @@ AFRAME.registerComponent('babia-boats', {
                 z: -y + translate.z
             }
 
-            // TEST TREE
+            // Tree layout
             if (self.data.treeLayout) {
-                // // Hide quarters that has not children
+                // Hide quarters with no children
                 if (self.data.treeHideOneSonQuarters && (figures[i].children && figures[i].children.length === 1)) {
                     figures[i].alphaTest = 1
                     figures[i].dontAddEvents = true
@@ -701,9 +671,6 @@ AFRAME.registerComponent('babia-boats', {
 
             let entity = this.createElement(figures[i], position);
             this.addEvents(entity, figures[i]);
-
-
-
 
             element.appendChild(entity);
         }
@@ -808,6 +775,131 @@ AFRAME.registerComponent('babia-boats', {
         }
 
         return [current_vertical, posX, posY, max_up];
+    },
+
+    /**
+     * getColor
+     * 
+     * Calculate the color of the element based on its value in color_field.
+     * If the value is a number, it will calculate the color based on the
+     * heat map from color_min to color_max.
+     * If the value is a string, it will assign a color from colorsArray in
+     * order of appearence.
+     *
+     * @param {Object} element - The element to calculate the color for
+     * @param {String} color_field - The field in the element to calculate the color from
+     *
+     * @return {String} - The color for the element
+     */
+    getColor: function (element, color_field) {
+        const self = this;
+        let color_value = element[color_field];
+        let color;
+        if (typeof color_value === 'number') {
+            color = heatMapColorforValue(color_value,
+                self.babiaMetadata['color_max'], self.babiaMetadata['color_min']);
+        } else if (typeof color_value === 'string') {
+            // Categoric color
+            if (color_value in self.categoricColorMaps) {
+                color = self.categoricColorMaps[color_value];
+            } else {
+                self.categoricColorMaps[color_value]
+                    = colorsArray[self.categoricColorIndex]
+                color = colorsArray[self.categoricColorIndex]
+
+                self.categoricColorIndex = self.categoricColorIndex + 1
+                if (self.categoricColorIndex >= colorsArray.length) {
+                    self.categoricColorIndex = 0
+                }
+            }
+        }
+        return color;
+    },
+
+    /**
+     * getColorBase
+     * 
+     * Determines the color for the base in a given level, depending on whether
+     * gradientBaseColor is enabled. If enabled, it calculates a color
+     * using the greenColorsurface function based on normalized level
+     * values. If not enabled, it uses the default base color.
+     *
+     * @param {number} level - The level for which to determine the color.
+     *
+     * @return {string} - The calculated base color.
+     */
+    getColorBase: function (level) {
+        let color;
+        const self = this;
+
+        if (self.data.gradientBaseColor) {
+            let max_levels = self.babiaMetadata['maxLevels'];
+            color = greenColorsurface(Math.round(
+                self.normalizeValues(1, max_levels, 15, 100, level)
+                ));
+        } else {
+            color = self.data.base_color;
+        };
+        return color;
+    },
+
+    /**
+     * setTransparency
+     * 
+     * If "transparency by a field" on buildings is selected
+     * set transparency to 80% or 20% to those buildings that share
+     * same value for the selected field.
+     * @param {Object} figure - The figure to set transparency
+     */
+    setTransparency: function (figure) {     
+        const self = this;
+        const data = this.data;
+
+        // If transparency by a field on buildings
+        // Put transparent 80% to those buildings that share same value for a field selected
+        const t80_field = data.transparent80ByRepeatedField;
+        const t20_field = data.transparent20ByRepeatedField;
+        if (t80_field && (!figure.children &&
+                self.idsToNotRepeat80Transparent.includes(figure.rawData[t80_field]))) {
+            figure.alpha = 0.8
+            figure.renderOrder = 2000
+        } else {
+            self.idsToNotRepeat80Transparent.push(figure.rawData[t80_field])
+        }
+
+        // Put transparent 20% to those buildings that share same value for a field selected
+        if (t20_field && (!figure.children &&
+                self.idsToNotRepeat20Transparent.includes(figure.rawData[t20_field]))) {
+            figure.alpha = 0.45
+            figure.renderOrder = 2000
+        } else {
+            self.idsToNotRepeat20Transparent.push(figure.rawData[t20_field])
+        }
+    },
+
+    /**
+     * getWireframe
+     * 
+     * Get boolean to decide if wireframe will be put to the elements
+     * that share the same value of the selected field.
+     * @param {Object} figure - The figure to set wireframe
+     * @param {String} wireframe_field - The field in the element to decide the wireframe
+     *
+     * @return {Boolean} - True if the element will be visualized as wireframe
+     */
+    getWireframe: function (figure, wireframe_field) {
+        const self = this;
+        let wireframe;
+
+        // Put wireframe to those buildings that share same value for a field selected
+        if (wireframe_field && (!figure.children &&
+                self.idsToNotRepeatWireframe.includes(figure.rawData[wireframe_field]))) {
+            wireframe = true;
+        } else {
+            wireframe = false;
+            self.idsToNotRepeatWireframe.push(figure.rawData[wireframe_field]);
+        }
+        return wireframe;
     },
 
     Animation: function (element, figures, figures_old, delta, translate, translate_old) {
