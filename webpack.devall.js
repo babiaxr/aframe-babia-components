@@ -22,6 +22,9 @@ module.exports = merge(common, {
         cert: './babia_cert.pem',
         key: './babia_key.pem'
       }
+    },
+    devMiddleware: {
+      writeToDisk: true,
     }
   }
 });

@@ -35,7 +35,8 @@ module.exports = merge(common, {
     // in the dev server's configuration.
     // https://webpack.js.org/guides/development/#using-webpack-dev-server
     devMiddleware: {
-      publicPath: '/dist/'
+      publicPath: '/dist/',
+      writeToDisk: true,
     }
   }
 });
