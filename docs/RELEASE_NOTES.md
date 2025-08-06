@@ -4,6 +4,10 @@ This doc gathers all the information about the releases made by the Sprints/Mile
 
 ## Release notes
 
+### NPM 1.3.1 version
+
+`babia-boats` fixed attribute `building_separation` that wasn't working well. Now the parameter is called `separation` because it affects also quarters.
+
 
 ### NPM 1.3.0 version
 

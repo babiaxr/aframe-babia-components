@@ -120,7 +120,7 @@
         <a-entity id="boats"
             babia-boats="from: sortinghat; area: loc_age; height: age_days; color: last_act_days; height_building_legend: -0.5; extra: 0.01; treeQuartersLevelHeight: 0.1;
                         highlightQuarter: false; treeLayout: true; gradientBaseColor: true; metricsInfoId: boatsmetricsinfo; treeFixQuarterHeight: true; treeHideOneSonQuarters: true;
-                        legend_scale: 0.25; height_quarter_legend_box: 3; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 0.4; minBuildingHeight: 0.0025; building_separation: 0.2; autoscale: true; baseAlpha: 0.6; highlightBuildingByField: depName; transparent20ByRepeatedField: depName;"
+                        legend_scale: 0.25; height_quarter_legend_box: 3; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 0.4; minBuildingHeight: 0.0025; separation: 0.2; autoscale: true; baseAlpha: 0.6; highlightBuildingByField: depName; transparent20ByRepeatedField: depName;"
             position="0 0.3 -1" scale="1 1 1" rotation="0 180 0"></a-entity>
 
         <a-entity id="interface"
@@ -285,7 +285,7 @@
         let quarterheight = getValueFromQueryString('quarterheight');
         let extra = getValueFromQueryString('extra');
         if (buildingsep) {
-            document.getElementById("boats").setAttribute('babia-boats', 'building_separation', parseFloat(buildingsep))
+            document.getElementById("boats").setAttribute('babia-boats', 'separation', parseFloat(buildingsep))
         }
         if (quarterheight) {
             document.getElementById("boats").setAttribute('babia-boats', 'treeQuartersLevelHeight', parseFloat(quarterheight))

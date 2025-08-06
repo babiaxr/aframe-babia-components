@@ -31,7 +31,7 @@ AFRAME.registerComponent('babia-boats', {
         // highest and lowest value)
         diffBuildingHeight: { type: 'boolean', default: false },
         zone_elevation: { type: 'number', default: 0.01 },
-        building_separation: { type: 'number', default: 0.25 },
+        separation: { type: 'number', default: 0.1 },
         extra: { type: 'number', default: 1.0 },
         levels: { type: 'number' },
         building_color: { type: 'string', default: "#E6B9A1" },
@@ -428,55 +428,51 @@ AFRAME.registerComponent('babia-boats', {
                     limit_left -= element.width / 2;
                 }
                 //console.log("==== RIGHT SIDE ====");
-                current_horizontal = limit_up + this.data.building_separation / 2;
+                current_horizontal = limit_up
             } else if (element.height > 0) {
                 if (up) {
                     [current_vertical, posX, posY, max_up] = this.UpSide(element, limit_up, current_vertical, max_up);
                     if (current_vertical > limit_right) {
-                        current_vertical += this.data.building_separation / 2;
                         max_right = current_vertical;
                         up = false;
                         right = true;
                         if (max_left < limit_left) {
                             limit_left = max_left;
                         }
-                        current_horizontal = limit_up + this.data.building_separation / 2;
+                        current_horizontal = limit_up;
                     }
                 } else if (right) {
                     [current_horizontal, posX, posY, max_right] = this.RightSide(element, limit_right, current_horizontal, max_right);
                     if (current_horizontal < limit_down) {
-                        current_horizontal += this.data.building_separation / 2;
                         max_down = current_horizontal;
                         right = false;
                         down = true;
                         if (max_up > limit_up) {
                             limit_up = max_up;
                         }
-                        current_vertical = limit_right + this.data.building_separation / 2;
+                        current_vertical = limit_right;
                     }
                 } else if (down) {
                     [current_vertical, posX, posY, max_down] = this.DownSide(element, limit_down, current_vertical, max_down);
                     if (current_vertical < limit_left) {
-                        current_vertical -= this.data.building_separation / 2;
                         max_left = current_vertical;
                         down = false;
                         left = true;
                         if (max_right > limit_right) {
                             limit_right = max_right;
                         }
-                        current_horizontal = limit_down - this.data.building_separation / 2;
+                        current_horizontal = limit_down;
                     }
                 } else if (left) {
                     [current_horizontal, posX, posY, max_left] = this.LeftSide(element, limit_left, current_horizontal, max_left);
                     if (current_horizontal > limit_up) {
-                        current_horizontal -= this.data.building_separation / 2;
                         max_up = current_horizontal;
                         left = false;
                         up = true;
                         if (max_down < limit_down) {
                             limit_down = max_down;
                         }
-                        current_vertical = limit_left - this.data.building_separation / 2;
+                        current_vertical = limit_left;
                     }
                 }
             }
@@ -495,8 +491,8 @@ AFRAME.registerComponent('babia-boats', {
             if (elements[i].children) {
                 // This is the base for a quarter
                 figure.name = elements[i][this.data.field] || '',
-                    figure.width = element.width,
-                    figure.depth = element.depth,
+                    figure.width = element.width - this.data.separation,
+                    figure.depth = element.depth - this.data.separation,
                     figure.children = children,
                     figure.alpha = self.data.baseAlpha,
                     figure.translate_matrix = translate_matrix
@@ -524,11 +520,11 @@ AFRAME.registerComponent('babia-boats', {
                 figure.name = (elements[i].name) ? elements[i].name : elements[i][this.data.field],
                     figure.alpha = self.data.buildingAlpha
                 if (this.data.area) {
-                    figure.width = Math.sqrt(element.area);
-                    figure.depth = Math.sqrt(element.area);
+                    figure.width = Math.sqrt(element.area) - this.data.separation;
+                    figure.depth = Math.sqrt(element.area) - this.data.separation;
                 } else {
-                    figure.width = element.width;
-                    figure.depth = element.depth;
+                    figure.width = element.width - this.data.separation;
+                    figure.depth = element.depth - this.data.separation;
                 };
                 if (typeof elements[i][self.data.color] === 'number') {
                     figure.color = heatMapColorforValue(elements[i][self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
@@ -596,18 +592,6 @@ AFRAME.registerComponent('babia-boats', {
             limit_right = max_right;
         }
 
-        if (current_vertical < limit_left) {
-            limit_left = current_vertical + this.data.building_separation / 2;
-        }
-        if (current_vertical > limit_right) {
-            limit_right = current_vertical - this.data.building_separation / 2;;
-        }
-        if (current_horizontal > limit_up) {
-            limit_up = current_horizontal - this.data.building_separation / 2;;
-        }
-        if (current_horizontal < limit_down) {
-            limit_down = current_horizontal + this.data.building_separation / 2;;
-        }
 
         // Calculate translate of the center, width and depth of the zone
         var width = Math.abs(limit_left) + Math.abs(limit_right);
@@ -714,22 +698,21 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     RightSide: function (element, limit_right, current_horizontal, max_right) {
-        let separation = parseFloat(this.data.building_separation);
         let width, depth;
         if (this.data.area && !element.children) {
             width = Math.sqrt(element.area);
-            depth = Math.sqrt(element.area) + separation;
+            depth = Math.sqrt(element.area);
         } else {
             width = parseFloat(element.width);
-            depth = parseFloat(element.depth) + separation;
+            depth = parseFloat(element.depth);
         }
         // Calculate position
-        let posX = limit_right + (width / 2) + separation;
+        let posX = limit_right + (width / 2);
         let posY = current_horizontal - (depth / 2);
 
         // Calculate states
         current_horizontal -= depth;
-        let total_x = limit_right + width + separation;
+        let total_x = limit_right + width;
         if (total_x > max_right) {
             max_right = total_x;
         }
@@ -738,22 +721,22 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     DownSide: function (element, limit_down, current_vertical, max_down) {
-        let separation = parseFloat(this.data.building_separation);
         let width, depth;
+
         if (this.data.area && !element.children) {
-            width = Math.sqrt(element.area) + separation;
+            width = Math.sqrt(element.area);
             depth = Math.sqrt(element.area);
         } else {
-            width = parseFloat(element.width) + separation;
+            width = parseFloat(element.width);
             depth = parseFloat(element.depth);
         }
-        // Calculate position
-        let posX = current_vertical - (width / 2);
-        let posY = limit_down - (depth / 2) - separation;
 
-        // Calculate state
+        let posX = current_vertical - (width / 2);
+        let posY = limit_down - (depth / 2);
+
         current_vertical -= width;
-        let total_y = limit_down - depth - separation;
+
+        let total_y = limit_down - depth;
         if (total_y < max_down) {
             max_down = total_y;
         }
@@ -762,22 +745,22 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     LeftSide: function (element, limit_left, current_horizontal, max_left) {
-        let separation = parseFloat(this.data.building_separation);
         let width, depth;
+
         if (this.data.area && !element.children) {
             width = Math.sqrt(element.area);
-            depth = Math.sqrt(element.area) + separation;
+            depth = Math.sqrt(element.area);
         } else {
             width = parseFloat(element.width);
-            depth = parseFloat(element.depth) + separation;
+            depth = parseFloat(element.depth);
         }
-        // Calculate position
-        let posX = limit_left - (width / 2) - separation;
+
+        let posX = limit_left - (width / 2);
         let posY = current_horizontal + (depth / 2);
 
-        // Calculate state
         current_horizontal += depth;
-        let total_x = limit_left - width - separation;
+
+        let total_x = limit_left - width;
         if (total_x < max_left) {
             max_left = total_x;
         }
@@ -786,22 +769,22 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     UpSide: function (element, limit_up, current_vertical, max_up) {
-        let separation = parseFloat(this.data.building_separation);
         let width, depth;
+
         if (this.data.area && !element.children) {
-            width = Math.sqrt(element.area) + separation;
+            width = Math.sqrt(element.area);
             depth = Math.sqrt(element.area);
         } else {
-            width = parseFloat(element.width) + separation;
+            width = parseFloat(element.width);
             depth = parseFloat(element.depth);
         }
-        // Calculate position
-        let posX = current_vertical + (width / 2);
-        let posY = limit_up + (depth / 2) + separation;
 
-        // Calculate state
+        let posX = current_vertical + (width / 2);
+        let posY = limit_up + (depth / 2);
+
         current_vertical += width;
-        let total_y = limit_up + depth + separation;
+
+        let total_y = limit_up + depth;
         if (total_y > max_up) {
             max_up = total_y;
         }

@@ -4,6 +4,7 @@ npm-debug*
 cypress/
 tests/videos/
 yarn*
+dist/main.*
 
 # Mac
 .DS_Store

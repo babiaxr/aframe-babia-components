@@ -112,8 +112,8 @@
 
         <!-- Boats Visualizer -->
         <a-entity id="boats"
-            babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn; height_building_legend: -0.5; legend_scale: 0.25; height_quarter_legend_box: 1; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 1"
-            position="-1 0.3 -2" scale="0.015 1 0.015"></a-entity>
+            babia-boats="from: treebuilder; area: num_funs; height: loc_per_function; color: ccn; height_building_legend: -0.5; legend_scale: 0.25; height_quarter_legend_box: 1; height_quarter_legend_title: 1.5; legend_lookat: [laser-controls]; zone_elevation: 0.01; maxBuildingHeight: 1; separation: 0;"
+            position="-1 0.3 -2" scale="0.02 0.5 0.02"></a-entity>
 
         <!-- Close tooltips -->
         <a-plane id="closelegends" babia-lookat="[laser-controls]" class="babiaxraycasterclass" scale="0.8 0.8 0.8"
@@ -150,25 +150,25 @@
         document.querySelector('a-scene').addEventListener('loaded', function () {
             // rotate popups to the camera
             let popups = document.querySelectorAll('[dialog-popup]');
-            if (!listenersDone) {
-                popups.forEach(function (popup) {
-                    popup.addEventListener('click', function (event) {
-                        let plane = document.getElementById(`${event.target.id}--dialog-plane`);
-                        if (plane) {
-                            // Opened task
-                            hidePopups(popup)
-                            plane.setAttribute("babia-lookat", "[laser-controls]")
-                        } else {
-                            // Closed task
-                            showPopups()
-                        }
-                    }, false);
-                });
+            // if (!listenersDone) {
+            //     popups.forEach(function (popup) {
+            //         popup.addEventListener('click', function (event) {
+            //             let plane = document.getElementById(`${event.target.id}--dialog-plane`);
+            //             if (plane) {
+            //                 // Opened task
+            //                 hidePopups(popup)
+            //                 plane.setAttribute("babia-lookat", "[laser-controls]")
+            //             } else {
+            //                 // Closed task
+            //                 showPopups()
+            //             }
+            //         }, false);
+            //     });
 
-                let infoPanel = document.getElementById(`navbarpopup--dialog-plane`);
-                infoPanel.setAttribute("visible", "true")
-                listenersDone = true;
-            }
+            //     let infoPanel = document.getElementById(`navbarpopup--dialog-plane`);
+            //     infoPanel.setAttribute("visible", "true")
+            //     listenersDone = true;
+            // }
 
             function hidePopups(popupExcept) {
                 popups.forEach(popup => {
@@ -187,21 +187,21 @@
 
         let exitScene = document.getElementById("exitscene");
 
-        document.getElementById("ninesurvey").addEventListener('click', function (event) {
-            console.log(event)
-            if (event.target.id === "ninesurvey--close-icon") {
-                exitScene.setAttribute("visible", "false")
-            } else if (event.target.id === "ninesurvey") {
-                exitScene.setAttribute("visible", "true")
-            }
+        // document.getElementById("ninesurvey").addEventListener('click', function (event) {
+        //     console.log(event)
+        //     if (event.target.id === "ninesurvey--close-icon") {
+        //         exitScene.setAttribute("visible", "false")
+        //     } else if (event.target.id === "ninesurvey") {
+        //         exitScene.setAttribute("visible", "true")
+        //     }
 
-        }, false);
+        // }, false);
 
-        exitScene.addEventListener('click', function (event) {
-            if (exitScene.getAttribute("visible")) {
-                window.location.replace("./end_first_vr.html")
-            }
-        }, false);
+        // exitScene.addEventListener('click', function (event) {
+        //     if (exitScene.getAttribute("visible")) {
+        //         window.location.replace("./end_first_vr.html")
+        //     }
+        // }, false);
 
         document.getElementById("closelegends").addEventListener('click', function (event) {
             let ewl = document.getElementById("boats").components['babia-boats'].entitiesWithLegend
