@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Babia Boats (elements in diagonal example)</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.4.0/dist/aframe-extras.min.js"></script>
+<!--  <script src="./aframe-babia-components.min.js"></script> -->
+<!--  <script
+      src="https://gl.githack.com/babiaxr/aframe-babia-components/-/raw/refactor/dist/aframe-babia-components.min.js">
+  </script> -->
+  <script src="../../../dist/aframe-babia-components.js"></script>
+</head>
+
+<body>
+  <a-scene renderer="antialias: true" background="color:  #c9f4f9"
+           stl-exporter>
+
+    <a-entity id="querier" babia-queryjson="url: ./diagonal.json;"></a-entity>
+
+    <a-entity id="tree"
+              babia-treebuilder="field: title; split_by: /; from: querier;
+                build_root: true">
+    </a-entity>
+
+    <!-- Boats Visualizer -->
+    <a-entity animation="property: rotation; to: 0 0 0; loop: true;
+                easing: linear; dur: 60000"
+              id="biblio"
+              babia-boats="from: tree; area: area; height: cites;
+                legendsAsChildren: true; legendsAsChildrenHeight: 5;
+                zone_elevation: 1; maxBuildingHeight: 5;
+                hideQuarterBoxLegend: true;
+                highlightQuarterByClick: true;
+                legend_lookat: [camera]"
+              position="0 0.1 0" sound="src: #music; loop: true">
+    </a-entity>
+
+    <a-entity light="type: ambient; color: #BBB; intensity: 0.2"></a-entity>
+    <a-entity light="type: directional; color: #FFF; intensity: 0.6"
+              position="-0.5 1 1"></a-entity>
+
+    <a-entity movement-controls="fly: true" position="0 4 6" rotation="-45 0 0">
+      <a-entity id="head" camera babia-camera="raycasterMouse: .babiaxraycasterclass; 
+                  raycasterHand: .babiaxraycasterclass; teleportCollision: #floorRoom" look-controls
+        wasd-controls="fly: true; acceleration: 10">
+        <a-entity></a-entity>
+      </a-entity>
+    </a-entity>
+  </a-scene>
+
+</body>
+</html>
