@@ -326,27 +326,29 @@ AFRAME.registerComponent('babia-boats', {
      */
     generateElements: function (elements, figures, translate, inc) {
         const self = this;
+        const data = this.data;
+
         var increment = inc;
 
-        // Vertical Limits
+        // Vertical limits (of all figures up to now)
         var limit_up = 0;
         var limit_down = 0;
-        // Horizontal Limits
+        // Horizontal limits (of all figures up to now)
         var limit_right = 0;
         var limit_left = 0;
 
-        //Position Figure
+        //Position of the center of current figure
         var posX = 0;
         var posY = 0;
 
-        // Aux to update the limits
-        // Save max limit to update last limit in the next step
+        // Aux variables to update limits
+        // Save max limits to update limits in the next step
         var max_right = 0;
         var max_left = 0;
         var max_down = 0;
         var max_up = 0;
 
-        // control points
+        // Control points
         var current_vertical = 0;
         var current_horizontal = 0;
 
@@ -363,31 +365,31 @@ AFRAME.registerComponent('babia-boats', {
         for (let i = 0; i < elements.length; i++) {
             // To do not overwrite newData
             let element = {}
-            if (this.data.width) {
-                element.width = elements[i][this.data.width] || 0.5
-            }
-            if (this.data.height) {
+            if (data.width) {
+                element.width = elements[i][data.width] || 0.5
+            };
+            if (data.depth) {
+                element.depth = elements[i][data.depth] || 0.5
+            };
+            if (data.height) {
                 let height_min = 0;
-                if (self.data.diffBuildingHeight) {
+                if (data.diffBuildingHeight) {
                     height_min = self.babiaMetadata['heightMin'];
                 };
                 element.height = self.normalizeValues(height_min,
                     self.babiaMetadata['heightMax'],
                     self.data.minBuildingHeight,
                     self.data.maxBuildingHeight,
-                    elements[i][this.data.height])
-                    || this.data.minBuildingHeight
-            }
-            if (this.data.depth) {
-                element.depth = elements[i][this.data.depth] || 0.5
-            }
-            if (this.data.area) {
-                element.area = elements[i][this.data.area] || 0.5
+                    elements[i][data.height]) || data.minBuildingHeight
+            };
+            if (data.area) {
+                element.area = elements[i][data.area] || 0.5;
+                element.width = element.depth = Math.sqrt(element.area);
             }
             if (elements[i].children) {
                 // There are elements hanging from this element
+                // so, it is a quarter. Let's run this function recursively
                 element.children = elements[i].children
-                this.quarter = true;
                 var children = [];
                 var translate_matrix;
                 // Save Zone's parameters
@@ -396,27 +398,28 @@ AFRAME.registerComponent('babia-boats', {
                 if (!scale) {
                     scale = { x: 1, y: 1, z: 1 }
                 }
-                element.height = this.data.zone_elevation / scale.y;
-                increment -= this.data.border * this.data.extra;
+                element.height = data.zone_elevation / scale.y;
+                increment -= data.border * data.extra;
 
-                // TEST TREE
-                if (self.data.treeLayout) {
+                // Tree layout
+                if (data.treeLayout) {
                     element.children.forEach(el => {
                         if (!el.children) {
-                            element.treeMetaphorHeight = el[self.data.height]
+                            element.treeMetaphorHeight = el[data.height]
                             return
                         }
                     });
                 }
 
                 [element.width, element.depth, translate_matrix, children]
-                    = this.generateElements(element.children, children, translate_matrix, increment);
+                    = this.generateElements(element.children, children,
+                        translate_matrix, increment);
                 translate_matrix.y = element.height;
                 increment = inc;
-            }
+            };
             if (i == 0) {
                 // This is the first element to place
-                if (this.data.area && !elements[i].children) {
+                if (data.area && !elements[i].children) {
                     limit_up += Math.sqrt(element.area) / 2;
                     limit_down -= Math.sqrt(element.area) / 2;
                     limit_right += Math.sqrt(element.area) / 2;
@@ -430,8 +433,19 @@ AFRAME.registerComponent('babia-boats', {
                 //console.log("==== RIGHT SIDE ====");
                 current_horizontal = limit_up
             } else if (element.height > 0) {
+                console.log("Element: ", i);
+                console.log("Directions (up, right, down, left):",
+                    up, right, down, left);
+                console.log("Current (vertical, horizontal):",
+                    current_vertical, current_horizontal);
+                console.log("Limits (up, right, down, left):",
+                    limit_up, limit_right, limit_down, limit_left);
+                console.log("Max (up, right, down, left):",
+                    max_up, max_right, max_down, max_left);
+                console.log("Position (x, y):", posX, posY);
                 if (up) {
-                    [current_vertical, posX, posY, max_up] = this.UpSide(element, limit_up, current_vertical, max_up);
+                    [current_vertical, posX, posY, max_up] =
+                        this.UpSide(element, limit_up, current_vertical, max_up);
                     if (current_vertical > limit_right) {
                         max_right = current_vertical;
                         up = false;
@@ -442,7 +456,9 @@ AFRAME.registerComponent('babia-boats', {
                         current_horizontal = limit_up;
                     }
                 } else if (right) {
-                    [current_horizontal, posX, posY, max_right] = this.RightSide(element, limit_right, current_horizontal, max_right);
+                    [current_horizontal, posX, posY, max_right] =
+                        this.RightSide(element, limit_right, current_horizontal, max_right);
+                    console.log("RIGHT", current_horizontal, posX, posY, max_right);
                     if (current_horizontal < limit_down) {
                         max_down = current_horizontal;
                         right = false;
@@ -452,8 +468,13 @@ AFRAME.registerComponent('babia-boats', {
                         }
                         current_vertical = limit_right;
                     }
+                    console.log("RIGHT2",
+                        current_horizontal, current_vertical, posX, posY, max_right);
                 } else if (down) {
+                    console.log("DOWN1 (element, limit_down, current_vertical, max_down):",
+                        element, limit_down, current_vertical, max_down);
                     [current_vertical, posX, posY, max_down] = this.DownSide(element, limit_down, current_vertical, max_down);
+                    console.log("DOWN2", current_vertical, posX, posY, max_down);
                     if (current_vertical < limit_left) {
                         max_left = current_vertical;
                         down = false;
@@ -481,7 +502,7 @@ AFRAME.registerComponent('babia-boats', {
             // First, fill in common properties, then add those specific for
             // bases or buildings
             let figure = {
-                id: "boat-" + elements[i][this.data.field],
+                id: "boat-" + elements[i][data.field],
                 posX: posX,
                 posY: posY,
                 height: element.height,
@@ -496,44 +517,32 @@ AFRAME.registerComponent('babia-boats', {
                     figure.children = children,
                     figure.alpha = self.data.baseAlpha,
                     figure.translate_matrix = translate_matrix
-                // TEST TREE
-                if (self.data.treeLayout) {
-                    figure.treeMetaphorHeight = element.treeMetaphorHeight
+                // Tree layout
+                if (data.treeLayout) {
+                    figure.treeMetaphorHeight = element.treeMetaphorHeight;
                 }
+                // Hierarchy level
+                let hierarchyLevel = figure.name.split("/").length - 1;
+                figure.hierarchyLevel = hierarchyLevel;
+                figure.renderOrder = hierarchyLevel;
                 // Gradient color
-                let hierarchyLevel = figure.name.split("/").length - 1
-                figure.hierarchyLevel = hierarchyLevel
-                figure.renderOrder = hierarchyLevel
-                if (self.data.gradientBaseColor) {
-                    figure.color = greenColorsurface(Math.round(
-                        self.normalizeValues(1,
-                            self.babiaMetadata['maxLevels'],
-                            15,
-                            100,
-                            hierarchyLevel)
-                    ));
-                } else {
-                    figure.color = self.data.base_color;
-                }
+                figure.color = self.getColorBase(hierarchyLevel);
             } else {
                 // This is a building
                 figure.name = (elements[i].name) ? elements[i].name : elements[i][this.data.field],
                     figure.alpha = self.data.buildingAlpha
-                if (this.data.area) {
-                    figure.width = Math.sqrt(element.area) - this.data.separation;
-                    figure.depth = Math.sqrt(element.area) - this.data.separation;
-                } else {
-                    figure.width = element.width - this.data.separation;
-                    figure.depth = element.depth - this.data.separation;
-                };
-                if (typeof elements[i][self.data.color] === 'number') {
-                    figure.color = heatMapColorforValue(elements[i][self.data.color], self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
-                } else if (typeof elements[i][self.data.color] === 'string') {
+                figure.width = element.width - data.separation;
+                figure.depth = element.depth - data.separation;
+
+                if (typeof elements[i][data.color] === 'number') {
+                    figure.color = heatMapColorforValue(elements[i][data.color],
+                        self.babiaMetadata['color_max'], self.babiaMetadata['color_min'])
+                } else if (typeof elements[i][data.color] === 'string') {
                     // Categoric color
-                    if (elements[i][self.data.color] in self.categoricColorMaps) {
-                        figure.color = self.categoricColorMaps[elements[i][self.data.color]]
+                    if (elements[i][data.color] in self.categoricColorMaps) {
+                        figure.color = self.categoricColorMaps[elements[i][data.color]]
                     } else {
-                        self.categoricColorMaps[elements[i][self.data.color]] = colorsArray[self.categoricColorIndex]
+                        self.categoricColorMaps[elements[i][data.color]] = colorsArray[self.categoricColorIndex]
                         figure.color = colorsArray[self.categoricColorIndex]
 
                         self.categoricColorIndex = self.categoricColorIndex + 1
@@ -543,37 +552,12 @@ AFRAME.registerComponent('babia-boats', {
                     }
                 }
 
-
-
             }
             figure.rawData = elements[i]
 
-            // If transparency by a field on buildings
-            // Put transparent 80% to those buildings that share same value for a field selected
-            if (self.data.transparent80ByRepeatedField && (!figure.children && self.idsToNotRepeat80Transparent.includes(figure.rawData[self.data.transparent80ByRepeatedField]))) {
-                figure.alpha = 0.8
-                figure.renderOrder = 2000
-            } else {
-                self.idsToNotRepeat80Transparent.push(figure.rawData[self.data.transparent80ByRepeatedField])
-            }
-
-            // Put transparent 20% to those buildings that share same value for a field selected
-            if (self.data.transparent20ByRepeatedField && (!figure.children && self.idsToNotRepeat20Transparent.includes(figure.rawData[self.data.transparent20ByRepeatedField]))) {
-                figure.alpha = 0.45
-                figure.renderOrder = 2000
-            } else {
-                self.idsToNotRepeat20Transparent.push(figure.rawData[self.data.transparent20ByRepeatedField])
-            }
-
-            // Put wireframe to those buildings that share same value for a field selected
-            if (self.data.wireframeByRepeatedField && (!figure.children && self.idsToNotRepeatWireframe.includes(figure.rawData[self.data.wireframeByRepeatedField]))) {
-                figure.wireframe = true
-            } else {
-                figure.wireframe = false
-                self.idsToNotRepeatWireframe.push(figure.rawData[self.data.wireframeByRepeatedField])
-            }
-
-
+            // Set transparency and wireframe, if appropriate
+            self.setTransparency(figure);
+            figure.wireframe = this.getWireframe(figure, data.wireframeByRepeatedField);
 
             figures.push(figure);
         }
@@ -592,8 +576,7 @@ AFRAME.registerComponent('babia-boats', {
             limit_right = max_right;
         }
 
-
-        // Calculate translate of the center, width and depth of the zone
+        // Calculate translation of the center, width and depth of the zone
         var width = Math.abs(limit_left) + Math.abs(limit_right);
         var depth = Math.abs(limit_down) + Math.abs(limit_up);
 
@@ -630,9 +613,9 @@ AFRAME.registerComponent('babia-boats', {
                 z: -y + translate.z
             }
 
-            // TEST TREE
+            // Tree layout
             if (self.data.treeLayout) {
-                // // Hide quarters that has not children
+                // Hide quarters with no children
                 if (self.data.treeHideOneSonQuarters && (figures[i].children && figures[i].children.length === 1)) {
                     figures[i].alphaTest = 1
                     figures[i].dontAddEvents = true
@@ -689,17 +672,16 @@ AFRAME.registerComponent('babia-boats', {
             let entity = this.createElement(figures[i], position);
             this.addEvents(entity, figures[i]);
 
-
-
-
             element.appendChild(entity);
         }
 
     },
 
     RightSide: function (element, limit_right, current_horizontal, max_right) {
+        const data = this.data;
+
         let width, depth;
-        if (this.data.area && !element.children) {
+        if (data.area && !element.children) {
             width = Math.sqrt(element.area);
             depth = Math.sqrt(element.area);
         } else {
@@ -721,9 +703,10 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     DownSide: function (element, limit_down, current_vertical, max_down) {
-        let width, depth;
+        const data = this.data;
 
-        if (this.data.area && !element.children) {
+        let width, depth;
+        if (data.area && !element.children) {
             width = Math.sqrt(element.area);
             depth = Math.sqrt(element.area);
         } else {
@@ -745,9 +728,10 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     LeftSide: function (element, limit_left, current_horizontal, max_left) {
-        let width, depth;
+        const data = this.data;
 
-        if (this.data.area && !element.children) {
+        let width, depth;
+        if (data.area && !element.children) {
             width = Math.sqrt(element.area);
             depth = Math.sqrt(element.area);
         } else {
@@ -769,9 +753,10 @@ AFRAME.registerComponent('babia-boats', {
     },
 
     UpSide: function (element, limit_up, current_vertical, max_up) {
+        const data = this.data;
+        
         let width, depth;
-
-        if (this.data.area && !element.children) {
+        if (data.area && !element.children) {
             width = Math.sqrt(element.area);
             depth = Math.sqrt(element.area);
         } else {
@@ -790,6 +775,131 @@ AFRAME.registerComponent('babia-boats', {
         }
 
         return [current_vertical, posX, posY, max_up];
+    },
+
+    /**
+     * getColor
+     * 
+     * Calculate the color of the element based on its value in color_field.
+     * If the value is a number, it will calculate the color based on the
+     * heat map from color_min to color_max.
+     * If the value is a string, it will assign a color from colorsArray in
+     * order of appearence.
+     *
+     * @param {Object} element - The element to calculate the color for
+     * @param {String} color_field - The field in the element to calculate the color from
+     *
+     * @return {String} - The color for the element
+     */
+    getColor: function (element, color_field) {
+        const self = this;
+        let color_value = element[color_field];
+        let color;
+        if (typeof color_value === 'number') {
+            color = heatMapColorforValue(color_value,
+                self.babiaMetadata['color_max'], self.babiaMetadata['color_min']);
+        } else if (typeof color_value === 'string') {
+            // Categoric color
+            if (color_value in self.categoricColorMaps) {
+                color = self.categoricColorMaps[color_value];
+            } else {
+                self.categoricColorMaps[color_value]
+                    = colorsArray[self.categoricColorIndex]
+                color = colorsArray[self.categoricColorIndex]
+
+                self.categoricColorIndex = self.categoricColorIndex + 1
+                if (self.categoricColorIndex >= colorsArray.length) {
+                    self.categoricColorIndex = 0
+                }
+            }
+        }
+        return color;
+    },
+
+    /**
+     * getColorBase
+     * 
+     * Determines the color for the base in a given level, depending on whether
+     * gradientBaseColor is enabled. If enabled, it calculates a color
+     * using the greenColorsurface function based on normalized level
+     * values. If not enabled, it uses the default base color.
+     *
+     * @param {number} level - The level for which to determine the color.
+     *
+     * @return {string} - The calculated base color.
+     */
+    getColorBase: function (level) {
+        let color;
+        const self = this;
+
+        if (self.data.gradientBaseColor) {
+            let max_levels = self.babiaMetadata['maxLevels'];
+            color = greenColorsurface(Math.round(
+                self.normalizeValues(1, max_levels, 15, 100, level)
+                ));
+        } else {
+            color = self.data.base_color;
+        };
+        return color;
+    },
+
+    /**
+     * setTransparency
+     * 
+     * If "transparency by a field" on buildings is selected
+     * set transparency to 80% or 20% to those buildings that share
+     * same value for the selected field.
+     * @param {Object} figure - The figure to set transparency
+     */
+    setTransparency: function (figure) {     
+        const self = this;
+        const data = this.data;
+
+        // If transparency by a field on buildings
+        // Put transparent 80% to those buildings that share same value for a field selected
+        const t80_field = data.transparent80ByRepeatedField;
+        const t20_field = data.transparent20ByRepeatedField;
+        if (t80_field && (!figure.children &&
+                self.idsToNotRepeat80Transparent.includes(figure.rawData[t80_field]))) {
+            figure.alpha = 0.8
+            figure.renderOrder = 2000
+        } else {
+            self.idsToNotRepeat80Transparent.push(figure.rawData[t80_field])
+        }
+
+        // Put transparent 20% to those buildings that share same value for a field selected
+        if (t20_field && (!figure.children &&
+                self.idsToNotRepeat20Transparent.includes(figure.rawData[t20_field]))) {
+            figure.alpha = 0.45
+            figure.renderOrder = 2000
+        } else {
+            self.idsToNotRepeat20Transparent.push(figure.rawData[t20_field])
+        }
+    },
+
+    /**
+     * getWireframe
+     * 
+     * Get boolean to decide if wireframe will be put to the elements
+     * that share the same value of the selected field.
+     * @param {Object} figure - The figure to set wireframe
+     * @param {String} wireframe_field - The field in the element to decide the wireframe
+     *
+     * @return {Boolean} - True if the element will be visualized as wireframe
+     */
+    getWireframe: function (figure, wireframe_field) {
+        const self = this;
+        let wireframe;
+
+        // Put wireframe to those buildings that share same value for a field selected
+        if (wireframe_field && (!figure.children &&
+                self.idsToNotRepeatWireframe.includes(figure.rawData[wireframe_field]))) {
+            wireframe = true;
+        } else {
+            wireframe = false;
+            self.idsToNotRepeatWireframe.push(figure.rawData[wireframe_field]);
+        }
+        return wireframe;
     },
 
     Animation: function (element, figures, figures_old, delta, translate, translate_old) {
@@ -1382,6 +1492,7 @@ AFRAME.registerComponent('babia-boats', {
         }
 
         // Create city
+        console.log("About to update chart...", this.newData)
         this.updateChart(this.newData)
 
         // Categoric color legend
