@@ -4,7 +4,11 @@ This doc gathers all the information about the releases made by the Sprints/Mile
 
 ## Release notes
 
-### NPM 1.3.2 version
+### NPM 1.3.3 version
+
+Added some refactor
+
+### NPM 1.3.3 version
 
 `babia-boats` accepts custom legends through the `legend_text` attribute.
 
