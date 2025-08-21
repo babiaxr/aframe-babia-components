@@ -45,6 +45,7 @@ AFRAME.registerComponent('babia-boats', {
         height_building_legend: { type: 'number', default: 0 },
         legend_scale: { type: 'number', default: 1 },
         legend_lookat: { type: 'string', default: "[camera]" },
+        legend_text: { type: 'string', default: '{name}\n{fheight} (height): {height}\n{farea} (area): {area}\n{fwidth} (width): {width}\n{fdepth} (depth): {depth}\n{fcolor} (color): {color}' },
         legendsAsChildren: { type: 'boolean', default: false },
         legendsAsChildrenHeight: { type: 'number', default: 3 },
         metricsInfoId: { type: 'string', default: "" },
@@ -187,7 +188,16 @@ AFRAME.registerComponent('babia-boats', {
 
                     if (figure.children) {
                         // Quarter
-                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
+                        entity.legend = generateLegend(entity.babiaRawData || {}, {
+                            name: figure.name,
+                            scale: self.data.legend_scale,
+                            lookat: self.data.legend_lookat,
+                            template: self.data.legend_text || '{name}',
+                            colorPlane: 'black',
+                            colorText: 'white',
+                            isQuarter: true,
+                            fields: {}
+                        });
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let coordinatesFinal = {
@@ -212,7 +222,22 @@ AFRAME.registerComponent('babia-boats', {
                         entity.alreadyActive = true
                     } else {
                         // Building
-                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        entity.legend = entity.legend = generateLegend(entity.babiaRawData, {
+                            name: figure.name,
+                            scale: self.data.legend_scale,
+                            lookat: self.data.legend_lookat,
+                            template: self.data.legend_text,
+                            colorPlane: 'white',
+                            colorText: 'black',
+                            isQuarter: false,
+                            fields: {
+                                height: self.data.height,
+                                area: self.data.area,
+                                width: self.data.width,
+                                depth: self.data.depth,
+                                color: self.data.color,
+                            }
+                        });
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -1646,7 +1671,16 @@ AFRAME.registerComponent('babia-boats', {
                             y: self.data.height_quarter_legend_title,
                             z: coordinates.z
                         }
-                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'black', 'white');
+                        entity.legend = generateLegend(entity.babiaRawData || {}, {
+                            name: figure.name,
+                            scale: self.data.legend_scale,
+                            lookat: self.data.legend_lookat,
+                            template: self.data.legend_text || '{name}',
+                            colorPlane: 'black',
+                            colorText: 'white',
+                            isQuarter: true,
+                            fields: {}
+                        });
 
                         // If legend is a child of the building/quarter
                         if (self.data.legendsAsChildren) {
@@ -1761,7 +1795,22 @@ AFRAME.registerComponent('babia-boats', {
                             depth: entityGeometry.depth + 0.1,
                             width: entityGeometry.width + 0.1
                         });
-                        entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                        entity.legend = generateLegend(entity.babiaRawData, {
+                            name: figure.name,
+                            scale: self.data.legend_scale,
+                            lookat: self.data.legend_lookat,
+                            template: self.data.legend_text,
+                            colorPlane: 'white',
+                            colorText: 'black',
+                            isQuarter: false,
+                            fields: {
+                                height: self.data.height,
+                                area: self.data.area,
+                                width: self.data.width,
+                                depth: self.data.depth,
+                                color: self.data.color,
+                            }
+                        });
                         let worldPos = new THREE.Vector3();
                         let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                         let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -1835,7 +1884,22 @@ AFRAME.registerComponent('babia-boats', {
                         depth: entityGeometry.depth + 0.1,
                         width: entityGeometry.width + 0.1
                     });
-                    entity.legend = generateLegend(figure.name, self.data.legend_scale, self.data.legend_lookat, 'white', 'black', entity.babiaRawData, self.data.height, self.data.area, self.data.depth, self.data.width, self.data.color);
+                    entity.legend = generateLegend(entity.babiaRawData, {
+                        name: figure.name,
+                        scale: self.data.legend_scale,
+                        lookat: self.data.legend_lookat,
+                        template: self.data.legend_text,
+                        colorPlane: 'white',
+                        colorText: 'black',
+                        isQuarter: false,
+                        fields: {
+                            height: self.data.height,
+                            area: self.data.area,
+                            width: self.data.width,
+                            depth: self.data.depth,
+                            color: self.data.color,
+                        }
+                    });
                     let worldPos = new THREE.Vector3();
                     let coordinates = worldPos.setFromMatrixPosition(entity.object3D.matrixWorld);
                     let height_real = new THREE.Box3().setFromObject(entity.object3D)
@@ -1916,74 +1980,79 @@ AFRAME.registerComponent('babia-boats', {
 /**
  * This function generate a plane at the top of the building with the desired text
  */
-let generateLegend = (name, legend_scale, lookat, colorPlane, colorText, data, fheight, farea, fdepth, fwidth, fcolor) => {
-    let width = 2;
-    let height = 1;
-    if (name.length > 16)
-        width = name.length / 5;
+let generateLegend = (data, {
+    name,
+    scale,
+    lookat,
+    template = '{name}',
+    colorPlane = 'white',
+    colorText = 'black',
+    isQuarter = false,
+    fields = {}
+}) => {
+    const safe = (val, fallback = '') => (typeof val !== 'undefined' ? val : fallback);
+    const round = v => (typeof v === 'number' ? Math.round(v * 100) / 100 : v);
 
-    if (data) {
-        let heightText = "\n " + fheight + " (height): " + Math.round(data[fheight] * 100) / 100
-        if (heightText.length > 16)
-            width = heightText.length / 5;
-        name += heightText
+    // Campos usados
+    const fheight = fields.height || '';
+    const farea = fields.area || '';
+    const fwidth = fields.width || '';
+    const fdepth = fields.depth || '';
+    const fcolor = fields.color || '';
 
-        if (farea) {
-            let areaText = "\n " + farea + " (area): " + Math.round(data[farea] * 100) / 100
-            if (areaText.length > 16 && areaText > heightText)
-                width = areaText.length / 5;
-            name += areaText
-        } else {
-            let depthText = "\n " + fdepth + " (depth): " + Math.round(data[fdepth] * 100) / 100
-            if (depthText.length > 16 && depthText > heightText)
-                width = depthText.length / 5;
-            name += depthText
+    // Datos correspondientes
+    const vheight = round(safe(data?.[fheight]));
+    const varea = round(safe(data?.[farea]));
+    const vwidth = round(safe(data?.[fwidth]));
+    const vdepth = round(safe(data?.[fdepth]));
+    const vcolor = safe(data?.[fcolor]);
 
-            let widthText = "\n " + fwidth + " (width): " + Math.round(data[fwidth] * 100) / 100
-            if (widthText.length > 16 && widthText > heightText && widthText > depthText)
-                width = widthText.length / 5;
-            name += widthText
+    // Texto final
+    const finalText = isQuarter
+        ? name
+        : template
+            .replaceAll('{name}', name)
+            // nombres de los campos
+            .replaceAll('{fheight}', fheight)
+            .replaceAll('{farea}', farea)
+            .replaceAll('{fwidth}', fwidth)
+            .replaceAll('{fdepth}', fdepth)
+            .replaceAll('{fcolor}', fcolor)
+            // valores
+            .replaceAll('{height}', vheight)
+            .replaceAll('{area}', varea)
+            .replaceAll('{width}', vwidth)
+            .replaceAll('{depth}', vdepth)
+            .replaceAll('{color}', vcolor);
 
-            height = 1.5
-        }
+    const lines = finalText.split('\n');
+    const width = Math.max(...lines.map(line => line.length)) / 5;
+    const height = lines.length * 0.3 + 0.3;
 
-        if (fcolor) {
-            let colorText = "\n " + fcolor
-            if (typeof data[fcolor] === 'string') {
-                colorText += " (color): " + data[fcolor]
-            } else {
-                colorText += " (color): " + Math.round(data[fcolor] * 100) / 100
-            }
-            if (colorText.length > 16 && colorText > heightText)
-                width = colorText.length / 5;
-            name += colorText
-            height += 0.2
-        }
-    }
-
-    let entity = document.createElement('a-plane');
+    const entity = document.createElement('a-plane');
     entity.setAttribute('babia-lookat', lookat);
-
     entity.setAttribute('rotation', { x: 0, y: 0, z: 0 });
     entity.setAttribute('height', height);
     entity.setAttribute('width', width);
     entity.setAttribute('color', colorPlane);
-    entity.setAttribute('material', { 'side': 'double' });
+    entity.setAttribute('material', { side: 'double' });
+
     entity.setAttribute('text', {
-        'value': name,
-        'align': 'center',
-        'width': 6,
-        'color': colorText,
-        'alphaTest': 6,
-        'opacity': 6,
-        'transparent': false
+        value: finalText,
+        align: 'center',
+        width: 6,
+        color: colorText,
+        alphaTest: 6,
+        opacity: 6,
+        transparent: false
     });
+
     entity.setAttribute('visible', false);
     entity.setAttribute('class', 'babialegend');
-    entity.setAttribute('scale', { x: legend_scale, y: legend_scale, z: legend_scale });
+    entity.setAttribute('scale', { x: scale, y: scale, z: scale });
 
     return entity;
-}
+};
 
 function setOpacity(entity, opacity) {
     entity.setAttribute('material', 'opacity', opacity);
