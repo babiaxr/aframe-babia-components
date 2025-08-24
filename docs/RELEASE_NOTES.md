@@ -4,6 +4,11 @@ This doc gathers all the information about the releases made by the Sprints/Mile
 
 ## Release notes
 
+
+### NPM 1.3.4 version
+
+`legend_text` attribute on boats now accepts any field.
+
 ### NPM 1.3.3 version
 
 Added some refactor
