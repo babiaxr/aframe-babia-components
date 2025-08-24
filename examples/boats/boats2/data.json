@@ -1,4 +1,4 @@
-[ 
+[
     {
         "id": "/barrio",
         "children": [
@@ -6,6 +6,7 @@
                 "id": "/barrio/block1",
                 "width": "3",
                 "height": "1",
+                "testfield": "20",
                 "depth": "3"
             },
             {
@@ -15,12 +16,14 @@
                         "id": "/barrio/subarrio/block1",
                         "width": "5",
                         "height": "2",
+                        "testfield": "20",
                         "depth": "5"
                     },
                     {
                         "id": "/barrio/subarrio/block2",
                         "width": "3",
                         "height": "1",
+                        "testfield": "20",
                         "depth": "3"
                     }
                 ]
@@ -34,6 +37,7 @@
                 "id": "/barrio2/block1",
                 "width": "3",
                 "height": "1",
+                "testfield": "20",
                 "depth": "3"
             },
             {
@@ -43,18 +47,21 @@
                         "id": "/barrio2/subarrio/block1",
                         "width": "5",
                         "height": "2",
+                        "testfield": "20",
                         "depth": "5"
                     },
                     {
                         "id": "/barrio2/subarrio/block2",
                         "width": "3",
                         "height": "1",
+                        "testfield": "20",
                         "depth": "3"
                     },
                     {
                         "id": "/barrio2/subarrio/block3",
                         "width": "1",
                         "height": "5",
+"testfield": "20",
                         "depth": "1"
                     }
                 ]
@@ -63,6 +70,7 @@
                 "id": "/barrio2/block2",
                 "width": "2",
                 "height": "3",
+"testfield": "20",
                 "depth": "2"
             }
         ]
@@ -74,12 +82,14 @@
                 "id": "/barrio3/block1",
                 "width": "2",
                 "height": "1",
+                "testfield": "20",
                 "depth": "2"
             },
             {
                 "id": "/barrio2/block2",
                 "width": "2",
                 "height": "3",
+"testfield": "20",
                 "depth": "2"
             },
             {
@@ -89,12 +99,14 @@
                         "id": "/barrio3/subarrio/block2",
                         "width": "3",
                         "height": "1",
+                        "testfield": "20",
                         "depth": "3"
                     },
                     {
                         "id": "/barrio3/subarrio/block3",
                         "width": "1",
                         "height": "5",
+"testfield": "20",
                         "depth": "1"
                     }
                 ]
@@ -105,31 +117,35 @@
         "id": "001",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "003",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "004",
         "width": "2",
         "height": "1",
+        "testfield": "20",
         "depth": "2"
     },
     {
         "id": "005",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
-    
     {
         "id": "006",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
@@ -139,6 +155,7 @@
                 "id": "/barrio4/block1",
                 "width": "3",
                 "height": "1",
+                "testfield": "20",
                 "depth": "3"
             },
             {
@@ -148,12 +165,14 @@
                         "id": "/barrio4/subarrio/block1",
                         "width": "5",
                         "height": "2",
+                        "testfield": "20",
                         "depth": "5"
                     },
                     {
                         "id": "/barrio4/subarrio/block2",
                         "width": "3",
                         "height": "1",
+                        "testfield": "20",
                         "depth": "3"
                     }
                 ]
@@ -164,78 +183,91 @@
         "id": "001",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "002",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
         "id": "003",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "004",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "005",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
         "id": "006",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
         "id": "001",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "002",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
         "id": "003",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "004",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     },
     {
         "id": "005",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
         "id": "006",
         "width": "3",
         "height": "1",
+        "testfield": "20",
         "depth": "3"
     },
     {
         "id": "001",
         "width": "5",
         "height": "1",
+        "testfield": "20",
         "depth": "5"
     }
 ]

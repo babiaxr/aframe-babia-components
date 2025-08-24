@@ -2008,22 +2008,30 @@ let generateLegend = (data, {
     const vcolor = safe(data?.[fcolor]);
 
     // Texto final
-    const finalText = isQuarter
-        ? name
-        : template
-            .replaceAll('{name}', name)
-            // nombres de los campos
-            .replaceAll('{fheight}', fheight)
-            .replaceAll('{farea}', farea)
-            .replaceAll('{fwidth}', fwidth)
-            .replaceAll('{fdepth}', fdepth)
-            .replaceAll('{fcolor}', fcolor)
-            // valores
-            .replaceAll('{height}', vheight)
-            .replaceAll('{area}', varea)
-            .replaceAll('{width}', vwidth)
-            .replaceAll('{depth}', vdepth)
-            .replaceAll('{color}', vcolor);
+    let processedTemplate = isQuarter ? '{name}' : template;
+
+    processedTemplate = processedTemplate
+        .replaceAll('{name}', name)
+        .replaceAll('{height}', vheight)
+        .replaceAll('{area}', varea)
+        .replaceAll('{width}', vwidth)
+        .replaceAll('{depth}', vdepth)
+        .replaceAll('{color}', vcolor)
+        .replaceAll('{fheight}', fheight)
+        .replaceAll('{farea}', farea)
+        .replaceAll('{fwidth}', fwidth)
+        .replaceAll('{fdepth}', fdepth)
+        .replaceAll('{fcolor}', fcolor);
+
+    const knownPlaceholders = new Set([
+        'name', 'height', 'area', 'width', 'depth', 'color',
+        'fheight', 'farea', 'fwidth', 'fdepth', 'fcolor'
+    ]);
+
+    const finalText = processedTemplate.replace(/\{(\w+)\}/g, (match, variable) => {
+        if (knownPlaceholders.has(variable)) return match; // ya procesado
+        return safe(data?.[variable], match); // si existe en rawData, lo usamos
+    });
 
     const lines = finalText.split('\n');
     const width = Math.max(...lines.map(line => line.length)) / 5;
